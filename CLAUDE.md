@@ -2,6 +2,8 @@
 
 该项目的介绍可以阅读[项目介绍.md]，相关参考文献可以阅读[参考文献.md],具体的开发需求可以阅读[prd.md]文件。
 
+**Planner 变量和指令集规范**请阅读 [docs/README.md](docs/README.md) 和 [docs/planner-instruction-standard.md](docs/planner-instruction-standard.md)。
+
 ## 强制要求
 
 - **在处理具有 MECE 关系的代码文件或逻辑时，充分利用 `Subagent` 或 `Task` 能力，做到并行工作**
