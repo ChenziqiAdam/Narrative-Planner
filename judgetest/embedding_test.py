@@ -63,6 +63,13 @@ class SimpleEvaluator:
         
         # 2. 算余弦相似度
         sim_score = cosine_similarity([v_goal], [v_resp])[0][0]
+
+        # 3. 计算长度比率 (Length Ratio)判断完整程度
+        # 这代表“量”的匹配。如果标准答案 100 字，用户只回 20 字，比率就是 0.2
+        # 我们设置一个上限 1.0，防止用户废话太多导致分数爆表
+        len_ratio = min(len(goal) / len(response), 1.0)
+
+        sim_score = sim_score * (len_ratio ** 0.9)
         
         # 3. 判分 (0 或 1)
         result = 1 if sim_score >= threshold else 0
