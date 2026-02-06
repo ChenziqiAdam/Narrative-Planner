@@ -1,0 +1,24 @@
+# 虚拟环境
+narrative_navigator_env/
+
+# API 密钥
+.env
+
+# Python 缓存
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# 日志
+logs/
+*.log
+
+# 编辑器文件
+.vscode/
+.idea/
+*.swp
+*.swo
+
+

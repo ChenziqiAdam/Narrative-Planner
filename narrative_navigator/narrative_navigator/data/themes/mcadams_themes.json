@@ -1,0 +1,452 @@
+{
+  "version": "1.0.0",
+  "last_updated": "2026-02-06",
+  "source": "McAdams Life Story Interview (2008)",
+  "domains": {
+    "life_chapters": {
+      "id": "life_chapters",
+      "label": "人生篇章",
+      "description": "构建时间轴骨架，划分人生阶段",
+      "themes": [
+        {
+          "theme_id": "THEME_01_LIFE_CHAPTERS",
+          "title": "人生篇章概览",
+          "description": "请参与者将自己的人生想象成一本书，思考其人生故事的主要篇章，为每个篇章提供标题和简短的描述。",
+          "seed_questions": [
+            "如果将自己的人生想象成一本书，目录会是什么样的？你能为你人生的每个篇章起一个标题吗？",
+            "让我们从你提到的第一个篇章开始。你能简要描述一下你人生的这个部分是关于什么的吗？",
+            "这个篇章的主要事件或主题是什么？",
+            "这个篇章是如何过渡到下一个篇章的？哪些变化或事件标志着下一个篇章的开始？",
+            "当我们从一个篇章过渡到下一个篇章时，你能找出任何转折点或重要的事件，它们开启了你人生的新阶段吗？"
+          ],
+          "trigger_logic": {
+            "trigger_phase": "opening",
+            "min_turn": 1,
+            "max_turn": 10
+          },
+          "priority": 1,
+          "depends_on": [],
+          "slots": ["childhood_chapter", "education_chapter", "career_chapter", "family_chapter", "retirement_chapter"],
+          "expected_depth": 3
+        }
+      ]
+    },
+    "key_scenes": {
+      "id": "key_scenes",
+      "label": "关键场景",
+      "description": "挖掘高光、低谷、转折点等标志性事件",
+      "themes": [
+        {
+          "theme_id": "THEME_02_PEAK_EXPERIENCE",
+          "title": "高潮",
+          "description": "讨论参与者人生中的一些关键场景，重点关注高潮：一个巅峰时刻。",
+          "seed_questions": [
+            "你能描述一个让你觉得是你人生巅峰体验的时刻吗？是什么让这个时刻如此积极？",
+            "这个高潮发生在何时何地？当时有哪些人在场？",
+            "你当时在想什么，感觉如何？",
+            "你为什么认为这个时刻对你的人生故事如此重要？它揭示了你是一个怎样的人？"
+          ],
+          "trigger_logic": {
+            "trigger_type": "emotion_high",
+            "min_emotional_score": 0.5
+          },
+          "priority": 2,
+          "depends_on": ["THEME_01_LIFE_CHAPTERS"],
+          "slots": ["time", "location", "people_present", "feelings", "significance"],
+          "expected_depth": 4
+        },
+        {
+          "theme_id": "THEME_03_LOW_POINT",
+          "title": "低谷",
+          "description": "讨论参与者人生中的一些关键场景，重点关注\"低谷\"：一个充满挑战或困难的时刻。",
+          "seed_questions": [
+            "想想你生命中感觉像低谷的时刻。你能分享一下发生了什么以及为什么如此困难吗？",
+            "这个事件发生在何时何地？还有谁参与其中？",
+            "在这个充满挑战的时期，你的感受如何？",
+            "回顾过去，这个低谷对你的人生或自我认知产生了什么影响？"
+          ],
+          "trigger_logic": {
+            "trigger_type": "emotion_low",
+            "max_emotional_score": -0.3
+          },
+          "priority": 2,
+          "depends_on": ["THEME_01_LIFE_CHAPTERS"],
+          "slots": ["time", "location", "people_involved", "difficulty", "coping", "impact"],
+          "expected_depth": 4
+        },
+        {
+          "theme_id": "THEME_04_TURNING_POINT",
+          "title": "转折点",
+          "description": "讨论参与者人生中的一些关键场景，重点关注\"转折点\"：一个重大改变的时刻。",
+          "seed_questions": [
+            "你能确定人生的一个转折点吗？一个标志着你或你人生方向发生重大改变的事件？",
+            "请描述一下这个事件的背景。何时何地发生的，以及谁参与其中？",
+            "这个事件之后发生了哪些变化？",
+            "为什么你认为这个事件是一个转折点？它如何影响了你之后的人生篇章？"
+          ],
+          "trigger_logic": {
+            "trigger_type": "change_detected"
+          },
+          "priority": 2,
+          "depends_on": ["THEME_01_LIFE_CHAPTERS"],
+          "slots": ["before_state", "event", "after_state", "reason", "impact"],
+          "expected_depth": 4
+        },
+        {
+          "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+          "title": "童年积极回忆",
+          "description": "讨论参与者人生中的一些关键场景，重点关注童年积极回忆。",
+          "seed_questions": [
+            "你还记得童年或青少年时期特别快乐的回忆吗？请分享一下。",
+            "具体发生了什么，何时何地？",
+            "谁参与了这段回忆，当时你在想什么，感觉如何？",
+            "为什么这段回忆让你印象深刻，它在你的人生故事中有什么意义？"
+          ],
+          "trigger_logic": {
+            "trigger_type": "period_specific",
+            "target_period": "childhood"
+          },
+          "priority": 3,
+          "depends_on": ["THEME_01_LIFE_CHAPTERS"],
+          "slots": ["time", "location", "people", "activity", "feelings", "meaning"],
+          "expected_depth": 3
+        },
+        {
+          "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+          "title": "童年消极回忆",
+          "description": "讨论参与者人生中的一些关键场景，重点关注童年消极回忆。",
+          "seed_questions": [
+            "你能描述一下早年一段困难或不快乐的回忆吗？",
+            "当时发生了什么，何时何地？",
+            "谁参与了，当时你经历了哪些情绪？",
+            "这段回忆如何影响了你或你的人生观？"
+          ],
+          "trigger_logic": {
+            "trigger_type": "period_specific",
+            "target_period": "childhood"
+          },
+          "priority": 3,
+          "depends_on": ["THEME_01_LIFE_CHAPTERS"],
+          "slots": ["time", "location", "people", "event", "emotions", "long_term_impact"],
+          "expected_depth": 3
+        },
+        {
+          "theme_id": "THEME_07_ADULT_MEMORY",
+          "title": "生动的成人记忆",
+          "description": "讨论参与者人生故事中的一些关键场景，重点关注生动的成人记忆。",
+          "seed_questions": [
+            "回顾您的成年岁月，您能描述一个至今尚未讨论过的、特别生动或有意义的场景吗？",
+            "发生了什么事，它发生在何时何地？",
+            "谁参与其中，您当时主要的想法和感受是什么？",
+            "这个记忆为何如此重要，它如何融入您的人生整体故事？"
+          ],
+          "trigger_logic": {
+            "trigger_type": "period_specific",
+            "target_period": "adulthood"
+          },
+          "priority": 3,
+          "depends_on": ["THEME_01_LIFE_CHAPTERS"],
+          "slots": ["time", "location", "people", "context", "significance"],
+          "expected_depth": 3
+        },
+        {
+          "theme_id": "THEME_08_RELIGIOUS_EXPERIENCE",
+          "title": "宗教、精神或神秘体验",
+          "description": "讨论参与者人生中的一些关键场景，重点关注宗教、精神或神秘体验。",
+          "seed_questions": [
+            "您是否曾有过一次与超越自身的事物（无论是宗教、精神还是神秘的）产生深刻联系的时刻？",
+            "请详细描述这次经历，包括它发生的地点、时间以及与谁一起。",
+            "这次经历伴随着怎样的想法和感受？",
+            "这次经历对您的信仰或您对世界的理解产生了怎样的影响？"
+          ],
+          "trigger_logic": {
+            "trigger_type": "special_experience"
+          },
+          "priority": 4,
+          "depends_on": ["THEME_01_LIFE_CHAPTERS"],
+          "slots": ["experience", "context", "feelings", "impact"],
+          "expected_depth": 3
+        },
+        {
+          "theme_id": "THEME_09_WISDOM_EVENT",
+          "title": "智慧事件",
+          "description": "讨论参与者人生中的一些关键场景，重点关注智慧事件：他们展现或遇到智慧的时刻。",
+          "seed_questions": [
+            "您能回想起自己展现智慧的时刻吗？也许是做了一个明智的决定或给出了深思熟虑的建议。",
+            "描述一下发生了什么，包括具体的地点、时间和参与人员。",
+            "那时您在想什么，感受如何？",
+            "这个事件说明了您的哪些价值观或生活方式？"
+          ],
+          "trigger_logic": {
+            "trigger_type": "reflection"
+          },
+          "priority": 4,
+          "depends_on": ["THEME_01_LIFE_CHAPTERS"],
+          "slots": ["situation", "action", "reasoning", "outcome", "values"],
+          "expected_depth": 3
+        }
+      ]
+    },
+    "future_scripts": {
+      "id": "future_scripts",
+      "label": "未来剧本",
+      "description": "探索期望、梦想与人生计划",
+      "themes": [
+        {
+          "theme_id": "THEME_10_NEXT_CHAPTER",
+          "title": "下一章",
+          "description": "探讨参与者未来期望、希望和计划，重点关注下一章。要求他们推测自己生活的近期未来。",
+          "seed_questions": [
+            "展望未来，您认为您人生故事的下一章是什么？您能描述一下您预期的发展吗？",
+            "您期望哪些事件或里程碑将定义您人生的下一阶段？",
+            "谁将是下一章的关键人物，他们将扮演什么角色？",
+            "在即将到来的这一章中，您是否有任何特定的目标或追求？"
+          ],
+          "trigger_logic": {
+            "trigger_phase": "middle_to_late"
+          },
+          "priority": 5,
+          "depends_on": [],
+          "slots": ["plans", "expectations", "people", "goals"],
+          "expected_depth": 3
+        },
+        {
+          "theme_id": "THEME_11_DREAMS_PLANS",
+          "title": "梦想、希望和未来计划",
+          "description": "深入了解参与者对未来的期望、希望和计划，重点关注梦想与计划：讨论他们的希望、梦想和计划。",
+          "seed_questions": [
+            "您能否分享一些您对未来的梦想或希望？您有哪些渴望实现的目标？",
+            "您是否有具体的计划或策略来实现这些梦想？您能描述一下吗？",
+            "这些梦想和计划如何与您迄今为止的人生故事中提到的价值观和经验相吻合？",
+            "您预计在实现这些目标的过程中会面临哪些挑战，以及您打算如何克服它们？"
+          ],
+          "trigger_logic": {
+            "trigger_phase": "middle_to_late"
+          },
+          "priority": 5,
+          "depends_on": [],
+          "slots": ["dreams", "plans", "challenges", "strategies"],
+          "expected_depth": 3
+        },
+        {
+          "theme_id": "THEME_12_LIFE_PROJECT",
+          "title": "人生项目",
+          "description": "深入了解参与者对未来的期望、希望和计划，重点关注人生项目：询问对他们而言意义重大的正在进行或计划中的项目。",
+          "seed_questions": [
+            "您目前是否正在进行某个特别的项目或事业，或者计划承担某个项目或事业，让您觉得这是您人生工作的重要组成部分？",
+            "您是如何参与到这个项目中的，或者您打算如何参与？",
+            "这个项目的目标是什么，为什么它对您或他人很重要？",
+            "在接下来的几年里，您认为这个项目将如何发展？您希望它产生什么影响？"
+          ],
+          "trigger_logic": {
+            "trigger_phase": "middle_to_late"
+          },
+          "priority": 5,
+          "depends_on": [],
+          "slots": ["project", "role", "goals", "impact", "timeline"],
+          "expected_depth": 3
+        }
+      ]
+    },
+    "challenges": {
+      "id": "challenges",
+      "label": "挑战",
+      "description": "直面困难、健康、失落与遗憾",
+      "themes": [
+        {
+          "theme_id": "THEME_13_LIFE_CHALLENGE",
+          "title": "人生挑战",
+          "description": "探讨参与者面临的各种挑战，重点关注人生挑战：他们一生中面临的最大挑战。",
+          "seed_questions": [
+            "回顾您的一生，您认为您所面临的最大挑战是什么？",
+            "您能描述一下这个挑战的背景吗？它发生在什么时候，涉及哪些人？",
+            "当时您是如何应对或处理这个挑战的？",
+            "回头看，这个挑战在您的人生故事中有什么意义？"
+          ],
+          "trigger_logic": {
+            "trigger_type": "challenge_discussion"
+          },
+          "priority": 4,
+          "depends_on": ["THEME_01_LIFE_CHAPTERS"],
+          "slots": ["challenge", "context", "response", "outcome", "meaning"],
+          "expected_depth": 4
+        },
+        {
+          "theme_id": "THEME_14_HEALTH",
+          "title": "健康",
+          "description": "探讨参与者所面临的各种挑战，重点关注健康：他们或他们亲近的家人所面临的重大健康问题、挑战或危机。",
+          "seed_questions": [
+            "你或你的亲人曾经面临过重大的健康问题吗？你能分享一下这次经历的细节吗？",
+            "这个健康问题是如何发生的？时间线是怎样的？",
+            "在此期间，你与医疗系统有哪些互动？这些互动对情况产生了什么影响？",
+            "你是如何应对这个健康挑战的？它对你的生活和看法产生了哪些持久的影响？"
+          ],
+          "trigger_logic": {
+            "trigger_type": "health_topic"
+          },
+          "priority": 4,
+          "depends_on": [],
+          "slots": ["condition", "timeline", "medical_interactions", "coping", "impact"],
+          "expected_depth": 3
+        },
+        {
+          "theme_id": "THEME_15_LOSS",
+          "title": "失落",
+          "description": "探讨参与者所面临的各种挑战，重点关注失落：他们所经历的最重大的 interpersonal 失落。",
+          "seed_questions": [
+            "失落是生活中不可避免的一部分。你能描述一下你所经历的最重大的失落吗？无论是亲人的离世还是其他形式的分离？",
+            "这次失落发生在何时？涉及哪些人？",
+            "当时你是如何应对这次失落的？现在又是如何继续处理的？",
+            "这次失落对你和你的人生故事产生了什么影响？"
+          ],
+          "trigger_logic": {
+            "trigger_type": "loss_topic"
+          },
+          "priority": 4,
+          "depends_on": [],
+          "slots": ["loss", "circumstances", "immediate_response", "long_term_processing", "impact"],
+          "expected_depth": 4
+        },
+        {
+          "theme_id": "THEME_16_FAILURE_REGRET",
+          "title": "失败的遗憾",
+          "description": "探讨参与者所面临的各种挑战，重点关注失败或遗憾：他们所面临的最重大的单次失败或遗憾。",
+          "seed_questions": [
+            "每个人都会经历失败和遗憾。你能谈谈你生活中特别突出的某次失败或遗憾吗？",
+            "导致这种情况发生的原因是什么？涉及哪些人？发生在何时？",
+            "你是如何应对这次经历的？你从中吸取了哪些教训？",
+            "这次失败或遗憾对你未来的决定或人生道路产生了什么影响？"
+          ],
+          "trigger_logic": {
+            "trigger_type": "reflection"
+          },
+          "priority": 4,
+          "depends_on": [],
+          "slots": ["failure_regret", "causes", "context", "response", "lessons", "impact"],
+          "expected_depth": 3
+        }
+      ]
+    },
+    "personal_ideology": {
+      "id": "personal_ideology",
+      "label": "个人意识形态",
+      "description": "提炼价值观与信仰体系",
+      "themes": [
+        {
+          "theme_id": "THEME_17_RELIGIOUS_VALUES",
+          "title": "宗教/伦理价值观",
+          "description": "深入探讨参与者的基本信仰和价值观，重点关注宗教和伦理价值观。",
+          "seed_questions": [
+            "您能描述一下您的宗教或精神信仰，以及它们如何影响您的日常生活吗？",
+            "无论您是否认为自己有宗教信仰，您将如何描述您的人生伦理或道德方法？",
+            "在您人生的艰难时期，您的宗教或精神信仰是如何支持或挑战您的？"
+          ],
+          "trigger_logic": {
+            "trigger_phase": "late"
+          },
+          "priority": 6,
+          "depends_on": [],
+          "slots": ["beliefs", "practices", "influence", "challenges"],
+          "expected_depth": 3
+        },
+        {
+          "theme_id": "THEME_18_POLITICAL_VALUES",
+          "title": "政治/社会价值观",
+          "description": "深入探讨参与者的基本信仰和价值观，重点关注政治和社会价值观。",
+          "seed_questions": [
+            "您对政治或社会问题的立场是什么？您是否认同某种特定的政治意识形态或运动？",
+            "是否有一些特定的社会问题或事业让您特别充满热情？您能否解释它们对您为什么重要？",
+            "您的政治或社会价值观如何影响您与他人的互动以及您对社区的参与？"
+          ],
+          "trigger_logic": {
+            "trigger_phase": "late"
+          },
+          "priority": 6,
+          "depends_on": [],
+          "slots": ["values", "causes", "actions", "impact"],
+          "expected_depth": 3
+        },
+        {
+          "theme_id": "THEME_19_VALUE_EVOLUTION",
+          "title": "宗教和政治观点转变和发展",
+          "description": "深入探讨参与者的基本信仰和价值观，重点关注观点演变：他们的信仰和价值观如何随时间而变化。",
+          "seed_questions": [
+            "回顾您的人生，您的宗教、道德或政治观点是如何改变或发展的？",
+            "您能描述一下您生命中的一个事件或一个时期，它对您的观点产生了重大影响或改变了吗？",
+            "您的信仰和价值观的变化是如何影响您的决定和关系的？"
+          ],
+          "trigger_logic": {
+            "trigger_phase": "late"
+          },
+          "priority": 7,
+          "depends_on": ["THEME_17_RELIGIOUS_VALUES", "THEME_18_POLITICAL_VALUES"],
+          "slots": ["past_views", "change_event", "current_views", "impact"],
+          "expected_depth": 3
+        },
+        {
+          "theme_id": "THEME_20_SINGLE_VALUE",
+          "title": "单一价值观",
+          "description": "深入探讨参与者的基本信仰和价值观，重点关注关键价值观：他们生命中最重要的价值观。",
+          "seed_questions": [
+            "您认为在人类生活中最重要的价值观是什么？为什么？",
+            "这个价值观在您的一生中是如何指导您的行动和选择的？",
+            "您能举一个例子，说明这个价值观在某个时候特别受到考验或得到肯定的经历吗？"
+          ],
+          "trigger_logic": {
+            "trigger_phase": "late"
+          },
+          "priority": 7,
+          "depends_on": [],
+          "slots": ["value", "reason", "application", "testing_example"],
+          "expected_depth": 3
+        }
+      ]
+    },
+    "context_management": {
+      "id": "context_management",
+      "label": "上下文管理",
+      "description": "会话摘要与信息整合",
+      "themes": [
+        {
+          "theme_id": "THEME_21_SESSION_SUMMARY",
+          "title": "会话摘要",
+          "description": "在每次会话结束后，提炼主要思想形成上下文摘要，供后续会话使用。",
+          "seed_questions": [],
+          "trigger_logic": {
+            "trigger_type": "session_end"
+          },
+          "priority": 9,
+          "depends_on": [],
+          "slots": ["key_points", "topics_covered", "next_steps"],
+          "expected_depth": 1
+        },
+        {
+          "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+          "title": "信息整合",
+          "description": "将多次会话的信息进行整合，形成连贯的叙事。",
+          "seed_questions": [],
+          "trigger_logic": {
+            "trigger_type": "session_start"
+          },
+          "priority": 9,
+          "depends_on": [],
+          "slots": ["previous_summary", "connections", "gaps"],
+          "expected_depth": 1
+        },
+        {
+          "theme_id": "THEME_23_CONTEXT_MANAGEMENT",
+          "title": "上下文管理",
+          "description": "管理整个访谈过程中的上下文信息，确保连贯性和一致性。",
+          "seed_questions": [],
+          "trigger_logic": {
+            "trigger_type": "continuous"
+          },
+          "priority": 9,
+          "depends_on": [],
+          "slots": ["entities", "timeline", "relationships"],
+          "expected_depth": 1
+        }
+      ]
+    }
+  }
+}

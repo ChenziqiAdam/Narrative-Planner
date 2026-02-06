@@ -1,0 +1,982 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Planner Instruction Configuration",
+  "description": "叙事导航者 Planner 指令集完整配置参数",
+  "version": "1.4.0",
+  "last_updated": "2026-02-06",
+
+  "meta": {
+    "description": "指令元数据配置",
+    "fields": {
+      "version": {
+        "type": "string",
+        "description": "指令集版本号",
+        "default": "1.0.0"
+      },
+      "timestamp": {
+        "type": "string",
+        "format": "ISO 8601",
+        "description": "指令生成时间",
+        "example": "2026-02-06T10:30:00Z"
+      },
+      "instruction_id": {
+        "type": "string",
+        "format": "UUID",
+        "description": "指令唯一标识符"
+      },
+      "turn_number": {
+        "type": "integer",
+        "minimum": 1,
+        "description": "当前对话轮次"
+      }
+    }
+  },
+
+  "state": {
+    "description": "图谱状态（Planner 内部处理变量，不包含在输出指令中）",
+    "note": "state 是决策依据而非决策结果，仅通过 _debug_snapshot 在调试模式下输出",
+    "fields": {
+      "current_focus": {
+        "description": "当前聚焦节点",
+        "type": "NodeReference"
+      },
+      "coverage_metrics": {
+        "description": "覆盖率指标",
+        "type": "CoverageMetrics"
+      },
+      "user_state": {
+        "description": "用户状态评估",
+        "type": "UserState"
+      }
+    }
+  },
+
+  "action": {
+    "description": "核心战术动作配置",
+    "primary_actions": {
+      "DEEP_DIVE": {
+        "code": "DEEP_DIVE",
+        "name": "深度挖掘",
+        "description": "在当前事件/主题上深入挖掘，获取更多细节、情感和反思",
+        "trigger_conditions": {
+          "slot_fill_rate": {
+            "operator": "<",
+            "threshold": 0.8,
+            "description": "槽位填充率小于80%"
+          },
+          "emotional_energy": {
+            "operator": ">",
+            "threshold": 0.5,
+            "description": "情绪能量评分大于0.5（用户情绪饱满，适合深挖）"
+          },
+          "energy_level": {
+            "operator": ">",
+            "threshold": 0.4,
+            "description": "精神状态大于0.4（用户还有精力）"
+          }
+        },
+        "stop_conditions": {
+          "slot_fill_rate": {
+            "operator": ">=",
+            "threshold": 0.8,
+            "description": "槽位填充率大于等于80%时停止"
+          },
+          "collected_elements": {
+            "min_count": 4,
+            "elements": ["时间", "地点", "人物", "起因", "结果", "感受"],
+            "description": "已收集4个以上要素时停止"
+          },
+          "emotional_energy_decline": {
+            "operator": "<",
+            "threshold": 0.2,
+            "description": "情绪能量下降到0.2以下时停止"
+          }
+        },
+        "tactical_goals": [
+          {
+            "code": "EXTRACT_DETAILS",
+            "name": "提取事实细节",
+            "description": "提取时间、地点、人物等事实信息",
+            "target_slots": ["时间", "地点", "人物"]
+          },
+          {
+            "code": "EXTRACT_EMOTIONS",
+            "name": "提取情绪体验",
+            "description": "提取事件发生时的情绪感受",
+            "target_slots": ["感受", "情绪变化"]
+          },
+          {
+            "code": "EXTRACT_REFLECTIONS",
+            "name": "提取反思感悟",
+            "description": "提取现在回头看时的思考和感悟",
+            "target_slots": ["反思", "感悟", "教训"]
+          },
+          {
+            "code": "EXTRACT_SENSORY",
+            "name": "提取感官细节",
+            "description": "提取视觉、听觉、嗅觉等感官记忆",
+            "target_slots": ["天气", "声音", "气味", "景象"]
+          },
+          {
+            "code": "EXTRACT_CAUSALITY",
+            "name": "提取因果关系",
+            "description": "提取事件的起因和结果链条",
+            "target_slots": ["起因", "经过", "结果", "影响"]
+          }
+        ],
+        "strategies": [
+          {
+            "code": "EVENT_TO_PERSON",
+            "name": "由事及人",
+            "description": "按时间轴索要事实，当事件足够多时计算关键词重合度提炼性格特质",
+            "usage_scenario": "访谈早期，建立信任和基础素材库"
+          },
+          {
+            "code": "OBJECT_TO_EMOTION",
+            "name": "由物及情",
+            "description": "抛出感官锚点（照片、老物件、老地名）",
+            "usage_scenario": "陷入僵局或老人出现记忆疲劳时",
+            "parameters": {
+              "anchor": {
+                "type": "string",
+                "description": "感官锚点物品描述"
+              }
+            }
+          },
+          {
+            "code": "ERA_TO_INDIVIDUAL",
+            "name": "由时代及个体",
+            "description": "调取时代背景库，询问老人在其中的位置",
+            "usage_scenario": "提升回忆录厚度，让个人史具备社会学价值",
+            "parameters": {
+              "era_context": {
+                "type": "string",
+                "description": "时代背景描述"
+              }
+            }
+          }
+        ]
+      },
+      "BREADTH_SWITCH": {
+        "code": "BREADTH_SWITCH",
+        "name": "广度跳转",
+        "description": "切换到新的人生阶段、人物或主题，确保访谈覆盖完整",
+        "trigger_conditions": {
+          "information_density": {
+            "operator": "<",
+            "threshold": 0.4,
+            "description": "当前节点信息密度低于0.4"
+          },
+          "energy_low": {
+            "operator": "<",
+            "threshold": 0.4,
+            "description": "精神状态小于0.4（用户累了）"
+          },
+          "slot_fill_rate": {
+            "operator": ">=",
+            "threshold": 0.8,
+            "description": "当前节点槽位填充率大于80%（已挖透）"
+          },
+          "dimension_coverage_low": {
+            "operator": "<",
+            "threshold": 0.3,
+            "description": "某维度覆盖率低于30%"
+          }
+        },
+        "switch_probability_formula": "Switch_Probability = alpha * (1 - Current_Information_Density) + beta * User_Fatigue_Score",
+        "formula_parameters": {
+          "alpha": {
+            "type": "float",
+            "default": 0.5,
+            "description": "信息密度权重"
+          },
+          "beta": {
+            "type": "float",
+            "default": 0.5,
+            "description": "疲劳度权重"
+          }
+        },
+        "tactical_goals": [
+          {
+            "code": "EXPLORE_PERIOD",
+            "name": "探索人生阶段",
+            "description": "切换到新的生命周期阶段"
+          },
+          {
+            "code": "EXPLORE_PERSON",
+            "name": "探索关键人物",
+            "description": "探索已识别但未展开的人物"
+          },
+          {
+            "code": "EXPLORE_LOCATION",
+            "name": "探索地点",
+            "description": "探索与特定地点相关的故事"
+          },
+          {
+            "code": "EXPLORE_THEME",
+            "name": "探索主题",
+            "description": "通过情感/动机共振探索相关事件"
+          }
+        ],
+        "strategies": [
+          {
+            "code": "AFFECTIVE_ASSOCIATION",
+            "name": "情感/动机共振跳转",
+            "priority": 1,
+            "description": "抓住用户表达的情绪，引导到另一个具有相同情绪的人生时刻",
+            "experience_rating": "最佳",
+            "parameters": {
+              "emotion_keyword": {
+                "type": "string",
+                "description": "情绪关键词"
+              }
+            }
+          },
+          {
+            "code": "SOCIAL_NETWORK_JUMP",
+            "name": "人物社交网络跳转",
+            "priority": 1,
+            "description": "利用图谱中已识别但未展开的人物",
+            "experience_rating": "最佳",
+            "parameters": {
+              "person_name": {
+                "type": "string",
+                "description": "目标人物姓名"
+              },
+              "connection_count": {
+                "type": "integer",
+                "description": "该人物关联的事件数量"
+              }
+            }
+          },
+          {
+            "code": "SPATIAL_JUMP",
+            "name": "物理/地理跳转",
+            "priority": 2,
+            "description": "从当前地点延伸到下一个地点",
+            "experience_rating": "稳健",
+            "parameters": {
+              "current_location": {
+                "type": "string",
+                "description": "当前地点"
+              },
+              "target_location": {
+                "type": "string",
+                "description": "目标地点"
+              }
+            }
+          },
+          {
+            "code": "TASK_RESUME",
+            "name": "挂起任务回溯跳转",
+            "priority": 2,
+            "description": "翻出之前被'打断'或'挂起'的话题",
+            "experience_rating": "稳健",
+            "parameters": {
+              "suspended_node_id": {
+                "type": "string",
+                "description": "挂起的节点ID"
+              }
+            }
+          },
+          {
+            "code": "HISTORICAL_SNAPSHOT",
+            "name": "时代快照跳转",
+            "priority": 3,
+            "description": "抛出时代标志性事件，询问老人在那个时刻的坐标",
+            "experience_rating": "补充",
+            "parameters": {
+              "historical_event": {
+                "type": "string",
+                "description": "历史事件描述"
+              },
+              "era": {
+                "type": "string",
+                "description": "时代标识"
+              }
+            }
+          }
+        ]
+      },
+      "CLARIFY": {
+        "code": "CLARIFY",
+        "name": "纠偏澄清",
+        "description": "检测并解决叙事中的矛盾、时间冲突或逻辑不一致",
+        "trigger_conditions": {
+          "timeline_conflict": {
+            "type": "boolean",
+            "description": "新事件与已有节点产生时间冲突"
+          },
+          "logic_contradiction": {
+            "type": "boolean",
+            "description": "用户表述存在明显矛盾"
+          },
+          "temporal_anchor_anomaly": {
+            "type": "boolean",
+            "description": "时间锚定发现异常"
+          }
+        },
+        "tactical_goals": [
+          {
+            "code": "RESOLVE_CONFLICT",
+            "name": "解决叙事矛盾",
+            "description": "温和地请用户帮助确认存在冲突的信息"
+          },
+          {
+            "code": "CONFIRM_UNDERSTANDING",
+            "name": "确认理解正确",
+            "description": "确认自己对用户表述的理解是否正确"
+          }
+        ]
+      },
+      "SUMMARIZE": {
+        "code": "SUMMARIZE",
+        "name": "阶段性总结",
+        "description": "在完成一个较大人生阶段（如青年时期）的访谈后，进行阶段性总结，承上启下",
+        "trigger_conditions": {
+          "period_completed": {
+            "type": "boolean",
+            "description": "完成一个人生篇章的所有关键节点"
+          },
+          "natural_transition": {
+            "type": "boolean",
+            "description": "用户话题自然结束，适合过渡到下一阶段"
+          }
+        },
+        "tactical_goals": [
+          {
+            "code": "REVIEW_PERIOD",
+            "name": "回顾人生阶段",
+            "description": "回顾刚完成的人生阶段，承上启下",
+            "parameters": {
+              "completed_period": {
+                "type": "string",
+                "description": "刚完成的人生阶段名称",
+                "example": "青年时期"
+              },
+              "next_period": {
+                "type": "string",
+                "description": "下一个人生阶段名称",
+                "example": "成家立业时期"
+              }
+            }
+          },
+          {
+            "code": "SYNTHESIZE_THEME",
+            "name": "综合提炼阶段主题",
+            "description": "基于当前阶段的事件提炼主题",
+            "parameters": {
+              "theme_keywords": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "主题关键词列表"
+              },
+              "suggested_title": {
+                "type": "string",
+                "description": "建议的主题标题"
+              }
+            }
+          }
+        ]
+      },
+      "PAUSE_SESSION": {
+        "code": "PAUSE_SESSION",
+        "name": "当天结束",
+        "description": "识别用户告别意图或精神状态过低，优雅地结束当天访谈，保存断点以便下次继续",
+        "trigger_conditions": {
+          "user_farewell_detected": {
+            "type": "boolean",
+            "description": "用户明确表达告别意图（如'今天就到这吧'、'我有点累了'）"
+          },
+          "energy_low": {
+            "operator": "<",
+            "threshold": 0.2,
+            "description": "精神状态小于0.2（用户明显疲惫）"
+          },
+          "max_turns_reached": {
+            "type": "boolean",
+            "description": "对话轮次超过预设上限（如单次超过50轮）"
+          }
+        },
+        "tactical_goals": [
+          {
+            "code": "SESSION_FAREWELL",
+            "name": "会话告别",
+            "description": "简单回顾当前访谈成果，告知下次会从断点继续，感谢并收集反馈"
+          }
+        ],
+        "checkpoint_fields": {
+          "last_discussed_node": {
+            "type": "string",
+            "description": "最后讨论的节点ID"
+          },
+          "next_resume_node": {
+            "type": "string",
+            "description": "下次恢复时的起始节点ID"
+          },
+          "topics_covered_today": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "今天覆盖的主题列表"
+          },
+          "coverage_today": {
+            "type": "float",
+            "description": "今天的覆盖率增量"
+          },
+          "summary_today": {
+            "type": "string",
+            "description": "今天访谈的简要总结"
+          }
+        }
+      },
+      "CLOSE_INTERVIEW": {
+        "code": "CLOSE_INTERVIEW",
+        "name": "全局结束",
+        "description": "在访谈完整度足够高后，进行完整总结，询问用户是否需要补充，确认后正式结束整个访谈项目",
+        "trigger_conditions": {
+          "coverage_complete": {
+            "operator": ">=",
+            "threshold": 0.85,
+            "description": "总体覆盖率大于等于85%"
+          },
+          "dimensions_balanced": {
+            "type": "boolean",
+            "description": "各维度覆盖率均衡（无维度低于60%）"
+          },
+          "user_confirms_complete": {
+            "type": "boolean",
+            "description": "用户明确表示访谈已完成"
+          }
+        },
+        "tactical_goals": [
+          {
+            "code": "FINAL_CLOSURE",
+            "name": "最终结束",
+            "description": "完整总结整个人生访谈，询问是否需要补充，用户同意后结束"
+          }
+        ],
+        "final_state_fields": {
+          "overall_coverage": {
+            "type": "float",
+            "description": "最终覆盖率"
+          },
+          "theme_summary": {
+            "type": "string",
+            "description": "整个人生主题总结"
+          },
+          "life_chapters_covered": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "覆盖的人生章节列表"
+          },
+          "completeness_confirmation_needed": {
+            "type": "boolean",
+            "description": "是否需要用户确认完整性"
+          }
+        }
+      }
+    }
+  },
+
+  "context": {
+    "description": "上下文桥接配置",
+    "note": "context_bridge 已删除，其功能由 suggested_opening 承担，审计信息移入 _debug_snapshot.decision_trace",
+    "fields": {
+      "bridge_type": {
+        "type": "enum",
+        "values": [
+          {
+            "code": "NONE",
+            "name": "无需桥接",
+            "description": "直接开始，如新会话开场"
+          },
+          {
+            "code": "SUMMARY_BRIDGE",
+            "name": "总结桥接",
+            "description": "用总结过渡，如'刚才我们聊了...'",
+            "example": "刚才我们聊到了您童年的趣事"
+          },
+          {
+            "code": "EMOTIONAL_BRIDGE",
+            "name": "情感桥接",
+            "description": "用情绪共鸣过渡",
+            "example": "我能感受到您那时的坚韧"
+          },
+          {
+            "code": "THEMATIC_BRIDGE",
+            "name": "主题桥接",
+            "description": "用主题关联过渡",
+            "example": "说到坚持，您年轻时也有类似经历"
+          },
+          {
+            "code": "TEMPORAL_BRIDGE",
+            "name": "时间桥接",
+            "description": "用时间关联过渡",
+            "example": "在那之后不久，您去了..."
+          },
+          {
+            "code": "CONTRAST_BRIDGE",
+            "name": "对比桥接",
+            "description": "用对比过渡",
+            "example": "与那次失败不同，这次..."
+          },
+          {
+            "code": "ACKNOWLEDGMENT_BRIDGE",
+            "name": "确认桥接",
+            "description": "用确认/道歉过渡",
+            "example": "请允许我确认一下，您刚才提到..."
+          }
+        ]
+      },
+      "entities": {
+        "type": "array",
+        "description": "当前上下文中的关键实体",
+        "entity_types": [
+          {
+            "code": "PERSON",
+            "name": "人物",
+            "examples": ["张三", "母亲", "王老师", "爱人"]
+          },
+          {
+            "code": "LOCATION",
+            "name": "地点",
+            "examples": ["上海", "清华大学", "老厂房", "乡下"]
+          },
+          {
+            "code": "TIME",
+            "name": "时间",
+            "examples": ["1990年代", "那个冬天", "18岁时", "1978年"]
+          },
+          {
+            "code": "ORGANIZATION",
+            "name": "组织机构",
+            "examples": ["某部队", "某公司", "生产队"]
+          },
+          {
+            "code": "EVENT",
+            "name": "事件",
+            "examples": ["高考", "南巡讲话", "文革", "香港回归"]
+          },
+          {
+            "code": "OBJECT",
+            "name": "物品",
+            "examples": ["军功章", "老照片", "自行车", "老屋"]
+          }
+        ]
+      },
+      "suggested_opening": {
+        "type": "string",
+        "description": "建议的对话开场方式（已包含上下文信息，NLG 直接使用）"
+      }
+    }
+  },
+
+  "_debug_snapshot": {
+    "description": "调试快照（仅调试模式包含，生产环境省略）",
+    "note": "用于记录决策时的内部状态，便于问题排查和审计",
+    "fields": {
+      "state_at_decision": {
+        "description": "决策时的图谱状态快照",
+        "type": "StateSnapshot",
+        "properties": {
+          "current_focus": "当前聚焦节点",
+          "coverage_metrics": "覆盖率指标",
+          "user_state": "用户状态"
+        }
+      },
+      "decision_trace": {
+        "description": "决策轨迹（可选），包含触发条件、原 context_bridge 等审计信息",
+        "type": "array",
+        "items": "string",
+        "example": ["触发: User_mentioned_difficult_winter", "槽位填充率 < 80%", "情绪能量 > 0.5", "选择 DEEP_DIVE"]
+      }
+    }
+  },
+
+  "tone_constraint": {
+    "description": "语气约束配置",
+    "primary_tones": [
+      {
+        "code": "EMPATHIC_SUPPORTIVE",
+        "name": "共情支持型",
+        "description": "表达理解和接纳，提供情感支持",
+        "usage_scenario": "谈论困难、低谷、失败时"
+      },
+      {
+        "code": "CURIOUS_INQUIRING",
+        "name": "好奇探索型",
+        "description": "表现出真诚的兴趣和好奇",
+        "usage_scenario": "挖掘新鲜故事时"
+      },
+      {
+        "code": "RESPECTFUL_REVERENT",
+        "name": "尊重敬重型",
+        "description": "保持尊重和敬意",
+        "usage_scenario": "谈论长辈、师长、去世亲人时"
+      },
+      {
+        "code": "CASUAL_CONVERSATIONAL",
+        "name": "轻松聊天型",
+        "description": "轻松自然，如老友交谈",
+        "usage_scenario": "聊童年趣事、爱好时"
+      },
+      {
+        "code": "PROFESSIONAL_NEUTRAL",
+        "name": "专业中立型",
+        "description": "保持客观中立",
+        "usage_scenario": "澄清事实、确认信息时"
+      },
+      {
+        "code": "GENTLE_WARM",
+        "name": "温柔温暖型",
+        "description": "温柔体贴，温暖亲切",
+        "usage_scenario": "老人疲劳、情绪低落时"
+      },
+      {
+        "code": "ENCOURAGING",
+        "name": "鼓励型",
+        "description": "给予鼓励和肯定",
+        "usage_scenario": "用户表达自我怀疑时"
+      }
+    ],
+    "secondary_tones": [
+      {
+        "code": "HUMOROUS",
+        "name": "幽默风趣"
+      },
+      {
+        "code": "NOSTALGIC",
+        "name": "怀旧感伤"
+      },
+      {
+        "code": "THOUGHTFUL",
+        "name": "沉思反思"
+      },
+      {
+        "code": "ENERGETIC",
+        "name": "活力热情"
+      },
+      {
+        "code": "CALM",
+        "name": "平静从容"
+      }
+    ],
+    "constraints": [
+      {
+        "code": "NO_LEADING_QUESTIONS",
+        "name": "避免诱导性问题",
+        "description": "不在问题中预设答案"
+      },
+      {
+        "code": "NO_JUDGMENT",
+        "name": "不做价值判断",
+        "description": "不对用户的经历和行为做评判"
+      },
+      {
+        "code": "ALLOW_SILENCE",
+        "name": "允许沉默",
+        "description": "给用户留出思考和回忆的时间"
+      },
+      {
+        "code": "VALIDATE_FEELINGS",
+        "name": "肯定情绪",
+        "description": "接纳和肯定用户表达的情绪"
+      },
+      {
+        "code": "AVOID_TECHNICAL_TERMS",
+        "name": "避免专业术语",
+        "description": "使用通俗易懂的语言"
+      }
+    ]
+  },
+
+  "node_reference": {
+    "description": "事件节点引用配置",
+    "fields": {
+      "node_id": {
+        "type": "string",
+        "description": "节点唯一标识",
+        "example": "1992_startup_phase"
+      },
+      "node_type": {
+        "type": "enum",
+        "values": [
+          {
+            "code": "life_chapter",
+            "name": "人生篇章",
+            "description": "如'童年'、'青年时期'、'创业阶段'"
+          },
+          {
+            "code": "key_event",
+            "name": "关键事件",
+            "description": "如'高考'、'第一次工作'、'结婚'"
+          },
+          {
+            "code": "relationship",
+            "name": "人物关系",
+            "description": "如'与父亲的关系'、'与爱人的相识'"
+          },
+          {
+            "code": "theme",
+            "name": "主题",
+            "description": "如'坚持'、'漂泊'、'成长'"
+          }
+        ]
+      },
+      "label": {
+        "type": "string",
+        "description": "节点显示标签",
+        "example": "1992年创业初期"
+      }
+    }
+  },
+
+  "coverage_metrics": {
+    "description": "覆盖率指标配置",
+    "fields": {
+      "overall_coverage": {
+        "type": "float",
+        "min": 0.0,
+        "max": 1.0,
+        "description": "总体覆盖率",
+        "calculation": "sum(已挖掘节点 * 深度权重) / 预设大纲总节点数"
+      },
+      "dimension_coverage": {
+        "description": "各维度覆盖率",
+        "dimensions": [
+          {
+            "code": "time",
+            "name": "时间维度",
+            "description": "童年、青年、中年、晚年的覆盖比例"
+          },
+          {
+            "code": "space",
+            "name": "空间维度",
+            "description": "生活地点、工作场所的覆盖"
+          },
+          {
+            "code": "people",
+            "name": "人物维度",
+            "description": "家人、朋友、同事的覆盖"
+          },
+          {
+            "code": "emotion",
+            "name": "情感维度",
+            "description": "高峰、低谷、转折的情绪记录"
+          },
+          {
+            "code": "reflection",
+            "name": "反思维度",
+            "description": "人生感悟、经验总结的提炼"
+          }
+        ]
+      },
+      "current_depth": {
+        "type": "integer",
+        "min": 0,
+        "max": 5,
+        "description": "当前节点挖掘深度等级",
+        "levels": {
+          "0": "未触及",
+          "1": "仅提及",
+          "2": "基础信息",
+          "3": "中等细节",
+          "4": "丰富细节",
+          "5": "深度挖掘完成"
+        }
+      }
+    }
+  },
+
+  "user_state": {
+    "description": "用户状态评估配置（两维度模型）",
+    "design_note": "将疲劳度、参与度、回答趋势三个高度相关的维度合并为精神状态(energy_level)",
+    "fields": {
+      "emotional_energy": {
+        "type": "float",
+        "min": -1.0,
+        "max": 1.0,
+        "description": "情绪能量（独立维度，用于选择语气）",
+        "levels": {
+          "-1.0--0.3": "负面/低落",
+          "-0.3-0.3": "平静",
+          "0.3-1.0": "正面/高昂"
+        },
+        "decision_function": "选择 tone_constraint（负面用共情型，正面用好奇型）"
+      },
+      "energy_level": {
+        "type": "float",
+        "min": 0.0,
+        "max": 1.0,
+        "description": "精神状态（合并疲劳度、参与度、回答趋势）",
+        "levels": {
+          "0.0-0.2": "疲惫/低能量",
+          "0.2-0.4": "略感疲惫",
+          "0.4-0.7": "状态良好",
+          "0.7-1.0": "精力充沛"
+        },
+        "decision_function": "决定继续深挖 vs 暂停/跳转",
+        "calculation": "1 - fatigue_score（疲劳度）或综合 engagement_score 和趋势计算",
+        "thresholds": {
+          "can_deep_dive": "> 0.4",
+          "should_pause": "< 0.2",
+          "consider_switch": "< 0.4"
+        }
+      }
+    }
+  },
+
+  "slot_definitions": {
+    "description": "通用槽位定义",
+    "event_slots": [
+      { "code": "time", "name": "时间", "prompt": "这是什么时候发生的？" },
+      { "code": "location", "name": "地点", "prompt": "这件事发生在哪里？" },
+      { "code": "people", "name": "人物", "prompt": "还有谁在场？" },
+      { "code": "cause", "name": "起因", "prompt": "是什么原因导致这件事发生？" },
+      { "code": "process", "name": "经过", "prompt": "具体是怎么发展的？" },
+      { "code": "result", "name": "结果", "prompt": "最后结果如何？" },
+      { "code": "feeling", "name": "感受", "prompt": "当时您是什么心情？" },
+      { "code": "reflection", "name": "反思", "prompt": "现在回头看，您有什么感悟？" }
+    ],
+    "relationship_slots": [
+      { "code": "how_met", "name": "相识契机", "prompt": "你们是怎么认识的？" },
+      { "code": "first_impression", "name": "第一印象", "prompt": "您对TA的第一印象是什么？" },
+      { "code": "relationship_change", "name": "关系变化", "prompt": "你们的关系后来有什么变化？" },
+      { "code": "conflict", "name": "冲突矛盾", "prompt": "你们之间有什么矛盾或分歧吗？" },
+      { "code": "resolution", "name": "结局", "prompt": "现在你们的关系怎么样？" }
+    ]
+  },
+
+  "era_contexts": {
+    "description": "时代背景库配置",
+    "eras": [
+      {
+        "code": "1949-1950s",
+        "name": "建国初期",
+        "keywords": ["土地改革", "抗美援朝", "三大改造"],
+        "prompt_template": "{year}年新中国刚成立不久，那时候您的{context}是怎么样的？"
+      },
+      {
+        "code": "1966-1976",
+        "name": "文革时期",
+        "keywords": ["上山下乡", "文革", "红卫兵"],
+        "prompt_template": "{year}年是特殊的历史时期，您当时在做什么？"
+      },
+      {
+        "code": "1977-1979",
+        "name": "改革开放初期",
+        "keywords": ["恢复高考", "改革开放", "知青返城"],
+        "prompt_template": "1977年恢复高考，那个变化对您有什么影响？"
+      },
+      {
+        "code": "1980s",
+        "name": "80年代",
+        "keywords": ["下海", "个体户", "万元户"],
+        "prompt_template": "80年代改革开放深化，很多人开始'下海'，那时候您在做什么？"
+      },
+      {
+        "code": "1990s",
+        "name": "90年代",
+        "keywords": ["南巡讲话", "市场经济", "下岗潮"],
+        "prompt_template": "1992年南巡讲话后，社会发生了很大变化，您的{context}有什么变化吗？"
+      },
+      {
+        "code": "2000s",
+        "name": "千禧年代",
+        "keywords": ["加入WTO", "互联网", "城市化"],
+        "prompt_template": "2000年以后，社会快速发展，这对您的生活有什么影响？"
+      }
+    ]
+  },
+
+  "error_handling": {
+    "description": "错误处理配置",
+    "scenarios": [
+      {
+        "error": "JSON_PARSE_FAILED",
+        "fallback_action": "DEEP_DIVE",
+        "fallback_tone": "CURIOUS_INQUIRING",
+        "description": "JSON解析失败时使用默认动作"
+      },
+      {
+        "error": "MISSING_REQUIRED_FIELD",
+        "action": "使用默认值填充，记录警告日志",
+        "description": "必填字段缺失"
+      },
+      {
+        "error": "INVALID_ENUM_VALUE",
+        "action": "回退到最保守的选项",
+        "fallback_mapping": {
+          "primary_tone": "PROFESSIONAL_NEUTRAL",
+          "bridge_type": "NONE",
+          "strategy": "EVENT_TO_PERSON"
+        },
+        "description": "枚举值无效"
+      },
+      {
+        "error": "NODE_NOT_FOUND",
+        "fallback_action": "BREADTH_SWITCH",
+        "description": "节点ID不存在时清空target_node并触发跳转"
+      }
+    ]
+  },
+
+  "thresholds": {
+    "description": "全局阈值配置",
+    "coverage": {
+      "low": 0.3,
+      "medium": 0.6,
+      "high": 0.8,
+      "complete": 0.85
+    },
+    "depth": {
+      "shallow": 1,
+      "moderate": 3,
+      "deep": 5
+    },
+    "energy_level": {
+      "exhausted": 0.2,
+      "tired": 0.4,
+      "good": 0.7,
+      "energetic": 1.0
+    },
+    "emotional_energy": {
+      "negative": -0.3,
+      "neutral_low": -0.3,
+      "neutral_high": 0.3,
+      "positive": 0.5
+    }
+  },
+  "changelog": {
+    "v1.4.0": {
+      "date": "2026-02-06",
+      "changes": [
+        "删除 context.context_bridge 字段（与 suggested_opening 功能重复）",
+        "suggested_opening 描述更新为已包含上下文信息，NLG 直接使用",
+        "审计信息移入 _debug_snapshot.decision_trace"
+      ]
+    },
+    "v1.3.0": {
+      "date": "2026-02-06",
+      "changes": [
+        "state 改为内部处理变量，输出 JSON 移除 state 字段",
+        "添加可选的 _debug_snapshot 字段用于调试模式",
+        "更新指令流转图，明确 state 的内部属性"
+      ]
+    },
+    "v1.2.0": {
+      "date": "2026-02-06",
+      "changes": [
+        "用户状态简化为两维度模型（emotional_energy + energy_level）",
+        "删除：fatigue_score, engagement_score, response_length_trend",
+        "energy_level 合并了疲劳度、参与度、回答趋势三个维度"
+      ]
+    },
+    "v1.1.0": {
+      "date": "2026-02-06",
+      "changes": [
+        "拆分 CLOSE_SESSION 为 PAUSE_SESSION 和 CLOSE_INTERVIEW"
+      ]
+    }
+  }
+}
