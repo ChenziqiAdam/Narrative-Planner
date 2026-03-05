@@ -1,0 +1,29 @@
+{
+     "memory_event_template": {
+      "event_id": "",
+      "event_name": "",
+      "description": "",
+      "details": [],
+      "typical_dialogue": "",
+      "timestamp_added": "",
+      "tags": [],
+      "linked_memory_ids": [],
+      "emotional_weight": 0 
+    },
+
+    "people_template":{
+      "name": "",
+      "relation": "",
+      "description": "",
+      "shared_memories_id": [],
+      "typical_dialogue": "",
+      "relationship_description": ""
+    },
+
+    "sensitive_topic_template": {
+        "topic": "",
+        "reason": "",
+        "trigger_keywords":[]      
+    }
+    
+}
