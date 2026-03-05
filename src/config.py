@@ -6,9 +6,10 @@ load_dotenv()
 
 class Config:
     """配置类"""
-    
+
     # API 配置
     OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+    OPENAI_BASE_URL = os.getenv('OPENAI_BASE_URL')  # 可选，用于非 OpenAI 兼容 API（如 Kimi、智谱等）
     MODEL_NAME = os.getenv('MODEL_NAME', 'gpt-4')
     
     # 项目配置

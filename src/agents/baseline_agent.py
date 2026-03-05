@@ -39,7 +39,11 @@ class BaselineAgent:
             session_id: 会话 ID，用于日志和结果保存
         """
         self.session_id = session_id or datetime.now().strftime("%Y%m%d_%H%M%S")
-        self.client = OpenAI(api_key=Config.OPENAI_API_KEY)
+        # 支持自定义 base_url（如 Kimi、智谱等 OpenAI 兼容 API）
+        client_kwargs = {"api_key": Config.OPENAI_API_KEY}
+        if Config.OPENAI_BASE_URL:
+            client_kwargs["base_url"] = Config.OPENAI_BASE_URL
+        self.client = OpenAI(**client_kwargs)
         self.conversation_history = []
 
         # 加载系统提示词
