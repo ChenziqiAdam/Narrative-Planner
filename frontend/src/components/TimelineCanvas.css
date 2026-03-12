@@ -1,0 +1,275 @@
+/**
+ * TimelineCanvas 样式
+ * 时间轴视图 - 事件卡片 + 5槽位 + 情绪能量 + 挖掘深度
+ */
+
+.timeline-canvas-container {
+  width: 100%;
+  height: 100%;
+  background: #FAFAFA;
+  overflow: auto;
+}
+
+.timeline-content {
+  min-height: 100%;
+  padding: 24px;
+}
+
+/* 空状态 */
+.timeline-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  color: #9CA3AF;
+}
+
+.timeline-empty .empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+/* 时间轴事件 */
+.timeline-events {
+  position: relative;
+  padding-left: 40px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.timeline-line {
+  position: absolute;
+  left: 12px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, #E5E7EB 0%, #D1D5DB 100%);
+}
+
+.timeline-event-wrapper {
+  position: relative;
+  margin-bottom: 24px;
+}
+
+.timeline-dot {
+  position: absolute;
+  left: -34px;
+  top: 24px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 3px solid #FFFFFF;
+  box-shadow: 0 0 0 2px currentColor;
+  z-index: 1;
+}
+
+/* 事件卡片 */
+.timeline-node.event-node {
+  background: #FFFFFF;
+  border: 2px solid #E5E7EB;
+  border-radius: 16px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.timeline-node.event-node:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.timeline-node.event-node.selected {
+  border-color: #3B82F6 !important;
+  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.2);
+}
+
+/* 事件头部 */
+.event-header {
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #F3F4F6;
+}
+
+.event-time {
+  font-size: 13px;
+  color: #6B7280;
+  margin-bottom: 8px;
+}
+
+.event-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+.event-theme-tag {
+  display: inline-block;
+  font-size: 11px;
+  padding: 4px 10px;
+  background: #F3F4F6;
+  color: #6B7280;
+  border-radius: 12px;
+}
+
+/* 5个核心槽位 */
+.event-slots {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding: 16px;
+  background: #FAFAFA;
+  border-radius: 12px;
+}
+
+.slot-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.slot-label {
+  min-width: 80px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #6B7280;
+}
+
+.slot-value {
+  flex: 1;
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.5;
+}
+
+.slot-value em {
+  color: #9CA3AF;
+  font-style: normal;
+}
+
+.event-description {
+  max-height: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.reflection-text {
+  color: #4B5563;
+  font-style: italic;
+}
+
+/* 分析指标 */
+.event-metrics {
+  display: flex;
+  gap: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #F3F4F6;
+}
+
+.metric-item {
+  flex: 1;
+}
+
+.metric-label {
+  display: block;
+  font-size: 12px;
+  color: #6B7280;
+  margin-bottom: 8px;
+}
+
+.metric-bar-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.metric-bar {
+  flex: 1;
+  height: 8px;
+  background: #E5E7EB;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.metric-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.metric-value {
+  font-size: 13px;
+  font-weight: 600;
+  min-width: 50px;
+  text-align: right;
+}
+
+/* 挖掘深度 */
+.depth-indicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.depth-pip {
+  width: 24px;
+  height: 8px;
+  background: #E5E7EB;
+  border-radius: 2px;
+  transition: background 0.2s ease;
+}
+
+.depth-pip.active {
+  background: #3B82F6;
+}
+
+.depth-value {
+  margin-left: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #3B82F6;
+}
+
+/* 标签 */
+.event-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.tag-item {
+  font-size: 11px;
+  padding: 4px 10px;
+  background: #EFF6FF;
+  color: #3B82F6;
+  border-radius: 12px;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .timeline-events {
+    padding-left: 24px;
+  }
+
+  .timeline-line {
+    left: 6px;
+  }
+
+  .timeline-dot {
+    left: -22px;
+    width: 12px;
+    height: 12px;
+  }
+
+  .event-metrics {
+    flex-direction: column;
+    gap: 16px;
+  }
+}

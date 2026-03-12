@@ -1,0 +1,261 @@
+/**
+ * CoverageDashboard 组件样式
+ */
+
+.coverage-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  color: #fff;
+  min-width: 280px;
+}
+
+.coverage-section {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.section-title {
+  margin: 0 0 12px 0;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* 总体覆盖率 - 环形进度条 */
+.overall-coverage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.progress-ring-container {
+  position: relative;
+  width: 120px;
+  height: 120px;
+}
+
+.progress-ring {
+  transform: rotate(-90deg);
+}
+
+.progress-ring-bg {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.1);
+}
+
+.progress-ring-fill {
+  fill: none;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.5s ease;
+}
+
+.progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.progress-text .percentage {
+  font-size: 32px;
+  font-weight: bold;
+  background: linear-gradient(135deg, #10B981, #3B82F6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.progress-text .unit {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* 主题节点统计 */
+.theme-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.status-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.status-bar-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 70px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.bar-container {
+  flex: 1;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.count {
+  min-width: 24px;
+  text-align: right;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.total-events {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 4px;
+}
+
+.total-events .label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.total-events .value {
+  font-size: 16px;
+  font-weight: bold;
+  color: #FCD34D;
+}
+
+/* 维度覆盖率 */
+.dimension-coverage {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dimension-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dimension-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dimension-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+}
+
+.dimension-label {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.dimension-value {
+  font-weight: 600;
+  color: #fff;
+}
+
+.dimension-bar-container {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.dimension-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+/* 领域覆盖 */
+.domain-coverage {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.domain-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.domain-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+}
+
+.domain-indicator {
+  width: 4px;
+  height: 32px;
+  border-radius: 2px;
+}
+
+.domain-name {
+  flex: 1;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.3;
+}
+
+.domain-value {
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .coverage-dashboard {
+    padding: 12px;
+    gap: 12px;
+    min-width: auto;
+  }
+
+  .coverage-section {
+    padding: 12px;
+  }
+
+  .domain-grid {
+    grid-template-columns: 1fr;
+  }
+}
