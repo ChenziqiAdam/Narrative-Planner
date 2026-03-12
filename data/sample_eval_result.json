@@ -1,0 +1,36 @@
+{
+  "counts": {
+    "total_turns": 9,
+    "assistant_turns": 5,
+    "user_turns": 4
+  },
+  "metrics": {
+    "single_question_rate": 1.0,
+    "avg_follow_up_depth": 2.0,
+    "follow_up_hit_rate": 0.4,
+    "stage_coverage_rate": 0.5
+  },
+  "stage_coverage": {
+    "covered_stages": [
+      "工作",
+      "求学",
+      "童年"
+    ],
+    "missing_stages": [
+      "家庭",
+      "感悟",
+      "转折"
+    ],
+    "assistant_stage_sequence": [
+      "童年",
+      "未识别",
+      "求学",
+      "求学",
+      "工作"
+    ]
+  },
+  "notes": [
+    "追问深度和命中率基于关键词重叠启发式计算，用于版本间相对比较。",
+    "若对话较短，阶段覆盖率会天然偏低，建议至少 12 轮以上再比较。"
+  ]
+}
