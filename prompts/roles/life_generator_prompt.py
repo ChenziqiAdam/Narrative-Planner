@@ -3,9 +3,10 @@ SYSTEM_PROMPT = """\
 你见证了无数。你想要把他们用最客观的语言记录下来，记录他们的点点滴滴，体会其中的感受，就好像你就是他！
 """
 
-def build_init_prompt(example_text: str,name: str) -> str:
+def build_init_prompt(example_text: str, name: str, system_prompt: str = None) -> str:
+    prompt_header = system_prompt if system_prompt is not None else SYSTEM_PROMPT
     return f"""
-{SYSTEM_PROMPT}
+{prompt_header}
 
 你现在要虚构一个人精彩的一生（注意是虚构)，他的名字叫做{name}，你完全代入了他的视角，首先你会先客观的记录下他人生大事，下面是你的其中一个例子，请仿照它再
 下一份另外一个的人生记录，但要保持连续性，时刻记住你写的是谁的记录！

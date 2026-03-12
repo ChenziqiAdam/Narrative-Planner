@@ -2,26 +2,41 @@ from camel.agents import ChatAgent
 from camel.models import ModelFactory
 from camel.types import ModelPlatformType
 import os
+import logging
+import sys
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+from config import Config
 from prompts.roles.elderly_promot import ElderPromptGenerator
 
 # 查找记忆的工具
 from tools.elder_tools import ElderMemorySystem, get_tools
 
+logging.basicConfig(
+    level=Config.LOG_LEVEL,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('logs/interviewee_agent.log'),
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger(__name__)
+
 class IntervieweeAgent:
-    def __init__(self, profile_path, model_type, model_base_url, api_key, save_path):
+    def __init__(self, profile_path, save_path, model_type=None, model_base_url=None, api_key=None):
         self.profile_path = profile_path
         self.example_text = None
-        self.model_type = model_type
-        self.model_base_url = model_base_url
-        self.api_key = api_key
+        self.model_type = model_type or Config.MODEL_NAME
+        self.model_base_url = model_base_url or Config.MOONSHOT_BASE_URL
+        self.api_key = api_key or Config.MOONSHOT_API_KEY
         self.save_path = save_path
-        
+
         self._load_sys_prompt()
         self._load_model()
         self._load_tools()
-        
+
         self._load_chat_agent()
         self.history = ""
+        logger.info("IntervieweeAgent 初始化完成")
 
     def _load_tools(self):
         self.memory_system = ElderMemorySystem(self.profile_path)
@@ -36,7 +51,7 @@ class IntervieweeAgent:
         )
     
     def _load_sys_prompt(self):
-        generator = ElderPromptGenerator()
+        generator = ElderPromptGenerator(template_path=Config.INTERVIEWEE_PROMPT_TEMPLATE)
         profile_data = generator.load_elder_profile(self.profile_path)
         self.sys_prompt = generator.generate_prompt(profile_data)
 
@@ -63,6 +78,7 @@ class IntervieweeAgent:
                 prompt = self._load_step_prompt(self.history, question)
                 response = self.agent.step(prompt)
                 answer = response.msg.content
+                logger.info(f"问题: {question[:80]}... | 回答: {answer[:80]}...")
                 print(f"问题：{question}\n回答：{answer}\n")
                 self.history += f"Q: {question}\nA: {answer}\n"
         else:
@@ -75,6 +91,7 @@ class IntervieweeAgent:
                 answer = response.msg.content
                 self.history += f"Q: {question}\nA: {answer}\n"
                 responses.append(answer)
+                logger.info(f"问题: {question[:80]}... | 回答: {answer[:80]}...")
                 print(f"问题：{question}\n回答：{answer}\n")
         with open(save_path, "w", encoding="utf-8") as f:
             f.write(self.history)
@@ -82,13 +99,13 @@ class IntervieweeAgent:
         return responses
 
 
-# test 
+# test
 if __name__ == "__main__":
+    if not Config.MOONSHOT_API_KEY:
+        print("错误: 请先在 .env 文件中设置 MOONSHOT_API_KEY")
+        exit(1)
     agent = IntervieweeAgent(
-        os.path.join(os.path.dirname(__file__), "../prompts/roles/elder_profile_example.json"),
-        model_type="deepseek-chat",
-        model_base_url="https://api.deepseek.com/v1",
-        api_key=os.getenv("API_KEY"),
+        profile_path=os.path.join(os.path.dirname(__file__), "../prompts/roles/elder_profile_example.json"),
         save_path=os.path.join(os.path.dirname(__file__), "../data/raw/interviewee_answers.txt"),
     )
     questions = [
