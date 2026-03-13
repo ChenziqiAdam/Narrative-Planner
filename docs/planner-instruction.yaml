@@ -1,0 +1,63 @@
+instructions:
+  - name: primary_action
+    description: "用于 action.primary_action 字段：主要战术动作。"
+    values:
+      - DEEP_DIVE: "在当前事件/主题上深入挖掘，获取更多细节、情感和反思。"
+      - BREADTH_SWITCH: "切换到新的人生阶段、人物或主题，以扩展覆盖面。"
+      - CLARIFY: "检测并解决叙事矛盾、时间冲突或逻辑不一致。"
+      - SUMMARIZE: "阶段性总结，承上启下。"
+      - PAUSE_SESSION: "当天结束，保存断点并优雅结束会话。"
+      - CLOSE_INTERVIEW: "完整结束访谈并确认最终状态。"
+  - name: tactical_goal
+    description: "用于 action.tactical_goal 字段：战术目标类型与简述（目标性指令）。"
+    values:
+      - EXTRACT_DETAILS: "提取事实细节（时间、地点、人物等）。"
+      - EXTRACT_EMOTIONS: "提取情绪体验与感受。"
+      - EXTRACT_REFLECTIONS: "提取反思与感悟。"
+      - EXTRACT_SENSORY: "提取感官细节（视觉、听觉、气味等）。"
+      - EXTRACT_CAUSALITY: "提取因果关系与影响链条。"
+      - EXPLORE_PERIOD: "探索某一人生阶段。"
+      - EXPLORE_PERSON: "探索关键人物相关故事。"
+      - EXPLORE_LOCATION: "探索与地点相关的经历。"
+      - EXPLORE_THEME: "探索某一主题下的多条事件。"
+      - RESOLVE_CONFLICT: "解决叙事中的矛盾或冲突。"
+      - CONFIRM_UNDERSTANDING: "确认理解是否准确。"
+      - REVIEW_PERIOD: "回顾并总结已完成的人生阶段。"
+      - SYNTHESIZE_THEME: "综合提炼阶段主题。"
+      - SESSION_FAREWELL: "会话告别并记录断点信息。"
+      - FINAL_CLOSURE: "最终结束并确认完整性。"
+
+  - name: tone_constraint
+    description: "用于 action.tone_constraint 字段：语气约束与辅助语气/限制。"
+    primary_tones:
+      - EMPATHIC_SUPPORTIVE: "共情支持型"
+      - CURIOUS_INQUIRING: "好奇探索型"
+      - RESPECTFUL_REVERENT: "尊重敬重型"
+      - CASUAL_CONVERSATIONAL: "轻松聊天型"
+      - PROFESSIONAL_NEUTRAL: "专业中立型"
+      - GENTLE_WARM: "温柔温暖型"
+      - ENCOURAGING: "鼓励型"
+    secondary_tones:
+      - HUMOROUS: "幽默风趣"
+      - NOSTALGIC: "怀旧感伤"
+      - THOUGHTFUL: "沉思反思"
+      - ENERGETIC: "活力热情"
+      - CALM: "平静从容"
+    constraints:
+      - NO_LEADING_QUESTIONS: "避免诱导性问题"
+      - NO_JUDGMENT: "不做价值判断"
+      - ALLOW_SILENCE: "允许沉默，给用户思考时间"
+      - VALIDATE_FEELINGS: "肯定并接纳用户情绪"
+      - AVOID_TECHNICAL_TERMS: "使用通俗语言，避免专业术语"
+
+  - name: strategy
+    description: "用于 action.strategy 字段：执行策略类型与简要说明。"
+    values:
+      - EVENT_TO_PERSON: "由事及人（由事件延伸到人物/性格特质提炼）。"
+      - OBJECT_TO_EMOTION: "由物及情（用感官锚点触发回忆）。"
+      - ERA_TO_INDIVIDUAL: "由时代及个体（结合时代背景提问）。"
+      - AFFECTIVE_ASSOCIATION: "情感/动机共振跳转（基于情绪关联切换话题）。"
+      - SOCIAL_NETWORK_JUMP: "人物社交网络跳转（沿人物关系展开）。"
+      - SPATIAL_JUMP: "空间/地点跳转（地点间延伸）。"
+      - TASK_RESUME: "挂起任务回溯（恢复之前被打断的话题）。"
+      - HISTORICAL_SNAPSHOT: "时代快照跳转（用历史事件作为触发）。"
