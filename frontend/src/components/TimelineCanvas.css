@@ -12,7 +12,7 @@
 
 .timeline-content {
   min-height: 100%;
-  padding: 24px;
+  padding: 12px 16px;
 }
 
 /* 空状态 */
@@ -33,7 +33,7 @@
 /* 时间轴事件 */
 .timeline-events {
   position: relative;
-  padding-left: 40px;
+  padding-left: 28px;
   max-width: 900px;
   margin: 0 auto;
 }
@@ -49,17 +49,17 @@
 
 .timeline-event-wrapper {
   position: relative;
-  margin-bottom: 24px;
+  margin-bottom: 12px;
 }
 
 .timeline-dot {
   position: absolute;
-  left: -34px;
-  top: 24px;
-  width: 16px;
-  height: 16px;
+  left: -26px;
+  top: 16px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
-  border: 3px solid #FFFFFF;
+  border: 2px solid #FFFFFF;
   box-shadow: 0 0 0 2px currentColor;
   z-index: 1;
 }
@@ -67,17 +67,19 @@
 /* 事件卡片 */
 .timeline-node.event-node {
   background: #FFFFFF;
-  border: 2px solid #E5E7EB;
-  border-radius: 16px;
-  padding: 20px;
+  border: 1.5px solid #E5E7EB;
+  border-radius: 10px;
+  padding: 12px 14px;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  min-width: 0;
+  overflow: hidden;
 }
 
 .timeline-node.event-node:hover {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
 }
 
 .timeline-node.event-node.selected {
@@ -87,62 +89,82 @@
 
 /* 事件头部 */
 .event-header {
-  margin-bottom: 16px;
-  padding-bottom: 12px;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
   border-bottom: 1px solid #F3F4F6;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: nowrap;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .event-time {
-  font-size: 13px;
+  font-size: 12px;
   color: #6B7280;
-  margin-bottom: 8px;
+  font-weight: 500;
 }
 
 .event-title {
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 700;
   color: #111827;
-  margin-bottom: 8px;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .event-theme-tag {
   display: inline-block;
-  font-size: 11px;
-  padding: 4px 10px;
+  font-size: 10px;
+  padding: 2px 8px;
   background: #F3F4F6;
   color: #6B7280;
-  border-radius: 12px;
+  border-radius: 10px;
 }
 
-/* 5个核心槽位 */
+/* 5个核心槽位 - 紧凑两列布局 */
 .event-slots {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 16px;
-  padding: 16px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 6px 12px;
+  margin-bottom: 10px;
+  padding: 10px;
   background: #FAFAFA;
-  border-radius: 12px;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .slot-row {
   display: flex;
-  gap: 12px;
-  align-items: flex-start;
+  gap: 6px;
+  align-items: center;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .slot-label {
-  min-width: 80px;
-  font-size: 13px;
+  flex-shrink: 0;
+  font-size: 11px;
   font-weight: 500;
-  color: #6B7280;
+  color: #9CA3AF;
+  white-space: nowrap;
 }
 
 .slot-value {
   flex: 1;
-  font-size: 14px;
+  min-width: 0;
+  font-size: 12px;
   color: #374151;
-  line-height: 1.5;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .slot-value em {
@@ -151,24 +173,21 @@
 }
 
 .event-description {
-  max-height: 80px;
   overflow: hidden;
   text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
+  white-space: nowrap;
 }
 
 .reflection-text {
-  color: #4B5563;
+  color: #6B7280;
   font-style: italic;
 }
 
 /* 分析指标 */
 .event-metrics {
   display: flex;
-  gap: 24px;
-  padding-top: 16px;
+  gap: 16px;
+  padding-top: 10px;
   border-top: 1px solid #F3F4F6;
 }
 
@@ -178,35 +197,35 @@
 
 .metric-label {
   display: block;
-  font-size: 12px;
+  font-size: 11px;
   color: #6B7280;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 
 .metric-bar-wrapper {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
 }
 
 .metric-bar {
   flex: 1;
-  height: 8px;
+  height: 6px;
   background: #E5E7EB;
-  border-radius: 4px;
+  border-radius: 3px;
   overflow: hidden;
 }
 
 .metric-fill {
   height: 100%;
-  border-radius: 4px;
+  border-radius: 3px;
   transition: width 0.3s ease;
 }
 
 .metric-value {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
-  min-width: 50px;
+  min-width: 40px;
   text-align: right;
 }
 
@@ -218,8 +237,8 @@
 }
 
 .depth-pip {
-  width: 24px;
-  height: 8px;
+  width: 18px;
+  height: 6px;
   background: #E5E7EB;
   border-radius: 2px;
   transition: background 0.2s ease;
@@ -230,8 +249,8 @@
 }
 
 .depth-value {
-  margin-left: 8px;
-  font-size: 13px;
+  margin-left: 6px;
+  font-size: 11px;
   font-weight: 600;
   color: #3B82F6;
 }
@@ -240,36 +259,40 @@
 .event-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 12px;
+  gap: 4px;
+  margin-top: 8px;
 }
 
 .tag-item {
-  font-size: 11px;
-  padding: 4px 10px;
+  font-size: 10px;
+  padding: 2px 8px;
   background: #EFF6FF;
   color: #3B82F6;
-  border-radius: 12px;
+  border-radius: 10px;
 }
 
 /* 响应式 */
 @media (max-width: 768px) {
   .timeline-events {
-    padding-left: 24px;
+    padding-left: 20px;
   }
 
   .timeline-line {
-    left: 6px;
+    left: 4px;
   }
 
   .timeline-dot {
-    left: -22px;
+    left: -18px;
     width: 12px;
     height: 12px;
   }
 
   .event-metrics {
     flex-direction: column;
-    gap: 16px;
+    gap: 8px;
+  }
+
+  .event-slots {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
