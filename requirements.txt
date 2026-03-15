@@ -1,3 +1,5 @@
-'camel-ai[all]'
-pyyaml
+openai
+python-dotenv
 flask
+pyyaml
+jinja2

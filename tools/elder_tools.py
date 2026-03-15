@@ -1,8 +1,5 @@
-from camel.toolkits import FunctionTool
-
 import json
 from typing import List, Optional, Dict, Any
-from datetime import datetime
 
 class ElderMemorySystem:
     """老人记忆系统"""
@@ -221,24 +218,102 @@ class ElderMemorySystem:
         return related_memories
 
 
-def get_tools(ms:ElderMemorySystem) -> List[FunctionTool]:
-    """获取老人记忆系统的工具列表"""
-    tools = [
-            FunctionTool(ms.search_memories_by_keywords),
-            FunctionTool(ms.get_memory_by_id),
-            FunctionTool(ms.search_memories_by_tags),
-            FunctionTool(ms.get_memories_by_period),
-            FunctionTool(ms.get_related_memories),
-        ]
-    return tools
+def get_tool_schemas() -> List[Dict[str, Any]]:
+    """返回 OpenAI function call 格式的工具 schema 列表"""
+    return [
+        {
+            "type": "function",
+            "function": {
+                "name": "search_memories_by_keywords",
+                "description": "根据关键词搜索老人记忆",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "keywords": {"type": "array", "items": {"type": "string"}, "description": "搜索关键词列表"},
+                        "period": {"type": "string", "description": "时期限制，如 period_1"},
+                        "emotion_weight": {"type": "integer", "description": "情感强度过滤（最低值）"},
+                        "limit": {"type": "integer", "description": "返回结果数量限制", "default": 5},
+                    },
+                    "required": ["keywords"],
+                },
+            },
+        },
+        {
+            "type": "function",
+            "function": {
+                "name": "get_memory_by_id",
+                "description": "根据记忆ID获取特定记忆",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "memory_id": {"type": "string", "description": "记忆ID"},
+                    },
+                    "required": ["memory_id"],
+                },
+            },
+        },
+        {
+            "type": "function",
+            "function": {
+                "name": "search_memories_by_tags",
+                "description": "根据标签搜索记忆",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "tags": {"type": "array", "items": {"type": "string"}, "description": "标签列表"},
+                        "period": {"type": "string", "description": "时期限制"},
+                        "limit": {"type": "integer", "description": "返回结果数量限制", "default": 5},
+                    },
+                    "required": ["tags"],
+                },
+            },
+        },
+        {
+            "type": "function",
+            "function": {
+                "name": "get_memories_by_period",
+                "description": "获取特定时期的记忆",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "period": {"type": "string", "description": "时期名称"},
+                        "sort_by_emotion": {"type": "boolean", "description": "是否按情感强度排序"},
+                        "limit": {"type": "integer", "description": "返回结果数量限制", "default": 10},
+                    },
+                    "required": ["period"],
+                },
+            },
+        },
+        {
+            "type": "function",
+            "function": {
+                "name": "get_related_memories",
+                "description": "获取与指定记忆相关的记忆",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "memory_id": {"type": "string", "description": "源记忆ID"},
+                        "max_related": {"type": "integer", "description": "最大相关记忆数量", "default": 3},
+                    },
+                    "required": ["memory_id"],
+                },
+            },
+        },
+    ]
 
-def get_tools_schemas(tools:List[FunctionTool]) -> List[Dict[str, Any]]:
-    tools_schemas = []
-    for tool in tools:
-        tools_schemas.append(tool.get_openai_function_schema())
-    return tools_schemas
+
+def get_tool_callables(ms: ElderMemorySystem) -> Dict[str, Any]:
+    """返回工具名称到可调用函数的映射"""
+    return {
+        "search_memories_by_keywords": ms.search_memories_by_keywords,
+        "get_memory_by_id": ms.get_memory_by_id,
+        "search_memories_by_tags": ms.search_memories_by_tags,
+        "get_memories_by_period": ms.get_memories_by_period,
+        "get_related_memories": ms.get_related_memories,
+    }
+
 
 if __name__ == "__main__":
     ms = ElderMemorySystem("prompts/roles/elder_profile_example.json")
-    tools = get_tools(ms)
-    print(get_tools_schemas(tools))
+    import pprint
+    pprint.pprint(get_tool_schemas())

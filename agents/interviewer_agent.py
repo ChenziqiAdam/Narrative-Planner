@@ -6,7 +6,7 @@ import re
 import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from config import Config
-from openai import OpenAI
+from agents.base_agent import BaseAgent
 
 logging.basicConfig(
     level=Config.LOG_LEVEL,
@@ -23,21 +23,17 @@ class InterviewerAgent:
     """负责提问的访谈者 Agent"""
 
     def __init__(self):
-        self.client = OpenAI(
-            api_key=Config.MOONSHOT_API_KEY,
-            base_url=Config.MOONSHOT_BASE_URL,
-        )
-        self.conversation_history = []
-
         with open(Config.INTERVIEWER_SYSTEM_PROMPT, 'r', encoding='utf-8') as f:
             self.system_prompt = f.read()
 
+        self.agent = BaseAgent(system_prompt=self.system_prompt)
         logger.info("InterviewerAgent 初始化完成")
 
     def initialize_conversation(self, basic_info):
         """初始化对话，注入受访者基本信息"""
         system_message = self.system_prompt.replace("[用户的基本生平信息]", basic_info)
-        self.conversation_history = [{"role": "system", "content": system_message}]
+        self.agent.system_prompt = system_message
+        self.agent.reset()
         logger.info(f"对话已初始化，基本信息: {basic_info}")
 
     def get_next_question(self, interviewee_response=None):
@@ -46,18 +42,10 @@ class InterviewerAgent:
         Returns:
             dict: {"action": "continue"|"next_phase"|"end", "question": str}
         """
-        if interviewee_response:
-            self.conversation_history.append({"role": "user", "content": interviewee_response})
-
+        message = interviewee_response or "请开始访谈"
         try:
-            response = self.client.chat.completions.create(
-                model=Config.MODEL_NAME,
-                messages=self.conversation_history,
-            )
-            raw = response.choices[0].message.content
-            self.conversation_history.append({"role": "assistant", "content": raw})
+            raw = self.agent.step(message)
 
-            # Parse JSON response
             cleaned = re.sub(r"```(?:json)?|```", "", raw).strip()
             parsed = json.loads(cleaned)
             action = parsed.get("action", "continue")
@@ -66,7 +54,6 @@ class InterviewerAgent:
             return {"action": action, "question": question}
 
         except (json.JSONDecodeError, ValueError) as e:
-            # Fallback: treat raw text as a continue question
             logger.warning(f"JSON解析失败，回退到原始文本: {e}")
             return {"action": "continue", "question": raw}
         except Exception as e:

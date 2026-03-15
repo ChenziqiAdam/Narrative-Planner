@@ -36,7 +36,7 @@ class Config:
     # interviewer_agent 使用的系统提示词文件路径
     INTERVIEWER_SYSTEM_PROMPT = os.getenv(
         'INTERVIEWER_SYSTEM_PROMPT',
-        'prompts/interviewer_system_prompt.txt'
+        'prompts/interviewer_system_prompt.md'
     )
 
 # 创建必要的目录

@@ -103,8 +103,7 @@ def auto_interview():
         while True:
             # Interviewee answers
             prompt = agents["interviewee"]._load_step_prompt(agents["interviewee"].history, last_question)
-            response = agents["interviewee"].agent.step(prompt)
-            raw_answer = response.msg.content
+            raw_answer = agents["interviewee"].agent.step(prompt)
             answer = extract_reply(raw_answer)
             agents["interviewee"].history += f"Q: {last_question}\nA: {answer}\n"
             agents["history"].append({"role": "interviewee", "text": answer})
