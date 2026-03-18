@@ -29,13 +29,13 @@ const CoverageDashboard: React.FC<CoverageDashboardProps> = ({
     { label: '已挖透', count: exhausted_themes, color: '#10B981', status: NodeStatus.EXHAUSTED },
   ]
 
-  // 维度覆盖率
+  // 维度覆盖率（5个维度：时间、地点、人物、事件、感受）
   const dimensionLabels: Record<string, string> = {
     time: '时间维度',
-    space: '空间维度',
+    location: '空间维度',
     people: '人物维度',
-    emotion: '情感维度',
-    reflection: '反思维度',
+    event: '事件维度',
+    reflection: '感受维度',
   }
 
   return (
