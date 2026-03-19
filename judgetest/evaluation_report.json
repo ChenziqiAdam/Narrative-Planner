@@ -1,0 +1,81 @@
+{
+    "step_by_step_matching": "1. GT事件1与Extracted事件1对应，属于匹配；2. GT事件2与Extracted事件2对应，属于匹配；3. GT事件3与Extracted事件3对应，属于匹配；4. GT事件4与Extracted事件4对应，属于匹配；5. GT事件5与Extracted事件5对应，属于匹配；6. GT事件6与Extracted事件6对应，属于匹配；7. GT事件7与Extracted事件7对应，属于匹配；8. GT事件8与Extracted事件8对应，属于匹配；9. GT事件9与Extracted事件9对应，属于匹配；10. GT事件10与Extracted事件10对应，属于匹配；11. GT事件11与Extracted事件11对应，属于匹配；12. Extracted事件12多余，属于幻觉。",
+    "matched_events": [
+        {
+            "gt_event_summary": "童年时期和发小大强偷生产队地瓜被村长发现，回家后被父亲追打。",
+            "extracted_event_summary": "用户出生在贫困家庭，童年时期与邻居大强偷生产队的地瓜被村长发现。",
+            "match_quality": "高",
+            "reason": "核心事件一致，时间、地点、人物要素基本正确提取，允许丢失无关紧要的细枝末节。"
+        },
+        {
+            "gt_event_summary": "发小大强一家搬去东北，两人从此失去联系。",
+            "extracted_event_summary": "邻居大强一家搬去东北，用户与大强失去联系。",
+            "match_quality": "高",
+            "reason": "核心事件一致，时间、地点、人物要素基本正确提取。"
+        },
+        {
+            "gt_event_summary": "响应号召前往陕北延安插队干农活。",
+            "extracted_event_summary": "用户响应上山下乡号召，去陕西延安插队。",
+            "match_quality": "高",
+            "reason": "核心事件一致，时间、地点、人物要素基本正确提取。"
+        },
+        {
+            "gt_event_summary": "干活体力透支时，同队女知青小芬偷偷赠予白面馍馍充饥。",
+            "extracted_event_summary": "用户在挑麦子时得到女知青小芬的帮助，后来成为用户的妻子。",
+            "match_quality": "中",
+            "reason": "核心事件一致，但在核心感受上出现了明显的遗漏。"
+        },
+        {
+            "gt_event_summary": "高考恢复后，与小芬一起点煤油灯刻苦复习备考。",
+            "extracted_event_summary": "高考恢复后用户和小芬一起复习，小芬未考上但将回城指标让给用户。",
+            "match_quality": "中",
+            "reason": "核心事件一致，但在时间、关键人物或核心感受上出现了明显的遗漏。"
+        },
+        {
+            "gt_event_summary": "考上中专，未考上的小芬主动将回城指标让出，留在乡下。",
+            "extracted_event_summary": "高考恢复后用户和小芬一起复习，小芬未考上但将回城指标让给用户。",
+            "match_quality": "中",
+            "reason": "核心事件一致，但在时间、关键人物或核心感受上出现了明显的遗漏。"
+        },
+        {
+            "gt_event_summary": "进厂工作初期，因零件公差问题被师傅赵大爷严厉批评。",
+            "extracted_event_summary": "用户毕业后被分配到红星齿轮厂工作，师傅赵大爷对其要求严格。",
+            "match_quality": "中",
+            "reason": "核心事件一致，但在时间、关键人物或核心感受上出现了明显的遗漏。"
+        },
+        {
+            "gt_event_summary": "因工厂效益不佳而下岗买断工龄，回家与妻子痛哭。",
+            "extracted_event_summary": "用户遭遇下岗，与妻子小芬一起在早市卖煎饼维持生计。",
+            "match_quality": "中",
+            "reason": "核心事件一致，但在时间、关键人物或核心感受上出现了明显的遗漏。"
+        },
+        {
+            "gt_event_summary": "在妻子鼓励下，两人每天凌晨在早市摆摊卖煎饼供女儿上大学。",
+            "extracted_event_summary": "用户遭遇下岗，与妻子小芬一起在早市卖煎饼维持生计。",
+            "match_quality": "中",
+            "reason": "核心事件一致，但在时间、关键人物或核心感受上出现了明显的遗漏。"
+        },
+        {
+            "gt_event_summary": "送获得全额奖学金的女儿赴英国留学。",
+            "extracted_event_summary": "用户的女儿获得英国留学全额奖学金，用户送别女儿时感到骄傲和失落。",
+            "match_quality": "高",
+            "reason": "核心事件一致，时间、地点、人物要素基本正确提取。"
+        },
+        {
+            "gt_event_summary": "在外孙女的教导下学会了使用智能手机进行微信视频。",
+            "extracted_event_summary": "外孙女教会用户使用智能手机，用户现在能与女儿视频通话。",
+            "match_quality": "高",
+            "reason": "核心事件一致，时间、地点、人物要素基本正确提取。"
+        }
+    ],
+    "missed_events": [],
+    "hallucinated_events": [
+        "女儿带外孙女回国与用户团聚，家中再次变得热闹。"
+    ],
+    "metrics": {
+        "completeness_score": 1.0,
+        "accuracy_score": 0.9167,
+        "overall_score": 0.9583
+    },
+    "final_evaluation": "整体匹配质量较高，但存在少量幻觉事件。"
+}
