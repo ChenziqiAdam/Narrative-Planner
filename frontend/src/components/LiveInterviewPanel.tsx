@@ -14,7 +14,6 @@ import {
   ChatMessage,
   WSConnectionStatus,
   ExtractedEvent,
-  ThemeStatusUpdate,
 } from '../types/websocket'
 import { GraphState } from '../types'
 import './LiveInterviewPanel.css'
@@ -37,8 +36,6 @@ interface LiveInterviewPanelProps {
   onReconnect: () => void
   /** 当前图谱状态（用于显示上下文） */
   graphState?: GraphState | null
-  /** 当前主题ID（用于上下文） */
-  currentThemeId?: string
   /** 是否禁用输入 */
   disabled?: boolean
   /** 自定义类名 */
@@ -253,7 +250,6 @@ const LiveInterviewPanel: React.FC<LiveInterviewPanelProps> = ({
   onSendMessage,
   onReconnect,
   graphState,
-  currentThemeId,
   disabled = false,
   className = '',
 }) => {

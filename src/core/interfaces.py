@@ -95,22 +95,26 @@ class ExtractedEvent:
 @dataclass
 class DialogueTurn:
     """单轮对话记录"""
+    # 必需字段（无默认值）
     turn_id: str
     session_id: str
     timestamp: datetime
-
-    # 访谈者
     interviewer_question: str
     interviewer_action: str  # continue|next_phase|end
-    interviewer_intent: Optional[str] = None
-
-    # 受访者
     interviewee_raw_reply: str
+
+    # 可选字段（有默认值）
+    interviewer_intent: Optional[str] = None
     interviewee_emotion: Optional[str] = None
     interviewee_memories_referenced: List[str] = field(default_factory=list)
-
-    # 提取的事件
     extracted_events: List[ExtractedEvent] = field(default_factory=list)
+
+    def __post_init__(self):
+        """确保列表字段有默认值"""
+        if self.interviewee_memories_referenced is None:
+            self.interviewee_memories_referenced = []
+        if self.extracted_events is None:
+            self.extracted_events = []
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -147,11 +151,13 @@ class GraphUpdateEvent:
 @dataclass
 class EventAddedUpdate(GraphUpdateEvent):
     """新事件添加更新"""
-    event: ExtractedEvent
+    event: ExtractedEvent = field(default=None)  # type: ignore
     theme_id: Optional[str] = None
 
     def __post_init__(self):
         self.update_type = "event_added"
+        if self.event is None:
+            raise ValueError("event is required")
 
     def to_dict(self) -> Dict[str, Any]:
         base = super().to_dict()
@@ -163,12 +169,14 @@ class EventAddedUpdate(GraphUpdateEvent):
 @dataclass
 class EventUpdatedUpdate(GraphUpdateEvent):
     """事件更新"""
-    event_id: str
-    updated_slots: Dict[str, Any]
-    new_confidence: float
+    event_id: str = ""
+    updated_slots: Dict[str, Any] = field(default_factory=dict)
+    new_confidence: float = 0.0
 
     def __post_init__(self):
         self.update_type = "event_updated"
+        if not self.event_id:
+            raise ValueError("event_id is required")
 
     def to_dict(self) -> Dict[str, Any]:
         base = super().to_dict()
@@ -181,12 +189,16 @@ class EventUpdatedUpdate(GraphUpdateEvent):
 @dataclass
 class ThemeStatusUpdate(GraphUpdateEvent):
     """主题状态变更"""
-    theme_id: str
-    old_status: NodeStatus
-    new_status: NodeStatus
+    theme_id: str = ""
+    old_status: NodeStatus = field(default=None)  # type: ignore
+    new_status: NodeStatus = field(default=None)  # type: ignore
 
     def __post_init__(self):
         self.update_type = "theme_status_changed"
+        if not self.theme_id:
+            raise ValueError("theme_id is required")
+        if self.old_status is None or self.new_status is None:
+            raise ValueError("old_status and new_status are required")
 
     def to_dict(self) -> Dict[str, Any]:
         base = super().to_dict()

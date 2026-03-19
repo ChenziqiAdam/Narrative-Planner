@@ -12,7 +12,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import {
   WSMessage,
-  WSMessageType,
   TokenMessage,
   ResponseCompleteMessage,
   EventAddedMessage,
@@ -31,7 +30,7 @@ import {
 import { GraphState } from '../types'
 
 /** WebSocket服务器地址 */
-const WS_BASE_URL = import.meta.env.VITE_WS_URL || 'ws://localhost:8000/ws'
+const WS_BASE_URL = (import.meta as { env?: { VITE_WS_URL?: string } }).env?.VITE_WS_URL || 'ws://localhost:8000/ws'
 
 /**
  * 创建WebSocket URL
@@ -85,9 +84,9 @@ export function useGraphWebSocket(options: WSConnectionOptions): UseGraphWebSock
   // 重连计数器
   const reconnectCountRef = useRef(0)
   // 重连定时器
-  const reconnectTimerRef = useRef<NodeJS.Timeout | null>(null)
+  const reconnectTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   // 心跳定时器
-  const heartbeatTimerRef = useRef<NodeJS.Timeout | null>(null)
+  const heartbeatTimerRef = useRef<ReturnType<typeof setInterval> | null>(null)
   // 当前流式消息ID
   const currentMessageIdRef = useRef<string | null>(null)
   // 稳定的回调引用

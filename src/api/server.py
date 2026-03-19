@@ -18,7 +18,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 # 导入项目模块
-from src.api.websocket_manager import WebSocketManager
+from src.api.websocket_manager import websocket_manager
 from src.core.graph_manager import GraphManager
 from src.core.event_node import EventNode
 from src.config import Config
@@ -80,9 +80,6 @@ class SessionEndResponse(BaseModel):
 # 会话存储: session_id -> GraphManager
 active_graphs: Dict[str, GraphManager] = {}
 
-# WebSocket连接管理器
-ws_manager = WebSocketManager()
-
 
 # ==================== 生命周期管理 ====================
 
@@ -91,7 +88,7 @@ async def lifespan(app: FastAPI):
     """
     应用生命周期管理
 
-n    启动时初始化，关闭时清理资源。
+    启动时初始化，关闭时清理资源。
     """
     # 启动
     logger.info("=" * 50)
@@ -106,6 +103,9 @@ n    启动时初始化，关闭时清理资源。
     logger.info("动态事件图谱 API 服务关闭")
     logger.info(f"清理 {len(active_graphs)} 个活动会话")
     logger.info("=" * 50)
+
+    # 关闭所有WebSocket连接
+    await websocket_manager.close_all_connections()
 
     # 清理所有会话
     active_graphs.clear()
@@ -155,15 +155,18 @@ async def interview_websocket(websocket: WebSocket, session_id: str):
     client_id = str(uuid.uuid4())[:8]
 
     try:
-        # 接受连接
-        await ws_manager.connect(websocket, session_id, client_id)
+        # 接受连接 - 使用新的接口参数顺序
+        await websocket_manager.connect(session_id, client_id, websocket)
 
         # 检查会话是否存在
         if session_id not in active_graphs:
-            await ws_manager.send_system_message(
+            await websocket_manager.broadcast_to_session(
                 session_id,
-                "error",
-                {"code": "SESSION_NOT_FOUND", "message": f"会话 {session_id} 不存在，请先创建会话"}
+                {
+                    "type": "system",
+                    "message_type": "error",
+                    "content": {"code": "SESSION_NOT_FOUND", "message": f"会话 {session_id} 不存在，请先创建会话"}
+                }
             )
             await websocket.close(code=4004, reason="Session not found")
             return
@@ -171,13 +174,16 @@ async def interview_websocket(websocket: WebSocket, session_id: str):
         graph_manager = active_graphs[session_id]
 
         # 发送连接成功消息
-        await ws_manager.send_system_message(
+        await websocket_manager.broadcast_to_session(
             session_id,
-            "connected",
             {
-                "session_id": session_id,
-                "client_id": client_id,
-                "graph_state": graph_manager.get_graph_state()
+                "type": "system",
+                "message_type": "connected",
+                "content": {
+                    "session_id": session_id,
+                    "client_id": client_id,
+                    "graph_state": graph_manager.get_graph_state()
+                }
             }
         )
 
@@ -192,10 +198,13 @@ async def interview_websocket(websocket: WebSocket, session_id: str):
                     # 处理用户消息
                     user_content = data.get("content", "").strip()
                     if not user_content:
-                        await ws_manager.send_system_message(
+                        await websocket_manager.broadcast_to_session(
                             session_id,
-                            "error",
-                            {"code": "EMPTY_MESSAGE", "message": "消息内容不能为空"}
+                            {
+                                "type": "system",
+                                "message_type": "error",
+                                "content": {"code": "EMPTY_MESSAGE", "message": "消息内容不能为空"}
+                            }
                         )
                         continue
 
@@ -210,10 +219,13 @@ async def interview_websocket(websocket: WebSocket, session_id: str):
                 elif msg_type == "get_graph_state":
                     # 请求图谱状态
                     state = graph_manager.get_graph_state()
-                    await ws_manager.send_system_message(
+                    await websocket_manager.broadcast_to_session(
                         session_id,
-                        "graph_state",
-                        state
+                        {
+                            "type": "system",
+                            "message_type": "graph_state",
+                            "content": state
+                        }
                     )
 
                 else:
@@ -224,10 +236,13 @@ async def interview_websocket(websocket: WebSocket, session_id: str):
                 break
             except Exception as e:
                 logger.error(f"处理消息时出错: {e}", exc_info=True)
-                await ws_manager.send_system_message(
+                await websocket_manager.broadcast_to_session(
                     session_id,
-                    "error",
-                    {"code": "PROCESSING_ERROR", "message": str(e)}
+                    {
+                        "type": "system",
+                        "message_type": "error",
+                        "content": {"code": "PROCESSING_ERROR", "message": str(e)}
+                    }
                 )
 
     except WebSocketDisconnect:
@@ -235,7 +250,7 @@ async def interview_websocket(websocket: WebSocket, session_id: str):
     except Exception as e:
         logger.error(f"WebSocket错误 - 会话: {session_id}, 客户端: {client_id}: {e}", exc_info=True)
     finally:
-        ws_manager.disconnect(session_id, client_id)
+        await websocket_manager.disconnect(session_id, client_id)
 
 
 async def _process_user_message_stream(
@@ -256,11 +271,17 @@ async def _process_user_message_stream(
 
     # 流式发送token
     for char in response_text:
-        await ws_manager.broadcast_token(session_id, char, is_final=False)
+        await websocket_manager.broadcast_to_session(
+            session_id,
+            {"type": "token", "token": char, "is_final": False}
+        )
         await asyncio.sleep(0.02)  # 模拟延迟
 
     # 发送结束标记
-    await ws_manager.broadcast_token(session_id, "", is_final=True)
+    await websocket_manager.broadcast_to_session(
+        session_id,
+        {"type": "token", "token": "", "is_final": True}
+    )
 
     # 模拟事件提取和图谱更新
     # TODO: 实际应调用EventExtractor
@@ -277,14 +298,17 @@ async def _process_user_message_stream(
         graph_manager.add_event_node(event, event.theme_id)
 
         # 广播图谱更新
-        await ws_manager.broadcast_graph_update(
+        await websocket_manager.broadcast_to_session(
             session_id,
-            "event_added",
             {
-                "event_id": event.event_id,
-                "theme_id": event.theme_id,
-                "title": event.title,
-                "graph_state": graph_manager.get_graph_state()
+                "type": "graph_update",
+                "update_type": "event_added",
+                "data": {
+                    "event_id": event.event_id,
+                    "theme_id": event.theme_id,
+                    "title": event.title,
+                    "graph_state": graph_manager.get_graph_state()
+                }
             }
         )
 
@@ -409,7 +433,8 @@ async def end_session(session_id: str):
 
     try:
         # 获取连接数
-        connection_count = ws_manager.get_session_connection_count(session_id)
+        stats = websocket_manager.get_session_stats(session_id)
+        connection_count = stats.get("client_count", 0)
 
         # 清理图谱数据
         del active_graphs[session_id]
@@ -504,7 +529,7 @@ async def health_check():
         "status": "healthy",
         "timestamp": datetime.now().isoformat(),
         "active_sessions": len(active_graphs),
-        "total_websocket_connections": ws_manager.get_total_connection_count()
+        "total_websocket_connections": websocket_manager.get_all_stats()["total_clients"]
     }
 
 
