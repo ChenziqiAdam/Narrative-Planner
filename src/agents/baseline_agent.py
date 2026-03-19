@@ -44,7 +44,10 @@ class BaselineAgent:
 
     def initialize_conversation(self, basic_info: str):
         system_message = self.system_prompt.replace("[用户的基本生平信息]", basic_info)
-        self.conversation_history = [{"role": "system", "content": system_message}]
+        self.conversation_history = [
+            {"role": "system", "content": system_message},
+            {"role": "user", "content": "请开始访谈，先向受访者问好并提出第一个问题。"},
+        ]
         logger.info("Baseline conversation initialized")
 
     def get_next_question(self, user_response: str | None = None):
@@ -57,8 +60,9 @@ class BaselineAgent:
                 messages=self.conversation_history,
                 max_tokens=4096,
             )
-            question = response.choices[0].message.content or ""
-            self.conversation_history.append({"role": "assistant", "content": question})
+            question = (response.choices[0].message.content or "").strip()
+            if question:
+                self.conversation_history.append({"role": "assistant", "content": question})
             logger.info("Baseline generated next turn")
             return question
         except Exception as exc:
