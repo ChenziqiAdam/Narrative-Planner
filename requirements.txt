@@ -1,0 +1,10 @@
+camel-ai[all]
+faiss-cpu
+sentence-transformers
+numpy
+networkx
+python-dotenv
+openai
+# scikit-learn
+tencentcloud-sdk-python
+# torch
