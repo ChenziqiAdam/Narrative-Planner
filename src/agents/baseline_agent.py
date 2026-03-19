@@ -40,9 +40,9 @@ class BaselineAgent:
         """
         self.session_id = session_id or datetime.now().strftime("%Y%m%d_%H%M%S")
         # 支持自定义 base_url（如 Kimi、智谱等 OpenAI 兼容 API）
-        client_kwargs = {"api_key": Config.OPENAI_API_KEY}
-        if Config.OPENAI_BASE_URL:
-            client_kwargs["base_url"] = Config.OPENAI_BASE_URL
+        client_kwargs = {"api_key": Config.MOONSHOT_API_KEY}
+        if Config.MOONSHOT_API_KEY:
+            client_kwargs["base_url"] = Config.MOONSHOT_API_KEY
         self.client = OpenAI(**client_kwargs)
         self.conversation_history = []
 
@@ -133,8 +133,8 @@ class BaselineAgent:
 
 if __name__ == "__main__":
     # 检查API密钥
-    if not Config.OPENAI_API_KEY:
-        print("错误: 请先在 .env 文件中设置 OPENAI_API_KEY")
+    if not Config.MOONSHOT_API_KEY:
+        print("错误: 请先在 .env 文件中设置 MOONSHOT_API_KEY")
         sys.exit(1)
 
     agent = BaselineAgent()

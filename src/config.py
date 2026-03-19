@@ -18,7 +18,7 @@ class Config:
     REQUEST_TIMEOUT = int(os.getenv('REQUEST_TIMEOUT', 30))
     
     # 文件路径
-    PROMPTS_DIR = 'prompts'
+    PROMPTS_DIR = 'src/prompts'
     DATA_DIR = 'data'
     LOGS_DIR = 'logs'
 
