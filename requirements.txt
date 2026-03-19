@@ -5,6 +5,8 @@ numpy
 networkx
 python-dotenv
 openai
+flask
+flask-sock
 # scikit-learn
 tencentcloud-sdk-python
 # torch

@@ -52,6 +52,16 @@ const DOMAIN_CONFIG: Record<string, { color: string; bgColor: string; icon: stri
     bgColor: '#FDF2F8',
     icon: '💭',
   },
+  [Domain.PERSONAL_IDEOLOGY]: {
+    color: '#EC4899',
+    bgColor: '#FDF2F8',
+    icon: '💭',
+  },
+  [Domain.CONTEXT_MANAGEMENT]: {
+    color: '#6B7280',
+    bgColor: '#F9FAFB',
+    icon: '🧭',
+  },
 }
 
 // 领域中文名称
@@ -61,6 +71,8 @@ const DOMAIN_NAMES: Record<string, string> = {
   [Domain.FUTURE_SCRIPTS]: '未来剧本',
   [Domain.CHALLENGES]: '挑战',
   [Domain.PERSONAL_THOUGHTS]: '个人思想',
+  [Domain.PERSONAL_IDEOLOGY]: '个人思想',
+  [Domain.CONTEXT_MANAGEMENT]: '上下文管理',
 }
 
 // 状态标签
@@ -100,7 +112,7 @@ const ThemeView: React.FC<ThemeViewProps> = ({
     const theme = graphState.theme_nodes[themeId]
     if (!theme) return []
 
-    return theme.extracted_events
+    return (theme.extracted_events || [])
       .map(eventId => graphState.event_nodes[eventId])
       .filter(Boolean)
   }
@@ -112,6 +124,8 @@ const ThemeView: React.FC<ThemeViewProps> = ({
     Domain.FUTURE_SCRIPTS,
     Domain.CHALLENGES,
     Domain.PERSONAL_THOUGHTS,
+    Domain.PERSONAL_IDEOLOGY,
+    Domain.CONTEXT_MANAGEMENT,
   ]
 
   return (
@@ -182,10 +196,10 @@ const ThemeView: React.FC<ThemeViewProps> = ({
                           </div>
                           <div className="theme-meta">
                             <span className="meta-item">
-                              📋 {theme.extracted_events.length} 事件
+                              📋 {(theme.extracted_events || []).length} 事件
                             </span>
                             <span className="meta-item">
-                              ✓ {Object.values(theme.slots_filled).filter(Boolean).length} 槽位
+                              ✓ {Object.values(theme.slots_filled || {}).filter(Boolean).length} 槽位
                             </span>
                           </div>
                         </div>

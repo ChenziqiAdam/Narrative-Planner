@@ -1,0 +1,4 @@
+Config check: OPENAI_API_KEY = SET
+Config.PROMPTS_DIR = C:\Users\Jenny\Desktop\narrative planner\src\prompts
+ * Serving Flask app 'src.app'
+ * Debug mode: off

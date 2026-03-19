@@ -456,3 +456,72 @@ body {
     font-size: 10px;
   }
 }
+
+/* ==================== 连接状态 ==================== */
+.connection-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px;
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-text-muted);
+  transition: background var(--transition-fast);
+}
+
+.status-dot.connected {
+  background: var(--color-success);
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+}
+
+.status-dot.disconnected {
+  background: var(--color-danger);
+}
+
+.session-id {
+  color: var(--color-text-secondary);
+  font-family: monospace;
+  font-size: 12px;
+}
+
+/* ==================== 加载和错误状态 ==================== */
+.app-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: var(--color-bg-primary);
+}
+
+.loading-content {
+  text-align: center;
+}
+
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 16px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.app-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: var(--color-bg-primary);
+}
+
+.error-content {
+  text-align: center;
+}

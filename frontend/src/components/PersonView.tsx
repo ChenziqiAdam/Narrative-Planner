@@ -87,16 +87,18 @@ const PersonView: React.FC<PersonViewProps> = ({
 
   // 转换数据为 G6 格式
   const transformData = useCallback((): GraphData => {
-    const { people_nodes, event_nodes, theme_nodes, elder_info } = graphState
+    const peopleNodes = graphState.people_nodes || {}
+    const eventNodes = graphState.event_nodes || {}
+    const themeNodes = graphState.theme_nodes || {}
+    const elderInfo = graphState.elder_info
     const nodes: NodeData[] = []
     const edges: { source: string; target: string }[] = []
 
     // 根节点 - 受访者
     nodes.push({
       id: 'root',
-      type: 'root-node',
       style: {
-        labelText: elder_info?.name || '受访者',
+        labelText: elderInfo?.name || '受访者',
         labelFill: '#111827',
         labelFontSize: 16,
         labelFontWeight: 'bold',
@@ -116,7 +118,7 @@ const PersonView: React.FC<PersonViewProps> = ({
       '其他': [],
     }
 
-    Object.entries(people_nodes).forEach(([id, person]) => {
+    Object.entries(peopleNodes).forEach(([id, person]) => {
       const group = getRelationGroup(person.relation)
       groups[group].push([id, person])
     })
@@ -135,7 +137,6 @@ const PersonView: React.FC<PersonViewProps> = ({
       // 类别节点
       nodes.push({
         id: groupId,
-        type: 'group-node',
         style: {
           labelText: `${config.icon} ${group}`,
           labelFill: config.color,
@@ -151,13 +152,12 @@ const PersonView: React.FC<PersonViewProps> = ({
       edges.push({ source: 'root', target: groupId })
 
       // 人物节点
-      people.forEach(([personId, person], index) => {
+      people.forEach(([personId, person]) => {
         const isSelected = selectedNodeId === personId
         const personNodeId = `person-${personId}`
 
         nodes.push({
           id: personNodeId,
-          type: 'person-node',
           style: {
             labelText: person.name,
             labelFill: '#374151',
@@ -173,17 +173,17 @@ const PersonView: React.FC<PersonViewProps> = ({
 
         // 相关事件节点
         const events = person.related_events
-          .map(id => event_nodes[id])
+          .map(id => eventNodes[id])
           .filter(Boolean)
           .filter(event => {
             if (filterStatus === 'all') return true
-            const theme = theme_nodes[event.theme_id]
+            const theme = themeNodes[event.theme_id]
             return theme?.status === filterStatus
           })
 
-        events.forEach((event, eventIndex) => {
+        events.forEach((event) => {
           const eventNodeId = `event-${event.event_id}`
-          const theme = theme_nodes[event.theme_id]
+          const theme = themeNodes[event.theme_id]
           const statusColor = theme ? STATUS_COLORS[theme.status] : '#9CA3AF'
           const isEventSelected = selectedNodeId === event.event_id
 
@@ -191,7 +191,6 @@ const PersonView: React.FC<PersonViewProps> = ({
           if (!nodes.find(n => n.id === eventNodeId)) {
             nodes.push({
               id: eventNodeId,
-              type: 'event-node',
               style: {
                 labelText: event.title,
                 labelFill: '#4B5563',
@@ -254,7 +253,12 @@ const PersonView: React.FC<PersonViewProps> = ({
 
     // 点击事件
     graph.on('node:click', (evt) => {
-      const nodeData = evt.target.getData()
+      const target = (evt as { target?: { getData?: () => Record<string, unknown> } }).target
+      const nodeData = target?.getData?.()
+      if (!nodeData) {
+        return
+      }
+
       if (nodeData.type === 'person' && nodeData.person) {
         onNodeClickRef.current?.(nodeData.person as PeopleNode, 'person')
       } else if (nodeData.type === 'event' && nodeData.event) {
@@ -297,7 +301,7 @@ const PersonView: React.FC<PersonViewProps> = ({
     // 聚焦到选中节点
     const node = graph.getNodeData(personNodeId) || graph.getNodeData(eventNodeId)
     if (node) {
-      graph.focusElement(node.id, { animation: true })
+      graph.focusElement(node.id)
     }
   }, [selectedNodeId])
 

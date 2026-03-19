@@ -44,10 +44,7 @@ class EventExtractor(IEventExtractor):
             client: 可选的OpenAI客户端实例，如果未提供则使用配置创建
         """
         # 初始化OpenAI客户端
-        self.client = client or OpenAI(
-            api_key=Config.OPENAI_API_KEY,
-            base_url=Config.OPENAI_BASE_URL
-        )
+        self.client = client or OpenAI(**Config.get_openai_client_kwargs())
         self.model = Config.MODEL_NAME
 
         # 异步队列控制
@@ -332,8 +329,7 @@ class EventExtractor(IEventExtractor):
                         },
                         {"role": "user", "content": prompt}
                     ],
-                    temperature=0.3,  # 较低温度以获得更稳定的输出
-                    max_tokens=2000
+                    max_tokens=4096
                 )
             )
 

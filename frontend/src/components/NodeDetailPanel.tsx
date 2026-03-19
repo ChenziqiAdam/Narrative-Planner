@@ -34,6 +34,8 @@ const DomainColors: Record<Domain, string> = {
   [Domain.FUTURE_SCRIPTS]: '#06B6D4',
   [Domain.CHALLENGES]: '#EF4444',
   [Domain.PERSONAL_THOUGHTS]: '#EC4899',
+  [Domain.PERSONAL_IDEOLOGY]: '#EC4899',
+  [Domain.CONTEXT_MANAGEMENT]: '#6B7280',
 }
 
 // 状态标签配置
@@ -159,7 +161,7 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({
                 <h3 className="section-label">人物关系</h3>
                 <div className="relationships-list">
                   {personNode.relationships.map((rel, index) => {
-                    const targetPerson = graphState?.people_nodes[rel.target_id]
+                    const targetPerson = graphState?.people_nodes?.[rel.target_id]
                     return (
                       <div key={index} className="relationship-item">
                         <span className="relation-arrow">→</span>
@@ -215,13 +217,13 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({
             )}
 
             {/* 已提取事件 */}
-            {themeNode.extracted_events.length > 0 && (
+            {(themeNode.extracted_events || []).length > 0 && (
               <div className="info-section">
                 <h3 className="section-label">
-                  已提取事件 ({themeNode.extracted_events.length})
+                  已提取事件 ({(themeNode.extracted_events || []).length})
                 </h3>
                 <div className="events-list">
-                  {themeNode.extracted_events.map((eventId) => {
+                  {(themeNode.extracted_events || []).map((eventId) => {
                     const event = graphState?.event_nodes[eventId]
                     return (
                       <div key={eventId} className="event-tag">
@@ -299,7 +301,7 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({
                 <h3 className="section-label">涉及人物</h3>
                 <div className="people-tags">
                   {eventNode.people_involved.map((personId) => {
-                    const person = graphState?.people_nodes[personId]
+                    const person = graphState?.people_nodes?.[personId]
                     return (
                       <span key={personId} className="person-tag">
                         👤 {person?.name || personId}

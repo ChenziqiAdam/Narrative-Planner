@@ -2,7 +2,7 @@
  * App - 主应用组件
  *
  * 叙事导航者 - 动态事件图谱可视化界面
- * 视图：人物视图（树状）、主题视图（思维导图）、时间轴视图
+ * 适配对比调试系统，支持从URL参数接收sessionId并通过WebSocket接收实时更新
  */
 
 import React, { useState, useEffect, useCallback } from 'react'
@@ -11,6 +11,7 @@ import ThemeView from './components/ThemeView'
 import TimelineCanvas from './components/TimelineCanvas'
 import CoverageDashboard from './components/CoverageDashboard'
 import NodeDetailPanel from './components/NodeDetailPanel'
+import { useGraphWebSocket } from './hooks/useGraphWebSocket'
 import { GraphState, ThemeNode, EventNode, PeopleNode, NodeStatus } from './types'
 import { getMockGraphState } from './data/mockData'
 import './styles/App.css'
@@ -18,31 +19,63 @@ import './styles/App.css'
 type ViewMode = 'person' | 'theme' | 'timeline'
 
 const App: React.FC = () => {
-  // 状态
+  const initialSessionId = new URLSearchParams(window.location.search).get('session')
+  const [sessionId] = useState<string | null>(initialSessionId)
+
+  // 使用WebSocket hook接收实时图谱更新
+  const { connectionStatus, graphState: wsGraphState, isConnected } = useGraphWebSocket({
+    sessionId,
+    onGraphInit: (data) => {
+      console.log('Graph initialized:', data)
+    },
+    onGraphUpdate: (data) => {
+      console.log('Graph updated:', data)
+    },
+    onNewEvent: (event) => {
+      console.log('New event:', event)
+    },
+    onConnected: () => {
+      console.log('WebSocket connected')
+    },
+    onDisconnected: () => {
+      console.log('WebSocket disconnected')
+    },
+  })
+
+  // 本地状态
   const [graphState, setGraphState] = useState<GraphState | null>(null)
   const [loading, setLoading] = useState(true)
   const [selectedNode, setSelectedNode] = useState<{
     node: ThemeNode | EventNode | PeopleNode
     type: 'theme' | 'event' | 'person'
   } | null>(null)
-  const [viewMode, setViewMode] = useState<ViewMode>('person')
+  const [viewMode, setViewMode] = useState<ViewMode>(initialSessionId ? 'theme' : 'person')
   const [filterStatus, setFilterStatus] = useState<NodeStatus | 'all'>('all')
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
 
-  // 加载数据
+  // 加载初始数据（如果有sessionId则等待WebSocket数据，否则使用mock数据）
   useEffect(() => {
-    const loadData = async () => {
-      try {
-        const data = await getMockGraphState()
-        setGraphState(data)
-      } catch (error) {
-        console.error('Failed to load graph data:', error)
-      } finally {
+    if (sessionId) {
+      // 有sessionId时，等待WebSocket数据
+      if (wsGraphState) {
+        setGraphState(wsGraphState)
         setLoading(false)
       }
+    } else {
+      // 无sessionId时，使用mock数据
+      const loadData = async () => {
+        try {
+          const data = await getMockGraphState()
+          setGraphState(data)
+        } catch (error) {
+          console.error('Failed to load graph data:', error)
+        } finally {
+          setLoading(false)
+        }
+      }
+      loadData()
     }
-    loadData()
-  }, [])
+  }, [sessionId, wsGraphState])
 
   // 节点点击处理
   const handleNodeClick = useCallback(
@@ -100,7 +133,8 @@ const App: React.FC = () => {
           </h1>
           {graphState.elder_info && (
             <span className="elder-name">
-              {graphState.elder_info.name} · {graphState.elder_info.age}岁
+              {graphState.elder_info.name}
+              {graphState.elder_info.age ? ` · ${graphState.elder_info.age}岁` : ''}
             </span>
           )}
         </div>
@@ -130,6 +164,12 @@ const App: React.FC = () => {
           </div>
         </div>
         <div className="header-right">
+          {sessionId && (
+            <div className="connection-status" title={connectionStatus}>
+              <span className={`status-dot ${isConnected ? 'connected' : 'disconnected'}`} />
+              <span className="session-id">会话: {sessionId.slice(0, 8)}...</span>
+            </div>
+          )}
           <div className="filter-group">
             <label>状态：</label>
             <select
@@ -245,7 +285,7 @@ const App: React.FC = () => {
         <div className="footer-right">
           {graphState.elder_info && (
             <span className="elder-info-footer">
-              {graphState.elder_info.hometown}
+              {graphState.elder_info.hometown || ''}
             </span>
           )}
         </div>

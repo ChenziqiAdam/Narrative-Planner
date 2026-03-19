@@ -30,6 +30,9 @@ export enum Domain {
   CHALLENGES = 'challenges',
   // 个人思想
   PERSONAL_THOUGHTS = 'personal_thoughts',
+  // 兼容后端当前使用的领域值
+  PERSONAL_IDEOLOGY = 'personal_ideology',
+  CONTEXT_MANAGEMENT = 'context_management',
 }
 
 /** 领域中文名称映射 */
@@ -39,6 +42,8 @@ export const DomainLabels: Record<string, string> = {
   [Domain.FUTURE_SCRIPTS]: '未来剧本',
   [Domain.CHALLENGES]: '挑战',
   [Domain.PERSONAL_THOUGHTS]: '个人思想',
+  [Domain.PERSONAL_IDEOLOGY]: '个人思想',
+  [Domain.CONTEXT_MANAGEMENT]: '上下文管理',
 }
 
 /** 领域颜色映射 - 低饱和度版本 */
@@ -48,6 +53,8 @@ export const DomainColors: Record<string, string> = {
   [Domain.FUTURE_SCRIPTS]: '#A5F3FC',  // 淡青
   [Domain.CHALLENGES]: '#FECACA',      // 淡红
   [Domain.PERSONAL_THOUGHTS]: '#FBCFE8', // 淡粉
+  [Domain.PERSONAL_IDEOLOGY]: '#FBCFE8',
+  [Domain.CONTEXT_MANAGEMENT]: '#E5E7EB',
 }
 
 /** 领域边框颜色映射 - 更深的边框 */
@@ -57,6 +64,8 @@ export const DomainBorderColors: Record<string, string> = {
   [Domain.FUTURE_SCRIPTS]: '#06B6D4',  // 青
   [Domain.CHALLENGES]: '#EF4444',      // 红
   [Domain.PERSONAL_THOUGHTS]: '#EC4899', // 粉
+  [Domain.PERSONAL_IDEOLOGY]: '#EC4899',
+  [Domain.CONTEXT_MANAGEMENT]: '#6B7280',
 }
 
 /** 子主题类型 - 关键场景下的细分 */

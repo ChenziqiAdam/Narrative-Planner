@@ -188,6 +188,7 @@ class ThemeNode:
             "status": self.status.value,
             "exploration_depth": self.exploration_depth,
             "slots_filled": self.slots_filled,
+            "extracted_events": self.extracted_events,
             "extracted_events_count": len(self.extracted_events),
             "priority": self.priority,
             "depends_on": self.depends_on,
