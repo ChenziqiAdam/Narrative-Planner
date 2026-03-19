@@ -1,0 +1,15 @@
+{
+    "evaluation": {
+        "logic_conflict_detected": "否，对话中没有出现时间线倒错或常识性矛盾",
+        "pending_cues_status": "老李（具体的帮助行为未展开）",
+        "slot_filling_status": "时间、地点、事件、人物、感受已完整，但老李的具体帮助行为未展开",
+        "slot_filling_rate": 0.83,
+        "emotional_energy_level": "高，老人对老李心存感激，情绪高涨",
+        "emotional_energy_score": 0.7
+    },
+    "decision_output": {
+        "primary_action": "DEEP_DIVE",
+        "tactical_goal": "EXTRACT_DETAILS",
+        "reason": "根据状态机优先级，当前老人对老李心存感激，情绪高涨，且老李的具体帮助行为是事件的必要组成部分，尚未展开。因此选择DEEP_DIVE动作，对应的Tactical Goal为EXTRACT_DETAILS，目的是深挖老李的具体帮助行为，完善事件细节。"
+    }
+}
