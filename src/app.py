@@ -5,8 +5,8 @@ import re
 
 from flask import Flask, Response, jsonify, render_template_string, request, session
 
-from src.agents.baseline_agent import BaselineAgent as IntervieweeAgent
-from src.agents.interviewer_agent import InterviewerAgent
+from src.agents.baseline_agent import BaselineAgent as InterviewerAgent
+from src.agents.interviewee_agent import IntervieweeAgent
 from config import Config
 
 app = Flask(__name__)
@@ -30,6 +30,7 @@ def get_session_agents(session_id: str) -> dict:
             ),
             "history": [],   # list of {"role": "interviewer"|"interviewee", "text": str}
             "save_path": save_path,
+            "mode": "ai",    # "ai" or "user"
         }
     return _sessions[session_id]
 
@@ -72,16 +73,64 @@ def start():
     if not basic_info:
         return jsonify({"error": "请提供受访者基本信息"}), 400
 
+    mode = (data.get("mode") or "ai").strip()  # "ai" or "user"
+
     agents = get_session_agents(sid)
     agents["interviewer"].initialize_conversation(basic_info)
     agents["basic_info"] = basic_info
+    agents["mode"] = mode
 
     # Get the opening question
     result = agents["interviewer"].get_next_question()
     question = result["question"]
     agents["history"].append({"role": "interviewer", "text": question})
 
-    return jsonify({"question": question})
+    return jsonify({"question": question, "mode": mode})
+
+
+@app.route("/user_reply", methods=["POST"])
+def user_reply():
+    """
+    User-mode: accept user's answer, store it, then get interviewer's next question.
+    Returns: {"action": str, "question": str, "done": bool}
+    """
+    sid = session.get("session_id")
+    if not sid or sid not in _sessions:
+        return jsonify({"error": "请先调用 /start 初始化访谈"}), 400
+
+    agents = _sessions[sid]
+    if agents.get("mode") != "user":
+        return jsonify({"error": "当前不是用户模式"}), 400
+
+    data = request.get_json(force=True)
+    answer = (data.get("answer") or "").strip()
+    if not answer:
+        return jsonify({"error": "回答不能为空"}), 400
+
+    # Record user's answer
+    agents["history"].append({"role": "interviewee", "text": answer})
+
+    # Interviewer decides next action
+    result = agents["interviewer"].get_next_question(answer)
+    action = result["action"]
+    question = result["question"]
+
+    if action == "end":
+        end_text = "感谢您的分享，访谈到此结束。"
+        agents["history"].append({"role": "interviewer", "text": end_text})
+
+        # Save full transcript
+        transcript = "\n".join(
+            f"{'访谈者' if m['role'] == 'interviewer' else '受访者'}: {m['text']}"
+            for m in agents["history"]
+        )
+        with open(agents["save_path"], "w", encoding="utf-8") as f:
+            f.write(transcript)
+
+        return jsonify({"action": "end", "question": end_text, "done": True})
+
+    agents["history"].append({"role": "interviewer", "text": question})
+    return jsonify({"action": action, "question": question, "done": False})
 
 
 @app.route("/auto_interview", methods=["GET"])
@@ -103,7 +152,7 @@ def auto_interview():
         while True:
             # Interviewee answers
             prompt = agents["interviewee"]._load_step_prompt(agents["interviewee"].history, last_question)
-            raw_answer = agents["interviewee"].agent.step(prompt)
+            raw_answer = agents["interviewee"].step(prompt)
             answer = extract_reply(raw_answer)
             agents["interviewee"].history += f"Q: {last_question}\nA: {answer}\n"
             agents["history"].append({"role": "interviewee", "text": answer})
@@ -205,10 +254,21 @@ header h1 { font-size: 1.1rem; font-weight: bold; }
 
 /* Setup panel */
 #setup { flex: 1; display: flex; align-items: center; justify-content: center; }
-#setup-card { background: #fff; border-radius: 16px; padding: 36px; width: 480px; box-shadow: 0 4px 20px rgba(0,0,0,.1); }
+#setup-card { background: #fff; border-radius: 16px; padding: 36px; width: 500px; box-shadow: 0 4px 20px rgba(0,0,0,.1); }
 #setup-card h2 { font-size: 1.1rem; color: #6b4f3a; margin-bottom: 20px; }
 #setup-card textarea { width: 100%; height: 100px; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: .95rem; resize: vertical; font-family: inherit; }
 #setup-card textarea:focus { outline: none; border-color: #6b4f3a; }
+
+/* Mode selector */
+.mode-selector { display: flex; gap: 10px; margin: 14px 0 18px; }
+.mode-option { flex: 1; border: 2px solid #ddd; border-radius: 10px; padding: 12px 10px; cursor: pointer; text-align: center; transition: all .2s; }
+.mode-option:hover { border-color: #6b4f3a; }
+.mode-option.selected { border-color: #6b4f3a; background: #fdf8f4; }
+.mode-option input[type=radio] { display: none; }
+.mode-option .mode-icon { font-size: 1.4rem; display: block; margin-bottom: 4px; }
+.mode-option .mode-label { font-size: .88rem; font-weight: 600; color: #4a3328; display: block; }
+.mode-option .mode-desc { font-size: .75rem; color: #999; margin-top: 3px; display: block; }
+
 #start-btn { width: 100%; padding: 13px; background: #6b4f3a; color: #fff; border: none; border-radius: 10px; font-size: 1rem; cursor: pointer; transition: opacity .2s; }
 #start-btn:disabled { opacity: .5; cursor: not-allowed; }
 
@@ -234,11 +294,25 @@ header h1 { font-size: 1.1rem; font-weight: bold; }
 .typing-dots span:nth-child(3) { animation-delay: .4s; }
 @keyframes blink { 0%,80%,100% { opacity:0 } 40% { opacity:1 } }
 
-#chat-controls { padding: 14px 20px; background: #faf7f3; border-top: 1px solid #eee; display: flex; gap: 10px; flex-shrink: 0; }
+/* AI mode controls */
+#chat-controls-ai { padding: 14px 20px; background: #faf7f3; border-top: 1px solid #eee; display: flex; gap: 10px; flex-shrink: 0; }
 #run-btn { flex: 1; padding: 11px; background: #6b4f3a; color: #fff; border: none; border-radius: 10px; font-size: .95rem; cursor: pointer; }
 #run-btn:disabled { opacity: .5; cursor: not-allowed; }
+
+/* User mode input area */
+#chat-controls-user { padding: 14px 20px; background: #faf7f3; border-top: 1px solid #eee; display: none; flex-direction: column; gap: 8px; flex-shrink: 0; }
+#user-input { width: 100%; padding: 11px 14px; border: 1px solid #ddd; border-radius: 10px; font-size: .93rem; font-family: inherit; resize: none; height: 80px; line-height: 1.5; }
+#user-input:focus { outline: none; border-color: #6b4f3a; }
+#user-input:disabled { background: #f5f5f5; color: #aaa; }
+#user-controls-row { display: flex; gap: 10px; }
+#send-btn { flex: 1; padding: 10px; background: #6b4f3a; color: #fff; border: none; border-radius: 10px; font-size: .93rem; cursor: pointer; }
+#send-btn:disabled { opacity: .5; cursor: not-allowed; }
+
+/* Shared bio button */
 #bio-btn { flex: 1; padding: 11px; background: #3a6b4f; color: #fff; border: none; border-radius: 10px; font-size: .95rem; cursor: pointer; }
 #bio-btn:disabled { opacity: .5; cursor: not-allowed; }
+#bio-btn-user { flex: 1; padding: 10px; background: #3a6b4f; color: #fff; border: none; border-radius: 10px; font-size: .93rem; cursor: pointer; }
+#bio-btn-user:disabled { opacity: .5; cursor: not-allowed; }
 
 /* Biography panel */
 #bio-panel { width: 42%; display: flex; flex-direction: column; }
@@ -253,7 +327,7 @@ header h1 { font-size: 1.1rem; font-weight: bold; }
 <body>
 
 <header>
-  <h1>传记访谈系统 · 自动对话</h1>
+  <h1 id="header-title">传记访谈系统</h1>
   <span id="status-badge">就绪</span>
 </header>
 
@@ -262,7 +336,22 @@ header h1 { font-size: 1.1rem; font-weight: bold; }
   <div id="setup-card">
     <h2>开始新访谈</h2>
     <textarea id="basic-info" placeholder="请输入受访者基本信息，例如：&#10;出生于1942年，四川成都人，曾是纺织厂工人，经历过文革和改革开放，育有三个子女，现独居。"></textarea>
-    <p style="font-size:.82rem;color:#999;margin:10px 0 18px">访谈者将自动决定何时深入、推进或结束访谈。</p>
+
+    <div class="mode-selector">
+      <label class="mode-option selected" id="mode-ai-label">
+        <input type="radio" name="mode" value="ai" checked onchange="selectMode('ai')">
+        <span class="mode-icon">🤖</span>
+        <span class="mode-label">AI 模拟受访者</span>
+        <span class="mode-desc">由 AI 自动回答问题</span>
+      </label>
+      <label class="mode-option" id="mode-user-label">
+        <input type="radio" name="mode" value="user" onchange="selectMode('user')">
+        <span class="mode-icon">🧑</span>
+        <span class="mode-label">我来亲自回答</span>
+        <span class="mode-desc">由您本人回答访谈问题</span>
+      </label>
+    </div>
+
     <button id="start-btn" onclick="startInterview()">开始访谈</button>
   </div>
 </div>
@@ -272,9 +361,20 @@ header h1 { font-size: 1.1rem; font-weight: bold; }
   <div id="chat-panel">
     <h2>访谈对话</h2>
     <div id="chat"></div>
-    <div id="chat-controls">
+
+    <!-- AI mode controls -->
+    <div id="chat-controls-ai">
       <button id="run-btn" onclick="runAutoInterview()" disabled>▶ 自动运行访谈</button>
       <button id="bio-btn" onclick="generateBiography()" disabled>📖 生成回忆录</button>
+    </div>
+
+    <!-- User mode controls -->
+    <div id="chat-controls-user">
+      <textarea id="user-input" placeholder="请输入您的回答…" onkeydown="handleUserKey(event)"></textarea>
+      <div id="user-controls-row">
+        <button id="send-btn" onclick="sendUserReply()">发送回答</button>
+        <button id="bio-btn-user" onclick="generateBiography()" disabled>📖 生成回忆录</button>
+      </div>
     </div>
   </div>
   <div id="bio-panel">
@@ -293,26 +393,36 @@ const chatEl   = document.getElementById('chat');
 const statusEl = document.getElementById('status-badge');
 const runBtn   = document.getElementById('run-btn');
 const bioBtn   = document.getElementById('bio-btn');
+const bioBtnUser = document.getElementById('bio-btn-user');
 const copyBtn  = document.getElementById('copy-btn');
 const bioContent = document.getElementById('bio-content');
+const sendBtn  = document.getElementById('send-btn');
+const userInput = document.getElementById('user-input');
 
 let interviewDone = false;
+let currentMode = 'ai';
 
 function setStatus(text, color='rgba(255,255,255,.2)') {
   statusEl.textContent = text;
   statusEl.style.background = color;
 }
 
+function selectMode(mode) {
+  currentMode = mode;
+  document.getElementById('mode-ai-label').classList.toggle('selected', mode === 'ai');
+  document.getElementById('mode-user-label').classList.toggle('selected', mode === 'user');
+}
+
 const actionLabels = { continue: '深入', next_phase: '下一阶段', end: '结束访谈' };
 
 function appendMsg(role, text, action) {
-  const labels = { interviewer: '访谈者', interviewee: '受访者', system: '' };
+  const labels = { interviewer: '访谈者', interviewee: '受访者（您）', system: '' };
   const d = document.createElement('div');
   d.className = 'msg ' + role;
   if (role !== 'system') {
     const lbl = document.createElement('div');
     lbl.className = 'label';
-    lbl.textContent = labels[role] || role;
+    lbl.textContent = (role === 'interviewee' && currentMode === 'user') ? '受访者（您）' : (labels[role] || role);
     if (action && actionLabels[action]) {
       const badge = document.createElement('span');
       badge.className = 'action-badge ' + action;
@@ -354,7 +464,7 @@ async function startInterview() {
     const res = await fetch('/start', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ basic_info: basicInfo })
+      body: JSON.stringify({ basic_info: basicInfo, mode: currentMode })
     });
     const data = await res.json();
     if (data.error) { alert(data.error); startBtn.disabled = false; startBtn.textContent = '开始访谈'; return; }
@@ -362,9 +472,22 @@ async function startInterview() {
     setupEl.style.display = 'none';
     mainEl.style.display = 'flex';
 
+    // Show correct controls based on mode
+    if (currentMode === 'user') {
+      document.getElementById('chat-controls-ai').style.display = 'none';
+      document.getElementById('chat-controls-user').style.display = 'flex';
+      document.getElementById('header-title').textContent = '传记访谈系统 · 亲历模式';
+      userInput.disabled = false;
+      sendBtn.disabled = false;
+    } else {
+      document.getElementById('chat-controls-ai').style.display = 'flex';
+      document.getElementById('chat-controls-user').style.display = 'none';
+      document.getElementById('header-title').textContent = '传记访谈系统 · 自动对话';
+      runBtn.disabled = false;
+    }
+
     appendMsg('system', '访谈已开始');
     appendMsg('interviewer', data.question);
-    runBtn.disabled = false;
     setStatus('已就绪');
   } catch(e) {
     alert('启动失败，请检查服务器');
@@ -372,6 +495,71 @@ async function startInterview() {
     startBtn.textContent = '开始访谈';
   }
 }
+
+// ── User mode ────────────────────────────────────────────────────────────────
+
+function handleUserKey(e) {
+  // Ctrl+Enter or Cmd+Enter to send
+  if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+    e.preventDefault();
+    sendUserReply();
+  }
+}
+
+async function sendUserReply() {
+  const answer = userInput.value.trim();
+  if (!answer) return;
+
+  sendBtn.disabled = true;
+  userInput.disabled = true;
+  userInput.value = '';
+
+  appendMsg('interviewee', answer);
+  setStatus('访谈者思考中…', 'rgba(255,200,100,.4)');
+
+  // Show typing indicator for interviewer
+  const typingEl = appendTyping('interviewer');
+
+  try {
+    const res = await fetch('/user_reply', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ answer })
+    });
+    const data = await res.json();
+    typingEl.remove();
+
+    if (data.error) {
+      appendMsg('system', '错误：' + data.error);
+      setStatus('出错', 'rgba(255,100,100,.4)');
+      return;
+    }
+
+    appendMsg('interviewer', data.question, data.action);
+
+    if (data.done) {
+      interviewDone = true;
+      sendBtn.disabled = true;
+      userInput.disabled = true;
+      bioBtnUser.disabled = false;
+      setStatus('访谈完成', 'rgba(100,200,150,.4)');
+      appendMsg('system', '访谈已结束，可点击「生成回忆录」');
+    } else {
+      sendBtn.disabled = false;
+      userInput.disabled = false;
+      userInput.focus();
+      setStatus('等待您的回答', 'rgba(255,255,255,.2)');
+    }
+  } catch(e) {
+    typingEl.remove();
+    appendMsg('system', '网络错误，请重试');
+    setStatus('连接中断', 'rgba(255,100,100,.4)');
+    sendBtn.disabled = false;
+    userInput.disabled = false;
+  }
+}
+
+// ── AI mode ──────────────────────────────────────────────────────────────────
 
 function runAutoInterview() {
   runBtn.disabled = true;
@@ -400,8 +588,11 @@ function runAutoInterview() {
   };
 }
 
+// ── Biography ────────────────────────────────────────────────────────────────
+
 async function generateBiography() {
   bioBtn.disabled = true;
+  bioBtnUser.disabled = true;
   copyBtn.disabled = true;
   bioContent.innerHTML = '<div id="bio-placeholder">正在撰写回忆录，请稍候…</div>';
   setStatus('生成中…', 'rgba(255,200,100,.4)');
@@ -418,6 +609,7 @@ async function generateBiography() {
     setStatus('生成失败', 'rgba(255,100,100,.4)');
   } finally {
     bioBtn.disabled = false;
+    bioBtnUser.disabled = false;
   }
 }
 
