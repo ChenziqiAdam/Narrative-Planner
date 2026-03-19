@@ -8,10 +8,9 @@ from camel.types import ModelPlatformType
 from camel.models import ModelFactory
 from json_repair import repair_json
 from jinja2 import Template
-from dotenv import load_dotenv
 import yaml
 
-load_dotenv()
+from config import Config
 
 
 class BaseAgent:
@@ -57,9 +56,9 @@ class BaseAgent:
         """创建模型实例（可由子类覆盖以更改配置）"""
         return ModelFactory.create(
             model_platform=ModelPlatformType.OPENAI_COMPATIBLE_MODEL,
-            model_type=os.getenv("MODEL_TYPE", "deepseek-chat"),
-            api_key=os.getenv("API_KEY", ""),
-            url=os.getenv("MODEL_URL", "https://api.deepseek.com/v1"),
+            model_type=Config.MODEL_NAME,
+            api_key=Config.MOONSHOT_API_KEY or "",
+            url=Config.MOONSHOT_BASE_URL,
         )
 
     def _create_system_message(self) -> BaseMessage:

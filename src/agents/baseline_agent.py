@@ -41,8 +41,8 @@ class BaselineAgent:
         self.session_id = session_id or datetime.now().strftime("%Y%m%d_%H%M%S")
         # 支持自定义 base_url（如 Kimi、智谱等 OpenAI 兼容 API）
         client_kwargs = {"api_key": Config.MOONSHOT_API_KEY}
-        if Config.MOONSHOT_API_KEY:
-            client_kwargs["base_url"] = Config.MOONSHOT_API_KEY
+        if Config.MOONSHOT_BASE_URL:
+            client_kwargs["base_url"] = Config.MOONSHOT_BASE_URL
         self.client = OpenAI(**client_kwargs)
         self.conversation_history = []
 
@@ -56,7 +56,10 @@ class BaselineAgent:
     def initialize_conversation(self, basic_info: str):
         """初始化对话"""
         system_message = self.system_prompt.replace("[用户的基本生平信息]", basic_info)
-        self.conversation_history = [{"role": "system", "content": system_message}]
+        self.conversation_history = [
+            {"role": "system", "content": system_message},
+            {"role": "user", "content": "请开始访谈，先向受访者问好并提出第一个问题。"},
+        ]
         logger.info(f"对话已初始化，基本信息: {basic_info}")
 
     def get_next_question(self, user_response: str = None):
@@ -69,12 +72,12 @@ class BaselineAgent:
             response = self.client.chat.completions.create(
                 model=Config.MODEL_NAME,
                 messages=self.conversation_history,
-                max_tokens=500,
-                temperature=0.7
+                max_tokens=2048
             )
 
-            question = response.choices[0].message.content
-            self.conversation_history.append({"role": "assistant", "content": question})
+            question = (response.choices[0].message.content or "").strip()
+            if question:
+                self.conversation_history.append({"role": "assistant", "content": question})
 
             logger.info(f"生成问题: {question[:100]}...")
             return question
