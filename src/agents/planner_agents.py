@@ -9,6 +9,7 @@ from camel.messages import BaseMessage
 
 from base_agents import BaseAgent
 from prompts.planner_interview_prompts import PLANNER_PROMPT_TEMPLATE
+from config import Config
 import yaml
 
 class PlannerAgent(BaseAgent):
@@ -140,7 +141,7 @@ if __name__ == "__main__":
 
     # Save to project's data/interviews directory
     project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
-    out_dir = os.path.join(project_root, "data", "interviews")
+    out_dir = os.path.join(project_root, Config.DATA_DIR, "interviews")
     os.makedirs(out_dir, exist_ok=True)
     fname = f"planner_simulated_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
     out_path = os.path.join(out_dir, fname)

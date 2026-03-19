@@ -36,6 +36,7 @@ def get_session_agents(session_id: str) -> dict:
             "history": [],   # list of {"role": "interviewer"|"interviewee", "text": str}
             "save_path": save_path,
             "mode": "ai",    # "ai" or "user"
+            "turn_count": 0,
         }
     return _sessions[session_id]
 
@@ -92,8 +93,7 @@ def start():
     agents["mode"] = mode
 
     # Get the opening question
-    result = agents["interviewer"].get_next_question()
-    question = result["question"]
+    question = agents["interviewer"].get_next_question()
     agents["history"].append({"role": "interviewer", "text": question})
 
     return jsonify({"question": question, "mode": mode})
@@ -121,12 +121,11 @@ def user_reply():
     # Record user's answer
     agents["history"].append({"role": "interviewee", "text": answer})
 
-    # Interviewer decides next action
-    result = agents["interviewer"].get_next_question(answer)
-    action = result["action"]
-    question = result["question"]
+    # Interviewer gets next question
+    question = agents["interviewer"].get_next_question(answer)
+    agents["turn_count"] += 1
 
-    if action == "end":
+    if agents["turn_count"] >= 50:
         end_text = "感谢您的分享，访谈到此结束。"
         agents["history"].append({"role": "interviewer", "text": end_text})
 
@@ -141,7 +140,7 @@ def user_reply():
         return jsonify({"action": "end", "question": end_text, "done": True})
 
     agents["history"].append({"role": "interviewer", "text": question})
-    return jsonify({"action": action, "question": question, "done": False})
+    return jsonify({"action": "continue", "question": question, "done": False})
 
 
 @app.route("/auto_interview", methods=["GET"])
@@ -169,19 +168,18 @@ def auto_interview():
             agents["history"].append({"role": "interviewee", "text": answer})
             yield f"data: {json.dumps({'role': 'interviewee', 'action': 'answer', 'text': answer}, ensure_ascii=False)}\n\n"
 
-            # Interviewer decides next action
-            result = agents["interviewer"].get_next_question(answer)
-            action = result["action"]
-            question = result["question"]
+            # Interviewer gets next question
+            question = agents["interviewer"].get_next_question(answer)
+            agents["turn_count"] += 1
 
-            if action == "end":
+            if agents["turn_count"] >= 50:
                 agents["history"].append({"role": "interviewer", "text": "感谢您的分享，访谈到此结束。"})
                 yield f"data: {json.dumps({'role': 'interviewer', 'action': 'end', 'text': '感谢您的分享，访谈到此结束。'}, ensure_ascii=False)}\n\n"
                 break
 
             agents["history"].append({"role": "interviewer", "text": question})
             last_question = question
-            yield f"data: {json.dumps({'role': 'interviewer', 'action': action, 'text': question}, ensure_ascii=False)}\n\n"
+            yield f"data: {json.dumps({'role': 'interviewer', 'action': 'continue', 'text': question}, ensure_ascii=False)}\n\n"
 
         # Save full transcript
         transcript = "\n".join(
