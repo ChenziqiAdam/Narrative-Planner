@@ -267,6 +267,40 @@ class GraphManager:
             "by_domain": by_domain,
         }
 
+    def calculate_slot_coverage(self) -> Dict[str, float]:
+        """
+        计算各槽位覆盖率
+
+        统计所有事件中五个维度槽位的填充情况：
+        - time: 时间信息
+        - location: 地点信息（空间维度）
+        - people: 涉及人物
+        - event: 事件起因和结果
+        - reflection: 感受和反思（包含情感）
+
+        Returns:
+            包含各槽位覆盖率的字典，值为 0.0-1.0
+        """
+        events = list(self.event_nodes.values())
+        if not events:
+            return {
+                "time": 0.0,
+                "location": 0.0,
+                "people": 0.0,
+                "event": 0.0,
+                "reflection": 0.0,
+            }
+
+        # 5个维度槽位
+        slot_keys = ["time", "location", "people", "event", "reflection"]
+        coverage = {}
+
+        for slot_name in slot_keys:
+            filled = sum(1 for e in events if e.slots.get(slot_name))
+            coverage[slot_name] = filled / len(events)
+
+        return coverage
+
     def get_pending_theme_nodes(self) -> List[ThemeNode]:
         """
         获取所有待触达的主题节点
@@ -369,11 +403,13 @@ class GraphManager:
             图谱状态摘要字典
         """
         coverage = self.calculate_coverage()
+        slot_coverage = self.calculate_slot_coverage()
 
         return {
             "coverage_metrics": {
                 "overall_coverage": coverage["overall"],
                 "domain_coverage": coverage["by_domain"],
+                "slot_coverage": slot_coverage,
             },
             "theme_count": len(self.theme_nodes),
             "event_count": len(self.event_nodes),

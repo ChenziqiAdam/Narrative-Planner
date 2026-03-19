@@ -1,0 +1,265 @@
+/**
+ * CoverageDashboard 组件样式
+ * 浅色主题 - 与整体风格一致
+ */
+
+.coverage-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  background: #FFFFFF;
+  border-radius: 10px;
+  color: #1F2937;
+  min-width: 260px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.coverage-section {
+  background: #F9FAFB;
+  border-radius: 8px;
+  padding: 10px;
+  border: 1px solid #E5E7EB;
+}
+
+.section-title {
+  margin: 0 0 10px 0;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #6B7280;
+}
+
+/* 总体覆盖率 - 环形进度条 */
+.overall-coverage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.progress-ring-container {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.progress-ring {
+  transform: rotate(-90deg);
+  display: block;
+}
+
+.progress-ring-bg {
+  fill: none;
+  stroke: #E5E7EB;
+}
+
+.progress-ring-fill {
+  fill: none;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.5s ease;
+}
+
+.progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.progress-text .percentage {
+  font-size: 28px;
+  font-weight: bold;
+  color: #1F2937;
+}
+
+.progress-text .unit {
+  font-size: 14px;
+  color: #9CA3AF;
+}
+
+/* 主题节点统计 */
+.theme-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.status-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.status-bar-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 60px;
+  font-size: 12px;
+  color: #4B5563;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.bar-container {
+  flex: 1;
+  height: 6px;
+  background: #E5E7EB;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+.count {
+  min-width: 20px;
+  text-align: right;
+  font-size: 12px;
+  font-weight: 600;
+  color: #1F2937;
+}
+
+.total-events {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 10px;
+  border-top: 1px solid #E5E7EB;
+  margin-top: 4px;
+}
+
+.total-events .label {
+  font-size: 12px;
+  color: #6B7280;
+}
+
+.total-events .value {
+  font-size: 14px;
+  font-weight: bold;
+  color: #F59E0B;
+}
+
+/* 维度覆盖率 */
+.dimension-coverage {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dimension-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dimension-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dimension-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+}
+
+.dimension-label {
+  color: #4B5563;
+}
+
+.dimension-value {
+  font-weight: 600;
+  color: #1F2937;
+}
+
+.dimension-bar-container {
+  height: 4px;
+  background: #E5E7EB;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.dimension-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.5s ease;
+}
+
+/* 领域覆盖 */
+.domain-coverage {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.domain-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+}
+
+.domain-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  background: #FFFFFF;
+  border-radius: 6px;
+  border: 1px solid #E5E7EB;
+}
+
+.domain-indicator {
+  width: 3px;
+  height: 24px;
+  border-radius: 2px;
+}
+
+.domain-name {
+  flex: 1;
+  font-size: 10px;
+  color: #4B5563;
+  line-height: 1.2;
+}
+
+.domain-value {
+  font-size: 11px;
+  font-weight: 600;
+  color: #1F2937;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .coverage-dashboard {
+    padding: 10px;
+    gap: 10px;
+    min-width: auto;
+  }
+
+  .coverage-section {
+    padding: 10px;
+  }
+
+  .domain-grid {
+    grid-template-columns: 1fr;
+  }
+}

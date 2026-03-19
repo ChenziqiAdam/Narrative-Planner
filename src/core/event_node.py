@@ -50,7 +50,9 @@ class EventNode:
     people_involved: List[str] = field(default_factory=list)
 
     # 槽位（叙事完整度）
-    # 预定义槽位：time, location, people, cause, result, emotion, reflection
+    # 预定义槽位：time, location, people, event, reflection
+    # event: 事件的起因和结果描述
+    # reflection: 感受和反思（包含情感和感悟）
     slots: Dict[str, Optional[str]] = field(default_factory=dict)
 
     # 情感与分析
@@ -71,16 +73,14 @@ class EventNode:
         if not self.event_id:
             self.event_id = f"evt_{uuid.uuid4().hex[:12]}"
 
-        # 初始化槽位
+        # 初始化槽位（5个维度：时间、地点、人物、事件、感受）
         if not self.slots:
             self.slots = {
-                "time": None,
-                "location": None,
-                "people": None,
-                "cause": None,
-                "result": None,
-                "emotion": None,
-                "reflection": None,
+                "time": None,       # 时间信息
+                "location": None,   # 地点信息（空间维度）
+                "people": None,     # 涉及人物
+                "event": None,      # 事件起因和结果
+                "reflection": None, # 感受和反思（包含情感）
             }
 
     def get_slot_completion_ratio(self) -> float:

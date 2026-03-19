@@ -1,0 +1,298 @@
+/**
+ * TimelineCanvas 样式
+ * 时间轴视图 - 事件卡片 + 5槽位 + 情绪能量 + 挖掘深度
+ */
+
+.timeline-canvas-container {
+  width: 100%;
+  height: 100%;
+  background: #FAFAFA;
+  overflow: auto;
+}
+
+.timeline-content {
+  min-height: 100%;
+  padding: 12px 16px;
+}
+
+/* 空状态 */
+.timeline-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  color: #9CA3AF;
+}
+
+.timeline-empty .empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+/* 时间轴事件 */
+.timeline-events {
+  position: relative;
+  padding-left: 28px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.timeline-line {
+  position: absolute;
+  left: 12px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, #E5E7EB 0%, #D1D5DB 100%);
+}
+
+.timeline-event-wrapper {
+  position: relative;
+  margin-bottom: 12px;
+}
+
+.timeline-dot {
+  position: absolute;
+  left: -26px;
+  top: 16px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid #FFFFFF;
+  box-shadow: 0 0 0 2px currentColor;
+  z-index: 1;
+}
+
+/* 事件卡片 */
+.timeline-node.event-node {
+  background: #FFFFFF;
+  border: 1.5px solid #E5E7EB;
+  border-radius: 10px;
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  min-width: 0;
+  overflow: hidden;
+}
+
+.timeline-node.event-node:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
+}
+
+.timeline-node.event-node.selected {
+  border-color: #3B82F6 !important;
+  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.2);
+}
+
+/* 事件头部 */
+.event-header {
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #F3F4F6;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: nowrap;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.event-time {
+  font-size: 12px;
+  color: #6B7280;
+  font-weight: 500;
+}
+
+.event-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.event-theme-tag {
+  display: inline-block;
+  font-size: 10px;
+  padding: 2px 8px;
+  background: #F3F4F6;
+  color: #6B7280;
+  border-radius: 10px;
+}
+
+/* 5个核心槽位 - 紧凑两列布局 */
+.event-slots {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 6px 12px;
+  margin-bottom: 10px;
+  padding: 10px;
+  background: #FAFAFA;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.slot-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.slot-label {
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 500;
+  color: #9CA3AF;
+  white-space: nowrap;
+}
+
+.slot-value {
+  flex: 1;
+  min-width: 0;
+  font-size: 12px;
+  color: #374151;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.slot-value em {
+  color: #9CA3AF;
+  font-style: normal;
+}
+
+.event-description {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.reflection-text {
+  color: #6B7280;
+  font-style: italic;
+}
+
+/* 分析指标 */
+.event-metrics {
+  display: flex;
+  gap: 16px;
+  padding-top: 10px;
+  border-top: 1px solid #F3F4F6;
+}
+
+.metric-item {
+  flex: 1;
+}
+
+.metric-label {
+  display: block;
+  font-size: 11px;
+  color: #6B7280;
+  margin-bottom: 4px;
+}
+
+.metric-bar-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.metric-bar {
+  flex: 1;
+  height: 6px;
+  background: #E5E7EB;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.metric-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.metric-value {
+  font-size: 12px;
+  font-weight: 600;
+  min-width: 40px;
+  text-align: right;
+}
+
+/* 挖掘深度 */
+.depth-indicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.depth-pip {
+  width: 18px;
+  height: 6px;
+  background: #E5E7EB;
+  border-radius: 2px;
+  transition: background 0.2s ease;
+}
+
+.depth-pip.active {
+  background: #3B82F6;
+}
+
+.depth-value {
+  margin-left: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #3B82F6;
+}
+
+/* 标签 */
+.event-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.tag-item {
+  font-size: 10px;
+  padding: 2px 8px;
+  background: #EFF6FF;
+  color: #3B82F6;
+  border-radius: 10px;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .timeline-events {
+    padding-left: 20px;
+  }
+
+  .timeline-line {
+    left: 4px;
+  }
+
+  .timeline-dot {
+    left: -18px;
+    width: 12px;
+    height: 12px;
+  }
+
+  .event-metrics {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .event-slots {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
