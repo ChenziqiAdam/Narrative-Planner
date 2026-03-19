@@ -5,13 +5,8 @@ import re
 
 from flask import Flask, Response, jsonify, render_template_string, request, session
 
-<<<<<<< HEAD
 from src.agents.baseline_agent import BaselineAgent as InterviewerAgent
 from src.agents.interviewee_agent import IntervieweeAgent
-=======
-from src.agents.baseline_agent import BaselineAgent as IntervieweeAgent
-from src.agents.interviewer_agent import InterviewerAgent
->>>>>>> 6d29b23398f159c8125aec1b7c611c79036521cf
 from config import Config
 
 app = Flask(__name__)
@@ -78,25 +73,18 @@ def start():
     if not basic_info:
         return jsonify({"error": "请提供受访者基本信息"}), 400
 
-<<<<<<< HEAD
     mode = (data.get("mode") or "ai").strip()  # "ai" or "user"
 
     agents = get_session_agents(sid)
     agents["interviewer"].initialize_conversation(basic_info)
     agents["basic_info"] = basic_info
     agents["mode"] = mode
-=======
-    agents = get_session_agents(sid)
-    agents["interviewer"].initialize_conversation(basic_info)
-    agents["basic_info"] = basic_info
->>>>>>> 6d29b23398f159c8125aec1b7c611c79036521cf
 
     # Get the opening question
     result = agents["interviewer"].get_next_question()
     question = result["question"]
     agents["history"].append({"role": "interviewer", "text": question})
 
-<<<<<<< HEAD
     return jsonify({"question": question, "mode": mode})
 
 
@@ -143,9 +131,6 @@ def user_reply():
 
     agents["history"].append({"role": "interviewer", "text": question})
     return jsonify({"action": action, "question": question, "done": False})
-=======
-    return jsonify({"question": question})
->>>>>>> 6d29b23398f159c8125aec1b7c611c79036521cf
 
 
 @app.route("/auto_interview", methods=["GET"])
@@ -167,11 +152,7 @@ def auto_interview():
         while True:
             # Interviewee answers
             prompt = agents["interviewee"]._load_step_prompt(agents["interviewee"].history, last_question)
-<<<<<<< HEAD
             raw_answer = agents["interviewee"].step(prompt)
-=======
-            raw_answer = agents["interviewee"].agent.step(prompt)
->>>>>>> 6d29b23398f159c8125aec1b7c611c79036521cf
             answer = extract_reply(raw_answer)
             agents["interviewee"].history += f"Q: {last_question}\nA: {answer}\n"
             agents["history"].append({"role": "interviewee", "text": answer})
@@ -273,7 +254,6 @@ header h1 { font-size: 1.1rem; font-weight: bold; }
 
 /* Setup panel */
 #setup { flex: 1; display: flex; align-items: center; justify-content: center; }
-<<<<<<< HEAD
 #setup-card { background: #fff; border-radius: 16px; padding: 36px; width: 500px; box-shadow: 0 4px 20px rgba(0,0,0,.1); }
 #setup-card h2 { font-size: 1.1rem; color: #6b4f3a; margin-bottom: 20px; }
 #setup-card textarea { width: 100%; height: 100px; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: .95rem; resize: vertical; font-family: inherit; }
@@ -289,12 +269,6 @@ header h1 { font-size: 1.1rem; font-weight: bold; }
 .mode-option .mode-label { font-size: .88rem; font-weight: 600; color: #4a3328; display: block; }
 .mode-option .mode-desc { font-size: .75rem; color: #999; margin-top: 3px; display: block; }
 
-=======
-#setup-card { background: #fff; border-radius: 16px; padding: 36px; width: 480px; box-shadow: 0 4px 20px rgba(0,0,0,.1); }
-#setup-card h2 { font-size: 1.1rem; color: #6b4f3a; margin-bottom: 20px; }
-#setup-card textarea { width: 100%; height: 100px; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: .95rem; resize: vertical; font-family: inherit; }
-#setup-card textarea:focus { outline: none; border-color: #6b4f3a; }
->>>>>>> 6d29b23398f159c8125aec1b7c611c79036521cf
 #start-btn { width: 100%; padding: 13px; background: #6b4f3a; color: #fff; border: none; border-radius: 10px; font-size: 1rem; cursor: pointer; transition: opacity .2s; }
 #start-btn:disabled { opacity: .5; cursor: not-allowed; }
 
@@ -320,7 +294,6 @@ header h1 { font-size: 1.1rem; font-weight: bold; }
 .typing-dots span:nth-child(3) { animation-delay: .4s; }
 @keyframes blink { 0%,80%,100% { opacity:0 } 40% { opacity:1 } }
 
-<<<<<<< HEAD
 /* AI mode controls */
 #chat-controls-ai { padding: 14px 20px; background: #faf7f3; border-top: 1px solid #eee; display: flex; gap: 10px; flex-shrink: 0; }
 #run-btn { flex: 1; padding: 11px; background: #6b4f3a; color: #fff; border: none; border-radius: 10px; font-size: .95rem; cursor: pointer; }
@@ -340,13 +313,6 @@ header h1 { font-size: 1.1rem; font-weight: bold; }
 #bio-btn:disabled { opacity: .5; cursor: not-allowed; }
 #bio-btn-user { flex: 1; padding: 10px; background: #3a6b4f; color: #fff; border: none; border-radius: 10px; font-size: .93rem; cursor: pointer; }
 #bio-btn-user:disabled { opacity: .5; cursor: not-allowed; }
-=======
-#chat-controls { padding: 14px 20px; background: #faf7f3; border-top: 1px solid #eee; display: flex; gap: 10px; flex-shrink: 0; }
-#run-btn { flex: 1; padding: 11px; background: #6b4f3a; color: #fff; border: none; border-radius: 10px; font-size: .95rem; cursor: pointer; }
-#run-btn:disabled { opacity: .5; cursor: not-allowed; }
-#bio-btn { flex: 1; padding: 11px; background: #3a6b4f; color: #fff; border: none; border-radius: 10px; font-size: .95rem; cursor: pointer; }
-#bio-btn:disabled { opacity: .5; cursor: not-allowed; }
->>>>>>> 6d29b23398f159c8125aec1b7c611c79036521cf
 
 /* Biography panel */
 #bio-panel { width: 42%; display: flex; flex-direction: column; }
@@ -361,11 +327,7 @@ header h1 { font-size: 1.1rem; font-weight: bold; }
 <body>
 
 <header>
-<<<<<<< HEAD
   <h1 id="header-title">传记访谈系统</h1>
-=======
-  <h1>传记访谈系统 · 自动对话</h1>
->>>>>>> 6d29b23398f159c8125aec1b7c611c79036521cf
   <span id="status-badge">就绪</span>
 </header>
 
@@ -374,7 +336,6 @@ header h1 { font-size: 1.1rem; font-weight: bold; }
   <div id="setup-card">
     <h2>开始新访谈</h2>
     <textarea id="basic-info" placeholder="请输入受访者基本信息，例如：&#10;出生于1942年，四川成都人，曾是纺织厂工人，经历过文革和改革开放，育有三个子女，现独居。"></textarea>
-<<<<<<< HEAD
 
     <div class="mode-selector">
       <label class="mode-option selected" id="mode-ai-label">
@@ -391,9 +352,6 @@ header h1 { font-size: 1.1rem; font-weight: bold; }
       </label>
     </div>
 
-=======
-    <p style="font-size:.82rem;color:#999;margin:10px 0 18px">访谈者将自动决定何时深入、推进或结束访谈。</p>
->>>>>>> 6d29b23398f159c8125aec1b7c611c79036521cf
     <button id="start-btn" onclick="startInterview()">开始访谈</button>
   </div>
 </div>
@@ -403,7 +361,6 @@ header h1 { font-size: 1.1rem; font-weight: bold; }
   <div id="chat-panel">
     <h2>访谈对话</h2>
     <div id="chat"></div>
-<<<<<<< HEAD
 
     <!-- AI mode controls -->
     <div id="chat-controls-ai">
@@ -419,12 +376,6 @@ header h1 { font-size: 1.1rem; font-weight: bold; }
         <button id="bio-btn-user" onclick="generateBiography()" disabled>📖 生成回忆录</button>
       </div>
     </div>
-=======
-    <div id="chat-controls">
-      <button id="run-btn" onclick="runAutoInterview()" disabled>▶ 自动运行访谈</button>
-      <button id="bio-btn" onclick="generateBiography()" disabled>📖 生成回忆录</button>
-    </div>
->>>>>>> 6d29b23398f159c8125aec1b7c611c79036521cf
   </div>
   <div id="bio-panel">
     <h2>人生回忆录</h2>
@@ -442,7 +393,6 @@ const chatEl   = document.getElementById('chat');
 const statusEl = document.getElementById('status-badge');
 const runBtn   = document.getElementById('run-btn');
 const bioBtn   = document.getElementById('bio-btn');
-<<<<<<< HEAD
 const bioBtnUser = document.getElementById('bio-btn-user');
 const copyBtn  = document.getElementById('copy-btn');
 const bioContent = document.getElementById('bio-content');
@@ -451,19 +401,12 @@ const userInput = document.getElementById('user-input');
 
 let interviewDone = false;
 let currentMode = 'ai';
-=======
-const copyBtn  = document.getElementById('copy-btn');
-const bioContent = document.getElementById('bio-content');
-
-let interviewDone = false;
->>>>>>> 6d29b23398f159c8125aec1b7c611c79036521cf
 
 function setStatus(text, color='rgba(255,255,255,.2)') {
   statusEl.textContent = text;
   statusEl.style.background = color;
 }
 
-<<<<<<< HEAD
 function selectMode(mode) {
   currentMode = mode;
   document.getElementById('mode-ai-label').classList.toggle('selected', mode === 'ai');
@@ -474,22 +417,12 @@ const actionLabels = { continue: '深入', next_phase: '下一阶段', end: '结
 
 function appendMsg(role, text, action) {
   const labels = { interviewer: '访谈者', interviewee: '受访者（您）', system: '' };
-=======
-const actionLabels = { continue: '深入', next_phase: '下一阶段', end: '结束访谈' };
-
-function appendMsg(role, text, action) {
-  const labels = { interviewer: '访谈者', interviewee: '受访者', system: '' };
->>>>>>> 6d29b23398f159c8125aec1b7c611c79036521cf
   const d = document.createElement('div');
   d.className = 'msg ' + role;
   if (role !== 'system') {
     const lbl = document.createElement('div');
     lbl.className = 'label';
-<<<<<<< HEAD
     lbl.textContent = (role === 'interviewee' && currentMode === 'user') ? '受访者（您）' : (labels[role] || role);
-=======
-    lbl.textContent = labels[role] || role;
->>>>>>> 6d29b23398f159c8125aec1b7c611c79036521cf
     if (action && actionLabels[action]) {
       const badge = document.createElement('span');
       badge.className = 'action-badge ' + action;
@@ -531,11 +464,7 @@ async function startInterview() {
     const res = await fetch('/start', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-<<<<<<< HEAD
       body: JSON.stringify({ basic_info: basicInfo, mode: currentMode })
-=======
-      body: JSON.stringify({ basic_info: basicInfo })
->>>>>>> 6d29b23398f159c8125aec1b7c611c79036521cf
     });
     const data = await res.json();
     if (data.error) { alert(data.error); startBtn.disabled = false; startBtn.textContent = '开始访谈'; return; }
@@ -543,7 +472,6 @@ async function startInterview() {
     setupEl.style.display = 'none';
     mainEl.style.display = 'flex';
 
-<<<<<<< HEAD
     // Show correct controls based on mode
     if (currentMode === 'user') {
       document.getElementById('chat-controls-ai').style.display = 'none';
@@ -560,11 +488,6 @@ async function startInterview() {
 
     appendMsg('system', '访谈已开始');
     appendMsg('interviewer', data.question);
-=======
-    appendMsg('system', '访谈已开始');
-    appendMsg('interviewer', data.question);
-    runBtn.disabled = false;
->>>>>>> 6d29b23398f159c8125aec1b7c611c79036521cf
     setStatus('已就绪');
   } catch(e) {
     alert('启动失败，请检查服务器');
@@ -573,7 +496,6 @@ async function startInterview() {
   }
 }
 
-<<<<<<< HEAD
 // ── User mode ────────────────────────────────────────────────────────────────
 
 function handleUserKey(e) {
@@ -639,8 +561,6 @@ async function sendUserReply() {
 
 // ── AI mode ──────────────────────────────────────────────────────────────────
 
-=======
->>>>>>> 6d29b23398f159c8125aec1b7c611c79036521cf
 function runAutoInterview() {
   runBtn.disabled = true;
   bioBtn.disabled = true;
@@ -668,16 +588,11 @@ function runAutoInterview() {
   };
 }
 
-<<<<<<< HEAD
 // ── Biography ────────────────────────────────────────────────────────────────
 
 async function generateBiography() {
   bioBtn.disabled = true;
   bioBtnUser.disabled = true;
-=======
-async function generateBiography() {
-  bioBtn.disabled = true;
->>>>>>> 6d29b23398f159c8125aec1b7c611c79036521cf
   copyBtn.disabled = true;
   bioContent.innerHTML = '<div id="bio-placeholder">正在撰写回忆录，请稍候…</div>';
   setStatus('生成中…', 'rgba(255,200,100,.4)');
@@ -694,10 +609,7 @@ async function generateBiography() {
     setStatus('生成失败', 'rgba(255,100,100,.4)');
   } finally {
     bioBtn.disabled = false;
-<<<<<<< HEAD
     bioBtnUser.disabled = false;
-=======
->>>>>>> 6d29b23398f159c8125aec1b7c611c79036521cf
   }
 }
 
@@ -718,8 +630,4 @@ if __name__ == "__main__":
     if not Config.MOONSHOT_API_KEY:
         print("错误: 请先在 .env 文件中设置 MOONSHOT_API_KEY")
         exit(1)
-<<<<<<< HEAD
     app.run(debug=True, host="0.0.0.0", port=9999)
-=======
-    app.run(debug=True, host="0.0.0.0", port=9999)
->>>>>>> 6d29b23398f159c8125aec1b7c611c79036521cf
