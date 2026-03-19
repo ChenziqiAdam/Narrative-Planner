@@ -29,17 +29,18 @@ class ExtractionStrategy(Enum):
 @dataclass
 class EventSlots:
     """
-    事件5核心槽位 + 3扩展槽位
+    事件6核心槽位 + 3扩展槽位
 
-    核心槽位：时间、地点、人物、事件、感受
+    核心槽位：时间、地点、人物、事件、感受、未展开线索
     扩展槽位：起因、结果、反思
     """
-    # 核心槽位
+    # 核心槽位（6层）
     time: Optional[str] = None           # 时间（如：1960年春天、我8岁那年）
     location: Optional[str] = None       # 地点（如：成都纺织厂、老家院子）
     people: Optional[List[str]] = None   # 涉及人物（如：["母亲", "王师傅"]）
     event: Optional[str] = None          # 事件描述（必填）
     feeling: Optional[str] = None        # 感受（如：很难过、特别自豪）
+    unexpanded_clues: Optional[str] = None  # 未展开线索（如：老王具体如何帮忙的细节）
 
     # 扩展槽位
     cause: Optional[str] = None          # 起因
@@ -53,13 +54,13 @@ class EventSlots:
     @property
     def core_filled(self) -> int:
         """核心槽位已填充数量"""
-        core_fields = [self.time, self.location, self.people, self.event, self.feeling]
+        core_fields = [self.time, self.location, self.people, self.event, self.feeling, self.unexpanded_clues]
         return sum(1 for f in core_fields if f is not None and f != [])
 
     @property
     def core_completion_rate(self) -> float:
         """核心槽位完成率"""
-        return self.core_filled / 5.0
+        return self.core_filled / 6.0
 
 
 @dataclass

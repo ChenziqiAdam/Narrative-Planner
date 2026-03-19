@@ -107,6 +107,7 @@ class EventExtractor(IEventExtractor):
       "people": ["人物1", "人物2"],
       "event": "事件描述",
       "feeling": "感受描述",
+      "unexpanded_clues": "未展开线索（如：具体细节未展开、新人物背景未说明）",
       "cause": "起因（如有）",
       "result": "结果（如有）",
       "reflection": "反思（如有）"
@@ -290,6 +291,7 @@ class EventExtractor(IEventExtractor):
             people=event_data.get("people"),
             event=event_data.get("event"),
             feeling=event_data.get("feeling"),
+            unexpanded_clues=event_data.get("unexpanded_clues"),
             cause=event_data.get("cause"),
             result=event_data.get("result"),
             reflection=event_data.get("reflection")
@@ -559,6 +561,7 @@ class EventExtractor(IEventExtractor):
                     people=updates.get("people") or existing_event.slots.people,
                     event=existing_event.slots.event,  # 事件描述不更新
                     feeling=updates.get("feeling") or existing_event.slots.feeling,
+                    unexpanded_clues=updates.get("unexpanded_clues") or existing_event.slots.unexpanded_clues,
                     cause=updates.get("cause") or existing_event.slots.cause,
                     result=updates.get("result") or existing_event.slots.result,
                     reflection=updates.get("reflection") or existing_event.slots.reflection

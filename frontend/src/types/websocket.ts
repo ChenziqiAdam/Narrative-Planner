@@ -54,6 +54,7 @@ export interface ExtractedEvent {
     people?: string[]
     event: string
     feeling?: string
+    unexpanded_clues?: string  // 未展开线索
   }
   confidence: number          // 置信度 0-1
   theme_id?: string           // 关联的主题ID
