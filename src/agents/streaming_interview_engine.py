@@ -168,7 +168,7 @@ class StreamingInterviewEngine(IInterviewEngine):
             # 调用LLM生成开场问题
             response = await asyncio.to_thread(
                 self.llm_client.chat.completions.create,
-                model=Config.MODEL_NAME,
+                model=Config.get_model_name("streaming"),
                 messages=[
                     {"role": "system", "content": self.system_prompt},
                     {"role": "user", "content": init_prompt}
@@ -259,7 +259,7 @@ class StreamingInterviewEngine(IInterviewEngine):
         try:
             stream = await asyncio.to_thread(
                 self.llm_client.chat.completions.create,
-                model=Config.MODEL_NAME,
+                model=Config.get_model_name("streaming"),
                 messages=messages,
                 temperature=0.7,
                 max_tokens=1000,

@@ -45,7 +45,7 @@ class EventExtractor(IEventExtractor):
         """
         # 初始化OpenAI客户端
         self.client = client or OpenAI(**Config.get_openai_client_kwargs())
-        self.model = Config.MODEL_NAME
+        self.model = Config.get_model_name("extractor")
 
         # 异步队列控制
         self.extraction_queue = asyncio.Queue()

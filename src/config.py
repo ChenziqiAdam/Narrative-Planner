@@ -23,6 +23,15 @@ class Config:
     MOONSHOT_API_KEY = os.getenv("MOONSHOT_API_KEY") or OPENAI_API_KEY
     MOONSHOT_BASE_URL = os.getenv("MOONSHOT_BASE_URL") or OPENAI_BASE_URL
     MODEL_NAME = os.getenv("MODEL_NAME", "moonshot-v1-8k")
+    STRUCTURED_MODEL_NAME = os.getenv("STRUCTURED_MODEL_NAME", "moonshot-v1-8k")
+    CHAT_MODEL_NAME = os.getenv("CHAT_MODEL_NAME", "kimi-latest")
+    PLANNER_MODEL_NAME = os.getenv("PLANNER_MODEL_NAME") or STRUCTURED_MODEL_NAME
+    INTERVIEWER_MODEL_NAME = os.getenv("INTERVIEWER_MODEL_NAME") or CHAT_MODEL_NAME
+    BASELINE_MODEL_NAME = os.getenv("BASELINE_MODEL_NAME") or INTERVIEWER_MODEL_NAME
+    EXTRACTOR_MODEL_NAME = os.getenv("EXTRACTOR_MODEL_NAME") or STRUCTURED_MODEL_NAME
+    INTERVIEWEE_MODEL_NAME = os.getenv("INTERVIEWEE_MODEL_NAME") or CHAT_MODEL_NAME
+    STREAMING_MODEL_NAME = os.getenv("STREAMING_MODEL_NAME") or INTERVIEWER_MODEL_NAME
+    CAMEL_MODEL_NAME = os.getenv("CAMEL_MODEL_NAME") or STRUCTURED_MODEL_NAME
 
     # App settings
     LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
@@ -70,6 +79,48 @@ class Config:
         if base_url:
             kwargs["base_url"] = base_url
         return kwargs
+
+    @classmethod
+    def get_model_name(cls, role=None):
+        role_key = (role or "").strip().lower()
+        model_map = {
+            "planner": cls.PLANNER_MODEL_NAME,
+            "interviewer": cls.INTERVIEWER_MODEL_NAME,
+            "baseline": cls.BASELINE_MODEL_NAME,
+            "extractor": cls.EXTRACTOR_MODEL_NAME,
+            "interviewee": cls.INTERVIEWEE_MODEL_NAME,
+            "streaming": cls.STREAMING_MODEL_NAME,
+            "camel": cls.CAMEL_MODEL_NAME,
+            "structured": cls.STRUCTURED_MODEL_NAME,
+            "chat": cls.CHAT_MODEL_NAME,
+        }
+        return model_map.get(role_key, cls.MODEL_NAME)
+
+    @classmethod
+    def get_model_candidates(cls, role=None):
+        role_key = (role or "").strip().lower()
+        if role_key in {"planner", "extractor", "camel"}:
+            candidates = [
+                cls.get_model_name(role_key),
+                cls.STRUCTURED_MODEL_NAME,
+                cls.MODEL_NAME,
+            ]
+        elif role_key in {"interviewer", "baseline", "interviewee", "streaming"}:
+            candidates = [
+                cls.get_model_name(role_key),
+                cls.CHAT_MODEL_NAME,
+                cls.MODEL_NAME,
+                cls.STRUCTURED_MODEL_NAME,
+            ]
+        else:
+            candidates = [cls.get_model_name(role_key), cls.MODEL_NAME]
+
+        unique_candidates = []
+        for candidate in candidates:
+            normalized = (candidate or "").strip()
+            if normalized and normalized not in unique_candidates:
+                unique_candidates.append(normalized)
+        return unique_candidates
 
 
 os.makedirs(Config.PROMPTS_DIR, exist_ok=True)

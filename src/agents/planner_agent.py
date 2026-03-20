@@ -1,133 +1,444 @@
 from __future__ import annotations
 
+import json
+import logging
+import os
 import uuid
-from typing import List, Optional
+from datetime import datetime
+from typing import Any, Dict, List, Optional
 
+import yaml
+from jinja2 import Template
+from openai import OpenAI
+
+from src.config import Config
+from src.prompts.planner_interview_prompts import PLANNER_PROMPT_TEMPLATE
 from src.state import MemoryCapsule, PlannerContext, QuestionPlan
+
+try:
+    from json_repair import repair_json
+except ImportError:  # pragma: no cover - optional dependency in some local envs
+    def repair_json(text: str) -> str:
+        return text
+
+
+logger = logging.getLogger(__name__)
 
 
 class PlannerAgent:
-    THEME_LABELS = {
-        "THEME_01_LIFE_CHAPTERS": "人生早期的重要阶段",
-        "THEME_02_PEAK_EXPERIENCE": "人生中的高光时刻",
-        "THEME_03_LOW_POINT": "人生中的低谷经历",
-        "THEME_04_TURNING_POINT": "人生转折点",
-        "THEME_05_CHILDHOOD_POSITIVE": "童年里快乐的回忆",
-        "THEME_06_CHILDHOOD_NEGATIVE": "童年里艰难的经历",
-        "THEME_07_ADULT_MEMORY": "成年后印象深刻的经历",
-        "THEME_13_LIFE_CHALLENGE": "人生中最难的挑战",
-        "THEME_14_HEALTH": "和健康相关的重要经历",
-        "THEME_15_LOSS": "重要的失落经历",
-        "THEME_16_FAILURE_REGRET": "失败或遗憾的经历",
+    VALID_ACTIONS = {
+        "DEEP_DIVE",
+        "BREADTH_SWITCH",
+        "CLARIFY",
+        "SUMMARIZE",
+        "PAUSE_SESSION",
+        "CLOSE_INTERVIEW",
+    }
+    VALID_SLOTS = {"time", "location", "people", "event", "feeling", "reflection", "cause", "result"}
+    VALID_TONES = {
+        "EMPATHIC_SUPPORTIVE",
+        "CURIOUS_INQUIRING",
+        "RESPECTFUL_REVERENT",
+        "CASUAL_CONVERSATIONAL",
+        "PROFESSIONAL_NEUTRAL",
+        "GENTLE_WARM",
+        "ENCOURAGING",
     }
 
-    def create_plan(self, context: PlannerContext) -> QuestionPlan:
-        memory = context.memory_capsule or MemoryCapsule.empty()
-        turn_index = context.turn_index
-        graph_summary = context.graph_summary
+    def __init__(self, instruction_path: Optional[str] = None):
+        self.client = OpenAI(**Config.get_openai_client_kwargs())
+        self.model_candidates = Config.get_model_candidates("planner")
+        self.model = self.model_candidates[0]
+        self.instruction_path = instruction_path or os.path.join(Config.PROJECT_ROOT, "docs", "planner-instruction.yaml")
+        self.instruction_payload = self._load_instruction_payload()
+        self.max_tokens = 4096 if self._is_reasoning_heavy_model() else 1600
 
+    def create_plan(self, context: PlannerContext) -> QuestionPlan:
+        if context.turn_index == 0:
+            return self._opening_plan(context)
+
+        system_prompt = self._render_system_prompt()
+        user_prompt = self._build_user_prompt(context)
+        max_attempts = max(1, min(Config.MAX_RETRIES, 2))
+        last_error: Optional[Exception] = None
+
+        for model_name in self.model_candidates:
+            candidate_max_tokens = 4096 if self._is_reasoning_heavy_model(model_name) else 1600
+            for attempt in range(1, max_attempts + 1):
+                try:
+                    response = self.client.chat.completions.create(
+                        model=model_name,
+                        messages=[
+                            {"role": "system", "content": system_prompt},
+                            {"role": "user", "content": user_prompt},
+                        ],
+                        max_tokens=candidate_max_tokens,
+                    )
+                    message = response.choices[0].message
+                    raw_content = (message.content or "").strip()
+                    if not raw_content:
+                        reasoning_content = getattr(message, "reasoning_content", "") or ""
+                        logger.warning(
+                            "PlannerAgent received empty content (model=%s, finish_reason=%s, reasoning_len=%s)",
+                            model_name,
+                            response.choices[0].finish_reason,
+                            len(reasoning_content),
+                        )
+                    planner_response = self._parse_response(raw_content)
+                    self.model = model_name
+                    self.max_tokens = candidate_max_tokens
+                    return self._to_question_plan(planner_response, context)
+                except Exception as exc:
+                    last_error = exc
+                    logger.warning(
+                        "PlannerAgent model=%s attempt %s/%s failed: %s",
+                        model_name,
+                        attempt,
+                        max_attempts,
+                        exc,
+                    )
+                    if self._should_fallback_model(exc):
+                        break
+
+        logger.error("PlannerAgent falling back to heuristic plan: %s", last_error)
+        return self._fallback_plan(context, last_error)
+
+    def _render_system_prompt(self) -> str:
+        return Template(PLANNER_PROMPT_TEMPLATE).render(
+            instruction_set=json.dumps(self.instruction_payload, ensure_ascii=False, indent=2),
+            timestamp=datetime.now().isoformat(),
+            instruction_id=str(uuid.uuid4()),
+        )
+
+    def _build_user_prompt(self, context: PlannerContext) -> str:
+        prompt_stage = self._prompt_stage(context.turn_index)
+        transcript_limit = 1 if prompt_stage == "early" else 2 if prompt_stage == "mid" else 3
+        transcript_payload = [
+            {
+                "turn_index": turn.turn_index,
+                "interviewer_question": turn.interviewer_question,
+                "interviewee_answer": turn.interviewee_answer,
+            }
+            for turn in context.recent_transcript[-transcript_limit:]
+        ]
+        memory = context.memory_capsule or MemoryCapsule.empty()
+        memory_payload = self._build_memory_payload(memory, prompt_stage)
+        graph_payload = self._build_graph_payload(context, prompt_stage)
+        evaluation_payload = self._build_evaluation_payload(context, prompt_stage)
+        elder_profile_payload = self._build_elder_profile_payload(context, prompt_stage)
+        available_ids = {
+            "theme_ids": list(context.graph_summary.theme_coverage.keys()),
+            "active_event_ids": list(context.graph_summary.active_event_ids),
+            "active_people_ids": list(memory.active_people_ids),
+            "unresolved_theme_ids": list(context.graph_summary.unresolved_theme_ids),
+        }
+        planning_note = self._planning_note(prompt_stage)
+
+        return (
+            "You are deciding the next structured interview action.\n"
+            "Use only the IDs provided below. If you are uncertain, return null instead of inventing one.\n"
+            "Do not generate the final natural-language question; only produce the planner JSON.\n\n"
+            f"Planning note:\n{planning_note}\n\n"
+            f"Prompt stage: {prompt_stage}\n\n"
+            f"Elder profile:\n{json.dumps(elder_profile_payload, ensure_ascii=False, indent=2)}\n\n"
+            f"Recent transcript:\n{json.dumps(transcript_payload, ensure_ascii=False, indent=2)}\n\n"
+            f"Memory capsule:\n{json.dumps(memory_payload, ensure_ascii=False, indent=2)}\n\n"
+            f"Graph summary:\n{json.dumps(graph_payload, ensure_ascii=False, indent=2)}\n\n"
+            f"Last turn evaluation:\n{json.dumps(evaluation_payload, ensure_ascii=False, indent=2)}\n\n"
+            f"Available IDs:\n{json.dumps(available_ids, ensure_ascii=False, indent=2)}"
+        )
+
+    def _parse_response(self, raw_content: str) -> Dict[str, Any]:
+        text = raw_content.strip()
+        if "```json" in text:
+            text = text.split("```json", 1)[1].split("```", 1)[0].strip()
+        elif "```" in text:
+            text = text.split("```", 1)[1].split("```", 1)[0].strip()
+
+        repaired = repair_json(text)
+        parsed = json.loads(repaired)
+        if not isinstance(parsed, dict) or "action" not in parsed:
+            raise ValueError("Planner response is missing required action payload.")
+        return parsed
+
+    def _to_question_plan(self, payload: Dict[str, Any], context: PlannerContext) -> QuestionPlan:
+        memory = context.memory_capsule or MemoryCapsule.empty()
+        action = payload.get("action", {}) if isinstance(payload.get("action"), dict) else {}
+        targets = action.get("targets", {}) if isinstance(action.get("targets"), dict) else {}
+        tactical_goal = action.get("tactical_goal", {}) if isinstance(action.get("tactical_goal"), dict) else {}
+        tone_constraint = (
+            action.get("tone_constraint", {})
+            if isinstance(action.get("tone_constraint"), dict)
+            else {}
+        )
+        strategy = action.get("strategy", {}) if isinstance(action.get("strategy"), dict) else {}
+        debug_snapshot = (
+            payload.get("_debug_snapshot", {})
+            if isinstance(payload.get("_debug_snapshot"), dict)
+            else {}
+        )
+        decision_trace = debug_snapshot.get("decision_trace", [])
+        if not isinstance(decision_trace, list):
+            decision_trace = [str(decision_trace)]
+
+        allowed_theme_ids = set(context.graph_summary.theme_coverage.keys())
+        allowed_event_ids = set(context.graph_summary.active_event_ids)
+        allowed_event_ids.update(
+            loop.source_event_id for loop in memory.open_loops if loop.source_event_id
+        )
+        allowed_person_ids = set(memory.active_people_ids)
+
+        primary_action = str(action.get("primary_action", "")).strip().upper()
+        if primary_action not in self.VALID_ACTIONS:
+            raise ValueError(f"Invalid primary action: {primary_action}")
+
+        target_slots = [
+            slot
+            for slot in targets.get("target_slots", [])
+            if isinstance(slot, str) and slot in self.VALID_SLOTS
+        ][:3]
+        primary_tone = str(tone_constraint.get("primary_tone", "")).strip().upper()
+        tone = primary_tone if primary_tone in self.VALID_TONES else self._pick_tone(memory)
+        secondary_tone = tone_constraint.get("secondary_tone")
+        tone_constraints = [
+            item for item in tone_constraint.get("constraints", [])
+            if isinstance(item, str)
+        ]
+        strategy_type = str(strategy.get("strategy_type", "")).strip() or self._strategy_from_slots(target_slots)
+        strategy_parameters = strategy.get("parameters", {})
+        if not isinstance(strategy_parameters, dict):
+            strategy_parameters = {}
+        strategy_priority = strategy.get("priority", 1)
+        if not isinstance(strategy_priority, int):
+            strategy_priority = 1
+
+        reference_anchor = targets.get("reference_anchor") or strategy_parameters.get("anchor")
+        target_theme_id = self._sanitize_identifier(targets.get("target_theme_id"), allowed_theme_ids)
+        target_event_id = self._sanitize_identifier(targets.get("target_event_id"), allowed_event_ids)
+        target_person_id = self._sanitize_identifier(targets.get("target_person_id"), allowed_person_ids)
+        reasoning_trace = [str(item).strip() for item in decision_trace if str(item).strip()]
+
+        instruction_set = {
+            "tactical_goal": {
+                "goal_type": tactical_goal.get("goal_type", "EXTRACT_DETAILS"),
+                "description": tactical_goal.get("description", ""),
+            },
+            "targets": {
+                "target_theme_id": target_theme_id,
+                "target_event_id": target_event_id,
+                "target_person_id": target_person_id,
+                "target_slots": target_slots,
+                "reference_anchor": reference_anchor,
+            },
+            "tone_constraint": {
+                "primary_tone": tone,
+                "secondary_tone": secondary_tone,
+                "constraints": tone_constraints,
+            },
+            "strategy": {
+                "strategy_type": strategy_type,
+                "parameters": strategy_parameters,
+                "priority": strategy_priority,
+            },
+        }
+
+        return QuestionPlan(
+            plan_id=f"plan_{uuid.uuid4().hex[:10]}",
+            primary_action=primary_action,
+            tactical_goal=str(tactical_goal.get("description", "")).strip() or "Continue the interview naturally.",
+            target_theme_id=target_theme_id,
+            target_event_id=target_event_id,
+            target_person_id=target_person_id,
+            tactical_goal_type=str(tactical_goal.get("goal_type", "EXTRACT_DETAILS")).strip() or "EXTRACT_DETAILS",
+            target_slots=target_slots,
+            tone=tone,
+            secondary_tone=secondary_tone if isinstance(secondary_tone, str) else None,
+            tone_constraints=tone_constraints,
+            strategy=strategy_type,
+            strategy_parameters=strategy_parameters,
+            strategy_priority=strategy_priority,
+            reasoning_trace=reasoning_trace or ["Planner returned no decision trace; using parsed action directly."],
+            instruction_set=instruction_set,
+            reference_anchor=str(reference_anchor).strip() if isinstance(reference_anchor, str) and reference_anchor.strip() else None,
+            raw_planner_response=payload,
+        )
+
+    def _fallback_plan(self, context: PlannerContext, error: Optional[Exception]) -> QuestionPlan:
+        memory = context.memory_capsule or MemoryCapsule.empty()
+        graph_summary = context.graph_summary
         reasoning_trace: List[str] = []
         tone = self._pick_tone(memory)
 
-        if turn_index == 0:
-            target_theme_id = graph_summary.unresolved_theme_ids[0] if graph_summary.unresolved_theme_ids else None
-            reasoning_trace.append("Opening turn: start with a broad, welcoming question.")
-            return QuestionPlan(
-                plan_id=f"plan_{uuid.uuid4().hex[:10]}",
-                primary_action="BREADTH_SWITCH",
-                tactical_goal="Open the interview and orient around the elder's early life or main timeline.",
-                target_theme_id=target_theme_id,
-                target_event_id=None,
-                target_person_id=None,
-                target_slots=[],
-                tone=tone,
-                strategy="OPENING_ORIENTATION",
-                reasoning_trace=reasoning_trace,
-                candidate_questions=self._opening_candidates(context, target_theme_id),
-            )
-
         if graph_summary.overall_coverage >= 0.88 and not memory.open_loops:
-            reasoning_trace.append("Coverage is high and no major open loops remain.")
-            return QuestionPlan(
-                plan_id=f"plan_{uuid.uuid4().hex[:10]}",
+            reasoning_trace.append("Planner model unavailable; coverage is already high, so closing gracefully.")
+            return self._build_fallback_question_plan(
                 primary_action="CLOSE_INTERVIEW",
-                tactical_goal="Close the interview gracefully after confirming major life themes are covered.",
+                tactical_goal="Close the interview gracefully after the main themes are covered.",
+                tactical_goal_type="FINAL_CLOSURE",
                 target_theme_id=context.graph_summary.current_focus_theme_id,
                 target_event_id=None,
                 target_person_id=None,
                 target_slots=[],
                 tone=tone,
                 strategy="GRACEFUL_CLOSE",
+                strategy_parameters={},
                 reasoning_trace=reasoning_trace,
-                candidate_questions=["今天聊了很多珍贵的回忆。最后，您最希望后人记住您人生中的哪一部分？"],
+                reference_anchor=None,
+                raw_planner_response={"error": str(error) if error else "planner unavailable"},
             )
 
         if memory.contradictions:
             contradiction = memory.contradictions[0]
-            reasoning_trace.append("A contradiction was detected and should be clarified before moving on.")
-            return QuestionPlan(
-                plan_id=f"plan_{uuid.uuid4().hex[:10]}",
+            reasoning_trace.append("Planner model unavailable; contradiction detected, so clarify before moving on.")
+            return self._build_fallback_question_plan(
                 primary_action="CLARIFY",
                 tactical_goal=contradiction.description,
+                tactical_goal_type="RESOLVE_CONFLICT",
                 target_theme_id=context.graph_summary.current_focus_theme_id,
                 target_event_id=contradiction.event_ids[0] if contradiction.event_ids else None,
                 target_person_id=None,
                 target_slots=[],
                 tone="GENTLE_WARM",
                 strategy="CONFLICT_RESOLUTION",
+                strategy_parameters={},
                 reasoning_trace=reasoning_trace,
-                candidate_questions=["我想确认一下刚才那段经历的时间或地点，您愿意再帮我理一理吗？"],
+                reference_anchor=contradiction.description,
+                raw_planner_response={"error": str(error) if error else "planner unavailable"},
             )
 
         hottest_loop = memory.open_loops[0] if memory.open_loops else None
         if hottest_loop and self._can_deep_dive(memory):
             target_slots = self._slots_from_loop(hottest_loop)
-            reasoning_trace.append(f"Open loop selected: {hottest_loop.description}")
-            return QuestionPlan(
-                plan_id=f"plan_{uuid.uuid4().hex[:10]}",
+            reasoning_trace.append(f"Planner model unavailable; follow the hottest open loop: {hottest_loop.description}")
+            return self._build_fallback_question_plan(
                 primary_action="DEEP_DIVE",
                 tactical_goal=hottest_loop.description,
+                tactical_goal_type=self._goal_type_from_slots(target_slots),
                 target_theme_id=context.graph_summary.current_focus_theme_id,
                 target_event_id=hottest_loop.source_event_id,
                 target_person_id=None,
                 target_slots=target_slots,
                 tone=tone,
                 strategy=self._strategy_from_slots(target_slots),
+                strategy_parameters={"anchor": hottest_loop.description},
                 reasoning_trace=reasoning_trace,
-                candidate_questions=self._follow_up_candidates(hottest_loop.description, target_slots),
+                reference_anchor=hottest_loop.description,
+                raw_planner_response={"error": str(error) if error else "planner unavailable"},
             )
 
         target_theme_id = self._pick_undercovered_theme(context)
         if target_theme_id:
-            reasoning_trace.append(f"Switching breadth to an under-covered theme: {target_theme_id}")
-            return QuestionPlan(
-                plan_id=f"plan_{uuid.uuid4().hex[:10]}",
+            reasoning_trace.append("Planner model unavailable; switching to an under-covered theme.")
+            return self._build_fallback_question_plan(
                 primary_action="BREADTH_SWITCH",
                 tactical_goal="Move to a less-covered life theme while keeping the conversation natural.",
+                tactical_goal_type="EXPLORE_THEME",
                 target_theme_id=target_theme_id,
                 target_event_id=None,
                 target_person_id=None,
-                target_slots=[],
+                target_slots=["event"],
                 tone=tone,
                 strategy="THEME_SWITCH",
+                strategy_parameters={"theme_id": target_theme_id},
                 reasoning_trace=reasoning_trace,
-                candidate_questions=self._theme_switch_candidates(context, target_theme_id),
+                reference_anchor=target_theme_id,
+                raw_planner_response={"error": str(error) if error else "planner unavailable"},
             )
 
-        reasoning_trace.append("No urgent open loop found; summarize to checkpoint and invite one more detail.")
-        return QuestionPlan(
-            plan_id=f"plan_{uuid.uuid4().hex[:10]}",
+        reasoning_trace.append("Planner model unavailable; checkpoint the conversation and invite one reflective detail.")
+        return self._build_fallback_question_plan(
             primary_action="SUMMARIZE",
             tactical_goal="Checkpoint the conversation and invite one more reflective memory.",
+            tactical_goal_type="SYNTHESIZE_THEME",
             target_theme_id=context.graph_summary.current_focus_theme_id,
             target_event_id=None,
             target_person_id=None,
             target_slots=["reflection"],
             tone=tone,
             strategy="CHECKPOINT_SUMMARY",
+            strategy_parameters={},
             reasoning_trace=reasoning_trace,
-            candidate_questions=["回头看刚才聊到的这些经历，哪一段最能代表那个阶段的您？"],
+            reference_anchor=None,
+            raw_planner_response={"error": str(error) if error else "planner unavailable"},
         )
+
+    def _build_fallback_question_plan(
+        self,
+        primary_action: str,
+        tactical_goal: str,
+        tactical_goal_type: str,
+        target_theme_id: Optional[str],
+        target_event_id: Optional[str],
+        target_person_id: Optional[str],
+        target_slots: List[str],
+        tone: str,
+        strategy: str,
+        strategy_parameters: Dict[str, Any],
+        reasoning_trace: List[str],
+        reference_anchor: Optional[str],
+        raw_planner_response: Dict[str, Any],
+    ) -> QuestionPlan:
+        instruction_set = {
+            "tactical_goal": {
+                "goal_type": tactical_goal_type,
+                "description": tactical_goal,
+            },
+            "targets": {
+                "target_theme_id": target_theme_id,
+                "target_event_id": target_event_id,
+                "target_person_id": target_person_id,
+                "target_slots": target_slots,
+                "reference_anchor": reference_anchor,
+            },
+            "tone_constraint": {
+                "primary_tone": tone,
+                "secondary_tone": None,
+                "constraints": ["NO_LEADING_QUESTIONS"],
+            },
+            "strategy": {
+                "strategy_type": strategy,
+                "parameters": strategy_parameters,
+                "priority": 1,
+            },
+        }
+        return QuestionPlan(
+            plan_id=f"plan_{uuid.uuid4().hex[:10]}",
+            primary_action=primary_action,
+            tactical_goal=tactical_goal,
+            target_theme_id=target_theme_id,
+            target_event_id=target_event_id,
+            target_person_id=target_person_id,
+            tactical_goal_type=tactical_goal_type,
+            target_slots=target_slots,
+            tone=tone,
+            secondary_tone=None,
+            tone_constraints=["NO_LEADING_QUESTIONS"],
+            strategy=strategy,
+            strategy_parameters=strategy_parameters,
+            strategy_priority=1,
+            reasoning_trace=reasoning_trace,
+            instruction_set=instruction_set,
+            reference_anchor=reference_anchor,
+            raw_planner_response=raw_planner_response,
+        )
+
+    def _load_instruction_payload(self) -> Dict[str, Any]:
+        try:
+            with open(self.instruction_path, "r", encoding="utf-8") as file:
+                payload = yaml.safe_load(file) or {}
+                if isinstance(payload, dict):
+                    return payload
+        except Exception as exc:
+            logger.warning("Failed to load planner instruction YAML %s: %s", self.instruction_path, exc)
+        return {}
+
+    def _sanitize_identifier(self, value: Any, allowed_ids: set[str]) -> Optional[str]:
+        if not isinstance(value, str):
+            return None
+        candidate = value.strip()
+        if not candidate:
+            return None
+        return candidate if candidate in allowed_ids else None
 
     def _pick_tone(self, memory: MemoryCapsule) -> str:
         emotional_state = memory.emotional_state
@@ -178,32 +489,162 @@ class PlannerAgent:
             return "PERSON_CONTEXT_FILL"
         return "DETAIL_EXPANSION"
 
-    def _opening_candidates(self, context: PlannerContext, target_theme_id: Optional[str]) -> List[str]:
-        background = (context.elder_profile.background_summary or "").lower()
-        if any(keyword in background for keyword in ["工厂", "工作", "上班", "career", "work"]):
-            return ["您还记得自己第一次参加工作时的情景吗？能从那一天讲起，也说说大概是什么时候、在哪里吗？"]
-        if any(keyword in background for keyword in ["结婚", "家庭", "孩子", "老伴"]):
-            return ["您还记得自己成家前后最重要的一件事吗？愿意从那件具体的事讲起，也说说当时是什么时候、在哪里吗？"]
-        if target_theme_id and target_theme_id in context.graph_summary.theme_coverage:
-            return ["您能先讲一件发生在年轻时候、至今记得最清楚的具体事情吗？最好说说大概是什么时候、在哪里发生的。"]
-        return ["您能先讲一件对您很重要、而且记得最清楚的具体事情吗？最好说说大概是什么时候、在哪里发生的。"]
+    def _goal_type_from_slots(self, target_slots: List[str]) -> str:
+        if any(slot in {"reflection"} for slot in target_slots):
+            return "EXTRACT_REFLECTIONS"
+        if any(slot in {"feeling"} for slot in target_slots):
+            return "EXTRACT_EMOTIONS"
+        if any(slot in {"time", "location", "people"} for slot in target_slots):
+            return "EXTRACT_DETAILS"
+        return "EXTRACT_DETAILS"
 
-    def _follow_up_candidates(self, description: str, target_slots: List[str]) -> List[str]:
-        slot_templates = {
-            "time": "这件事大概发生在什么时候，您还记得吗？",
-            "location": "当时是在哪里发生的，周围是什么样子？",
-            "people": "当时还有哪些人和您在一起，他们和您是什么关系？",
-            "reflection": "现在回头看这件事，您觉得它对您意味着什么？",
-            "feeling": "那一刻您心里最强烈的感受是什么？",
-            "cause": "这件事是怎么开始的，背后有什么原因吗？",
-            "result": "后来事情是怎么发展的，对您带来了什么变化？",
-            "event": "您愿意把这件事再展开讲讲，尤其是最关键的细节吗？",
+    def _is_reasoning_heavy_model(self, model_name: Optional[str] = None) -> bool:
+        model_name = (model_name or self.model or "").lower()
+        return "thinking" in model_name or "k2.5" in model_name or "reasoning" in model_name
+
+    def _should_fallback_model(self, error: Exception) -> bool:
+        message = str(error).lower()
+        return (
+            "not found the model" in message
+            or "permission denied" in message
+            or "resource_not_found_error" in message
+        )
+
+    def _prompt_stage(self, turn_index: int) -> str:
+        if turn_index <= 2:
+            return "early"
+        if turn_index <= 5:
+            return "mid"
+        return "full"
+
+    def _planning_note(self, prompt_stage: str) -> str:
+        if prompt_stage == "early":
+            return (
+                "This is still an early interview turn. Use progressive disclosure: stay close to the latest answer, "
+                "prefer one concrete follow-up target, and avoid over-planning across too many themes."
+            )
+        if prompt_stage == "mid":
+            return (
+                "This is a middle interview turn. You may combine the latest answer with one or two broader memory or graph hints, "
+                "but keep the next move anchored and natural."
+            )
+        return (
+            "This is a later interview turn. You can use the broader session state to balance depth, coverage, and open-loop closure."
+        )
+
+    def _build_elder_profile_payload(self, context: PlannerContext, prompt_stage: str) -> Dict[str, Any]:
+        profile = context.elder_profile.to_dict()
+        stable_facts = profile.get("stable_facts", {})
+        if prompt_stage == "early" and isinstance(stable_facts, dict):
+            profile["stable_facts"] = {
+                key: stable_facts[key]
+                for key in list(stable_facts.keys())[:4]
+            }
+        return profile
+
+    def _build_memory_payload(self, memory: MemoryCapsule, prompt_stage: str) -> Dict[str, Any]:
+        emotional_state = memory.emotional_state.to_dict() if memory.emotional_state else {}
+        if prompt_stage == "early":
+            return {
+                "session_summary": memory.session_summary,
+                "current_storyline": memory.current_storyline,
+                "recent_topics": memory.recent_topics[:2],
+                "open_loops": [loop.to_dict() for loop in memory.open_loops[:3]],
+                "do_not_repeat": memory.do_not_repeat[-2:],
+                "emotional_state": emotional_state,
+            }
+        if prompt_stage == "mid":
+            return {
+                "session_summary": memory.session_summary,
+                "current_storyline": memory.current_storyline,
+                "active_event_ids": memory.active_event_ids[:4],
+                "active_people_ids": memory.active_people_ids[:4],
+                "recent_topics": memory.recent_topics[:3],
+                "do_not_repeat": memory.do_not_repeat[-3:],
+                "open_loops": [loop.to_dict() for loop in memory.open_loops[:4]],
+                "contradictions": [note.to_dict() for note in memory.contradictions[:2]],
+                "emotional_state": emotional_state,
+            }
+        return {
+            "session_summary": memory.session_summary,
+            "current_storyline": memory.current_storyline,
+            "active_event_ids": memory.active_event_ids,
+            "active_people_ids": memory.active_people_ids,
+            "recent_topics": memory.recent_topics,
+            "do_not_repeat": memory.do_not_repeat[-3:],
+            "open_loops": [loop.to_dict() for loop in memory.open_loops[:6]],
+            "contradictions": [note.to_dict() for note in memory.contradictions[:4]],
+            "emotional_state": emotional_state,
         }
-        questions = [slot_templates[slot] for slot in target_slots if slot in slot_templates]
-        if not questions:
-            questions.append(f"关于“{description}”，您愿意再多讲一点细节吗？")
-        return questions[:3]
 
-    def _theme_switch_candidates(self, context: PlannerContext, target_theme_id: str) -> List[str]:
-        theme_title = self.THEME_LABELS.get(target_theme_id, "那段重要经历")
-        return [f"我们换到您人生的另一段重要经历上。关于{theme_title}，您能讲一件记得最清楚的具体事情吗？最好说说它大概是什么时候、在哪里发生的。"]
+    def _build_graph_payload(self, context: PlannerContext, prompt_stage: str) -> Dict[str, Any]:
+        summary = context.graph_summary
+        ranked_slot_gaps = sorted(summary.slot_coverage.items(), key=lambda item: item[1])
+        ranked_theme_gaps = sorted(summary.theme_coverage.items(), key=lambda item: item[1])
+        if prompt_stage == "early":
+            return {
+                "overall_coverage": summary.overall_coverage,
+                "current_focus_theme_id": summary.current_focus_theme_id,
+                "top_undercovered_slots": ranked_slot_gaps[:3],
+                "top_undercovered_themes": ranked_theme_gaps[:2],
+                "active_event_ids": summary.active_event_ids[:3],
+                "unresolved_theme_ids": summary.unresolved_theme_ids[:3],
+            }
+        if prompt_stage == "mid":
+            return {
+                "overall_coverage": summary.overall_coverage,
+                "theme_coverage": dict(ranked_theme_gaps[:4]),
+                "slot_coverage": dict(ranked_slot_gaps[:4]),
+                "people_coverage": summary.people_coverage,
+                "current_focus_theme_id": summary.current_focus_theme_id,
+                "active_event_ids": summary.active_event_ids[:4],
+                "unresolved_theme_ids": summary.unresolved_theme_ids[:4],
+            }
+        return summary.to_dict()
+
+    def _build_evaluation_payload(self, context: PlannerContext, prompt_stage: str) -> Dict[str, Any]:
+        if not context.last_turn_evaluation:
+            return {}
+        if prompt_stage == "early":
+            return {
+                "question_quality_score": context.last_turn_evaluation.question_quality_score,
+                "information_gain_score": context.last_turn_evaluation.information_gain_score,
+                "planner_alignment_score": context.last_turn_evaluation.planner_alignment_score,
+                "coverage_gain": context.last_turn_evaluation.coverage_gain,
+            }
+        return context.last_turn_evaluation.to_dict()
+
+    def _opening_plan(self, context: PlannerContext) -> QuestionPlan:
+        target_theme_id = context.graph_summary.current_focus_theme_id
+        if not target_theme_id and context.graph_summary.unresolved_theme_ids:
+            target_theme_id = context.graph_summary.unresolved_theme_ids[0]
+
+        background = (context.elder_profile.background_summary or "").strip()
+        hometown = (context.elder_profile.hometown or "").strip()
+        if background:
+            reference_anchor = background[:60]
+        elif hometown:
+            reference_anchor = hometown
+        elif context.elder_profile.birth_year:
+            reference_anchor = f"{context.elder_profile.birth_year}年出生"
+        else:
+            reference_anchor = "人生早期经历"
+
+        return self._build_fallback_question_plan(
+            primary_action="BREADTH_SWITCH",
+            tactical_goal="Open the interview with a concrete, profile-grounded starting point.",
+            tactical_goal_type="EXPLORE_PERIOD",
+            target_theme_id=target_theme_id,
+            target_event_id=None,
+            target_person_id=None,
+            target_slots=["event", "time", "location"],
+            tone="EMPATHIC_SUPPORTIVE",
+            strategy="OPENING_ORIENTATION",
+            strategy_parameters={"source": "elder_profile", "opening_turn": True},
+            reasoning_trace=[
+                "Opening turn: use known elder profile instead of waiting for a heavy planner inference.",
+                "Ground the first question in stable profile facts so the interview can start immediately.",
+            ],
+            reference_anchor=reference_anchor,
+            raw_planner_response={"mode": "opening_profile_bootstrap"},
+        )

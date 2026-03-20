@@ -77,6 +77,7 @@ class SessionOrchestrator:
             state.memory_capsule,
             graph_summary,
             plan,
+            focus_event_payload=None,
         )
         state.pending_plan = plan
         state.pending_question = generated["question"]
@@ -132,12 +133,14 @@ class SessionOrchestrator:
                 last_turn_evaluation=last_turn_evaluation,
             )
         )
+        focus_event_payload = self._build_focus_event_payload(state, next_plan)
         generated = self.interviewer_agent.generate_question(
             state.elder_profile,
             state.recent_transcript(3),
             state.memory_capsule,
             post_graph_summary,
             next_plan,
+            focus_event_payload=focus_event_payload,
         )
         state.pending_plan = next_plan
         state.pending_question = generated["question"]
@@ -257,6 +260,50 @@ class SessionOrchestrator:
 
     async def close(self) -> None:
         await self.extraction_agent.close()
+
+    def _build_focus_event_payload(self, state: SessionState, plan) -> Optional[Dict[str, Any]]:
+        target_event_id = plan.target_event_id if plan else None
+        if not target_event_id:
+            active_event_ids = state.memory_capsule.active_event_ids if state.memory_capsule else []
+            target_event_id = active_event_ids[-1] if active_event_ids else None
+        if not target_event_id:
+            return None
+
+        event = state.canonical_events.get(target_event_id)
+        if not event:
+            return None
+
+        known_slots = {
+            "time": event.time,
+            "location": event.location,
+            "people": event.people_names,
+            "event": event.event or event.summary,
+            "feeling": event.feeling,
+            "reflection": event.reflection,
+            "cause": event.cause,
+            "result": event.result,
+        }
+        missing_slots = [
+            slot_name for slot_name, value in known_slots.items()
+            if value in (None, "", [])
+        ]
+        recent_answer_span = ""
+        for turn in reversed(state.transcript):
+            if turn.turn_id in event.source_turn_ids:
+                recent_answer_span = turn.interviewee_answer
+                break
+
+        return {
+            "event_id": event.event_id,
+            "title": event.title,
+            "summary": event.summary,
+            "known_slots": known_slots,
+            "missing_slots": missing_slots,
+            "people_names": list(event.people_names),
+            "recent_answer_span": recent_answer_span,
+            "unexpanded_clues": list(event.unexpanded_clues),
+            "source_turn_ids": list(event.source_turn_ids),
+        }
 
     def _require_state(self) -> SessionState:
         state = self.store.get(self.session_id)

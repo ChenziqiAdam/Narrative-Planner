@@ -31,9 +31,16 @@ logger = logging.getLogger(__name__)
 class BaselineAgent:
     """A standalone baseline interview agent with no planner-side backends."""
 
+    _PROMPT_PLACEHOLDERS = (
+        "[用户的基本生平信息]",
+        "[鐢ㄦ埛鐨勫熀鏈敓骞充俊鎭痌",
+    )
+
     def __init__(self, session_id: str | None = None):
         self.session_id = session_id or datetime.now().strftime("%Y%m%d_%H%M%S")
         self.client = OpenAI(**Config.get_openai_client_kwargs())
+        self.model_candidates = Config.get_model_candidates("baseline")
+        self.model = self.model_candidates[0]
         self.conversation_history: list[dict[str, str]] = []
 
         prompt_path = os.path.join(Config.PROMPTS_DIR, "baseline_system_prompt.txt")
@@ -43,7 +50,10 @@ class BaselineAgent:
         logger.info("Baseline Agent initialized (session=%s)", self.session_id)
 
     def initialize_conversation(self, basic_info: str):
-        system_message = self.system_prompt.replace("[用户的基本生平信息]", basic_info)
+        system_message = self.system_prompt
+        for placeholder in self._PROMPT_PLACEHOLDERS:
+            system_message = system_message.replace(placeholder, basic_info)
+
         self.conversation_history = [
             {"role": "system", "content": system_message},
             {"role": "user", "content": "请开始访谈，先向受访者问好并提出第一个问题。"},
@@ -54,20 +64,28 @@ class BaselineAgent:
         if user_response:
             self.conversation_history.append({"role": "user", "content": user_response})
 
-        try:
-            response = self.client.chat.completions.create(
-                model=Config.MODEL_NAME,
-                messages=self.conversation_history,
-                max_tokens=4096,
-            )
-            question = (response.choices[0].message.content or "").strip()
-            if question:
-                self.conversation_history.append({"role": "assistant", "content": question})
-            logger.info("Baseline generated next turn")
-            return question
-        except Exception as exc:
-            logger.error("Baseline API call failed: %s", exc)
-            return "抱歉，我遇到了一些技术问题，请稍后再试。"
+        last_error = None
+        for model_name in self.model_candidates:
+            try:
+                response = self.client.chat.completions.create(
+                    model=model_name,
+                    messages=self.conversation_history,
+                    max_tokens=4096,
+                )
+                question = (response.choices[0].message.content or "").strip()
+                if question:
+                    self.model = model_name
+                    self.conversation_history.append({"role": "assistant", "content": question})
+                logger.info("Baseline generated next turn with model=%s", model_name)
+                return question
+            except Exception as exc:
+                last_error = exc
+                logger.warning("Baseline API call failed with model=%s: %s", model_name, exc)
+                if not self._should_fallback_model(exc):
+                    break
+
+        logger.error("Baseline API call failed: %s", last_error)
+        return "抱歉，我这边刚才没有顺利组织出下一个问题，请稍后再试一次。"
 
     def save_conversation(self):
         results_dir = "results/conversations"
@@ -79,6 +97,14 @@ class BaselineAgent:
                 file.write(f"[{message['role']}]: {message['content']}\n\n")
 
         logger.info("Baseline conversation saved to %s", output_file)
+
+    def _should_fallback_model(self, error: Exception) -> bool:
+        message = str(error).lower()
+        return (
+            "not found the model" in message
+            or "permission denied" in message
+            or "resource_not_found_error" in message
+        )
 
 
 if __name__ == "__main__":

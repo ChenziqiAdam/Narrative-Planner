@@ -184,11 +184,18 @@ class QuestionPlan:
     target_theme_id: Optional[str]
     target_event_id: Optional[str]
     target_person_id: Optional[str]
+    tactical_goal_type: str = "EXTRACT_DETAILS"
     target_slots: List[str] = field(default_factory=list)
     tone: str = "EMPATHIC_SUPPORTIVE"
+    secondary_tone: Optional[str] = None
+    tone_constraints: List[str] = field(default_factory=list)
     strategy: str = "OBJECT_TO_EMOTION"
+    strategy_parameters: Dict[str, Any] = field(default_factory=dict)
+    strategy_priority: int = 1
     reasoning_trace: List[str] = field(default_factory=list)
-    candidate_questions: List[str] = field(default_factory=list)
+    instruction_set: Dict[str, Any] = field(default_factory=dict)
+    reference_anchor: Optional[str] = None
+    raw_planner_response: Dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
         return serialize_value(self)

@@ -8,6 +8,11 @@ from typing import Any
 
 from openai import OpenAI
 
+try:
+    from json_repair import repair_json
+except ImportError:  # pragma: no cover - optional until dependencies are installed
+    repair_json = None
+
 project_root = os.path.join(os.path.dirname(__file__), "..", "..")
 if project_root not in sys.path:
     sys.path.insert(0, project_root)
@@ -17,12 +22,67 @@ from src.prompts.roles.elderly_promot import ElderPromptGenerator
 from src.tools.elder_tools import ElderMemorySystem, get_tool_callables, get_tool_schemas
 
 
+REPLY_KEYS = ("reply", "response", "answer")
+DEFAULT_REPLY_FALLBACK = "这个问题我得再想想。"
+
+
+def _strip_code_fences(raw: str) -> str:
+    return re.sub(r"```(?:json)?|```", "", raw or "").strip()
+
+
+def _parse_json_like(raw: str) -> Any | None:
+    cleaned = _strip_code_fences(raw)
+    if not cleaned:
+        return None
+
+    parse_candidates = [cleaned]
+    if repair_json is not None:
+        try:
+            repaired = repair_json(cleaned)
+        except Exception:
+            repaired = None
+        if repaired and repaired not in parse_candidates:
+            parse_candidates.append(repaired)
+
+    for candidate in parse_candidates:
+        try:
+            return json.loads(candidate)
+        except (json.JSONDecodeError, TypeError, ValueError):
+            continue
+
+    return None
+
+
+def extract_interviewee_reply(raw: str) -> str:
+    cleaned = _strip_code_fences(raw)
+    if not cleaned:
+        return DEFAULT_REPLY_FALLBACK
+
+    parsed = _parse_json_like(cleaned)
+    if parsed is None:
+        return cleaned
+
+    if isinstance(parsed, dict):
+        for key in REPLY_KEYS:
+            value = parsed.get(key)
+            if isinstance(value, str) and value.strip():
+                return value.strip()
+        return DEFAULT_REPLY_FALLBACK
+
+    if isinstance(parsed, str):
+        return parsed.strip() or DEFAULT_REPLY_FALLBACK
+
+    return cleaned
+
+
 class IntervieweeAgent:
     def __init__(self, profile_path, save_path=None):
         self.profile_path = profile_path
         self.save_path = save_path
         self.history = ""
         self.basic_info = ""
+        self.model_candidates = Config.get_model_candidates("interviewee")
+        self.model = self.model_candidates[0]
         self._prompt_generator = ElderPromptGenerator(template_path=Config.INTERVIEWEE_PROMPT_TEMPLATE)
         self._base_profile_data = self._prompt_generator.load_elder_profile(self.profile_path)
 
@@ -47,7 +107,7 @@ class IntervieweeAgent:
         self.sys_prompt = self._prompt_generator.generate_prompt(profile_data)
 
     def _load_step_prompt(self, history, question):
-        return f"采访历史：{history}\n采访问题：{question}"
+        return f"访谈历史：{history}\n访谈问题：{question}"
 
     def _init_client(self):
         self.client = OpenAI(**Config.get_openai_client_kwargs())
@@ -63,17 +123,21 @@ class IntervieweeAgent:
         if basic_info.get("name"):
             parts.append(f"姓名：{basic_info['name']}")
         if basic_info.get("birth_year"):
-            parts.append(f"出生于 {basic_info['birth_year']} 年")
+            parts.append(f"出生年份：{basic_info['birth_year']}")
         elif basic_info.get("age"):
-            parts.append(f"年龄：{basic_info['age']} 岁")
+            parts.append(f"年龄：{basic_info['age']}")
         if basic_info.get("hometown"):
             parts.append(f"家乡：{basic_info['hometown']}")
         if basic_info.get("background"):
             parts.append(f"背景：{basic_info['background']}")
 
-        return "，".join(parts)
+        return "；".join(parts)
 
-    def _apply_basic_info_overrides(self, profile_data: dict[str, Any], basic_info: dict[str, Any]) -> dict[str, Any]:
+    def _apply_basic_info_overrides(
+        self,
+        profile_data: dict[str, Any],
+        basic_info: dict[str, Any],
+    ) -> dict[str, Any]:
         profile_root = profile_data.setdefault("elder_profile", {})
         basic_profile = profile_root.setdefault("basic_info", {})
 
@@ -106,26 +170,7 @@ class IntervieweeAgent:
         return profile_data
 
     def _normalize_reply(self, raw: str) -> str:
-        cleaned = re.sub(r"```(?:json)?|```", "", raw or "").strip()
-        if not cleaned:
-            return "这个问题我得再想想。"
-
-        try:
-            data = json.loads(cleaned)
-        except (json.JSONDecodeError, TypeError, ValueError):
-            return cleaned
-
-        if isinstance(data, dict):
-            for key in ("reply", "response", "answer"):
-                value = data.get(key)
-                if isinstance(value, str) and value.strip():
-                    return value.strip()
-            return "这个问题我得再想想。"
-
-        if isinstance(data, str):
-            return data.strip()
-
-        return cleaned
+        return extract_interviewee_reply(raw)
 
     def record_turn(self, question: str, answer: str):
         question = (question or "").strip()
@@ -141,12 +186,7 @@ class IntervieweeAgent:
         ]
 
         while True:
-            response = self.client.chat.completions.create(
-                model=Config.MODEL_NAME,
-                messages=messages,
-                tools=self.tools,
-                tool_choice="auto",
-            )
+            response = self._create_completion(messages)
             message = response.choices[0].message
 
             if not message.tool_calls:
@@ -173,7 +213,13 @@ class IntervieweeAgent:
 
             for tool_call in message.tool_calls:
                 fn_name = tool_call.function.name
-                fn_args = json.loads(tool_call.function.arguments)
+                fn_args_raw = tool_call.function.arguments or "{}"
+                if repair_json is not None:
+                    try:
+                        fn_args_raw = repair_json(fn_args_raw)
+                    except Exception:
+                        pass
+                fn_args = json.loads(fn_args_raw)
                 fn = self.tool_callables.get(fn_name)
                 result = fn(**fn_args) if fn else {"error": f"unknown tool: {fn_name}"}
                 messages.append(
@@ -184,13 +230,39 @@ class IntervieweeAgent:
                     }
                 )
 
+    def _create_completion(self, messages):
+        last_error = None
+        for model_name in self.model_candidates:
+            try:
+                response = self.client.chat.completions.create(
+                    model=model_name,
+                    messages=messages,
+                    tools=self.tools,
+                    tool_choice="auto",
+                )
+                self.model = model_name
+                return response
+            except Exception as exc:
+                last_error = exc
+                if not self._should_fallback_model(exc):
+                    raise
+        raise last_error
+
+    def _should_fallback_model(self, error: Exception) -> bool:
+        message = str(error).lower()
+        return (
+            "not found the model" in message
+            or "permission denied" in message
+            or "resource_not_found_error" in message
+        )
+
     def answer_questions(self, questions, save_path=None, test=False):
         target_path = save_path or self.save_path
         responses = []
 
         if test:
             while True:
-                question = input("请输入问题（输入exit退出）：")
+                question = input("请输入问题（输入 exit 退出）：")
                 if question.lower() == "exit":
                     break
                 prompt = self._load_step_prompt(self.history, question)

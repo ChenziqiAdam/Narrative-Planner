@@ -11,7 +11,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 from flask import Flask, Response, jsonify, render_template_string, request, session
 
 from src.agents.baseline_agent import BaselineAgent as InterviewerAgent
-from src.agents.interviewee_agent import IntervieweeAgent
+from src.agents.interviewee_agent import IntervieweeAgent, extract_interviewee_reply
 from src.agents.planner_interview_agent import PlannerInterviewAgentSync
 from src.config import Config
 from src.orchestration.baseline_evaluation_runtime import BaselineEvaluationRuntime
@@ -45,6 +45,8 @@ def get_session_agents(session_id: str) -> dict:
 
 def extract_reply(raw: str) -> str:
     """Extract the 'reply' field if the response is JSON, otherwise return raw."""
+    return extract_interviewee_reply(raw)
+
     try:
         # strip markdown code fences if present
         cleaned = re.sub(r"```(?:json)?|```", "", raw).strip()
@@ -60,6 +62,20 @@ def extract_reply(raw: str) -> str:
     except (json.JSONDecodeError, ValueError):
         pass
     return (raw or "").strip()
+
+
+def _build_compare_interviewee(session_data: dict) -> IntervieweeAgent:
+    """Create a compare-mode interviewee instance for one session only."""
+    interviewee = IntervieweeAgent(profile_path=PROFILE_PATH)
+    interviewee.initialize_conversation(session_data.get("elder_info", {}))
+    return interviewee
+
+
+def _run_compare_interviewee_turn(interviewee: IntervieweeAgent, question: str) -> str:
+    prompt = interviewee._load_step_prompt(interviewee.history, question)
+    answer = extract_reply(interviewee.step(prompt))
+    interviewee.record_turn(question, answer)
+    return answer
 
 
 # ── Routes ───────────────────────────────────────────────────────────────────
@@ -735,6 +751,12 @@ def baseline_auto():
     def generate():
         agent = session["agent"]
         scorer = session["scorer"]
+        interviewee = _build_compare_interviewee(session)
+        for index in range(len(session["history"]) - 1):
+            current = session["history"][index]
+            following = session["history"][index + 1]
+            if current.get("role") == "interviewer" and following.get("role") == "interviewee":
+                interviewee.record_turn(current.get("text", ""), following.get("text", ""))
 
         # single_turn模式下只运行一轮
         max_turns = 1 if single_turn else 20
@@ -744,11 +766,7 @@ def baseline_auto():
             last_question = last_question_entry.get("text", "")
 
             # AI受访者回答
-            answer = _generate_baseline_interviewee_reply(
-                elder_info=session["elder_info"],
-                question=last_question,
-                history=session["history"],
-            )
+            answer = _run_compare_interviewee_turn(interviewee, last_question)
 
             session["history"].append({"role": "interviewee", "text": answer})
             yield f"data: {json.dumps({'role': 'interviewee', 'action': 'answer', 'text': answer}, ensure_ascii=False)}\n\n"
@@ -915,8 +933,7 @@ def planner_auto():
 
     def generate():
         agent = session["agent"]
-        interviewee = IntervieweeAgent(profile_path=PROFILE_PATH)
-        interviewee.initialize_conversation(session["elder_info"])
+        interviewee = _build_compare_interviewee(session)
 
         # 从已有会话恢复访谈历史，避免多轮自动/单轮调试时丢上下文
         for index in range(len(session["history"]) - 1):
@@ -932,10 +949,7 @@ def planner_auto():
             last_question = session["history"][-1]["text"] if session["history"] else ""
 
             # AI受访者回答
-            prompt = interviewee._load_step_prompt(interviewee.history, last_question)
-            raw_answer = interviewee.step(prompt)
-            answer = extract_reply(raw_answer)
-            interviewee.record_turn(last_question, answer)
+            answer = _run_compare_interviewee_turn(interviewee, last_question)
 
             session["history"].append({"role": "interviewee", "text": answer})
             yield f"data: {json.dumps({'role': 'interviewee', 'text': answer, 'extracted_events': [], 'graph_delta': {}}, ensure_ascii=False)}\n\n"
@@ -1003,7 +1017,7 @@ def _generate_baseline_interviewee_reply(elder_info, question: str, history: lis
     try:
         client = OpenAI(**Config.get_openai_client_kwargs())
         response = client.chat.completions.create(
-            model=Config.MODEL_NAME,
+            model=Config.get_model_name("interviewee"),
             max_tokens=4096,
             messages=[
                 {

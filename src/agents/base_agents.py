@@ -56,7 +56,7 @@ class BaseAgent:
         """创建模型实例（可由子类覆盖以更改配置）"""
         return ModelFactory.create(
             model_platform=ModelPlatformType.OPENAI_COMPATIBLE_MODEL,
-            model_type=Config.MODEL_NAME,
+            model_type=Config.get_model_name("camel"),
             api_key=Config.MOONSHOT_API_KEY or "",
             url=Config.MOONSHOT_BASE_URL,
         )

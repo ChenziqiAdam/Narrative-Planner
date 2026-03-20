@@ -143,7 +143,7 @@ class MemoryProjector:
                             loop_id=f"{event.event_id}:{slot_name}",
                             source_event_id=event.event_id,
                             loop_type="missing_slot" if slot_name != "people" else "person_gap",
-                            description=f"Missing {slot_name} detail for event '{event.title}'.",
+                            description=self._build_missing_slot_description(event, slot_name),
                             priority=priority,
                         )
                     )
@@ -153,7 +153,7 @@ class MemoryProjector:
                         loop_id=f"{event.event_id}:clue:{index}",
                         source_event_id=event.event_id,
                         loop_type="unexpanded_clue",
-                        description=clue,
+                        description=self._build_clue_description(event, clue),
                         priority=0.95,
                     )
                 )
@@ -227,6 +227,25 @@ class MemoryProjector:
             confidence=0.65,
             evidence=evidence[:4],
         )
+
+    def _build_missing_slot_description(self, event, slot_name: str) -> str:
+        anchor = event.title or event.summary or "刚才那段经历"
+        slot_copy = {
+            "time": "但还没说清楚大概是什么时候发生的。",
+            "location": "但还没说清楚具体是在什么地方发生的。",
+            "people": "但相关人物是谁、和受访者是什么关系，还没有展开。",
+            "reflection": "但这件事对受访者后来意味着什么，还没有讲清楚。",
+            "feeling": "但当时最强烈的感受还没有展开。",
+            "cause": "但事情是怎么开始的、背后原因是什么，还没有说清楚。",
+            "result": "但后来事情怎么发展、带来了什么变化，还没有补充完整。",
+        }
+        suffix = slot_copy.get(slot_name, "但还有一些关键细节没有补充完整。")
+        return f"老人刚提到“{anchor}”{suffix}"
+
+    def _build_clue_description(self, event, clue: str) -> str:
+        anchor = event.title or event.summary or "刚才那段经历"
+        clue_text = clue.strip() or "还有一条值得追问的线索"
+        return f"老人提到“{anchor}”时带出了线索：{clue_text}，但这条线索还没有展开。"
 
     def _estimate_valence(self, text: str) -> float:
         positive_keywords = ["开心", "高兴", "幸福", "自豪", "喜欢", "温暖", "快乐"]
