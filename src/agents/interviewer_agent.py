@@ -11,6 +11,45 @@ from src.state import ElderProfile, GraphSummary, MemoryCapsule, QuestionPlan, T
 
 
 class InterviewerAgent:
+    ACTION_GUIDANCE = {
+        "DEEP_DIVE": "Stay on the current event and ask for one more layer of detail, feeling, or reflection.",
+        "BREADTH_SWITCH": "Move naturally to a new life stage or theme without sounding abrupt.",
+        "CLARIFY": "Gently resolve an ambiguity or contradiction in time, place, people, or sequence.",
+        "SUMMARIZE": "Briefly checkpoint what was shared and invite one more representative detail.",
+        "PAUSE_SESSION": "Land softly and avoid opening a large new thread.",
+        "CLOSE_INTERVIEW": "End gracefully with a warm closing prompt instead of opening a new topic.",
+    }
+    TONE_GUIDANCE = {
+        "EMPATHIC_SUPPORTIVE": "Warm, validating, and emotionally supportive.",
+        "CURIOUS_INQUIRING": "Curious and engaged, but still respectful and non-leading.",
+        "RESPECTFUL_REVERENT": "Respectful, calm, and honoring the elder's experience.",
+        "CASUAL_CONVERSATIONAL": "Natural and relaxed, like a gentle conversation.",
+        "PROFESSIONAL_NEUTRAL": "Clear, neutral, and unobtrusive.",
+        "GENTLE_WARM": "Short, soft, and low-pressure, especially when energy is low.",
+        "ENCOURAGING": "Lightly encouraging without pushing too hard.",
+    }
+    STRATEGY_GUIDANCE = {
+        "OBJECT_TO_EMOTION": "Anchor on a concrete moment first, then invite feeling or meaning.",
+        "TIMELINE_SLOT_FILL": "Prefer filling missing time, place, or people slots.",
+        "PERSON_CONTEXT_FILL": "Clarify who was involved and what their relationship was.",
+        "DETAIL_EXPANSION": "Expand the most important concrete detail from the current thread.",
+        "THEME_SWITCH": "Transition cleanly into a less-covered but related life theme.",
+        "CHECKPOINT_SUMMARY": "Use a brief summary to bridge into one reflective follow-up.",
+        "CONFLICT_RESOLUTION": "Politely verify inconsistent details instead of assuming.",
+        "GRACEFUL_CLOSE": "Close warmly and help the elder leave the conversation with dignity.",
+        "OPENING_ORIENTATION": "Open broad enough for storytelling, but specific enough to get a concrete memory.",
+    }
+    SLOT_GUIDANCE = {
+        "time": "when it happened",
+        "location": "where it happened",
+        "people": "who was there and their relationship to the elder",
+        "event": "what concretely happened",
+        "feeling": "what the elder felt at that moment",
+        "reflection": "what it means looking back now",
+        "cause": "what led to it",
+        "result": "what changed afterward",
+    }
+
     def __init__(self):
         self.client = OpenAI(**Config.get_openai_client_kwargs())
         self.model = Config.MODEL_NAME
@@ -53,8 +92,9 @@ class InterviewerAgent:
     def _render_system_prompt(self, elder_profile: ElderProfile) -> str:
         basic_info = self._build_basic_info_text(elder_profile)
         replacements = [
-            "[用户的基本生平信息]",
+            "{{elder_basic_info}}",
             "[鐢ㄦ埛鐨勫熀鏈敓骞充俊鎭痌",
+            "[閻劍鍩涢惃鍕唨閺堫剛鏁撻獮鍏呬繆閹棇",
         ]
         rendered = self.system_prompt_template
         for placeholder in replacements:
@@ -95,15 +135,39 @@ class InterviewerAgent:
         }
         graph_payload = graph_summary.to_dict()
 
+        action_hint = self.ACTION_GUIDANCE.get(plan.primary_action, "Follow the planner decision faithfully.")
+        tone_hint = self.TONE_GUIDANCE.get(plan.tone, "Keep the tone natural and respectful.")
+        strategy_hint = self.STRATEGY_GUIDANCE.get(plan.strategy, "Turn the plan into one natural question.")
+        slot_focus = (
+            ", ".join(f"{slot} ({self.SLOT_GUIDANCE.get(slot, slot)})" for slot in plan.target_slots)
+            if plan.target_slots
+            else "none"
+        )
+
         return (
-            "Use the planner decision below to write the next natural interview question in Chinese.\n"
+            "You are only the language surface layer for the interviewer.\n"
+            "Do not redesign the strategy. The planner decision is the source of truth.\n"
+            "Use memory, graph summary, and transcript only to phrase the next question naturally.\n\n"
             "Return strict JSON with keys `action` and `question` only.\n"
-            "Rules:\n"
+            "Hard constraints:\n"
             "- Ask exactly one question.\n"
-            "- Keep it natural, warm, and non-redundant.\n"
-            "- If the planner action is CLOSE_INTERVIEW, return action=`end` and provide a short closing question or prompt.\n"
-            "- If the planner action is BREADTH_SWITCH or SUMMARIZE, action should usually be `next_phase`.\n"
+            "- Keep the question concise, natural, warm, and non-redundant.\n"
+            "- Do not ask multiple sub-questions in one turn.\n"
+            "- Do not expose internal labels like DEEP_DIVE, target_slots, strategy, or theme IDs.\n"
+            "- Respect `do_not_repeat` and avoid repeating nearly identical wording from recent turns.\n"
+            "- If cognitive energy is low, make the question shorter and gentler.\n"
+            "- If emotional valence is negative, you may add a brief validating clause before the question, but still ask only one question.\n"
+            "- If the planner action is CLOSE_INTERVIEW, return action=`end` and provide a short closing prompt.\n"
+            "- If the planner action is BREADTH_SWITCH, SUMMARIZE, or PAUSE_SESSION, action should usually be `next_phase`.\n"
             "- Otherwise action should usually be `continue`.\n\n"
+            "Planner semantics:\n"
+            f"- primary_action={plan.primary_action}: {action_hint}\n"
+            f"- tone={plan.tone}: {tone_hint}\n"
+            f"- strategy={plan.strategy}: {strategy_hint}\n"
+            f"- target_slots={slot_focus}\n\n"
+            "When target slots are present, prefer filling the most important one or two slots naturally instead of asking for everything at once.\n"
+            "If there is a contradiction or ambiguity, ask for clarification rather than assuming.\n"
+            "If the plan already provides candidate questions, treat them as preferred phrasing direction.\n\n"
             f"Planner decision:\n{json.dumps(plan_payload, ensure_ascii=False, indent=2)}\n\n"
             f"Memory capsule:\n{json.dumps(memory_payload, ensure_ascii=False, indent=2)}\n\n"
             f"Graph summary:\n{json.dumps(graph_payload, ensure_ascii=False, indent=2)}\n\n"
@@ -125,7 +189,7 @@ class InterviewerAgent:
         action = str(parsed.get("action", "continue")).strip() or "continue"
         question = str(parsed.get("question", "")).strip()
         if action == "end" and not question:
-            question = "今天我们聊了很多宝贵的经历。最后，您最希望别人记住您人生中的哪一点？"
+            question = "今天我们聊了很多珍贵的经历。最后，您最希望别人记住您人生中的哪一点？"
         return {"action": action, "question": question}
 
     def _fallback_response(
