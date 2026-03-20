@@ -45,6 +45,9 @@ class PlannerInterviewAgent:
     def get_graph_state(self) -> Dict[str, Any]:
         return self.orchestrator.get_graph_state()
 
+    def get_evaluation_state(self) -> Dict[str, Any]:
+        return self.orchestrator.get_evaluation_state()
+
     def get_conversation_history(self) -> List[Dict[str, str]]:
         return self.orchestrator.build_conversation_history()
 
@@ -71,6 +74,9 @@ class PlannerInterviewAgentSync:
 
     def get_graph_state(self) -> Dict[str, Any]:
         return self.async_agent.get_graph_state()
+
+    def get_evaluation_state(self) -> Dict[str, Any]:
+        return self.async_agent.get_evaluation_state()
 
     def get_conversation_history(self) -> List[Dict[str, str]]:
         return self.async_agent.get_conversation_history()

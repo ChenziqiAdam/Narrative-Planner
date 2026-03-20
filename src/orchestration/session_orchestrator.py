@@ -181,6 +181,42 @@ class SessionOrchestrator:
         state = self._require_state()
         return self.graph_projector.build_graph_state(self.graph_manager, state)
 
+    def get_evaluation_state(self) -> Dict[str, Any]:
+        state = self._require_state()
+        graph_state = self.get_graph_state()
+        completed = {
+            turn.turn_id: turn.turn_evaluation.to_dict()
+            for turn in state.transcript
+            if turn.turn_evaluation
+        }
+        pending_turn_ids = [
+            turn.turn_id
+            for turn in state.transcript
+            if not turn.turn_evaluation
+        ]
+        turns = [
+            {
+                "turn_id": turn.turn_id,
+                "turn_index": turn.turn_index,
+                "interviewer_question": turn.interviewer_question,
+                "interviewee_answer": turn.interviewee_answer,
+                "evaluation_status": "completed" if turn.turn_evaluation else "pending",
+                "turn_evaluation": turn.turn_evaluation.to_dict() if turn.turn_evaluation else None,
+            }
+            for turn in state.transcript
+        ]
+        return {
+            "session_id": state.session_id,
+            "turn_count": state.turn_count,
+            "completed_turn_count": len(completed),
+            "pending_turn_ids": pending_turn_ids,
+            "turn_evaluations": completed,
+            "turns": turns,
+            "session_metrics": state.session_metrics.to_dict() if state.session_metrics else {},
+            "coverage_metrics": graph_state.get("coverage_metrics", {}),
+            "latest_turn_evaluation": graph_state.get("latest_turn_evaluation", {}),
+        }
+
     def build_conversation_history(self) -> List[Dict[str, str]]:
         state = self._require_state()
         history: List[Dict[str, str]] = [

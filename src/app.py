@@ -14,6 +14,7 @@ from src.agents.baseline_agent import BaselineAgent as InterviewerAgent
 from src.agents.interviewee_agent import IntervieweeAgent
 from src.agents.planner_interview_agent import PlannerInterviewAgentSync
 from src.config import Config
+from src.orchestration.baseline_evaluation_runtime import BaselineEvaluationRuntime
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -636,12 +637,16 @@ def baseline_start():
     # 获取首条问题
     result = agent.get_next_question()
     question = result["question"] if isinstance(result, dict) else result
+    first_action = result.get("action", "continue") if isinstance(result, dict) else "continue"
+    scorer = BaselineEvaluationRuntime(session_id)
+    scorer.initialize_session(elder_info if isinstance(elder_info, dict) else {"background": basic_info_text})
 
     # 存储会话
     _compare_sessions[session_id] = {
         "type": "baseline",
         "agent": agent,
-        "history": [{"role": "interviewer", "text": question}],
+        "history": [{"role": "interviewer", "text": question, "action": first_action}],
+        "scorer": scorer,
         "mode": mode,
         "elder_info": elder_info,
         "start_time": datetime.now().isoformat()
@@ -673,6 +678,8 @@ def baseline_reply():
 
     session = _compare_sessions[session_id]
     agent = session["agent"]
+    scorer = session["scorer"]
+    previous_question = session["history"][-1] if session["history"] else {"text": "", "action": "continue"}
 
     # 记录回答
     session["history"].append({"role": "interviewee", "text": answer})
@@ -688,7 +695,12 @@ def baseline_reply():
         question = result
         action = "continue"
 
-    session["history"].append({"role": "interviewer", "text": question})
+    turn_evaluation = scorer.submit_turn(
+        previous_question.get("text", ""),
+        answer,
+        previous_question.get("action", "continue"),
+    )
+    session["history"].append({"role": "interviewer", "text": question, "action": action})
 
     # 检查是否应该结束
     done = action == "end" or len(session["history"]) >= 100
@@ -700,7 +712,8 @@ def baseline_reply():
     return jsonify({
         "question": question,
         "action": action,
-        "done": done
+        "done": done,
+        "turn_evaluation": turn_evaluation,
     })
 
 
@@ -721,12 +734,14 @@ def baseline_auto():
 
     def generate():
         agent = session["agent"]
+        scorer = session["scorer"]
 
         # single_turn模式下只运行一轮
         max_turns = 1 if single_turn else 20
         for turn in range(max_turns):
             # 获取上一个问题
-            last_question = session["history"][-1]["text"] if session["history"] else ""
+            last_question_entry = session["history"][-1] if session["history"] else {"text": "", "action": "continue"}
+            last_question = last_question_entry.get("text", "")
 
             # AI受访者回答
             answer = _generate_baseline_interviewee_reply(
@@ -747,8 +762,13 @@ def baseline_auto():
                 question = result
                 action = "continue"
 
-            session["history"].append({"role": "interviewer", "text": question})
-            yield f"data: {json.dumps({'role': 'interviewer', 'action': action, 'text': question}, ensure_ascii=False)}\n\n"
+            turn_evaluation = scorer.submit_turn(
+                last_question,
+                answer,
+                last_question_entry.get("action", "continue"),
+            )
+            session["history"].append({"role": "interviewer", "text": question, "action": action})
+            yield f"data: {json.dumps({'role': 'interviewer', 'action': action, 'text': question, 'turn_evaluation': turn_evaluation}, ensure_ascii=False)}\n\n"
 
             if action == "end":
                 break
@@ -763,6 +783,21 @@ def baseline_auto():
 
 
 # ========== Planner 相关 API ==========
+
+@app.route("/api/baseline/evaluation/<session_id>")
+def baseline_evaluation(session_id):
+    if session_id not in _compare_sessions:
+        return jsonify({"error": "Session not found"}), 400
+
+    session = _compare_sessions[session_id]
+    if session["type"] != "baseline":
+        return jsonify({"error": "Not a baseline session"}), 400
+
+    scorer = session.get("scorer")
+    if scorer is None:
+        return jsonify({"error": "Baseline scorer unavailable"}), 500
+    return jsonify(scorer.get_evaluation_state())
+
 
 @app.route("/api/planner/start", methods=["POST"])
 def planner_start():
@@ -1397,6 +1432,9 @@ COMPARE_HTML = '''<!DOCTYPE html>
             line-height: 1.6;
             font-size: 0.92rem;
         }
+        .message .msg-text {
+            word-break: break-word;
+        }
         .message.interviewer {
             align-self: flex-start;
             background: #e8f4fd;
@@ -1422,6 +1460,47 @@ COMPARE_HTML = '''<!DOCTYPE html>
             border-radius: 10px;
             margin-left: 6px;
             background: rgba(0,0,0,0.1);
+        }
+        .message-evaluation {
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .evaluation-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            border-radius: 999px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            background: rgba(255,255,255,0.7);
+            color: #35546a;
+        }
+        .evaluation-chip.pending {
+            background: rgba(255,255,255,0.9);
+            color: #8a6b2d;
+        }
+        .evaluation-chip.score {
+            background: #d7f0ff;
+            color: #0f4c75;
+        }
+        .evaluation-chip.info {
+            background: #e8f6ea;
+            color: #1b5e20;
+        }
+        .evaluation-chip.slot {
+            background: #f5e9ff;
+            color: #6a1b9a;
+        }
+        .evaluation-chip.coverage {
+            background: #fff1d6;
+            color: #8a5300;
+        }
+        .evaluation-chip.notes {
+            background: #fff3f0;
+            color: #8f3b2e;
         }
 
         /* Controls */
@@ -1519,6 +1598,87 @@ COMPARE_HTML = '''<!DOCTYPE html>
             font-size: 0.85rem;
             text-align: center;
             padding: 20px;
+        }
+        .side-section + .side-section {
+            margin-top: 18px;
+        }
+        .side-section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .section-action {
+            border: none;
+            border-radius: 999px;
+            padding: 6px 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            background: #ede7f6;
+            color: #5e35b1;
+        }
+        .section-action:hover:not(:disabled) {
+            background: #e0d5f2;
+        }
+        .evaluation-summary {
+            background: linear-gradient(180deg, #fcf8ff 0%, #f7f3ff 100%);
+            border: 1px solid #eadfff;
+            border-radius: 12px;
+            padding: 14px;
+        }
+        .evaluation-summary.placeholder {
+            color: #7b6f90;
+            font-size: 0.84rem;
+            line-height: 1.6;
+        }
+        .summary-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .summary-item {
+            background: rgba(255,255,255,0.9);
+            border-radius: 10px;
+            padding: 10px 12px;
+        }
+        .summary-label {
+            display: block;
+            font-size: 0.72rem;
+            color: #6f5f86;
+            margin-bottom: 4px;
+        }
+        .summary-value {
+            display: block;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #3f2d5f;
+        }
+        .summary-meta {
+            margin-top: 12px;
+            font-size: 0.78rem;
+            color: #75658a;
+            line-height: 1.6;
+        }
+        .summary-compare {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .summary-agent {
+            background: rgba(255,255,255,0.72);
+            border-radius: 12px;
+            padding: 12px;
+        }
+        .summary-agent.empty-agent {
+            background: rgba(255,255,255,0.52);
+        }
+        .summary-agent-title {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #4c3a66;
+            margin-bottom: 10px;
         }
 
         /* Footer */
@@ -1711,12 +1871,34 @@ COMPARE_HTML = '''<!DOCTYPE html>
         let allExtractedEvents = [];  // 累积所有提取的事件
         let baselineAutoFinished = false;
         let plannerAutoFinished = false;
+        let baselineEvaluationPollTimer = null;
+        let plannerEvaluationPollTimer = null;
+        let plannerMetricsActivated = false;
+        let baselineQuestionQueue = [];
+        let baselineQuestionMap = new Map();
+        let plannerQuestionQueue = [];
+        let plannerQuestionMap = new Map();
+        let latestBaselineEvaluationSnapshot = null;
+        let latestPlannerEvaluationSnapshot = null;
+        let baselineEvaluationStatusText = "idle";
+        let plannerEvaluationStatusText = "idle";
 
         // DOM elements
         const configModal = document.getElementById("config-modal");
         const btnConfig = document.getElementById("btn-config");
         const btnStart = document.getElementById("btn-start-compare");
         const configForm = document.getElementById("elder-config-form");
+        const footerActions = document.querySelector(".compare-footer > div");
+
+        if (footerActions && !document.getElementById("planner-eval-status")) {
+            const statusSpan = document.createElement("span");
+            statusSpan.id = "planner-eval-status";
+            statusSpan.style.marginRight = "12px";
+            statusSpan.textContent = "Evaluation: idle";
+            footerActions.prepend(statusSpan);
+        }
+
+        initializePlannerSidePanel();
 
         // Config modal
         btnConfig.onclick = () => configModal.classList.add("active");
@@ -1846,13 +2028,341 @@ COMPARE_HTML = '''<!DOCTYPE html>
             throw new Error(`${url} 未返回 JSON，实际 content-type: ${contentType || "unknown"}`);
         }
 
+        function initializePlannerSidePanel() {
+            const container = document.getElementById("events-list-container");
+            if (!container) return;
+
+            container.innerHTML = `
+                <section class="side-section">
+                    <div class="side-section-header">
+                        <h4>Overall Metrics</h4>
+                        <button id="btn-generate-metrics" class="section-action" disabled>Generate</button>
+                    </div>
+                    <div id="evaluation-summary" class="evaluation-summary placeholder">
+                        Click Generate to compare baseline and planner coverage, average question quality, and information gain.
+                    </div>
+                </section>
+                <section class="side-section">
+                    <div class="side-section-header">
+                        <h4>Recent Events</h4>
+                    </div>
+                    <div id="events-list-content">
+                        <p class="no-events">No events yet</p>
+                    </div>
+                </section>
+            `;
+
+            const btnGenerateMetrics = document.getElementById("btn-generate-metrics");
+            if (btnGenerateMetrics) {
+                btnGenerateMetrics.onclick = fetchCombinedEvaluationSummary;
+            }
+        }
+
+        async function fetchCombinedEvaluationSummary() {
+            const btnGenerateMetrics = document.getElementById("btn-generate-metrics");
+            if (!btnGenerateMetrics) return;
+
+            plannerMetricsActivated = true;
+            btnGenerateMetrics.disabled = true;
+            btnGenerateMetrics.textContent = "Loading...";
+            try {
+                const [baselineSnapshot, plannerSnapshot] = await Promise.all([
+                    baselineSessionId ? requestJson(`/api/baseline/evaluation/${baselineSessionId}`) : Promise.resolve(null),
+                    plannerSessionId ? requestJson(`/api/planner/evaluation/${plannerSessionId}`) : Promise.resolve(null),
+                ]);
+                if (baselineSnapshot) {
+                    applyBaselineEvaluationSnapshot(baselineSnapshot);
+                }
+                if (plannerSnapshot) {
+                    applyPlannerEvaluationSnapshot(plannerSnapshot);
+                }
+                renderEvaluationSummary();
+            } catch (err) {
+                renderEvaluationSummaryError(err.message);
+            } finally {
+                btnGenerateMetrics.disabled = false;
+                btnGenerateMetrics.textContent = "Refresh";
+            }
+        }
+
+        function resetPlannerTracking() {
+            plannerMetricsActivated = false;
+            baselineQuestionQueue = [];
+            baselineQuestionMap = new Map();
+            plannerQuestionQueue = [];
+            plannerQuestionMap = new Map();
+            latestBaselineEvaluationSnapshot = null;
+            latestPlannerEvaluationSnapshot = null;
+            stopBaselineEvaluationPolling();
+            stopPlannerEvaluationPolling();
+            updateBaselineEvaluationStatus("idle");
+            updatePlannerEvaluationStatus("idle");
+            initializePlannerSidePanel();
+        }
+
+        function updateCombinedEvaluationStatus() {
+            const statusEl = document.getElementById("planner-eval-status");
+            if (statusEl) {
+                statusEl.textContent = `Evaluation: B ${baselineEvaluationStatusText} | P ${plannerEvaluationStatusText}`;
+            }
+        }
+
+        function updateBaselineEvaluationStatus(text) {
+            baselineEvaluationStatusText = text;
+            updateCombinedEvaluationStatus();
+        }
+
+        function updatePlannerEvaluationStatus(text) {
+            plannerEvaluationStatusText = text;
+            updateCombinedEvaluationStatus();
+        }
+
+        function formatPercent(value) {
+            return `${Math.round((value || 0) * 100)}%`;
+        }
+
+        function formatCoverageGain(value) {
+            return `${Math.round((value || 0) * 100)}pt`;
+        }
+
+        function renderPendingEvaluation(container, text = "Waiting for answer") {
+            container.innerHTML = `<span class="evaluation-chip pending">${text}</span>`;
+        }
+
+        function renderTurnEvaluation(container, evaluation) {
+            if (!container) return;
+            if (!evaluation || !evaluation.turn_id) {
+                renderPendingEvaluation(container);
+                return;
+            }
+
+            if (evaluation.status === "pending" || evaluation.question_quality_score === undefined) {
+                renderPendingEvaluation(container, "Scoring...");
+                return;
+            }
+
+            const notes = Array.isArray(evaluation.notes) ? evaluation.notes : [];
+            const targetSlots = Array.isArray(evaluation.targeted_slots) ? evaluation.targeted_slots : [];
+            const noteText = notes.length > 0 ? notes.join(" | ") : "";
+            const slotText = targetSlots.length > 0 ? `Slots ${targetSlots.join("/")}` : "No slot target";
+            container.innerHTML = `
+                <span class="evaluation-chip score">Question ${formatPercent(evaluation.question_quality_score)}</span>
+                <span class="evaluation-chip info">Gain ${formatPercent(evaluation.information_gain_score)}</span>
+                <span class="evaluation-chip slot">${slotText}</span>
+                <span class="evaluation-chip coverage">Coverage ${formatCoverageGain(evaluation.coverage_gain)}</span>
+                ${noteText ? `<span class="evaluation-chip notes" title="${noteText}">Notes</span>` : ""}
+            `;
+        }
+
+        function appendScoredQuestion(queueRef, container, text, action) {
+            const msg = appendMessage(container, "interviewer", text, action);
+            const evaluationEl = document.createElement("div");
+            evaluationEl.className = "message-evaluation";
+            renderPendingEvaluation(evaluationEl);
+            msg.appendChild(evaluationEl);
+
+            const item = {
+                element: msg,
+                evaluationEl,
+                turnId: null,
+            };
+            queueRef.push(item);
+            return item;
+        }
+
+        function appendBaselineQuestion(container, text, action) {
+            return appendScoredQuestion(baselineQuestionQueue, container, text, action);
+        }
+
+        function appendPlannerQuestion(container, text, action) {
+            return appendScoredQuestion(plannerQuestionQueue, container, text, action);
+        }
+
+        function bindPendingEvaluation(queueRef, mapRef, turnEvaluation, statusUpdater) {
+            if (!turnEvaluation || !turnEvaluation.turn_id) return;
+
+            const item = queueRef.find((candidate) => !candidate.turnId);
+            if (!item) return;
+
+            item.turnId = turnEvaluation.turn_id;
+            item.element.dataset.turnId = turnEvaluation.turn_id;
+            mapRef.set(turnEvaluation.turn_id, item);
+            renderTurnEvaluation(item.evaluationEl, turnEvaluation);
+            statusUpdater("background scoring");
+        }
+
+        function bindPendingBaselineTurnEvaluation(turnEvaluation) {
+            bindPendingEvaluation(baselineQuestionQueue, baselineQuestionMap, turnEvaluation, updateBaselineEvaluationStatus);
+        }
+
+        function bindPendingTurnEvaluation(turnEvaluation) {
+            bindPendingEvaluation(plannerQuestionQueue, plannerQuestionMap, turnEvaluation, updatePlannerEvaluationStatus);
+        }
+
+        function applyEvaluationSnapshot(mapRef, snapshot, statusUpdater, kind) {
+            const evaluations = snapshot?.turn_evaluations || {};
+            Object.entries(evaluations).forEach(([turnId, evaluation]) => {
+                const item = mapRef.get(turnId);
+                if (item) {
+                    renderTurnEvaluation(item.evaluationEl, evaluation);
+                }
+            });
+
+            const pendingCount = Array.isArray(snapshot?.pending_turn_ids) ? snapshot.pending_turn_ids.length : 0;
+            const completedCount = snapshot?.completed_turn_count || 0;
+            if (pendingCount > 0) {
+                statusUpdater(`running ${pendingCount}, done ${completedCount}`);
+            } else if (completedCount > 0) {
+                statusUpdater(`done ${completedCount}`);
+            } else {
+                statusUpdater("waiting for first score");
+            }
+
+            if (plannerMetricsActivated) {
+                renderEvaluationSummary();
+            }
+
+            if (kind === "baseline" && baselineAutoFinished && pendingCount === 0) {
+                stopBaselineEvaluationPolling();
+            }
+            if (kind === "planner" && plannerAutoFinished && pendingCount === 0) {
+                stopPlannerEvaluationPolling();
+            }
+        }
+
+        function applyBaselineEvaluationSnapshot(snapshot) {
+            latestBaselineEvaluationSnapshot = snapshot;
+            applyEvaluationSnapshot(baselineQuestionMap, snapshot, updateBaselineEvaluationStatus, "baseline");
+        }
+
+        function applyPlannerEvaluationSnapshot(snapshot) {
+            latestPlannerEvaluationSnapshot = snapshot;
+            applyEvaluationSnapshot(plannerQuestionMap, snapshot, updatePlannerEvaluationStatus, "planner");
+        }
+
+        function renderMetricBlock(label, snapshot) {
+            if (!snapshot) {
+                return `
+                    <div class="summary-agent empty-agent">
+                        <div class="summary-agent-title">${label}</div>
+                        <div class="summary-meta">No evaluation snapshot yet.</div>
+                    </div>
+                `;
+            }
+
+            const sessionMetrics = snapshot.session_metrics || {};
+            const coverageMetrics = snapshot.coverage_metrics || {};
+            const pendingCount = Array.isArray(snapshot.pending_turn_ids) ? snapshot.pending_turn_ids.length : 0;
+            const completedCount = snapshot.completed_turn_count || 0;
+            return `
+                <div class="summary-agent">
+                    <div class="summary-agent-title">${label}</div>
+                    <div class="summary-grid">
+                        <div class="summary-item">
+                            <span class="summary-label">Coverage</span>
+                            <span class="summary-value">${formatPercent(coverageMetrics.overall_coverage)}</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">People</span>
+                            <span class="summary-value">${formatPercent(sessionMetrics.people_coverage)}</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Question Quality</span>
+                            <span class="summary-value">${formatPercent(sessionMetrics.average_turn_quality)}</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Info Gain</span>
+                            <span class="summary-value">${formatPercent(sessionMetrics.average_information_gain)}</span>
+                        </div>
+                    </div>
+                    <div class="summary-meta">
+                        Completed ${completedCount}, pending ${pendingCount}.<br>
+                        Loop closure ${formatPercent(sessionMetrics.open_loop_closure_rate)}, contradiction resolution ${formatPercent(sessionMetrics.contradiction_resolution_rate)}.
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderEvaluationSummary() {
+            const summaryEl = document.getElementById("evaluation-summary");
+            if (!summaryEl) return;
+
+            summaryEl.classList.remove("placeholder");
+            summaryEl.innerHTML = `
+                <div class="summary-compare">
+                    ${renderMetricBlock("Baseline", latestBaselineEvaluationSnapshot)}
+                    ${renderMetricBlock("Planner", latestPlannerEvaluationSnapshot)}
+                </div>
+            `;
+        }
+
+        function renderEvaluationSummaryError(message) {
+            const summaryEl = document.getElementById("evaluation-summary");
+            if (!summaryEl) return;
+
+            summaryEl.classList.add("placeholder");
+            summaryEl.textContent = `Failed to load metrics: ${message}`;
+        }
+
+        async function pollBaselineEvaluationState() {
+            if (!baselineSessionId) return;
+
+            try {
+                const snapshot = await requestJson(`/api/baseline/evaluation/${baselineSessionId}`);
+                applyBaselineEvaluationSnapshot(snapshot);
+            } catch (err) {
+                console.warn("Baseline evaluation polling failed:", err);
+            }
+        }
+
+        function startBaselineEvaluationPolling() {
+            stopBaselineEvaluationPolling();
+            if (!baselineSessionId) return;
+            pollBaselineEvaluationState();
+            baselineEvaluationPollTimer = window.setInterval(pollBaselineEvaluationState, 1500);
+        }
+
+        function stopBaselineEvaluationPolling() {
+            if (baselineEvaluationPollTimer) {
+                window.clearInterval(baselineEvaluationPollTimer);
+                baselineEvaluationPollTimer = null;
+            }
+        }
+
+        async function pollPlannerEvaluationState() {
+            if (!plannerSessionId) return;
+
+            try {
+                const snapshot = await requestJson(`/api/planner/evaluation/${plannerSessionId}`);
+                applyPlannerEvaluationSnapshot(snapshot);
+            } catch (err) {
+                console.warn("Planner evaluation polling failed:", err);
+            }
+        }
+
+        function startPlannerEvaluationPolling() {
+            stopPlannerEvaluationPolling();
+            if (!plannerSessionId) return;
+            pollPlannerEvaluationState();
+            plannerEvaluationPollTimer = window.setInterval(pollPlannerEvaluationState, 1500);
+        }
+
+        function stopPlannerEvaluationPolling() {
+            if (plannerEvaluationPollTimer) {
+                window.clearInterval(plannerEvaluationPollTimer);
+                plannerEvaluationPollTimer = null;
+            }
+        }
+
         // Start comparison
         btnStart.onclick = async () => {
             if (!config) return;
 
             // Reset state
             allExtractedEvents = [];
+            resetPlannerTracking();
             updateEventList([]);
+            updatePlannerEvaluationStatus("starting");
 
             btnStart.disabled = true;
             btnStart.textContent = "初始化中...";
@@ -1887,6 +2397,11 @@ COMPARE_HTML = '''<!DOCTYPE html>
                 // Setup panels
                 setupBaselinePanel(baselineResult);
                 setupPlannerPanel(plannerResult);
+                startBaselineEvaluationPolling();
+                startPlannerEvaluationPolling();
+                if (document.getElementById("btn-generate-metrics")) {
+                    document.getElementById("btn-generate-metrics").disabled = false;
+                }
 
                 // Auto-start if AI mode
                 if (currentMode === "ai") {
@@ -1936,7 +2451,7 @@ COMPARE_HTML = '''<!DOCTYPE html>
             const mode = document.getElementById("baseline-mode");
 
             chat.innerHTML = "";
-            appendMessage(chat, "interviewer", result.first_question);
+            appendBaselineQuestion(chat, result.first_question);
             status.textContent = "进行中";
             mode.textContent = currentMode === "ai" ? "🤖 AI模式" : "🧑 用户模式";
 
@@ -1959,7 +2474,7 @@ COMPARE_HTML = '''<!DOCTYPE html>
             const mode = document.getElementById("planner-mode");
 
             chat.innerHTML = "";
-            appendMessage(chat, "interviewer", result.first_question);
+            appendPlannerQuestion(chat, result.first_question);
             status.textContent = "进行中";
             mode.textContent = currentMode === "ai" ? "🤖 AI模式" : "🧑 用户模式";
 
@@ -1993,6 +2508,7 @@ COMPARE_HTML = '''<!DOCTYPE html>
             `;
             container.appendChild(msg);
             container.scrollTop = container.scrollHeight;
+            return msg;
         }
 
         // Baseline controls
@@ -2024,7 +2540,12 @@ COMPARE_HTML = '''<!DOCTYPE html>
                 if (msg.role === "interviewer" && msg.action === "end") {
                     interviewEnded = true;
                 }
-                appendMessage(chat, msg.role, msg.text, msg.action);
+                if (msg.role === "interviewer") {
+                    bindPendingBaselineTurnEvaluation(msg.turn_evaluation);
+                    appendBaselineQuestion(chat, msg.text, msg.action);
+                } else {
+                    appendMessage(chat, msg.role, msg.text, msg.action);
+                }
             };
 
             evtSource.onerror = () => {
@@ -2051,7 +2572,8 @@ COMPARE_HTML = '''<!DOCTYPE html>
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ session_id: baselineSessionId, answer })
             });
-            appendMessage(chat, "interviewer", data.question, data.action);
+            bindPendingBaselineTurnEvaluation(data.turn_evaluation);
+            appendBaselineQuestion(chat, data.question, data.action);
 
             if (data.done) {
                 document.getElementById("baseline-status").textContent = "已完成";
@@ -2091,16 +2613,16 @@ COMPARE_HTML = '''<!DOCTYPE html>
 
                 if (msg.role === "interviewee") {
                     appendMessage(chat, "interviewee", msg.text);
-                    // Accumulate and update extracted events
-                    if (msg.extracted_events && msg.extracted_events.length > 0) {
-                        allExtractedEvents.push(...msg.extracted_events);
-                        updateEventList(allExtractedEvents);
-                    }
                 } else {
                     if (msg.action === "end") {
                         interviewEnded = true;
                     }
-                    appendMessage(chat, "interviewer", msg.text, msg.action);
+                    bindPendingTurnEvaluation(msg.turn_evaluation);
+                    appendPlannerQuestion(chat, msg.text, msg.action);
+                    if (msg.extracted_events && msg.extracted_events.length > 0) {
+                        allExtractedEvents.push(...msg.extracted_events);
+                        updateEventList(allExtractedEvents);
+                    }
                 }
 
                 // Broadcast to dashboard via WebSocket
@@ -2133,7 +2655,8 @@ COMPARE_HTML = '''<!DOCTYPE html>
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ session_id: plannerSessionId, answer })
             });
-            appendMessage(chat, "interviewer", data.question, data.action);
+            bindPendingTurnEvaluation(data.turn_evaluation);
+            appendPlannerQuestion(chat, data.question, data.action);
 
             // Accumulate and update extracted events
             if (data.extracted_events && data.extracted_events.length > 0) {
@@ -2151,7 +2674,7 @@ COMPARE_HTML = '''<!DOCTYPE html>
         }
 
         function updateEventList(events) {
-            const container = document.getElementById("events-list-container");
+            const container = document.getElementById("events-list-content") || document.getElementById("events-list-container");
             if (!events || events.length === 0) {
                 container.innerHTML = '<p class="no-events">暂无事件</p>';
                 return;
@@ -2183,6 +2706,19 @@ COMPARE_HTML = '''<!DOCTYPE html>
     </script>
 </body>
 </html>'''
+
+
+@app.route("/api/planner/evaluation/<session_id>")
+def planner_evaluation(session_id):
+    if session_id not in _compare_sessions:
+        return jsonify({"error": "Session not found"}), 400
+
+    session = _compare_sessions[session_id]
+    if session["type"] != "planner":
+        return jsonify({"error": "Not a planner session"}), 400
+
+    agent = session["agent"]
+    return jsonify(agent.get_evaluation_state())
 
 
 if __name__ == "__main__":
