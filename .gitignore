@@ -12,4 +12,7 @@ __pycache__/
 logs
 data
 nohup.out
+.log
+
 node_modules
+package-lock.json

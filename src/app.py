@@ -12,6 +12,7 @@ from flask import Flask, Response, jsonify, render_template_string, request, ses
 
 from src.agents.baseline_agent import BaselineAgent as InterviewerAgent
 from src.agents.interviewee_agent import IntervieweeAgent
+from src.agents.planner_interview_agent import PlannerInterviewAgentSync
 from src.config import Config
 
 app = Flask(__name__)
@@ -590,7 +591,6 @@ def compare_interface():
 @app.route("/api/debug/config")
 def debug_config():
     """调试：检查 Config 状态"""
-    from src.config import Config
     return jsonify({
         "config_module": Config.__module__,
         "has_openai_key": hasattr(Config, 'OPENAI_API_KEY'),
@@ -615,7 +615,6 @@ def baseline_start():
         return jsonify({"error": "请提供受访者基本信息"}), 400
 
     # Debug: Check Config
-    from src.config import Config
     if not Config.get_api_key():
         return jsonify({
             "error": "Config OPENAI_API_KEY not set",
@@ -772,8 +771,6 @@ def planner_start():
     Body: { "elder_info": dict, "mode": "ai"|"user" }
     Response: { "session_id": str, "first_question": str, "initial_graph": dict }
     """
-    from src.agents.planner_interview_agent import PlannerInterviewAgentSync
-
     data = request.get_json(force=True)
     elder_info = data.get("elder_info", {})
     mode = data.get("mode", "ai")
