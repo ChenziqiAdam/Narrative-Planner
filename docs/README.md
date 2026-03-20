@@ -17,6 +17,8 @@
 |:---|:---|:---|
 | [planner-instruction-standard.md](planner-instruction-standard.md) | Planner 指令集标准规范 | v1.4.0 |
 | [planner-instruction-config.json](planner-instruction-config.json) | Planner 指令集 JSON Schema | v1.0.0 |
+| [planner-multi-agent-architecture.md](planner-multi-agent-architecture.md) | 多 Agent 协作与统一状态架构草案 | draft v0.1 |
+| [planner-engineering-roadmap.md](planner-engineering-roadmap.md) | 多 Agent 工程落地路线图与测试方案 | draft v0.1 |
 
 ## 文档结构关系
 

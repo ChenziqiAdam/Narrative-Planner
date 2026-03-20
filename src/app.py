@@ -859,7 +859,10 @@ def planner_reply():
         "done": done,
         "extracted_events": result.get("extracted_events", []),
         "graph_update": result.get("graph_changes", {}),
-        "current_graph_state": result.get("current_graph_state", {})
+        "current_graph_state": result.get("current_graph_state", {}),
+        "turn_evaluation": result.get("turn_evaluation", {}),
+        "session_metrics": result.get("session_metrics", {}),
+        "planner_plan": result.get("planner_plan", {}),
     })
 
 
@@ -920,7 +923,10 @@ def planner_auto():
                 'action': result['action'],
                 'text': result['question'],
                 'extracted_events': result.get('extracted_events', []),
-                'graph_delta': result.get('graph_changes', {})
+                'graph_delta': result.get('graph_changes', {}),
+                'turn_evaluation': result.get('turn_evaluation', {}),
+                'session_metrics': result.get('session_metrics', {}),
+                'planner_plan': result.get('planner_plan', {}),
             }
             yield f"data: {json.dumps(interviewer_data, ensure_ascii=False)}\n\n"
 

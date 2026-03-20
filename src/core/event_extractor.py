@@ -155,7 +155,8 @@ class EventExtractor(IEventExtractor):
     def _build_prompt(
         self,
         turn: DialogueTurn,
-        conversation_context: List[DialogueTurn]
+        conversation_context: List[DialogueTurn],
+        existing_events: Optional[List[dict]] = None,
     ) -> str:
         """
         构建完整的提示词
@@ -185,7 +186,7 @@ class EventExtractor(IEventExtractor):
                 "respondent": turn.interviewee_raw_reply
             },
             "context": context_list,
-            "existing_events": []  # 可扩展为传入已有事件
+            "existing_events": existing_events or []
         }
 
         # 返回提示词模板 + JSON输入
@@ -226,6 +227,8 @@ class EventExtractor(IEventExtractor):
 
             # 检查是否有事件
             has_event = data.get("has_event", False)
+            if not has_event and data.get("events"):
+                has_event = True
             if not has_event:
                 return [], 0.0, None, False
 
@@ -380,10 +383,11 @@ class EventExtractor(IEventExtractor):
                 turn = task['turn']
                 context = task['context']
                 future = task['future']
+                existing_events = task.get('existing_events')
 
                 try:
                     # 执行提取
-                    events = await self._do_extraction(turn, context)
+                    events = await self._do_extraction(turn, context, existing_events)
                     future.set_result(events)
                 except Exception as e:
                     logger.error(f"Extraction failed: {e}")
@@ -397,7 +401,8 @@ class EventExtractor(IEventExtractor):
     async def _do_extraction(
         self,
         turn: DialogueTurn,
-        conversation_context: List[DialogueTurn]
+        conversation_context: List[DialogueTurn],
+        existing_events: Optional[List[dict]] = None,
     ) -> List[ExtractedEvent]:
         """
         执行实际的事件提取
@@ -411,7 +416,7 @@ class EventExtractor(IEventExtractor):
         """
         try:
             # 构建提示词
-            prompt = self._build_prompt(turn, conversation_context)
+            prompt = self._build_prompt(turn, conversation_context, existing_events)
 
             # 调用LLM
             response_text = await self._call_llm(prompt)
@@ -466,6 +471,7 @@ class EventExtractor(IEventExtractor):
         await self.extraction_queue.put({
             'turn': turn,
             'context': conversation_context,
+            'existing_events': None,
             'future': future,
             'turn_id': turn.turn_id
         })
@@ -483,6 +489,17 @@ class EventExtractor(IEventExtractor):
         except Exception as e:
             logger.error(f"Extraction error: {e}")
             return []
+
+    async def extract_with_existing_events(
+        self,
+        turn: DialogueTurn,
+        conversation_context: List[DialogueTurn],
+        existing_events: Optional[List[dict]] = None,
+    ) -> List[ExtractedEvent]:
+        """
+        Extract events while providing summaries of known events for merge-aware prompts.
+        """
+        return await self._do_extraction(turn, conversation_context, existing_events or [])
 
     async def extract_incremental(
         self,
