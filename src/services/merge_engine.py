@@ -3,9 +3,10 @@ from __future__ import annotations
 import uuid
 from dataclasses import dataclass, field
 from difflib import SequenceMatcher
-from typing import Dict, Iterable, List, Optional
+from typing import Iterable, List, Optional
 
 from src.core.interfaces import ExtractedEvent
+from src.services.relation_lexicon import infer_relation_code, is_self_reference
 from src.state import CanonicalEvent, PersonProfile, SessionState
 
 
@@ -94,21 +95,27 @@ class MergeEngine:
 
         time_score = 0.0
         if existing.time and extracted.slots.time:
-            time_score = 1.0 if existing.time == extracted.slots.time else SequenceMatcher(
-                None, existing.time, extracted.slots.time
-            ).ratio() * 0.6
+            time_score = (
+                1.0
+                if existing.time == extracted.slots.time
+                else SequenceMatcher(None, existing.time, extracted.slots.time).ratio() * 0.6
+            )
 
         location_score = 0.0
         if existing.location and extracted.slots.location:
             location_score = (
-                1.0 if existing.location == extracted.slots.location else SequenceMatcher(
-                    None, existing.location, extracted.slots.location
-                ).ratio() * 0.5
+                1.0
+                if existing.location == extracted.slots.location
+                else SequenceMatcher(None, existing.location, extracted.slots.location).ratio() * 0.5
             )
 
-        people_score = 0.0
-        extracted_people = {self._normalize_key(name) for name in extracted.slots.people or []}
+        extracted_people = {
+            self._normalize_key(name)
+            for name in extracted.slots.people or []
+            if not is_self_reference(str(name))
+        }
         existing_people = {self._normalize_key(name) for name in existing.people_names}
+        people_score = 0.0
         if extracted_people and existing_people:
             overlap = len(extracted_people & existing_people)
             people_score = overlap / max(len(extracted_people | existing_people), 1)
@@ -122,7 +129,8 @@ class MergeEngine:
         turn_id: str,
     ) -> CanonicalEvent:
         summary = extracted.slots.event or "Untitled event"
-        clues = self._normalize_clues(extracted.slots.unexpanded_clues)
+        people_names = self._filtered_people_names(extracted)
+
         return CanonicalEvent(
             event_id=extracted.event_id or f"evt_{uuid.uuid4().hex[:12]}",
             title=summary[:24],
@@ -130,16 +138,16 @@ class MergeEngine:
             time=extracted.slots.time,
             location=extracted.slots.location,
             people_ids=person_ids,
-            people_names=list(extracted.slots.people or []),
+            people_names=people_names,
             event=extracted.slots.event,
             feeling=extracted.slots.feeling,
             reflection=extracted.slots.reflection,
             cause=extracted.slots.cause,
             result=extracted.slots.result,
-            unexpanded_clues=clues,
+            unexpanded_clues=self._normalize_clues(extracted.slots.unexpanded_clues),
             theme_id=extracted.theme_id,
             source_turn_ids=[turn_id],
-            completeness_score=self._completeness_score(extracted),
+            completeness_score=self._completeness_score(extracted, people_names),
             confidence=extracted.confidence,
             merge_status="new",
         )
@@ -163,9 +171,10 @@ class MergeEngine:
         if extracted.theme_id and not event.theme_id:
             event.theme_id = extracted.theme_id
 
-        for person_name in extracted.slots.people or []:
+        for person_name in self._filtered_people_names(extracted):
             if person_name not in event.people_names:
                 event.people_names.append(person_name)
+
         for person_id in person_ids:
             if person_id not in event.people_ids:
                 event.people_ids.append(person_id)
@@ -177,7 +186,10 @@ class MergeEngine:
         if turn_id not in event.source_turn_ids:
             event.source_turn_ids.append(turn_id)
 
-        event.completeness_score = max(event.completeness_score, self._completeness_score(extracted))
+        event.completeness_score = max(
+            event.completeness_score,
+            self._completeness_score(extracted, self._filtered_people_names(extracted)),
+        )
         event.confidence = max(event.confidence, extracted.confidence)
 
     def _upsert_people(
@@ -191,7 +203,7 @@ class MergeEngine:
 
         for raw_name in extracted.slots.people or []:
             display_name = str(raw_name).strip()
-            if not display_name:
+            if not display_name or is_self_reference(display_name):
                 continue
 
             normalized = self._normalize_key(display_name)
@@ -204,11 +216,10 @@ class MergeEngine:
                 continue
 
             person_id = f"person_{uuid.uuid4().hex[:10]}"
-            relation = self._infer_relation(display_name)
             state.people_registry[person_id] = PersonProfile(
                 person_id=person_id,
                 display_name=display_name,
-                relation_to_elder=relation,
+                relation_to_elder=infer_relation_code(display_name),
                 summary=f"Mentioned in turn {turn_id}.",
             )
             person_ids.append(person_id)
@@ -238,51 +249,34 @@ class MergeEngine:
             if person and event_id not in person.related_event_ids:
                 person.related_event_ids.append(event_id)
 
+    def _filtered_people_names(self, extracted: ExtractedEvent) -> List[str]:
+        return [
+            str(name).strip()
+            for name in extracted.slots.people or []
+            if str(name).strip() and not is_self_reference(str(name))
+        ]
+
     def _normalize_clues(self, raw_clues: Optional[str]) -> List[str]:
         if not raw_clues:
             return []
-        parts = [item.strip() for item in str(raw_clues).replace(";", "，").split("，")]
+        normalized = str(raw_clues).replace("；", ";")
+        parts = [item.strip() for item in normalized.split(";")]
         return [item for item in parts if item]
 
     def _normalize_key(self, value: str) -> str:
         return value.strip().lower().replace(" ", "")
 
-    def _infer_relation(self, name: str) -> Optional[str]:
-        relation_map: Dict[str, str] = {
-            "mother": "mother",
-            "father": "father",
-            "mom": "mother",
-            "dad": "father",
-            "wife": "spouse",
-            "husband": "spouse",
-            "son": "child",
-            "daughter": "child",
-            "teacher": "teacher",
-            "friend": "friend",
-            "母亲": "mother",
-            "妈妈": "mother",
-            "父亲": "father",
-            "爸爸": "father",
-            "爱人": "spouse",
-            "老伴": "spouse",
-            "儿子": "child",
-            "女儿": "child",
-            "老师": "teacher",
-            "同学": "classmate",
-            "朋友": "friend",
-        }
-        lowered = name.lower()
-        for keyword, relation in relation_map.items():
-            if keyword in lowered or keyword in name:
-                return relation
-        return None
-
-    def _completeness_score(self, extracted: ExtractedEvent) -> float:
+    def _completeness_score(
+        self,
+        extracted: ExtractedEvent,
+        filtered_people: Optional[List[str]] = None,
+    ) -> float:
         slots = extracted.slots
+        people_value = filtered_people if filtered_people is not None else list(slots.people or [])
         checks = [
             slots.time,
             slots.location,
-            slots.people,
+            people_value,
             slots.event,
             slots.feeling,
             slots.reflection,

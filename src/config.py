@@ -32,6 +32,13 @@ class Config:
     INTERVIEWEE_MODEL_NAME = os.getenv("INTERVIEWEE_MODEL_NAME") or CHAT_MODEL_NAME
     STREAMING_MODEL_NAME = os.getenv("STREAMING_MODEL_NAME") or INTERVIEWER_MODEL_NAME
     CAMEL_MODEL_NAME = os.getenv("CAMEL_MODEL_NAME") or STRUCTURED_MODEL_NAME
+    RELATION_LLM_MODEL_NAME = os.getenv("RELATION_LLM_MODEL_NAME") or STRUCTURED_MODEL_NAME
+    ENABLE_RELATION_LLM_FALLBACK = os.getenv("ENABLE_RELATION_LLM_FALLBACK", "false").lower() in {
+        "1",
+        "true",
+        "yes",
+        "on",
+    }
 
     # App settings
     LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")

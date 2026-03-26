@@ -1,21 +1,12 @@
-/**
- * PersonView - 人物思维导图视图组件
- *
- * 使用 AntV G6 实现真正的思维导图效果
- * 中心：受访者老人
- * 一级：关系类别（家人/朋友/工作/其他）
- * 二级：人物节点
- * 三级：相关事件
- */
-
-import React, { useEffect, useRef, useCallback } from 'react'
-import { Graph, GraphData, NodeData } from '@antv/g6'
+import React from 'react'
+import { EventNode, GraphState, NodeStatus, PeopleNode } from '../types'
 import {
-  GraphState,
-  PeopleNode,
-  EventNode,
-  NodeStatus,
-} from '../types'
+  getRelationGroup,
+  getRelationGroupLabel,
+  getRelationLabel,
+  isSelfReference,
+  RelationGroupKey,
+} from '../utils/relationLexicon'
 import './PersonView.css'
 
 interface PersonViewProps {
@@ -26,36 +17,91 @@ interface PersonViewProps {
   className?: string
 }
 
-// 关系类别配置
-const RELATION_CONFIG: Record<string, { color: string; bgColor: string; icon: string }> = {
-  '家人': {
-    color: '#EC4899',
-    bgColor: '#FDF2F8',
-    icon: '👨‍👩‍👧',
+type CompatPeopleNode = PeopleNode & {
+  person_id?: string
+  display_name?: string
+  relation_to_elder?: string | null
+  summary?: string | null
+  related_event_ids?: string[]
+  aliases?: string[]
+}
+
+const GROUP_CONFIG: Record<RelationGroupKey, { color: string; bgColor: string; icon: string }> = {
+  family: {
+    color: '#ec4899',
+    bgColor: '#fdf2f8',
+    icon: '家',
   },
-  '朋友': {
-    color: '#8B5CF6',
-    bgColor: '#F5F3FF',
-    icon: '👫',
+  friend: {
+    color: '#8b5cf6',
+    bgColor: '#f5f3ff',
+    icon: '友',
   },
-  '工作': {
-    color: '#3B82F6',
-    bgColor: '#EFF6FF',
-    icon: '💼',
+  work: {
+    color: '#3b82f6',
+    bgColor: '#eff6ff',
+    icon: '工',
   },
-  '其他': {
-    color: '#6B7280',
-    bgColor: '#F9FAFB',
-    icon: '📌',
+  other: {
+    color: '#6b7280',
+    bgColor: '#f9fafb',
+    icon: '其',
   },
 }
 
-// 状态颜色
 const STATUS_COLORS: Record<NodeStatus, string> = {
-  [NodeStatus.PENDING]: '#9CA3AF',
-  [NodeStatus.MENTIONED]: '#F59E0B',
-  [NodeStatus.EXHAUSTED]: '#10B981',
+  [NodeStatus.PENDING]: '#9ca3af',
+  [NodeStatus.MENTIONED]: '#f59e0b',
+  [NodeStatus.EXHAUSTED]: '#10b981',
 }
+
+const getCompatPerson = (person: PeopleNode): CompatPeopleNode => person as CompatPeopleNode
+
+const getPersonId = (person: PeopleNode, fallbackId: string): string => {
+  const compat = getCompatPerson(person)
+  return compat.person_id || compat.people_id || fallbackId
+}
+
+const getPersonName = (person: PeopleNode): string => {
+  const compat = getCompatPerson(person)
+  return compat.name || compat.display_name || '未命名人物'
+}
+
+const getAliases = (person: PeopleNode): string[] => {
+  const compat = getCompatPerson(person)
+  return compat.aliases || []
+}
+
+const getPersonRelationRaw = (person: PeopleNode): string => {
+  const compat = getCompatPerson(person)
+  return (compat.relation || compat.relation_to_elder || '').trim()
+}
+
+const getPersonRelation = (person: PeopleNode): string =>
+  getRelationLabel(getPersonRelationRaw(person))
+
+const getPersonSummary = (person: PeopleNode): string => {
+  const compat = getCompatPerson(person)
+  return compat.description || compat.summary || ''
+}
+
+const getRelatedEventIds = (person: PeopleNode): string[] => {
+  const compat = getCompatPerson(person)
+  return compat.related_events || compat.related_event_ids || []
+}
+
+const getRelationships = (person: PeopleNode) => person.relationships || []
+
+const getPersonGroup = (person: PeopleNode): RelationGroupKey =>
+  getRelationGroup(
+    [
+      getPersonName(person),
+      getPersonRelationRaw(person),
+      getPersonSummary(person),
+      ...getAliases(person),
+    ],
+    getPersonRelationRaw(person),
+  )
 
 const PersonView: React.FC<PersonViewProps> = ({
   graphState,
@@ -64,277 +110,161 @@ const PersonView: React.FC<PersonViewProps> = ({
   filterStatus = 'all',
   className = '',
 }) => {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const graphRef = useRef<Graph | null>(null)
-  const onNodeClickRef = useRef(onNodeClick)
-
-  useEffect(() => {
-    onNodeClickRef.current = onNodeClick
-  }, [onNodeClick])
-
-  // 获取关系类别
-  const getRelationGroup = (relation: string): string => {
-    const lower = relation.toLowerCase()
-    const family = ['父亲', '母亲', '丈夫', '妻子', '儿子', '女儿', '兄弟姐妹', '爷爷', '奶奶', '孙子', '孙女', '老伴']
-    const friend = ['朋友', '邻居', '同学', '老乡']
-    const work = ['师傅', '工友', '同事', '领导', '下属', '老师', '学生']
-
-    if (family.some(r => lower.includes(r))) return '家人'
-    if (friend.some(r => lower.includes(r))) return '朋友'
-    if (work.some(r => lower.includes(r))) return '工作'
-    return '其他'
-  }
-
-  // 转换数据为 G6 格式
-  const transformData = useCallback((): GraphData => {
-    const peopleNodes = graphState.people_nodes || {}
-    const eventNodes = graphState.event_nodes || {}
+  const visibleGroups = React.useMemo(() => {
     const themeNodes = graphState.theme_nodes || {}
-    const elderInfo = graphState.elder_info
-    const nodes: NodeData[] = []
-    const edges: { source: string; target: string }[] = []
-
-    // 根节点 - 受访者
-    nodes.push({
-      id: 'root',
-      style: {
-        labelText: elderInfo?.name || '受访者',
-        labelFill: '#111827',
-        labelFontSize: 16,
-        labelFontWeight: 'bold',
-        fill: '#FFFFFF',
-        stroke: '#3B82F6',
-        lineWidth: 3,
-        size: [120, 50],
-      },
-      data: { type: 'root' },
-    })
-
-    // 按关系类别分组
-    const groups: Record<string, Array<[string, PeopleNode]>> = {
-      '家人': [],
-      '朋友': [],
-      '工作': [],
-      '其他': [],
+    const eventNodes = graphState.event_nodes || {}
+    const grouped: Record<RelationGroupKey, Array<{
+      id: string
+      person: PeopleNode
+      relation: string
+      summary: string
+      events: EventNode[]
+      relationships: ReturnType<typeof getRelationships>
+    }>> = {
+      family: [],
+      friend: [],
+      work: [],
+      other: [],
     }
 
-    Object.entries(peopleNodes).forEach(([id, person]) => {
-      const group = getRelationGroup(person.relation)
-      groups[group].push([id, person])
-    })
-
-    // 关系类别顺序
-    const relationOrder = ['家人', '朋友', '工作', '其他']
-    let sideIndex = 0
-
-    relationOrder.forEach((group) => {
-      const people = groups[group]
-      if (people.length === 0) return
-
-      const config = RELATION_CONFIG[group]
-      const groupId = `group-${group}`
-
-      // 类别节点
-      nodes.push({
-        id: groupId,
-        style: {
-          labelText: `${config.icon} ${group}`,
-          labelFill: config.color,
-          labelFontSize: 14,
-          labelFontWeight: 'bold',
-          fill: config.bgColor,
-          stroke: config.color,
-          lineWidth: 2,
-          size: [100, 36],
-        },
-        data: { type: 'group', group },
-      })
-      edges.push({ source: 'root', target: groupId })
-
-      // 人物节点
-      people.forEach(([personId, person]) => {
-        const isSelected = selectedNodeId === personId
-        const personNodeId = `person-${personId}`
-
-        nodes.push({
-          id: personNodeId,
-          style: {
-            labelText: person.name,
-            labelFill: '#374151',
-            labelFontSize: 13,
-            fill: isSelected ? '#EFF6FF' : '#FAFAFA',
-            stroke: isSelected ? '#3B82F6' : config.color,
-            lineWidth: isSelected ? 3 : 2,
-            size: [90, 34],
-          },
-          data: { type: 'person', person, personId },
-        })
-        edges.push({ source: groupId, target: personNodeId })
-
-        // 相关事件节点
-        const events = person.related_events
-          .map(id => eventNodes[id])
-          .filter(Boolean)
-          .filter(event => {
-            if (filterStatus === 'all') return true
-            const theme = themeNodes[event.theme_id]
-            return theme?.status === filterStatus
-          })
-
-        events.forEach((event) => {
-          const eventNodeId = `event-${event.event_id}`
-          const theme = themeNodes[event.theme_id]
-          const statusColor = theme ? STATUS_COLORS[theme.status] : '#9CA3AF'
-          const isEventSelected = selectedNodeId === event.event_id
-
-          // 检查事件节点是否已存在
-          if (!nodes.find(n => n.id === eventNodeId)) {
-            nodes.push({
-              id: eventNodeId,
-              style: {
-                labelText: event.title,
-                labelFill: '#4B5563',
-                labelFontSize: 11,
-                fill: isEventSelected ? '#EFF6FF' : '#FFFFFF',
-                stroke: statusColor,
-                lineWidth: isEventSelected ? 2 : 1,
-                size: [120, 28],
-              },
-              data: { type: 'event', event },
-            })
-          }
-          edges.push({ source: personNodeId, target: eventNodeId })
-        })
-
-        // 分配左右侧
-        sideIndex++
-      })
-    })
-
-    return { nodes, edges }
-  }, [graphState, selectedNodeId, filterStatus])
-
-  // 初始化图
-  useEffect(() => {
-    if (!containerRef.current) return
-
-    const graph = new Graph({
-      container: containerRef.current,
-      width: containerRef.current.clientWidth,
-      height: containerRef.current.clientHeight,
-      data: { nodes: [], edges: [] },
-      layout: {
-        type: 'mindmap',
-        direction: 'LR', // 从左向右：根节点在左，子节点向右展开
-        getWidth: () => 100,
-        getHeight: () => 40,
-        getHGap: () => 60,
-        getVGap: () => 20,
-      },
-      behaviors: ['drag-canvas', 'zoom-canvas', 'drag-element'],
-      node: {
-        type: 'rect',
-        style: {
-          radius: 8,
-          labelPlacement: 'center',
-          labelMaxWidth: 140,
-        },
-      },
-      edge: {
-        type: 'cubic-horizontal',
-        style: {
-          stroke: '#E5E7EB',
-          lineWidth: 2,
-        },
-      },
-    })
-
-    graphRef.current = graph
-
-    // 点击事件
-    graph.on('node:click', (evt) => {
-      const target = (evt as { target?: { getData?: () => Record<string, unknown> } }).target
-      const nodeData = target?.getData?.()
-      if (!nodeData) {
+    Object.entries(graphState.people_nodes || {}).forEach(([fallbackId, person]) => {
+      if (isSelfReference(getPersonName(person))) {
         return
       }
 
-      if (nodeData.type === 'person' && nodeData.person) {
-        onNodeClickRef.current?.(nodeData.person as PeopleNode, 'person')
-      } else if (nodeData.type === 'event' && nodeData.event) {
-        onNodeClickRef.current?.(nodeData.event as EventNode, 'event')
+      const personId = getPersonId(person, fallbackId)
+      const relation = getPersonRelation(person)
+      const group = getPersonGroup(person)
+      const events = getRelatedEventIds(person)
+        .map(eventId => eventNodes[eventId])
+        .filter((event): event is EventNode => Boolean(event))
+        .filter(event => {
+          if (filterStatus === 'all') return true
+          const theme = themeNodes[event.theme_id]
+          return theme?.status === filterStatus
+        })
+
+      if (filterStatus !== 'all' && events.length === 0) {
+        return
       }
+
+      grouped[group].push({
+        id: personId,
+        person,
+        relation,
+        summary: getPersonSummary(person),
+        events,
+        relationships: getRelationships(person),
+      })
     })
 
-    // 初始渲染
-    graph.render()
+    return grouped
+  }, [graphState, filterStatus])
 
-    return () => {
-      graph.destroy()
-    }
-  }, [])
+  const groupOrder: RelationGroupKey[] = ['family', 'friend', 'work', 'other']
+  const totalPeople = groupOrder.reduce((count, group) => count + visibleGroups[group].length, 0)
 
-  // 更新数据
-  useEffect(() => {
-    const graph = graphRef.current
-    if (!graph) return
-
-    const data = transformData()
-    graph.setData(data)
-    graph.render()
-
-    // 适配视图
-    setTimeout(() => {
-      graph.fitView()
-    }, 100)
-  }, [transformData])
-
-  // 处理选中节点高亮
-  useEffect(() => {
-    const graph = graphRef.current
-    if (!graph || !selectedNodeId) return
-
-    // 查找对应的节点
-    const personNodeId = `person-${selectedNodeId}`
-    const eventNodeId = `event-${selectedNodeId}`
-
-    // 聚焦到选中节点
-    const node = graph.getNodeData(personNodeId) || graph.getNodeData(eventNodeId)
-    if (node) {
-      graph.focusElement(node.id)
-    }
-  }, [selectedNodeId])
+  if (totalPeople === 0) {
+    return (
+      <div className={`person-view-container ${className}`}>
+        <div className="person-view-empty">
+          <div className="empty-icon">人</div>
+          <p>当前没有可展示的人物关系</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
-    <div className={`person-mindmap-container ${className}`}>
-      <div ref={containerRef} className="person-mindmap-canvas" />
-      {/* 图例 */}
-      <div className="person-mindmap-legend">
-        <div className="legend-title">关系类别</div>
-        {Object.entries(RELATION_CONFIG).map(([group, config]) => (
-          <div key={group} className="legend-item">
-            <span className="legend-color" style={{ backgroundColor: config.color }} />
-            <span className="legend-label">{config.icon} {group}</span>
+    <div className={`person-view-container ${className}`}>
+      <div className="person-view-content">
+        <div className="person-root-card">
+          <div className="person-root-avatar">访</div>
+          <div className="person-root-meta">
+            <div className="person-root-title">{graphState.elder_info?.name || '受访者'}</div>
+            <div className="person-root-subtitle">
+              已识别人物 {totalPeople} 位，关联事件 {graphState.event_count} 个
+            </div>
           </div>
-        ))}
-        <div className="legend-divider" />
-        <div className="legend-title">事件状态</div>
-        {Object.entries(STATUS_COLORS).map(([status, color]) => (
-          <div key={status} className="legend-item">
-            <span className="legend-color" style={{ backgroundColor: color }} />
-            <span className="legend-label">
-              {status === NodeStatus.PENDING && '待触达'}
-              {status === NodeStatus.MENTIONED && '已提及'}
-              {status === NodeStatus.EXHAUSTED && '已挖透'}
-            </span>
-          </div>
-        ))}
-      </div>
-      {/* 操作提示 */}
-      <div className="person-mindmap-hint">
-        <span>🖱️ 拖拽移动画布</span>
-        <span>🔍 滚轮缩放</span>
-        <span>👆 点击节点查看详情</span>
+        </div>
+
+        <div className="person-group-grid">
+          {groupOrder.map(group => {
+            const items = visibleGroups[group]
+            if (items.length === 0) return null
+
+            const config = GROUP_CONFIG[group]
+            return (
+              <section
+                key={group}
+                className="person-group-card"
+                style={{ '--group-color': config.color, '--group-bg': config.bgColor } as React.CSSProperties}
+              >
+                <header className="person-group-header">
+                  <div className="person-group-title">
+                    <span className="person-group-icon">{config.icon}</span>
+                    <span>{getRelationGroupLabel(group)}</span>
+                  </div>
+                  <span className="person-group-count">{items.length}</span>
+                </header>
+
+                <div className="person-card-list">
+                  {items.map(({ id, person, relation, summary, events, relationships }) => {
+                    const isSelected = selectedNodeId === id
+                    return (
+                      <article
+                        key={id}
+                        className={`person-card ${isSelected ? 'selected' : ''}`}
+                        onClick={() => onNodeClick?.(person, 'person')}
+                      >
+                        <div className="person-card-header">
+                          <div>
+                            <div className="person-name">{getPersonName(person)}</div>
+                            <div className="person-relation">{relation}</div>
+                          </div>
+                          <div className="person-metrics">
+                            <span className="metric-pill">{events.length} 事件</span>
+                            {relationships.length > 0 && (
+                              <span className="metric-pill subtle">{relationships.length} 关系</span>
+                            )}
+                          </div>
+                        </div>
+
+                        {summary && <p className="person-summary">{summary}</p>}
+
+                        {events.length > 0 ? (
+                          <div className="person-event-list">
+                            {events.map(event => {
+                              const theme = graphState.theme_nodes[event.theme_id]
+                              const borderColor = theme ? STATUS_COLORS[theme.status] : '#9ca3af'
+                              const isEventSelected = selectedNodeId === event.event_id
+                              return (
+                                <button
+                                  key={event.event_id}
+                                  className={`person-event-chip ${isEventSelected ? 'selected' : ''}`}
+                                  style={{ '--event-color': borderColor } as React.CSSProperties}
+                                  onClick={evt => {
+                                    evt.stopPropagation()
+                                    onNodeClick?.(event, 'event')
+                                  }}
+                                >
+                                  <span className="event-chip-dot" />
+                                  <span>{event.title}</span>
+                                </button>
+                              )
+                            })}
+                          </div>
+                        ) : (
+                          <div className="person-empty-events">当前筛选条件下暂无关联事件</div>
+                        )}
+                      </article>
+                    )
+                  })}
+                </div>
+              </section>
+            )
+          })}
+        </div>
       </div>
     </div>
   )
