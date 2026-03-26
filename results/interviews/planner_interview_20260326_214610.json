@@ -1,0 +1,2838 @@
+{
+  "session_id": "20260326_214610",
+  "timestamp": "2026-03-26T22:08:22.086719",
+  "mode": "planner",
+  "conversation": [
+    {
+      "turn": 1,
+      "role": "interviewer",
+      "content": "您小时候是在哪里长大的？那里给您留下最深的印象是什么？",
+      "source": "baseline_direct"
+    },
+    {
+      "turn": 1,
+      "role": "interviewee",
+      "content": "我是在苏州长大的，就在我们家的祖宅里。那个宅子啊，在苏州的老城区，靠着运河不远。要说最深的印象……（停顿片刻，目光望向远处）我想起天井里的那些早晨。",
+      "thoughts": {
+        "current_emotion": "平静中带着些许怀念",
+        "accept_value": 25,
+        "topic_analysis": "对方询问我的童年成长地点和最深印象。这是一个比较温和的问题，不涉及敏感话题，可以适当分享一些童年记忆。",
+        "memory_search_needed": true,
+        "search_criteria": {
+          "keywords": [
+            "童年",
+            "苏州",
+            "祖宅",
+            "天井"
+          ],
+          "period": "period_1",
+          "emotion_weight": 0
+        },
+        "search_results": "找到了三个童年记忆：1. 祖宅天井里的识字课（1939年春）- 父亲在天井教我识字，阳光、海棠花、墨香，宁静温暖；2. 战火逼近下的举家藏匿（1941年冬夜）- 全家躲在地窖里躲避战火，恐惧紧张；3. 后河埠头看运粮船与伤兵船交错（1943年夏）- 在河埠头看到战争带来的创伤景象。",
+        "sensitive_topic_detected": false,
+        "response_strategy": "先回答成长地点，然后选择最温暖、最不敏感的记忆片段来分享最深印象。重点讲述天井识字课的场景，避免过多涉及战争创伤。保持温和、回忆的语气。"
+      }
+    },
+    {
+      "turn": 2,
+      "role": "interviewer",
+      "content": "（语气：CURIOUS_INQUIRING + NOSTALGIC）\n您能闭上眼睛，带我回到那个天井里的早晨吗？您最先看到的是什么，又听到了哪些声音？",
+      "source": "baseline_planner_guided"
+    },
+    {
+      "turn": 2,
+      "role": "interviewee",
+      "content": "（慢慢闭上眼睛，停顿片刻）好……让我想想。最先看到的……是青石板上的露水，在晨光里亮晶晶的，像撒了一层碎银子。天井中间那棵海棠树，花开得正好，粉白粉白的。",
+      "thoughts": {
+        "current_emotion": "怀念中带着温暖",
+        "accept_value": 30,
+        "topic_analysis": "对方希望我闭上眼睛回忆天井早晨的具体细节，这是一个很感性的请求，说明对方对这段记忆感兴趣。这让我感到被理解，愿意分享更多细节。",
+        "memory_search_needed": true,
+        "search_criteria": {
+          "keywords": [
+            "天井",
+            "早晨",
+            "阳光",
+            "声音",
+            "细节"
+          ],
+          "period": "period_1",
+          "emotion_weight": 0
+        },
+        "search_results": "找到了三个童年记忆，其中关于天井识字课的记忆情感权重为7，是温暖宁静的记忆。记忆中有很多细节描述：青石板上的露水、海棠花香、墨香、父亲温和的声音、远处货船的汽笛声等。",
+        "sensitive_topic_detected": false,
+        "response_strategy": "按照对方的请求，闭上眼睛回忆那个早晨，从视觉、听觉、嗅觉等多个感官角度描述。重点描述天井里的景象、声音和气味，保持温和、回忆的语气，适当加入一些细节描述。"
+      }
+    },
+    {
+      "turn": 3,
+      "role": "interviewer",
+      "content": "（语气：EMPATHIC_SUPPORTIVE + NOSTALGIC）\n那露水和海棠花的香气，您还记得吗？当时天井里还有谁在，他们在做什么呢？",
+      "source": "baseline_planner_guided"
+    },
+    {
+      "turn": 3,
+      "role": "interviewee",
+      "content": "（睁开眼睛，微微点头）记得，记得很清楚。露水的气味……是青石板蒸腾起来的潮润土腥气，混着海棠花的淡香。那种香气很清甜，但又不腻人。风一吹，花瓣就落下来。",
+      "thoughts": {
+        "current_emotion": "温暖而专注",
+        "accept_value": 35,
+        "topic_analysis": "对方继续询问天井早晨的细节，特别是气味和在场人物。这让我更加沉浸在回忆中，愿意分享更多具体的感官记忆。",
+        "memory_search_needed": false,
+        "search_criteria": {},
+        "search_results": "已获取到天井识字课的记忆细节，包含丰富的感官描述和人物互动。",
+        "sensitive_topic_detected": false,
+        "response_strategy": "根据记忆细节，详细描述露水和海棠花的香气，以及天井里的人物和活动。重点描述父亲教我识字的场景，保持温和、回忆的语气，适当加入一些细节描述。"
+      }
+    },
+    {
+      "turn": 4,
+      "role": "interviewer",
+      "content": "（语气：CURIOUS_INQUIRING + CALM）\n当花瓣落下来的时候，您通常会在天井里做什么？您的家人呢，他们那时在忙些什么？",
+      "source": "baseline_planner_guided"
+    },
+    {
+      "turn": 4,
+      "role": "interviewee",
+      "content": "（微笑）那时候啊，我正坐在小板凳上，挨着父亲。他膝上摊着本《声律启蒙》，指着上面的字教我念：“云对雨，雪对风，晚照对晴空……”",
+      "thoughts": {
+        "current_emotion": "怀念而专注",
+        "accept_value": 40,
+        "topic_analysis": "对方询问花瓣落下时我在天井里做什么，以及家人在忙什么。这是一个很具体的问题，让我可以继续分享那个早晨的细节。",
+        "memory_search_needed": false,
+        "search_criteria": {},
+        "search_results": "已获取到天井识字课的记忆细节，包含父亲教我识字的场景，花瓣落在书页上，父亲小心地拈起来夹在书里的细节。",
+        "sensitive_topic_detected": false,
+        "response_strategy": "根据记忆细节，描述花瓣落下时的场景，重点描述父亲教我识字的互动，以及他处理花瓣的细节。保持温和、回忆的语气，适当加入一些细节描述。"
+      }
+    },
+    {
+      "turn": 5,
+      "role": "interviewer",
+      "content": "（语气：RESPECTFUL_REVERENT + THOUGHTFUL）\n您还记得父亲念书时的声音和神情吗？他教您这些的时候，您心里是什么感觉？",
+      "source": "baseline_planner_guided"
+    },
+    {
+      "turn": 5,
+      "role": "interviewee",
+      "content": "（目光变得柔和）记得，怎么会不记得。他的声音啊……温和得很，带着点苏州口音的软糯。念到“晚照对晴空”的时候，尾音拖得长长的，像在品味每个字的美。",
+      "thoughts": {
+        "current_emotion": "深情而感慨",
+        "accept_value": 45,
+        "topic_analysis": "对方询问父亲念书时的声音、神情以及我当时的感受。这是一个触及情感深处的问题，让我回忆起父亲的教学方式和情感交流。",
+        "memory_search_needed": false,
+        "search_criteria": {},
+        "search_results": "已获取到天井识字课的记忆细节，包含父亲温和的声音、他拈花瓣的动作、眼角的细纹、以及他说话时的语气和神情。",
+        "sensitive_topic_detected": false,
+        "response_strategy": "根据记忆细节，详细描述父亲念书时的声音和神情，以及我当时的内心感受。重点描述父亲的教学方式和情感交流，保持温和、回忆的语气，适当加入一些情感表达。"
+      }
+    },
+    {
+      "turn": 6,
+      "role": "interviewer",
+      "content": "（语气：GENTLE_WARM + THOUGHTFUL）\n这种在天井里跟着父亲念书的经历，对您后来的性格或者爱好，有没有留下什么特别的影响？",
+      "source": "baseline_planner_guided"
+    },
+    {
+      "turn": 6,
+      "role": "interviewee",
+      "content": "（沉默片刻，轻轻摩挲着茶杯）影响啊……（缓缓点头）有的，而且很深。你看我现在喜欢书法，喜欢在宣纸上写字，这个习惯就是从那时候开始的。",
+      "thoughts": {
+        "current_emotion": "感慨而深思",
+        "accept_value": 50,
+        "topic_analysis": "对方询问天井里跟父亲念书的经历对我后来性格或爱好的影响。这是一个关于人生影响的问题，让我思考童年经历对一生的塑造。",
+        "memory_search_needed": true,
+        "search_criteria": {
+          "keywords": [
+            "影响",
+            "性格",
+            "爱好",
+            "书法",
+            "阅读"
+          ],
+          "period": null,
+          "emotion_weight": 0
+        },
+        "search_results": "",
+        "sensitive_topic_detected": false,
+        "response_strategy": "根据记忆和人生经历，思考天井识字课对我后来性格和爱好的影响。重点描述对书法、阅读、教学等方面的影响，保持温和、回忆的语气，适当加入一些人生感悟。"
+      }
+    },
+    {
+      "turn": 7,
+      "role": "interviewer",
+      "content": "（语气：CURIOUS_INQUIRING + ENCOURAGING）\n您第一次拿起毛笔，想写下“云对雨，雪对风”这些句子，是在天井里，还是在别的地方？当时的情形是怎样的？",
+      "source": "baseline_planner_guided"
+    },
+    {
+      "turn": 7,
+      "role": "interviewee",
+      "content": "（轻轻摇头）第一次拿起毛笔啊……不是在天井里。是在父亲的书房里。那天他教我认完“云对雨，雪对风”之后，看我眼睛亮亮的，就说：“栋儿，想不想自己写写看？”",
+      "thoughts": {
+        "current_emotion": "怀念而专注",
+        "accept_value": 55,
+        "topic_analysis": "对方询问我第一次拿起毛笔写“云对雨，雪对风”是在哪里，以及当时的情形。这是一个很具体的问题，让我可以分享第一次接触书法的经历。",
+        "memory_search_needed": false,
+        "search_criteria": {},
+        "search_results": "已获取到天井识字课的记忆细节，包含父亲用毛笔在宣纸上写字的场景，以及他教我识字的过程。",
+        "sensitive_topic_detected": false,
+        "response_strategy": "根据记忆细节，描述第一次拿起毛笔写字的场景。重点描述父亲教我握笔、写字的细节，以及我当时的感受。保持温和、回忆的语气，适当加入一些细节描述。"
+      }
+    },
+    {
+      "turn": 8,
+      "role": "interviewer",
+      "content": "（语气：EMPATHIC_SUPPORTIVE + NOSTALGIC）\n书房里是什么样子的？您还记得第一次握住毛笔，笔尖落在纸上的那种感觉吗？",
+      "source": "baseline_planner_guided"
+    },
+    {
+      "turn": 8,
+      "role": "interviewee",
+      "content": "（眼神变得深远）书房啊……不大，但很清静。靠墙是一排老榆木书架，上面摆满了线装书。窗户朝东，早晨的阳光能照到书桌上。（停顿片刻）父亲的书桌是红木的，桌面上有一方大砚台，还有笔架、笔洗……",
+      "thoughts": {
+        "current_emotion": "沉浸于回忆中",
+        "accept_value": 60,
+        "topic_analysis": "对方询问书房的样子以及第一次握住毛笔、笔尖落在纸上的感觉。这是一个关于感官记忆和细节的问题，让我可以分享更具体的童年经历。",
+        "memory_search_needed": true,
+        "search_criteria": {
+          "keywords": [
+            "书房",
+            "毛笔",
+            "第一次",
+            "握笔",
+            "笔尖"
+          ],
+          "period": "period_1",
+          "emotion_weight": 0
+        },
+        "search_results": "",
+        "sensitive_topic_detected": false,
+        "response_strategy": "根据记忆和人生经历，描述父亲书房的样子，以及第一次握毛笔写字的感觉。重点描述书房的陈设、氛围，以及握笔、落笔的细节感受。保持温和、细腻的回忆语气，适当加入感官描述。"
+      }
+    },
+    {
+      "turn": 9,
+      "role": "interviewer",
+      "content": "（语气：GENTLE_WARM + CURIOUS_INQUIRING）\n当您第一次握住父亲递来的毛笔，笔尖蘸上墨汁，准备写下“云”字的时候，您的手是稳的，还是抖的？父亲当时是怎么教您握笔的？",
+      "source": "baseline_planner_guided"
+    },
+    {
+      "turn": 9,
+      "role": "interviewee",
+      "content": "（抱歉，我没有很好地理解这个问题，可以再问一遍吗？）",
+      "thoughts": {}
+    },
+    {
+      "turn": 10,
+      "role": "interviewer",
+      "content": "（语气：GENTLE_WARM + CALM）\n没关系，是我问得太复杂了。我想问的是，您第一次写毛笔字的时候，紧张吗？手会不会抖？还有，父亲是怎么教您拿笔的？",
+      "source": "baseline_planner_guided"
+    },
+    {
+      "turn": 10,
+      "role": "interviewee",
+      "content": "（轻轻摇头，露出温和的笑容）抖啊，怎么不抖。那支笔在我手里像条滑溜溜的泥鳅，怎么都握不住。（模仿握笔的动作）父亲就站在我身后，用他的大手包住我的小手……",
+      "thoughts": {
+        "current_emotion": "温暖而专注",
+        "accept_value": 65,
+        "topic_analysis": "对方询问第一次写毛笔字时是否紧张，手是否发抖，以及父亲如何教我握笔。这是一个关于学习过程和父子互动的细节问题。",
+        "memory_search_needed": true,
+        "search_criteria": {
+          "keywords": [
+            "第一次",
+            "握笔",
+            "紧张",
+            "手抖",
+            "父亲教"
+          ],
+          "period": "period_1",
+          "emotion_weight": 0
+        },
+        "search_results": "",
+        "sensitive_topic_detected": false,
+        "response_strategy": "根据记忆和人生经历，描述第一次写毛笔字时的紧张感，手是否发抖，以及父亲如何耐心地教我握笔。重点描述父亲的手如何握住我的手，以及他教导的方式。保持温和、细腻的回忆语气。"
+      }
+    },
+    {
+      "turn": 11,
+      "role": "interviewer",
+      "content": "（语气：NOSTALGIC + EMPATHIC_SUPPORTIVE）\n父亲的手是什么样的感觉？是温热的，还是有点粗糙？他握着您的手写下第一个字的时候，您心里在想什么？",
+      "source": "baseline_planner_guided"
+    },
+    {
+      "turn": 11,
+      "role": "interviewee",
+      "content": "（抱歉，我没有很好地理解这个问题，可以再问一遍吗？）",
+      "thoughts": {}
+    },
+    {
+      "turn": 12,
+      "role": "interviewer",
+      "content": "（语气：GENTLE_WARM + CALM）\n好的，我们慢慢来。您还记得父亲的手，握着您的手写字时，是什么感觉吗？",
+      "source": "baseline_planner_guided"
+    },
+    {
+      "turn": 12,
+      "role": "interviewee",
+      "content": "（闭上眼睛，仿佛在感受）父亲的手……是温热的，手心有些粗糙，那是常年握笔、翻书留下的茧子。（睁开眼睛）他握着我的手时，我能感觉到他手指的骨节，还有那种沉稳的力道……",
+      "thoughts": {
+        "current_emotion": "深深怀念",
+        "accept_value": 70,
+        "topic_analysis": "对方询问父亲的手握着我的手写字时的感觉，以及我当时心里在想什么。这是一个关于触觉记忆和情感体验的问题。",
+        "memory_search_needed": true,
+        "search_criteria": {
+          "keywords": [
+            "父亲的手",
+            "握着",
+            "感觉",
+            "温热",
+            "粗糙"
+          ],
+          "period": "period_1",
+          "emotion_weight": 0
+        },
+        "search_results": "",
+        "sensitive_topic_detected": false,
+        "response_strategy": "根据记忆和人生经历，描述父亲的手的感觉——温热、有些粗糙，以及他握着我的手写字时的触感。然后描述我当时心里的想法和感受。保持温和、感性的回忆语气。"
+      }
+    },
+    {
+      "turn": 13,
+      "role": "interviewer",
+      "content": "（语气：THOUGHTFUL + EMPATHIC_SUPPORTIVE）\n那种沉稳的力道，除了教您写字，是不是也像在告诉您一些别的东西？现在回想起来，那感觉意味着什么？",
+      "source": "baseline_planner_guided"
+    },
+    {
+      "turn": 13,
+      "role": "interviewee",
+      "content": "（沉默片刻，缓缓点头）是啊……现在想来，那力道里不光是教我怎么握笔。（语气变得深沉）那是一种传承，从他的手到我的手。他是在告诉我，写字要稳，做人更要稳。",
+      "thoughts": {
+        "current_emotion": "深沉感慨",
+        "accept_value": 75,
+        "topic_analysis": "对方询问父亲沉稳的力道除了教写字，是否还意味着其他东西，以及现在回想起来那感觉意味着什么。这是一个关于深层情感和人生感悟的问题。",
+        "memory_search_needed": false,
+        "search_criteria": {},
+        "search_results": "",
+        "sensitive_topic_detected": false,
+        "response_strategy": "根据人生经历和感悟，回答父亲沉稳的力道所蕴含的深层意义。可以从文化传承、父爱、人生指导等角度来阐述。保持深沉、感慨的语气，适当加入人生感悟。"
+      }
+    },
+    {
+      "turn": 14,
+      "role": "interviewer",
+      "content": "（语气：RESPECTFUL_REVERENT + THOUGHTFUL）\n“做人要稳”，在您后来的人生里，有没有那么一个时刻，您特别深刻地体会到了父亲这句话的重量？",
+      "source": "baseline_planner_guided"
+    },
+    {
+      "turn": 14,
+      "role": "interviewee",
+      "content": "（沉默了很久，手指轻轻摩挲着茶杯）有……在北大荒的时候。（声音低沉）1960年，困难时期，粮食不够吃。有一天夜里……（停顿，似乎在斟酌要不要说下去）",
+      "thoughts": {
+        "current_emotion": "沉重回忆",
+        "accept_value": 80,
+        "topic_analysis": "对方询问在后来的人生里，有没有特别深刻地体会到“做人要稳”这句话的重量。这是一个需要从人生经历中寻找具体例证的问题。",
+        "memory_search_needed": false,
+        "search_criteria": {},
+        "search_results": "",
+        "sensitive_topic_detected": false,
+        "response_strategy": "根据刚才搜索到的记忆，特别是北大荒时期关于道德挣扎的记忆，来回答这个问题。描述在极端困难时期，如何体会到“做人要稳”的重量。保持深沉、反思的语气。"
+      }
+    },
+    {
+      "turn": 15,
+      "role": "interviewer",
+      "content": "（语气：GENTLE_WARM + CALM）\n您愿意说说那天夜里发生了什么吗？我们慢慢来，不着急。",
+      "source": "baseline_planner_guided"
+    },
+    {
+      "turn": 15,
+      "role": "interviewee",
+      "content": "（深深吸了口气，声音低沉）那天夜里……月亮特别亮，照得豆田垄沟像一条条冻住的河。（停顿）我和卫东……饿得实在受不了了。",
+      "thoughts": {
+        "current_emotion": "痛苦挣扎",
+        "accept_value": 85,
+        "topic_analysis": "对方温和地询问那天夜里发生了什么，表示可以慢慢来。这是一个关于北大荒困难时期的具体记忆，涉及道德挣扎和生存考验。",
+        "memory_search_needed": false,
+        "search_criteria": {},
+        "search_results": "",
+        "sensitive_topic_detected": false,
+        "response_strategy": "根据刚才搜索到的记忆片段，特别是zhiqing_1960_autumn_11这个记忆，描述那天夜里的经历。保持缓慢、沉重的叙述节奏，如实讲述当时的道德挣扎和生存困境。"
+      }
+    },
+    {
+      "turn": 16,
+      "role": "interviewer",
+      "content": "（语气：EMPATHIC_SUPPORTIVE + CALM）\n“饿得实在受不了了”，那种感觉，除了肚子空，身体上还有别的感觉吗？比如，走路的时候，或者看东西的时候？",
+      "source": "baseline_planner_guided"
+    },
+    {
+      "turn": 16,
+      "role": "interviewee",
+      "content": "（闭上眼睛，似乎在回忆那种感觉）走路的时候……腿是软的，像踩在棉花上，可又沉得很。（睁开眼睛）看东西……眼前有时候会发黑，像蒙了一层灰纱。耳朵里嗡嗡响，可又特别安静……静得能听见自己心跳，一下，一下，跳得特别慢。",
+      "thoughts": {
+        "current_emotion": "沉重回忆",
+        "accept_value": 90,
+        "topic_analysis": "对方询问饥饿的具体身体感受，包括走路、看东西时的感觉。这是一个需要描述具体生理体验的问题。",
+        "memory_search_needed": false,
+        "search_criteria": {},
+        "search_results": "",
+        "sensitive_topic_detected": false,
+        "response_strategy": "根据记忆片段中的细节，描述饥饿的具体身体感受。可以从走路时的感觉、视觉变化、身体反应等方面详细描述。保持真实、细致的叙述。"
+      }
+    },
+    {
+      "turn": 17,
+      "role": "interviewer",
+      "content": "（语气：GENTLE_WARM + THOUGHTFUL）\n当您听着自己缓慢的心跳，眼前发黑的时候，心里在想什么？有没有想起父亲那句“做人要稳”？",
+      "source": "baseline_planner_guided"
+    },
+    {
+      "turn": 17,
+      "role": "interviewee",
+      "content": "（长时间沉默，手指微微颤抖）想……想得最多的，是明天还能不能挥得动镐头。（声音更低了）父亲的话……那时候不敢想。一想，就觉得……（停顿）觉得自己要垮了。",
+      "thoughts": {
+        "current_emotion": "深刻反思",
+        "accept_value": 95,
+        "topic_analysis": "对方询问在那种极端饥饿状态下，心里在想什么，是否想起了父亲的话。这是一个关于内心挣扎和道德反思的问题。",
+        "memory_search_needed": false,
+        "search_criteria": {},
+        "search_results": "",
+        "sensitive_topic_detected": false,
+        "response_strategy": "结合记忆片段中的道德挣扎，描述当时的内心活动。可以提到是否想起父亲的话，以及这种回忆如何影响当时的决定。保持深沉、反思的语气。"
+      }
+    },
+    {
+      "turn": 18,
+      "role": "interviewer",
+      "content": "（语气：EMPATHIC_SUPPORTIVE + CALM）\n觉得“自己要垮了”……那种感觉，是像心里有什么东西在往下沉，还是像被什么东西压得喘不过气？",
+      "source": "baseline_planner_guided"
+    },
+    {
+      "turn": 18,
+      "role": "interviewee",
+      "content": "（深深吸了口气，声音有些发颤）像……像站在冰面上，脚下的冰在一点点裂开。（停顿）能听见裂缝的声音，咔……咔……可又动不了，只能看着它裂。",
+      "thoughts": {
+        "current_emotion": "痛苦回忆",
+        "accept_value": 98,
+        "topic_analysis": "对方询问“自己要垮了”的具体感觉，是心里下沉还是被压得喘不过气。这是一个需要描述具体心理感受的问题。",
+        "memory_search_needed": false,
+        "search_criteria": {},
+        "search_results": "",
+        "sensitive_topic_detected": false,
+        "response_strategy": "根据记忆中的情感体验，描述那种“要垮了”的具体感觉。可以用比喻来描述心理状态，保持真实、细腻的表达。"
+      }
+    },
+    {
+      "turn": 19,
+      "role": "interviewer",
+      "content": "（语气：GENTLE_WARM + THOUGHTFUL）\n您说“只能看着它裂”，那时候，您和卫东，你们互相之间会说些什么吗？还是就那样沉默地看着？",
+      "source": "baseline_planner_guided"
+    },
+    {
+      "turn": 19,
+      "role": "interviewee",
+      "content": "（缓慢摇头）不说话……一个字都不说。（声音低沉）就那样蹲在垄沟里，月光照着他的脸，惨白惨白的。能听见他粗重的呼吸声，还有……还有远处田鼠洞里窸窸窣窣的声音。",
+      "thoughts": {
+        "current_emotion": "沉重",
+        "accept_value": 100,
+        "topic_analysis": "对方询问在那种极端情况下，和卫东之间的交流情况，是说话还是沉默。这是一个需要回忆具体互动细节的问题。",
+        "memory_search_needed": false,
+        "search_criteria": {},
+        "search_results": "",
+        "sensitive_topic_detected": false,
+        "response_strategy": "根据记忆片段中的描述，如实讲述当时和卫东的互动情况。可以描述对话内容、沉默的时刻，以及两人之间的默契或紧张。"
+      }
+    },
+    {
+      "turn": 20,
+      "role": "interviewer",
+      "content": "（语气：EMPATHIC_SUPPORTIVE + CALM）\n在那种极致的安静里，您能听见自己心里有声音吗？或者，您和卫东交换过眼神吗？那眼神里说了什么？",
+      "source": "baseline_planner_guided"
+    },
+    {
+      "turn": 20,
+      "role": "interviewee",
+      "content": "（闭上眼睛，声音几乎听不见）心里……心里有个声音在说：陈国栋，你要当贼了。（睁开眼睛，眼神空洞）卫东看了我一眼……就一眼。那眼神……（停顿）像在问：干不干？也像在说：别看我，我也不知道。",
+      "thoughts": {
+        "current_emotion": "深刻回忆",
+        "accept_value": 100,
+        "topic_analysis": "对方询问在那种安静中是否能听见内心的声音，以及和卫东交换眼神的情况。这是一个关于内心独白和非语言交流的问题。",
+        "memory_search_needed": false,
+        "search_criteria": {},
+        "search_results": "",
+        "sensitive_topic_detected": false,
+        "response_strategy": "描述当时的内心声音和眼神交流。可以讲述内心的挣扎、眼神中传递的信息，以及这种非语言交流如何影响最终的决定。"
+      }
+    },
+    {
+      "turn": 21,
+      "role": "interviewer",
+      "content": "（语气：GENTLE_WARM + THOUGHTFUL）\n“你要当贼了”这个声音，和卫东那个“干不干”的眼神，在您心里是怎么打架的？最后是哪一边，或者是什么别的东西，让您的手伸了出去？",
+      "source": "baseline_planner_guided"
+    },
+    {
+      "turn": 21,
+      "role": "interviewee",
+      "content": "（双手握紧又松开，反复几次）那个声音说：你读了那么多书，学了那么多道理……（声音哽咽）卫东的眼神说：明天还要挖渠，挖不动了，就真倒下了。（停顿很久）最后……最后是胃。胃在烧，烧得人……什么都顾不上了。",
+      "thoughts": {
+        "current_emotion": "痛苦挣扎",
+        "accept_value": 100,
+        "topic_analysis": "对方询问内心挣扎的具体过程，以及最终是什么促使行动。这是一个关于道德困境和最终决策的问题。",
+        "memory_search_needed": false,
+        "search_criteria": {},
+        "search_results": "",
+        "sensitive_topic_detected": false,
+        "response_strategy": "详细描述内心的挣扎过程，包括各种声音、想法、身体感受的冲突。最后说明是什么因素促使了最终的行动。保持真实、细腻的描述。"
+      }
+    },
+    {
+      "turn": 22,
+      "role": "interviewer",
+      "content": "（语气：EMPATHIC_SUPPORTIVE + CALM）\n您还记得，您的手伸向的是哪一垄，哪一棵菜吗？是离您最近的，还是看起来最大最饱满的？手指碰到菜叶子的时候，是什么感觉？",
+      "source": "baseline_planner_guided"
+    },
+    {
+      "turn": 22,
+      "role": "interviewee",
+      "content": "（手指微微颤抖，仿佛在触摸什么）中间那垄……第三棵。（声音很轻）叶子……叶子是冰凉的，带着露水。手指碰到的时候……（停顿）抖得厉害，差点没抓住。",
+      "thoughts": {
+        "current_emotion": "痛苦细节",
+        "accept_value": 100,
+        "topic_analysis": "对方询问具体行动的细节：哪一垄、哪一棵菜，以及手指触碰时的感觉。这是一个需要回忆具体感官体验的问题。",
+        "memory_search_needed": false,
+        "search_criteria": {},
+        "search_results": "",
+        "sensitive_topic_detected": false,
+        "response_strategy": "根据记忆片段，描述具体的行动细节。包括选择哪棵菜、触碰时的感觉、当时的心理状态等。保持细腻、真实的感官描述。"
+      }
+    },
+    {
+      "turn": 23,
+      "role": "interviewer",
+      "content": "（语气：GENTLE_WARM + THOUGHTFUL）\n您是怎么把它弄下来的？是拧断的，还是掐断的？弄下来之后，您和卫东是怎么分着吃掉的？生吃的味道，还记得吗？",
+      "source": "baseline_planner_guided"
+    },
+    {
+      "turn": 23,
+      "role": "interviewee",
+      "content": "（做了一个拧的动作）拧……拧断的。茎秆很脆，咔嚓一声……（声音发紧）吓得我们俩都僵住了。（停顿）一人一半……他掰的，手也在抖。生吃……（摇头）不记得味道了，只记得……嚼的时候，眼泪掉下来了。",
+      "thoughts": {
+        "current_emotion": "痛苦细节",
+        "accept_value": 100,
+        "topic_analysis": "对方询问具体如何摘取蔬菜、如何分配以及生吃的味道。这是一个需要回忆具体动作和感官体验的问题。",
+        "memory_search_needed": false,
+        "search_criteria": {},
+        "search_results": "",
+        "sensitive_topic_detected": false,
+        "response_strategy": "根据记忆片段，描述摘取蔬菜的具体动作、分配方式以及生吃的味道和感受。保持真实、细腻的描述，包括动作细节和感官体验。"
+      }
+    },
+    {
+      "turn": 24,
+      "role": "interviewer",
+      "content": "（语气：EMPATHIC_SUPPORTIVE + NOSTALGIC）\n那眼泪，是为自己，为卫东，还是……为别的什么？哭出来之后，你们俩是怎么从垄沟里站起来的？之后还说过话吗？",
+      "source": "baseline_planner_guided"
+    },
+    {
+      "turn": 24,
+      "role": "interviewee",
+      "content": "（用袖子擦了擦眼角）为……为所有吧。为自己，为卫东，也为……（声音更轻）那棵菜。（停顿）站起来的时候，腿是软的，互相搀了一把。之后……（摇头）一路走回宿舍，谁都没说话。",
+      "thoughts": {
+        "current_emotion": "沉重悲伤",
+        "accept_value": 100,
+        "topic_analysis": "对方询问眼泪的含义、如何站起来以及之后是否说话。这是一个关于情感体验和后续行为的问题。",
+        "memory_search_needed": false,
+        "search_criteria": {},
+        "search_results": "",
+        "sensitive_topic_detected": false,
+        "response_strategy": "描述眼泪的含义、站起来的过程以及之后的沉默。可以讲述情感的多重含义、身体动作的艰难以及沉默的意义。"
+      }
+    },
+    {
+      "turn": 25,
+      "role": "interviewer",
+      "content": "（语气：THOUGHTFUL + RESPECTFUL_REVERENT）\n您说“也为那棵菜”，这个念头在当时就那么清晰，还是后来才慢慢体会到的？那晚之后，您和卫东之间，有什么东西变得不一样了吗？",
+      "source": "baseline_planner_guided"
+    },
+    {
+      "turn": 25,
+      "role": "interviewee",
+      "content": "（缓慢摇头）当时……就是觉得……（寻找词语）它不该被那样拧断。后来才明白，那是……对生命的愧疚。（停顿）和卫东……（眼神深远）从那晚起，我们之间……多了个秘密。一个谁都不会提，但都知道的秘密。",
+      "thoughts": {
+        "current_emotion": "深沉反思",
+        "accept_value": 100,
+        "topic_analysis": "对方询问对“为那棵菜”的理解是当时就有还是后来体会，以及这件事对与卫东关系的影响。这是一个关于认知过程和关系变化的问题。",
+        "memory_search_needed": false,
+        "search_criteria": {},
+        "search_results": "",
+        "sensitive_topic_detected": false,
+        "response_strategy": "回答对“为那棵菜”的理解过程，以及这件事对与卫东关系的影响。可以描述当时的模糊感受和后来的清晰认知，以及关系的变化。"
+      }
+    },
+    {
+      "turn": 26,
+      "role": "interviewer",
+      "content": "（语气：THOUGHTFUL + CALM）\n所以，那个夜晚，在您心里种下了两样东西：一份对生命本身的愧疚，和一个与卫东之间，沉重又牢固的秘密。这让我想到，在那样艰苦的环境里，人与人之间，是不是常常会因为这些说不出口的“秘密”，而绑得更紧？除了卫东，还有没有其他人，和您共享过这样的“秘密”？",
+      "source": "baseline_planner_guided"
+    },
+    {
+      "turn": 26,
+      "role": "interviewee",
+      "content": "",
+      "thoughts": {
+        "current_emotion": "深沉回忆",
+        "accept_value": 100,
+        "topic_analysis": "对方询问在艰苦环境中，人与人之间是否因秘密而更紧密，以及是否还有其他人共享过类似秘密。这是一个关于人际关系和集体经历的问题。",
+        "memory_search_needed": true,
+        "search_criteria": {
+          "keywords": [
+            "知青",
+            "秘密",
+            "共享",
+            "艰苦",
+            "关系"
+          ],
+          "period": "period_4",
+          "emotion_weight": 7
+        },
+        "search_results": "",
+        "sensitive_topic_detected": false,
+        "response_strategy": "先搜索相关记忆，然后回答关于秘密如何影响人际关系的问题。可以描述其他类似的秘密共享经历，以及这些经历如何塑造人际关系。"
+      }
+    },
+    {
+      "turn": 27,
+      "role": "interviewer",
+      "content": "（语气：CASUAL_CONVERSATIONAL + CURIOUS_INQUIRING）\n除了卫东，还有没有其他人，和您共享过这样的“秘密”？",
+      "source": "baseline_planner_guided"
+    },
+    {
+      "turn": 27,
+      "role": "interviewee",
+      "content": "",
+      "thoughts": {
+        "current_emotion": "深沉回忆",
+        "accept_value": 100,
+        "topic_analysis": "对方询问是否还有其他人共享过类似秘密。这是一个关于人际关系和集体经历的具体问题。",
+        "memory_search_needed": true,
+        "search_criteria": {
+          "keywords": [
+            "秘密",
+            "共享",
+            "知青",
+            "北大荒",
+            "卫东"
+          ],
+          "period": "period_4",
+          "emotion_weight": 7
+        },
+        "search_results": "",
+        "sensitive_topic_detected": false,
+        "response_strategy": "搜索相关记忆，然后回答是否有其他人共享过类似秘密。如果有，可以简要描述；如果没有，也可以说明情况。"
+      }
+    },
+    {
+      "turn": 28,
+      "role": "interviewer",
+      "content": "（语气：GENTLE_WARM + CURIOUS_INQUIRING）\n或者，不一定非得是“秘密”。有没有一些事，是您只和某几个人一起做，一起经历，别人不知道，或者知道了也不会明白的？",
+      "source": "baseline_planner_guided"
+    },
+    {
+      "turn": 28,
+      "role": "interviewee",
+      "content": "",
+      "thoughts": {
+        "current_emotion": "深沉回忆",
+        "accept_value": 100,
+        "topic_analysis": "对方询问是否有只和某几个人一起做、一起经历，别人不知道或不理解的事。这是一个关于特殊经历和人际关系的问题。",
+        "memory_search_needed": true,
+        "search_criteria": {
+          "keywords": [
+            "一起经历",
+            "特殊",
+            "别人不知道",
+            "知青",
+            "北大荒"
+          ],
+          "period": "period_4",
+          "emotion_weight": 6
+        },
+        "search_results": "",
+        "sensitive_topic_detected": false,
+        "response_strategy": "搜索相关记忆，然后描述一些特殊的共同经历。可以讲述这些经历的特点和意义。"
+      }
+    },
+    {
+      "turn": 29,
+      "role": "interviewer",
+      "content": "（语气：GENTLE_WARM + RESPECTFUL_REVERENT）\n（温和地停顿片刻）您看起来有些累了。今天您分享的关于卫东、关于那片豆田和那棵菜的故事，非常珍贵，也让我思考了很多。我们今天就先到这里，好吗？非常感谢您。",
+      "source": "baseline_planner_guided"
+    }
+  ],
+  "planner_decisions": [
+    {
+      "turn": 1,
+      "decision": {
+        "meta": {
+          "version": "1.0.0",
+          "timestamp": "2026-03-26T21:46:11.552619",
+          "instruction_id": "ab3b6ace-627b-4b3c-820b-6971dc687de5",
+          "turn_number": "0"
+        },
+        "action": {
+          "primary_action": "DEEP_DIVE",
+          "tactical_goal": {
+            "goal_type": "EXTRACT_SENSORY",
+            "description": "围绕‘天井里的早晨’这一感官锚点，深入挖掘视觉、听觉、气味等具体细节，还原童年生活场景。"
+          },
+          "tone_constraint": {
+            "primary_tone": "GENTLE_WARM",
+            "secondary_tone": "NOSTALGIC",
+            "constraints": [
+              "ALLOW_SILENCE",
+              "VALIDATE_FEELINGS"
+            ]
+          },
+          "strategy": {
+            "strategy_type": "OBJECT_TO_EMOTION",
+            "parameters": {
+              "anchor": "天井里的早晨"
+            },
+            "priority": 1
+          }
+        },
+        "_debug_snapshot": {
+          "state_at_decision": {
+            "current_focus": "童年苏州祖宅生活，特别是天井里的早晨",
+            "user_state": {
+              "emotional_energy": 0.6,
+              "energy_level": 0.8
+            }
+          },
+          "decision_trace": [
+            "触发: 受访者精神状态良好(energy_level=0.8)，且主动提供了‘天井里的早晨’这一充满潜力的感官锚点。",
+            "目标: 利用此锚点进行深度挖掘，还原童年生活细节。",
+            "策略: 采用由物及情策略，从感官细节切入，引发更丰富回忆。",
+            "语气: 受访者回忆时略有停顿和远望，选择温柔温暖且略带怀旧的语气，给予思考空间。"
+          ]
+        },
+        "recommended_questions": [
+          {
+            "question": "您能再具体描述一下天井早晨的样子吗？比如光线、声音，或者空气里的味道？",
+            "purpose": "抽取感官细节",
+            "reason": "从受访者主动提及的‘天井里的早晨’这一具体意象切入，最容易引发丰富的感官回忆。",
+            "suggested_granularity": 4
+          },
+          {
+            "question": "在天井的早晨，您通常会做些什么呢？",
+            "purpose": "提取事实细节与日常活动",
+            "reason": "在建立感官印象后，询问具体行为，可以勾勒出童年生活的日常图景。",
+            "suggested_granularity": 3
+          },
+          {
+            "question": "想起天井的早晨，您心里是一种什么样的感觉？",
+            "purpose": "提取情绪体验",
+            "reason": "在描述具体场景后，自然过渡到情感层面，捕捉回忆带来的情绪色彩。",
+            "suggested_granularity": 3
+          },
+          {
+            "question": "除了天井，祖宅里还有哪些地方让您记忆特别深刻？",
+            "purpose": "探索与地点相关的经历",
+            "reason": "为可能的广度切换做准备，如果天井话题深入后，可以自然延伸到宅子的其他空间。",
+            "suggested_granularity": 2
+          }
+        ]
+      },
+      "raw_response": "```json\n{\n  \"meta\": {\n    \"version\": \"1.0.0\",\n    \"timestamp\": \"2026-03-26T21:46:11.552619\",\n    \"instruction_id\": \"ab3b6ace-627b-4b3c-820b-6971dc687de5\",\n    \"turn_number\": \"0\"\n  },\n  \"action\": {\n    \"primary_action\": \"DEEP_DIVE\",\n    \"tactical_goal\": {\n      \"goal_type\": \"EXTRACT_SENSORY\",\n      \"description\": \"围绕‘天井里的早晨’这一感官锚点，深入挖掘视觉、听觉、气味等具体细节，还原童年生活场景。\"\n    },\n    \"tone_constraint\": {\n      \"primary_tone\": \"GENTLE_WARM\",\n      \"secondary_tone\": \"NOSTALGIC\",\n      \"constraints\": [\"ALLOW_SILENCE\", \"VALIDATE_FEELINGS\"]\n    },\n    \"strategy\": {\n      \"strategy_type\": \"OBJECT_TO_EMOTION\",\n      \"parameters\": {\"anchor\": \"天井里的早晨\"},\n      \"priority\": 1\n    }\n  },\n  \"_debug_snapshot\": {\n    \"state_at_decision\": {\n      \"current_focus\": \"童年苏州祖宅生活，特别是天井里的早晨\",\n      \"user_state\": {\n        \"emotional_energy\": 0.6,\n        \"energy_level\": 0.8\n      }\n    },\n    \"decision_trace\": [\"触发: 受访者精神状态良好(energy_level=0.8)，且主动提供了‘天井里的早晨’这一充满潜力的感官锚点。\", \"目标: 利用此锚点进行深度挖掘，还原童年生活细节。\", \"策略: 采用由物及情策略，从感官细节切入，引发更丰富回忆。\", \"语气: 受访者回忆时略有停顿和远望，选择温柔温暖且略带怀旧的语气，给予思考空间。\"]\n  },\n  \"recommended_questions\": [\n    {\n      \"question\": \"您能再具体描述一下天井早晨的样子吗？比如光线、声音，或者空气里的味道？\",\n      \"purpose\": \"抽取感官细节\",\n      \"reason\": \"从受访者主动提及的‘天井里的早晨’这一具体意象切入，最容易引发丰富的感官回忆。\",\n      \"suggested_granularity\": 4\n    },\n    {\n      \"question\": \"在天井的早晨，您通常会做些什么呢？\",\n      \"purpose\": \"提取事实细节与日常活动\",\n      \"reason\": \"在建立感官印象后，询问具体行为，可以勾勒出童年生活的日常图景。\",\n      \"suggested_granularity\": 3\n    },\n    {\n      \"question\": \"想起天井的早晨，您心里是一种什么样的感觉？\",\n      \"purpose\": \"提取情绪体验\",\n      \"reason\": \"在描述具体场景后，自然过渡到情感层面，捕捉回忆带来的情绪色彩。\",\n      \"suggested_granularity\": 3\n    },\n    {\n      \"question\": \"除了天井，祖宅里还有哪些地方让您记忆特别深刻？\",\n      \"purpose\": \"探索与地点相关的经历\",\n      \"reason\": \"为可能的广度切换做准备，如果天井话题深入后，可以自然延伸到宅子的其他空间。\",\n      \"suggested_granularity\": 2\n    }\n  ]\n}\n```"
+    },
+    {
+      "turn": 2,
+      "decision": {
+        "meta": {
+          "version": "1.0.0",
+          "timestamp": "2026-03-26T21:46:11.552619",
+          "instruction_id": "ab3b6ace-627b-4b3c-820b-6971dc687de5",
+          "turn_number": "1"
+        },
+        "action": {
+          "primary_action": "DEEP_DIVE",
+          "tactical_goal": {
+            "goal_type": "EXTRACT_SENSORY",
+            "description": "继续围绕‘天井早晨’的视觉意象，并引导扩展至听觉、嗅觉等其他感官，以及当时的人物活动，构建更立体的场景。"
+          },
+          "tone_constraint": {
+            "primary_tone": "GENTLE_WARM",
+            "secondary_tone": "NOSTALGIC",
+            "constraints": [
+              "ALLOW_SILENCE",
+              "VALIDATE_FEELINGS"
+            ]
+          },
+          "strategy": {
+            "strategy_type": "OBJECT_TO_EMOTION",
+            "parameters": {
+              "anchor": "青石板露水与海棠花"
+            },
+            "priority": 1
+          }
+        },
+        "_debug_snapshot": {
+          "state_at_decision": {
+            "current_focus": "童年苏州祖宅天井早晨的感官细节（视觉：露水、海棠花）",
+            "user_state": {
+              "emotional_energy": 0.7,
+              "energy_level": 0.8
+            }
+          },
+          "decision_trace": [
+            "触发: 受访者精神状态稳定(energy_level=0.8)，情绪能量略有上升(emotional_energy=0.7)，表明沉浸于美好回忆。",
+            "目标: 受访者已给出‘青石板露水’和‘海棠花’两个生动的视觉锚点，深度挖掘潜力巨大。",
+            "策略: 继续使用由物及情策略，从已提供的视觉细节出发，引导回忆其他感官和关联活动。",
+            "语气: 维持温柔怀旧的基调，鼓励受访者继续沉浸于细节回忆。"
+          ]
+        },
+        "recommended_questions": [
+          {
+            "question": "除了露水和海棠花，那时的早晨还有什么特别的声音吗？比如鸟叫声，或者家人的动静？",
+            "purpose": "抽取听觉感官细节",
+            "reason": "在建立了清晰的视觉画面后，引入声音维度能让场景更鲜活、立体。",
+            "suggested_granularity": 4
+          },
+          {
+            "question": "您还记得当时空气里有什么味道吗？是花香，还是清晨特有的气息？",
+            "purpose": "抽取嗅觉感官细节",
+            "reason": "嗅觉记忆非常持久且富有情感，能进一步加深回忆的沉浸感和独特性。",
+            "suggested_granularity": 3
+          },
+          {
+            "question": "看着这亮晶晶的露水和海棠花，那时候的您，心里在想些什么，或者通常会做些什么呢？",
+            "purpose": "提取情绪体验与日常活动",
+            "reason": "将外部感官细节与内在心理活动或行为连接起来，勾勒出更完整的个人体验。",
+            "suggested_granularity": 4
+          },
+          {
+            "question": "那棵海棠树对您和您的家人来说，有什么特别的意义吗？",
+            "purpose": "探索关键人物相关故事/情感联结",
+            "reason": "从具体的物（树）延伸到与之相关的人和情感，可能引出家庭故事或传统。",
+            "suggested_granularity": 3
+          }
+        ]
+      },
+      "raw_response": "{\n  \"meta\": {\n    \"version\": \"1.0.0\",\n    \"timestamp\": \"2026-03-26T21:46:11.552619\",\n    \"instruction_id\": \"ab3b6ace-627b-4b3c-820b-6971dc687de5\",\n    \"turn_number\": \"1\"\n  },\n  \"action\": {\n    \"primary_action\": \"DEEP_DIVE\",\n    \"tactical_goal\": {\n      \"goal_type\": \"EXTRACT_SENSORY\",\n      \"description\": \"继续围绕‘天井早晨’的视觉意象，并引导扩展至听觉、嗅觉等其他感官，以及当时的人物活动，构建更立体的场景。\"\n    },\n    \"tone_constraint\": {\n      \"primary_tone\": \"GENTLE_WARM\",\n      \"secondary_tone\": \"NOSTALGIC\",\n      \"constraints\": [\"ALLOW_SILENCE\", \"VALIDATE_FEELINGS\"]\n    },\n    \"strategy\": {\n      \"strategy_type\": \"OBJECT_TO_EMOTION\",\n      \"parameters\": {\"anchor\": \"青石板露水与海棠花\"},\n      \"priority\": 1\n    }\n  },\n  \"_debug_snapshot\": {\n    \"state_at_decision\": {\n      \"current_focus\": \"童年苏州祖宅天井早晨的感官细节（视觉：露水、海棠花）\",\n      \"user_state\": {\n        \"emotional_energy\": 0.7,\n        \"energy_level\": 0.8\n      }\n    },\n    \"decision_trace\": [\"触发: 受访者精神状态稳定(energy_level=0.8)，情绪能量略有上升(emotional_energy=0.7)，表明沉浸于美好回忆。\", \"目标: 受访者已给出‘青石板露水’和‘海棠花’两个生动的视觉锚点，深度挖掘潜力巨大。\", \"策略: 继续使用由物及情策略，从已提供的视觉细节出发，引导回忆其他感官和关联活动。\", \"语气: 维持温柔怀旧的基调，鼓励受访者继续沉浸于细节回忆。\"]\n  },\n  \"recommended_questions\": [\n    {\n      \"question\": \"除了露水和海棠花，那时的早晨还有什么特别的声音吗？比如鸟叫声，或者家人的动静？\",\n      \"purpose\": \"抽取听觉感官细节\",\n      \"reason\": \"在建立了清晰的视觉画面后，引入声音维度能让场景更鲜活、立体。\",\n      \"suggested_granularity\": 4\n    },\n    {\n      \"question\": \"您还记得当时空气里有什么味道吗？是花香，还是清晨特有的气息？\",\n      \"purpose\": \"抽取嗅觉感官细节\",\n      \"reason\": \"嗅觉记忆非常持久且富有情感，能进一步加深回忆的沉浸感和独特性。\",\n      \"suggested_granularity\": 3\n    },\n    {\n      \"question\": \"看着这亮晶晶的露水和海棠花，那时候的您，心里在想些什么，或者通常会做些什么呢？\",\n      \"purpose\": \"提取情绪体验与日常活动\",\n      \"reason\": \"将外部感官细节与内在心理活动或行为连接起来，勾勒出更完整的个人体验。\",\n      \"suggested_granularity\": 4\n    },\n    {\n      \"question\": \"那棵海棠树对您和您的家人来说，有什么特别的意义吗？\",\n      \"purpose\": \"探索关键人物相关故事/情感联结\",\n      \"reason\": \"从具体的物（树）延伸到与之相关的人和情感，可能引出家庭故事或传统。\",\n      \"suggested_granularity\": 3\n    }\n  ]\n}"
+    },
+    {
+      "turn": 3,
+      "decision": {
+        "meta": {
+          "version": "1.0.0",
+          "timestamp": "2026-03-26T21:46:11.552619",
+          "instruction_id": "ab3b6ace-627b-4b3c-820b-6971dc687de5",
+          "turn_number": "2"
+        },
+        "action": {
+          "primary_action": "DEEP_DIVE",
+          "tactical_goal": {
+            "goal_type": "EXTRACT_DETAILS",
+            "description": "在已建立的丰富感官印象基础上，聚焦于当时天井里的人物活动与互动，将场景从静态环境转向动态生活。"
+          },
+          "tone_constraint": {
+            "primary_tone": "CURIOUS_INQUIRING",
+            "secondary_tone": "NOSTALGIC",
+            "constraints": [
+              "ALLOW_SILENCE",
+              "VALIDATE_FEELINGS"
+            ]
+          },
+          "strategy": {
+            "strategy_type": "EVENT_TO_PERSON",
+            "parameters": {
+              "anchor": "天井早晨的人物活动"
+            },
+            "priority": 1
+          }
+        },
+        "_debug_snapshot": {
+          "state_at_decision": {
+            "current_focus": "童年苏州祖宅天井早晨的感官细节（视觉、嗅觉）及人物活动",
+            "user_state": {
+              "emotional_energy": 0.8,
+              "energy_level": 0.85
+            }
+          },
+          "decision_trace": [
+            "触发: 受访者情绪能量(emotional_energy=0.8)和精神状态(energy_level=0.85)均显著提升，回忆清晰且投入。",
+            "目标: 受访者已详细描述了露水与海棠花的嗅觉细节，但未回答关于‘人物’的部分。当前话题信息远未充分展开。",
+            "策略: 从已描绘的生动事件（天井早晨）自然过渡到人物（家人），采用由事及人策略。",
+            "语气: 受访者状态积极，转为好奇探索型以鼓励分享更多故事细节，同时保持怀旧氛围。"
+          ]
+        },
+        "recommended_questions": [
+          {
+            "question": "您刚才提到‘风一吹，花瓣就落下来’，那当时天井里除了您，还有谁在呢？他们那时在忙些什么？",
+            "purpose": "提取事实细节（人物与活动）",
+            "reason": "直接跟进上一轮未回答的部分，将场景从感官环境引向家庭生活与人物互动。",
+            "suggested_granularity": 4
+          },
+          {
+            "question": "在这样的早晨，您和家人之间有没有什么固定的互动或习惯？比如一起吃早饭，或者聊聊天？",
+            "purpose": "探索关键人物相关故事/日常仪式",
+            "reason": "在确认人物在场后，深入挖掘家庭关系和日常仪式，这往往是珍贵回忆的核心。",
+            "suggested_granularity": 4
+          },
+          {
+            "question": "看着花瓣飘落，听着家人的动静，那时候小小的您，心里是一种什么样的感觉？是宁静，还是充满期待？",
+            "purpose": "提取情绪体验与感受",
+            "reason": "在构建了人物和活动框架后，再次聚焦于受访者当时的内心感受，深化情感层面。",
+            "suggested_granularity": 4
+          },
+          {
+            "question": "这个充满花香和露水的天井早晨，对您后来的性格或者对家的理解，有没有产生什么影响？",
+            "purpose": "提取反思与感悟",
+            "reason": "在细节充分展开后，尝试引导受访者进行初步的反思，连接过去与现在。",
+            "suggested_granularity": 3
+          }
+        ]
+      },
+      "raw_response": "{\n  \"meta\": {\n    \"version\": \"1.0.0\",\n    \"timestamp\": \"2026-03-26T21:46:11.552619\",\n    \"instruction_id\": \"ab3b6ace-627b-4b3c-820b-6971dc687de5\",\n    \"turn_number\": \"2\"\n  },\n  \"action\": {\n    \"primary_action\": \"DEEP_DIVE\",\n    \"tactical_goal\": {\n      \"goal_type\": \"EXTRACT_DETAILS\",\n      \"description\": \"在已建立的丰富感官印象基础上，聚焦于当时天井里的人物活动与互动，将场景从静态环境转向动态生活。\"\n    },\n    \"tone_constraint\": {\n      \"primary_tone\": \"CURIOUS_INQUIRING\",\n      \"secondary_tone\": \"NOSTALGIC\",\n      \"constraints\": [\"ALLOW_SILENCE\", \"VALIDATE_FEELINGS\"]\n    },\n    \"strategy\": {\n      \"strategy_type\": \"EVENT_TO_PERSON\",\n      \"parameters\": {\"anchor\": \"天井早晨的人物活动\"},\n      \"priority\": 1\n    }\n  },\n  \"_debug_snapshot\": {\n    \"state_at_decision\": {\n      \"current_focus\": \"童年苏州祖宅天井早晨的感官细节（视觉、嗅觉）及人物活动\",\n      \"user_state\": {\n        \"emotional_energy\": 0.8,\n        \"energy_level\": 0.85\n      }\n    },\n    \"decision_trace\": [\"触发: 受访者情绪能量(emotional_energy=0.8)和精神状态(energy_level=0.85)均显著提升，回忆清晰且投入。\", \"目标: 受访者已详细描述了露水与海棠花的嗅觉细节，但未回答关于‘人物’的部分。当前话题信息远未充分展开。\", \"策略: 从已描绘的生动事件（天井早晨）自然过渡到人物（家人），采用由事及人策略。\", \"语气: 受访者状态积极，转为好奇探索型以鼓励分享更多故事细节，同时保持怀旧氛围。\"]\n  },\n  \"recommended_questions\": [\n    {\n      \"question\": \"您刚才提到‘风一吹，花瓣就落下来’，那当时天井里除了您，还有谁在呢？他们那时在忙些什么？\",\n      \"purpose\": \"提取事实细节（人物与活动）\",\n      \"reason\": \"直接跟进上一轮未回答的部分，将场景从感官环境引向家庭生活与人物互动。\",\n      \"suggested_granularity\": 4\n    },\n    {\n      \"question\": \"在这样的早晨，您和家人之间有没有什么固定的互动或习惯？比如一起吃早饭，或者聊聊天？\",\n      \"purpose\": \"探索关键人物相关故事/日常仪式\",\n      \"reason\": \"在确认人物在场后，深入挖掘家庭关系和日常仪式，这往往是珍贵回忆的核心。\",\n      \"suggested_granularity\": 4\n    },\n    {\n      \"question\": \"看着花瓣飘落，听着家人的动静，那时候小小的您，心里是一种什么样的感觉？是宁静，还是充满期待？\",\n      \"purpose\": \"提取情绪体验与感受\",\n      \"reason\": \"在构建了人物和活动框架后，再次聚焦于受访者当时的内心感受，深化情感层面。\",\n      \"suggested_granularity\": 4\n    },\n    {\n      \"question\": \"这个充满花香和露水的天井早晨，对您后来的性格或者对家的理解，有没有产生什么影响？\",\n      \"purpose\": \"提取反思与感悟\",\n      \"reason\": \"在细节充分展开后，尝试引导受访者进行初步的反思，连接过去与现在。\",\n      \"suggested_granularity\": 3\n    }\n  ]\n}"
+    },
+    {
+      "turn": 4,
+      "decision": {
+        "meta": {
+          "version": "1.0.0",
+          "timestamp": "2026-03-26T21:46:11.552619",
+          "instruction_id": "ab3b6ace-627b-4b3c-820b-6971dc687de5",
+          "turn_number": "3"
+        },
+        "action": {
+          "primary_action": "DEEP_DIVE",
+          "tactical_goal": {
+            "goal_type": "EXTRACT_DETAILS",
+            "description": "围绕‘父亲教《声律启蒙》’这一新出现的核心事件，深入挖掘教学互动的具体细节、父亲的形象、以及这段经历对受访者的影响。"
+          },
+          "tone_constraint": {
+            "primary_tone": "RESPECTFUL_REVERENT",
+            "secondary_tone": "THOUGHTFUL",
+            "constraints": [
+              "ALLOW_SILENCE",
+              "VALIDATE_FEELINGS",
+              "NO_JUDGMENT"
+            ]
+          },
+          "strategy": {
+            "strategy_type": "EVENT_TO_PERSON",
+            "parameters": {
+              "anchor": "父亲教《声律启蒙》"
+            },
+            "priority": 1
+          }
+        },
+        "_debug_snapshot": {
+          "state_at_decision": {
+            "current_focus": "童年天井早晨与父亲的教学互动（《声律启蒙》）",
+            "user_state": {
+              "emotional_energy": 0.9,
+              "energy_level": 0.9
+            }
+          },
+          "decision_trace": [
+            "触发: 受访者情绪能量(emotional_energy=0.9)和精神状态(energy_level=0.9)达到高点，并主动提供了极具价值的新叙事核心——父亲的教学场景。",
+            "目标: 这是一个充满情感与文化传承意味的细节，必须深入挖掘，还原父亲形象、教学方式及个人影响。",
+            "策略: 核心事件（教学）已明确，采用由事及人策略，聚焦于父亲这一关键人物及其行为细节。",
+            "语气: 涉及父辈教育与家族传承，选择尊重敬重且带有沉思反思的语气，以匹配话题的庄重感。"
+          ]
+        },
+        "recommended_questions": [
+          {
+            "question": "您还记得父亲当时教您念书时的样子吗？他的语气、神态是怎样的？",
+            "purpose": "提取事实细节（人物形象与行为）",
+            "reason": "这是勾勒父亲形象的关键，从具体的神态语气入手，能使回忆中的人物鲜活起来。",
+            "suggested_granularity": 5
+          },
+          {
+            "question": "除了《声律启蒙》，父亲还教过您别的什么吗？这些早晨的时光，对您后来的学习或爱好产生了什么影响？",
+            "purpose": "探索关键人物相关故事/提取因果关系",
+            "reason": "将单一事件扩展到更广泛的教育影响，探索父亲在受访者成长中的持续作用。",
+            "suggested_granularity": 4
+          },
+          {
+            "question": "当您念着“云对雨，雪对风”的时候，心里是什么感觉？是觉得有趣，还是感到一种特别的安宁？",
+            "purpose": "提取情绪体验与感受",
+            "reason": "在描述外部事件后，引导受访者内观，捕捉学习时的内在心理体验。",
+            "suggested_granularity": 4
+          },
+          {
+            "question": "在您记忆中，母亲或者其他家人，在天井的早晨通常扮演着什么角色？",
+            "purpose": "探索人物社交网络",
+            "reason": "在深入挖掘父亲之后，可自然地将视角稍微拓宽，了解家庭其他成员在同一场景中的位置，为可能的广度切换做准备。",
+            "suggested_granularity": 3
+          }
+        ]
+      },
+      "raw_response": "{\n  \"meta\": {\n    \"version\": \"1.0.0\",\n    \"timestamp\": \"2026-03-26T21:46:11.552619\",\n    \"instruction_id\": \"ab3b6ace-627b-4b3c-820b-6971dc687de5\",\n    \"turn_number\": \"3\"\n  },\n  \"action\": {\n    \"primary_action\": \"DEEP_DIVE\",\n    \"tactical_goal\": {\n      \"goal_type\": \"EXTRACT_DETAILS\",\n      \"description\": \"围绕‘父亲教《声律启蒙》’这一新出现的核心事件，深入挖掘教学互动的具体细节、父亲的形象、以及这段经历对受访者的影响。\"\n    },\n    \"tone_constraint\": {\n      \"primary_tone\": \"RESPECTFUL_REVERENT\",\n      \"secondary_tone\": \"THOUGHTFUL\",\n      \"constraints\": [\"ALLOW_SILENCE\", \"VALIDATE_FEELINGS\", \"NO_JUDGMENT\"]\n    },\n    \"strategy\": {\n      \"strategy_type\": \"EVENT_TO_PERSON\",\n      \"parameters\": {\"anchor\": \"父亲教《声律启蒙》\"},\n      \"priority\": 1\n    }\n  },\n  \"_debug_snapshot\": {\n    \"state_at_decision\": {\n      \"current_focus\": \"童年天井早晨与父亲的教学互动（《声律启蒙》）\",\n      \"user_state\": {\n        \"emotional_energy\": 0.9,\n        \"energy_level\": 0.9\n      }\n    },\n    \"decision_trace\": [\"触发: 受访者情绪能量(emotional_energy=0.9)和精神状态(energy_level=0.9)达到高点，并主动提供了极具价值的新叙事核心——父亲的教学场景。\", \"目标: 这是一个充满情感与文化传承意味的细节，必须深入挖掘，还原父亲形象、教学方式及个人影响。\", \"策略: 核心事件（教学）已明确，采用由事及人策略，聚焦于父亲这一关键人物及其行为细节。\", \"语气: 涉及父辈教育与家族传承，选择尊重敬重且带有沉思反思的语气，以匹配话题的庄重感。\"]\n  },\n  \"recommended_questions\": [\n    {\n      \"question\": \"您还记得父亲当时教您念书时的样子吗？他的语气、神态是怎样的？\",\n      \"purpose\": \"提取事实细节（人物形象与行为）\",\n      \"reason\": \"这是勾勒父亲形象的关键，从具体的神态语气入手，能使回忆中的人物鲜活起来。\",\n      \"suggested_granularity\": 5\n    },\n    {\n      \"question\": \"除了《声律启蒙》，父亲还教过您别的什么吗？这些早晨的时光，对您后来的学习或爱好产生了什么影响？\",\n      \"purpose\": \"探索关键人物相关故事/提取因果关系\",\n      \"reason\": \"将单一事件扩展到更广泛的教育影响，探索父亲在受访者成长中的持续作用。\",\n      \"suggested_granularity\": 4\n    },\n    {\n      \"question\": \"当您念着“云对雨，雪对风”的时候，心里是什么感觉？是觉得有趣，还是感到一种特别的安宁？\",\n      \"purpose\": \"提取情绪体验与感受\",\n      \"reason\": \"在描述外部事件后，引导受访者内观，捕捉学习时的内在心理体验。\",\n      \"suggested_granularity\": 4\n    },\n    {\n      \"question\": \"在您记忆中，母亲或者其他家人，在天井的早晨通常扮演着什么角色？\",\n      \"purpose\": \"探索人物社交网络\",\n      \"reason\": \"在深入挖掘父亲之后，可自然地将视角稍微拓宽，了解家庭其他成员在同一场景中的位置，为可能的广度切换做准备。\",\n      \"suggested_granularity\": 3\n    }\n  ]\n}"
+    },
+    {
+      "turn": 5,
+      "decision": {
+        "meta": {
+          "version": "1.0.0",
+          "timestamp": "2026-03-26T21:46:11.552619",
+          "instruction_id": "ab3b6ace-627b-4b3c-820b-6971dc687de5",
+          "turn_number": "4"
+        },
+        "action": {
+          "primary_action": "DEEP_DIVE",
+          "tactical_goal": {
+            "goal_type": "EXTRACT_REFLECTIONS",
+            "description": "在受访者已生动描绘父亲声音细节的基础上，引导其深入反思这段经历带来的内心感受、长远影响以及对父亲的理解。"
+          },
+          "tone_constraint": {
+            "primary_tone": "EMPATHIC_SUPPORTIVE",
+            "secondary_tone": "THOUGHTFUL",
+            "constraints": [
+              "ALLOW_SILENCE",
+              "VALIDATE_FEELINGS",
+              "NO_JUDGMENT"
+            ]
+          },
+          "strategy": {
+            "strategy_type": "EVENT_TO_PERSON",
+            "parameters": {
+              "anchor": "父亲温和的教导声音与个人感悟"
+            },
+            "priority": 1
+          }
+        },
+        "_debug_snapshot": {
+          "state_at_decision": {
+            "current_focus": "父亲教导《声律启蒙》的细节（声音、口音）及受访者的内心感受",
+            "user_state": {
+              "emotional_energy": 0.95,
+              "energy_level": 0.85
+            }
+          },
+          "decision_trace": [
+            "触发: 受访者情绪能量极高(emotional_energy=0.95)，完全沉浸在美好回忆中，对父亲声音的描绘非常细腻。",
+            "目标: 感官细节（听觉）已充分展开，现在是引导深入反思和情感提炼的最佳时机，以挖掘这段经历的深层意义。",
+            "策略: 继续由事及人，从具体事件（父亲念书）深入到对人物（父亲）的感悟和对自身的影响。",
+            "语气: 受访者情感充沛，选择共情支持型为主，辅以沉思反思，鼓励其安全地表达深层情感。"
+          ]
+        },
+        "recommended_questions": [
+          {
+            "question": "听着父亲这样温和地念着，那时候小小的您，心里是一种什么样的感觉？是觉得安稳，还是对文字产生了最初的好奇？",
+            "purpose": "提取情绪体验与感受",
+            "reason": "直接承接上一轮未完全回答的部分，聚焦于当时的内心体验，这是情感记忆的核心。",
+            "suggested_granularity": 5
+          },
+          {
+            "question": "现在回想起来，您觉得父亲通过这种方式，想传递给您的，仅仅是文字，还是别的什么东西？",
+            "purpose": "提取反思与感悟",
+            "reason": "引导受访者以成年人的视角回望，解读父亲行为背后的意图与深意，触及教育与传承的主题。",
+            "suggested_granularity": 4
+          },
+          {
+            "question": "父亲这种温和的教导方式，对您后来自己为人处事或者教育下一代，有没有产生一些影响？",
+            "purpose": "提取因果关系与影响链条",
+            "reason": "将过去的经历与后来的生命历程连接起来，探索其跨越时间的持续影响力。",
+            "suggested_granularity": 4
+          },
+          {
+            "question": "除了教您念书，父亲在您童年的其他方面，是一个怎样的形象？",
+            "purpose": "探索关键人物相关故事",
+            "reason": "如果对当前教学场景的挖掘趋于饱和，此问题可自然地将对父亲的探索扩展到更广阔的层面。",
+            "suggested_granularity": 3
+          }
+        ]
+      },
+      "raw_response": "{\n  \"meta\": {\n    \"version\": \"1.0.0\",\n    \"timestamp\": \"2026-03-26T21:46:11.552619\",\n    \"instruction_id\": \"ab3b6ace-627b-4b3c-820b-6971dc687de5\",\n    \"turn_number\": \"4\"\n  },\n  \"action\": {\n    \"primary_action\": \"DEEP_DIVE\",\n    \"tactical_goal\": {\n      \"goal_type\": \"EXTRACT_REFLECTIONS\",\n      \"description\": \"在受访者已生动描绘父亲声音细节的基础上，引导其深入反思这段经历带来的内心感受、长远影响以及对父亲的理解。\"\n    },\n    \"tone_constraint\": {\n      \"primary_tone\": \"EMPATHIC_SUPPORTIVE\",\n      \"secondary_tone\": \"THOUGHTFUL\",\n      \"constraints\": [\"ALLOW_SILENCE\", \"VALIDATE_FEELINGS\", \"NO_JUDGMENT\"]\n    },\n    \"strategy\": {\n      \"strategy_type\": \"EVENT_TO_PERSON\",\n      \"parameters\": {\"anchor\": \"父亲温和的教导声音与个人感悟\"},\n      \"priority\": 1\n    }\n  },\n  \"_debug_snapshot\": {\n    \"state_at_decision\": {\n      \"current_focus\": \"父亲教导《声律启蒙》的细节（声音、口音）及受访者的内心感受\",\n      \"user_state\": {\n        \"emotional_energy\": 0.95,\n        \"energy_level\": 0.85\n      }\n    },\n    \"decision_trace\": [\"触发: 受访者情绪能量极高(emotional_energy=0.95)，完全沉浸在美好回忆中，对父亲声音的描绘非常细腻。\", \"目标: 感官细节（听觉）已充分展开，现在是引导深入反思和情感提炼的最佳时机，以挖掘这段经历的深层意义。\", \"策略: 继续由事及人，从具体事件（父亲念书）深入到对人物（父亲）的感悟和对自身的影响。\", \"语气: 受访者情感充沛，选择共情支持型为主，辅以沉思反思，鼓励其安全地表达深层情感。\"]\n  },\n  \"recommended_questions\": [\n    {\n      \"question\": \"听着父亲这样温和地念着，那时候小小的您，心里是一种什么样的感觉？是觉得安稳，还是对文字产生了最初的好奇？\",\n      \"purpose\": \"提取情绪体验与感受\",\n      \"reason\": \"直接承接上一轮未完全回答的部分，聚焦于当时的内心体验，这是情感记忆的核心。\",\n      \"suggested_granularity\": 5\n    },\n    {\n      \"question\": \"现在回想起来，您觉得父亲通过这种方式，想传递给您的，仅仅是文字，还是别的什么东西？\",\n      \"purpose\": \"提取反思与感悟\",\n      \"reason\": \"引导受访者以成年人的视角回望，解读父亲行为背后的意图与深意，触及教育与传承的主题。\",\n      \"suggested_granularity\": 4\n    },\n    {\n      \"question\": \"父亲这种温和的教导方式，对您后来自己为人处事或者教育下一代，有没有产生一些影响？\",\n      \"purpose\": \"提取因果关系与影响链条\",\n      \"reason\": \"将过去的经历与后来的生命历程连接起来，探索其跨越时间的持续影响力。\",\n      \"suggested_granularity\": 4\n    },\n    {\n      \"question\": \"除了教您念书，父亲在您童年的其他方面，是一个怎样的形象？\",\n      \"purpose\": \"探索关键人物相关故事\",\n      \"reason\": \"如果对当前教学场景的挖掘趋于饱和，此问题可自然地将对父亲的探索扩展到更广阔的层面。\",\n      \"suggested_granularity\": 3\n    }\n  ]\n}"
+    },
+    {
+      "turn": 6,
+      "decision": {
+        "meta": {
+          "version": "1.0.0",
+          "timestamp": "2026-03-26T21:46:11.552619",
+          "instruction_id": "ab3b6ace-627b-4b3c-820b-6971dc687de5",
+          "turn_number": "5"
+        },
+        "action": {
+          "primary_action": "DEEP_DIVE",
+          "tactical_goal": {
+            "goal_type": "EXTRACT_CAUSALITY",
+            "description": "围绕‘书法爱好源于天井教学’这一明确的因果关系，深入探索其具体转化过程、关键节点以及这一爱好对受访者人生的持续意义。"
+          },
+          "tone_constraint": {
+            "primary_tone": "CURIOUS_INQUIRING",
+            "secondary_tone": "THOUGHTFUL",
+            "constraints": [
+              "ALLOW_SILENCE",
+              "VALIDATE_FEELINGS"
+            ]
+          },
+          "strategy": {
+            "strategy_type": "AFFECTIVE_ASSOCIATION",
+            "parameters": {
+              "anchor": "书法爱好与童年教导的关联"
+            },
+            "priority": 1
+          }
+        },
+        "_debug_snapshot": {
+          "state_at_decision": {
+            "current_focus": "童年天井教学经历对受访者书法爱好的深远影响",
+            "user_state": {
+              "emotional_energy": 0.9,
+              "energy_level": 0.8
+            }
+          },
+          "decision_trace": [
+            "触发: 受访者明确指出了童年经历与当前爱好（书法）的直接因果关系，这是一个极有价值的深度挖掘点。",
+            "目标: 精神状态(energy_level=0.8)仍支持深度探索。需要厘清‘念书’如何具体转化为‘写字’，并探索其情感与精神内涵。",
+            "策略: 基于情感/动机共振跳转，从对父亲的感恩和对文字的美感体验，自然关联到书法这一具体实践。",
+            "语气: 受访者处于沉思状态，选择好奇探索型以鼓励其梳理内在逻辑，同时保持沉思氛围。"
+          ]
+        },
+        "recommended_questions": [
+          {
+            "question": "从跟着父亲念《声律启蒙》，到后来自己拿起毛笔写字，这中间是怎么发生的呢？有没有一个特别的契机或时刻？",
+            "purpose": "提取因果关系与影响链条",
+            "reason": "这是连接两个事件（念书与书法）的关键，挖掘具体的转化节点能使故事脉络更清晰。",
+            "suggested_granularity": 5
+          },
+          {
+            "question": "在您看来，书法对您而言，仅仅是写字，还是承载了更多的东西？比如，是否也延续了当年在天井里感受到的那种宁静或与父亲的连接？",
+            "purpose": "提取反思与感悟/情感联结",
+            "reason": "引导受访者阐释书法爱好的深层情感价值和象征意义，将其与童年核心体验挂钩。",
+            "suggested_granularity": 5
+          },
+          {
+            "question": "当您沉浸在书法中时，会不会偶尔想起那个天井的早晨，或者父亲念书的声音？",
+            "purpose": "提取情感体验与感官记忆的关联",
+            "reason": "直接询问当下实践与过去记忆的情感联结，可以揭示跨越时间的心理图景。",
+            "suggested_granularity": 4
+          },
+          {
+            "question": "除了书法，父亲教您的那些文字和对美的感受，还在您生活的哪些方面留下了印记？",
+            "purpose": "探索某一主题下的多条事件",
+            "reason": "如果书法话题深入后，此问题可将影响范围拓宽，探索更广泛的文化或审美影响。",
+            "suggested_granularity": 3
+          }
+        ]
+      },
+      "raw_response": "{\n  \"meta\": {\n    \"version\": \"1.0.0\",\n    \"timestamp\": \"2026-03-26T21:46:11.552619\",\n    \"instruction_id\": \"ab3b6ace-627b-4b3c-820b-6971dc687de5\",\n    \"turn_number\": \"5\"\n  },\n  \"action\": {\n    \"primary_action\": \"DEEP_DIVE\",\n    \"tactical_goal\": {\n      \"goal_type\": \"EXTRACT_CAUSALITY\",\n      \"description\": \"围绕‘书法爱好源于天井教学’这一明确的因果关系，深入探索其具体转化过程、关键节点以及这一爱好对受访者人生的持续意义。\"\n    },\n    \"tone_constraint\": {\n      \"primary_tone\": \"CURIOUS_INQUIRING\",\n      \"secondary_tone\": \"THOUGHTFUL\",\n      \"constraints\": [\"ALLOW_SILENCE\", \"VALIDATE_FEELINGS\"]\n    },\n    \"strategy\": {\n      \"strategy_type\": \"AFFECTIVE_ASSOCIATION\",\n      \"parameters\": {\"anchor\": \"书法爱好与童年教导的关联\"},\n      \"priority\": 1\n    }\n  },\n  \"_debug_snapshot\": {\n    \"state_at_decision\": {\n      \"current_focus\": \"童年天井教学经历对受访者书法爱好的深远影响\",\n      \"user_state\": {\n        \"emotional_energy\": 0.9,\n        \"energy_level\": 0.8\n      }\n    },\n    \"decision_trace\": [\"触发: 受访者明确指出了童年经历与当前爱好（书法）的直接因果关系，这是一个极有价值的深度挖掘点。\", \"目标: 精神状态(energy_level=0.8)仍支持深度探索。需要厘清‘念书’如何具体转化为‘写字’，并探索其情感与精神内涵。\", \"策略: 基于情感/动机共振跳转，从对父亲的感恩和对文字的美感体验，自然关联到书法这一具体实践。\", \"语气: 受访者处于沉思状态，选择好奇探索型以鼓励其梳理内在逻辑，同时保持沉思氛围。\"]\n  },\n  \"recommended_questions\": [\n    {\n      \"question\": \"从跟着父亲念《声律启蒙》，到后来自己拿起毛笔写字，这中间是怎么发生的呢？有没有一个特别的契机或时刻？\",\n      \"purpose\": \"提取因果关系与影响链条\",\n      \"reason\": \"这是连接两个事件（念书与书法）的关键，挖掘具体的转化节点能使故事脉络更清晰。\",\n      \"suggested_granularity\": 5\n    },\n    {\n      \"question\": \"在您看来，书法对您而言，仅仅是写字，还是承载了更多的东西？比如，是否也延续了当年在天井里感受到的那种宁静或与父亲的连接？\",\n      \"purpose\": \"提取反思与感悟/情感联结\",\n      \"reason\": \"引导受访者阐释书法爱好的深层情感价值和象征意义，将其与童年核心体验挂钩。\",\n      \"suggested_granularity\": 5\n    },\n    {\n      \"question\": \"当您沉浸在书法中时，会不会偶尔想起那个天井的早晨，或者父亲念书的声音？\",\n      \"purpose\": \"提取情感体验与感官记忆的关联\",\n      \"reason\": \"直接询问当下实践与过去记忆的情感联结，可以揭示跨越时间的心理图景。\",\n      \"suggested_granularity\": 4\n    },\n    {\n      \"question\": \"除了书法，父亲教您的那些文字和对美的感受，还在您生活的哪些方面留下了印记？\",\n      \"purpose\": \"探索某一主题下的多条事件\",\n      \"reason\": \"如果书法话题深入后，此问题可将影响范围拓宽，探索更广泛的文化或审美影响。\",\n      \"suggested_granularity\": 3\n    }\n  ]\n}"
+    },
+    {
+      "turn": 7,
+      "decision": {
+        "meta": {
+          "version": "1.0.0",
+          "timestamp": "2026-03-26T21:46:11.552619",
+          "instruction_id": "ab3b6ace-627b-4b3c-820b-6971dc687de5",
+          "turn_number": "6"
+        },
+        "action": {
+          "primary_action": "DEEP_DIVE",
+          "tactical_goal": {
+            "goal_type": "EXTRACT_DETAILS",
+            "description": "聚焦于‘父亲书房’这一新场景和‘第一次提笔写字’这一关键事件，深入挖掘书房环境、父亲的教学方式转变以及受访者初次书写的具体体验。"
+          },
+          "tone_constraint": {
+            "primary_tone": "CURIOUS_INQUIRING",
+            "secondary_tone": "NOSTALGIC",
+            "constraints": [
+              "ALLOW_SILENCE",
+              "VALIDATE_FEELINGS"
+            ]
+          },
+          "strategy": {
+            "strategy_type": "SPATIAL_JUMP",
+            "parameters": {
+              "anchor": "从‘天井’跳转到‘父亲书房’"
+            },
+            "priority": 1
+          }
+        },
+        "_debug_snapshot": {
+          "state_at_decision": {
+            "current_focus": "在父亲书房第一次提笔写字的经历",
+            "user_state": {
+              "emotional_energy": 0.85,
+              "energy_level": 0.8
+            }
+          },
+          "decision_trace": [
+            "触发: 受访者引入了新的关键地点（父亲书房）和关键事件（第一次提笔），这是从‘念’到‘写’的实质性跨越，必须深入挖掘。",
+            "目标: 精神状态(energy_level=0.8)良好，新场景蕴含丰富细节（环境、互动、感受），是深度探索的绝佳机会。",
+            "策略: 场景已从天井切换到书房，采用空间/地点跳转策略，围绕新地点展开细节探索。",
+            "语气: 保持好奇探索以鼓励描述新场景，辅以怀旧感伤以匹配回忆性质。"
+          ]
+        },
+        "recommended_questions": [
+          {
+            "question": "您还记得父亲的书房是什么样子的吗？有什么特别的摆设、气味或者光线？",
+            "purpose": "提取感官细节（视觉、嗅觉）",
+            "reason": "建立新场景的物理与氛围基础，使接下来的事件（第一次写字）有更生动的发生背景。",
+            "suggested_granularity": 5
+          },
+          {
+            "question": "父亲是怎么教您握笔、蘸墨的？他当时说了些什么，又做了些什么？",
+            "purpose": "提取事实细节（人物行为与教学互动）",
+            "reason": "这是技能传授的关键环节，细节能生动体现父亲的教导方式和父子间的亲密互动。",
+            "suggested_granularity": 5
+          },
+          {
+            "question": "当您第一次用毛笔写下那些字的时候，手抖吗？心里是紧张，还是兴奋？",
+            "purpose": "提取情绪体验与身体感受",
+            "reason": "聚焦于初次尝试时的身心体验，这是个人成长叙事中极具感染力的瞬间。",
+            "suggested_granularity": 4
+          },
+          {
+            "question": "父亲看到您写下的第一个字时，是什么反应？",
+            "purpose": "提取事实细节（人物反应）",
+            "reason": "父亲的反馈是这次经历的重要组成部分，能反映其性格以及对孩子的鼓励方式。",
+            "suggested_granularity": 4
+          }
+        ]
+      },
+      "raw_response": "{\n  \"meta\": {\n    \"version\": \"1.0.0\",\n    \"timestamp\": \"2026-03-26T21:46:11.552619\",\n    \"instruction_id\": \"ab3b6ace-627b-4b3c-820b-6971dc687de5\",\n    \"turn_number\": \"6\"\n  },\n  \"action\": {\n    \"primary_action\": \"DEEP_DIVE\",\n    \"tactical_goal\": {\n      \"goal_type\": \"EXTRACT_DETAILS\",\n      \"description\": \"聚焦于‘父亲书房’这一新场景和‘第一次提笔写字’这一关键事件，深入挖掘书房环境、父亲的教学方式转变以及受访者初次书写的具体体验。\"\n    },\n    \"tone_constraint\": {\n      \"primary_tone\": \"CURIOUS_INQUIRING\",\n      \"secondary_tone\": \"NOSTALGIC\",\n      \"constraints\": [\"ALLOW_SILENCE\", \"VALIDATE_FEELINGS\"]\n    },\n    \"strategy\": {\n      \"strategy_type\": \"SPATIAL_JUMP\",\n      \"parameters\": {\"anchor\": \"从‘天井’跳转到‘父亲书房’\"},\n      \"priority\": 1\n    }\n  },\n  \"_debug_snapshot\": {\n    \"state_at_decision\": {\n      \"current_focus\": \"在父亲书房第一次提笔写字的经历\",\n      \"user_state\": {\n        \"emotional_energy\": 0.85,\n        \"energy_level\": 0.8\n      }\n    },\n    \"decision_trace\": [\"触发: 受访者引入了新的关键地点（父亲书房）和关键事件（第一次提笔），这是从‘念’到‘写’的实质性跨越，必须深入挖掘。\", \"目标: 精神状态(energy_level=0.8)良好，新场景蕴含丰富细节（环境、互动、感受），是深度探索的绝佳机会。\", \"策略: 场景已从天井切换到书房，采用空间/地点跳转策略，围绕新地点展开细节探索。\", \"语气: 保持好奇探索以鼓励描述新场景，辅以怀旧感伤以匹配回忆性质。\"]\n  },\n  \"recommended_questions\": [\n    {\n      \"question\": \"您还记得父亲的书房是什么样子的吗？有什么特别的摆设、气味或者光线？\",\n      \"purpose\": \"提取感官细节（视觉、嗅觉）\",\n      \"reason\": \"建立新场景的物理与氛围基础，使接下来的事件（第一次写字）有更生动的发生背景。\",\n      \"suggested_granularity\": 5\n    },\n    {\n      \"question\": \"父亲是怎么教您握笔、蘸墨的？他当时说了些什么，又做了些什么？\",\n      \"purpose\": \"提取事实细节（人物行为与教学互动）\",\n      \"reason\": \"这是技能传授的关键环节，细节能生动体现父亲的教导方式和父子间的亲密互动。\",\n      \"suggested_granularity\": 5\n    },\n    {\n      \"question\": \"当您第一次用毛笔写下那些字的时候，手抖吗？心里是紧张，还是兴奋？\",\n      \"purpose\": \"提取情绪体验与身体感受\",\n      \"reason\": \"聚焦于初次尝试时的身心体验，这是个人成长叙事中极具感染力的瞬间。\",\n      \"suggested_granularity\": 4\n    },\n    {\n      \"question\": \"父亲看到您写下的第一个字时，是什么反应？\",\n      \"purpose\": \"提取事实细节（人物反应）\",\n      \"reason\": \"父亲的反馈是这次经历的重要组成部分，能反映其性格以及对孩子的鼓励方式。\",\n      \"suggested_granularity\": 4\n    }\n  ]\n}"
+    },
+    {
+      "turn": 8,
+      "decision": {
+        "meta": {
+          "version": "1.0.0",
+          "timestamp": "2026-03-26T21:46:11.552619",
+          "instruction_id": "ab3b6ace-627b-4b3c-820b-6971dc687de5",
+          "turn_number": "7"
+        },
+        "action": {
+          "primary_action": "DEEP_DIVE",
+          "tactical_goal": {
+            "goal_type": "EXTRACT_SENSORY",
+            "description": "在受访者已勾勒出书房静态环境的基础上，聚焦于‘第一次提笔书写’的动态过程，深入挖掘其触觉、视觉、嗅觉等多感官细节及伴随的情感。"
+          },
+          "tone_constraint": {
+            "primary_tone": "GENTLE_WARM",
+            "secondary_tone": "NOSTALGIC",
+            "constraints": [
+              "ALLOW_SILENCE",
+              "VALIDATE_FEELINGS"
+            ]
+          },
+          "strategy": {
+            "strategy_type": "OBJECT_TO_EMOTION",
+            "parameters": {
+              "anchor": "毛笔、砚台、宣纸等书写用具"
+            },
+            "priority": 1
+          }
+        },
+        "_debug_snapshot": {
+          "state_at_decision": {
+            "current_focus": "父亲书房的环境细节及第一次提笔书写的感官与情感体验",
+            "user_state": {
+              "emotional_energy": 0.9,
+              "energy_level": 0.85
+            }
+          },
+          "decision_trace": [
+            "触发: 受访者情绪能量(emotional_energy=0.9)高涨，对环境（书架、书桌、文具）的描述清晰而充满感情，但尚未回答关于‘第一次提笔书写’的核心感官体验。",
+            "目标: 精神状态(energy_level=0.85)支持继续深度探索。需要将焦点从静态环境转向动态事件，捕捉书写瞬间的多感官记忆。",
+            "策略: 利用已提及的‘砚台、笔架’等具体物件作为锚点，采用由物及情策略，触发对书写动作本身的回忆。",
+            "语气: 受访者沉浸在温暖怀旧的回忆中，选择温柔温暖且怀旧的语气，以鼓励其安全地分享细腻感受。"
+          ]
+        },
+        "recommended_questions": [
+          {
+            "question": "您还记得第一次握住那支毛笔时，笔杆是什么触感吗？是温润的，还是微凉的？",
+            "purpose": "提取感官细节（触觉）",
+            "reason": "从最直接的触觉入手，开启对书写动作的感官回忆。",
+            "suggested_granularity": 5
+          },
+          {
+            "question": "当笔尖第一次蘸饱了墨，落在宣纸上的那一刹那，您看到了什么？墨迹是怎样洇开的？",
+            "purpose": "提取感官细节（视觉）",
+            "reason": "聚焦于书写瞬间最具视觉冲击力的画面，这是连接内心感受与外部动作的关键。",
+            "suggested_granularity": 5
+          },
+          {
+            "question": "书房里除了书香，是不是还弥漫着墨香？那种气味，您现在还能回想起来吗？",
+            "purpose": "提取感官细节（嗅觉）",
+            "reason": "将环境气味与核心事件关联，增强回忆的立体感和沉浸感。",
+            "suggested_granularity": 4
+          },
+          {
+            "question": "在那一刻，看着自己写下的字，您心里涌起的最强烈的感觉是什么？",
+            "purpose": "提取情绪体验与感受",
+            "reason": "在所有感官细节铺垫后，自然引导至内心的情感高潮，完成对这次关键经历的完整还原。",
+            "suggested_granularity": 5
+          }
+        ]
+      },
+      "raw_response": "{\n  \"meta\": {\n    \"version\": \"1.0.0\",\n    \"timestamp\": \"2026-03-26T21:46:11.552619\",\n    \"instruction_id\": \"ab3b6ace-627b-4b3c-820b-6971dc687de5\",\n    \"turn_number\": \"7\"\n  },\n  \"action\": {\n    \"primary_action\": \"DEEP_DIVE\",\n    \"tactical_goal\": {\n      \"goal_type\": \"EXTRACT_SENSORY\",\n      \"description\": \"在受访者已勾勒出书房静态环境的基础上，聚焦于‘第一次提笔书写’的动态过程，深入挖掘其触觉、视觉、嗅觉等多感官细节及伴随的情感。\"\n    },\n    \"tone_constraint\": {\n      \"primary_tone\": \"GENTLE_WARM\",\n      \"secondary_tone\": \"NOSTALGIC\",\n      \"constraints\": [\"ALLOW_SILENCE\", \"VALIDATE_FEELINGS\"]\n    },\n    \"strategy\": {\n      \"strategy_type\": \"OBJECT_TO_EMOTION\",\n      \"parameters\": {\"anchor\": \"毛笔、砚台、宣纸等书写用具\"},\n      \"priority\": 1\n    }\n  },\n  \"_debug_snapshot\": {\n    \"state_at_decision\": {\n      \"current_focus\": \"父亲书房的环境细节及第一次提笔书写的感官与情感体验\",\n      \"user_state\": {\n        \"emotional_energy\": 0.9,\n        \"energy_level\": 0.85\n      }\n    },\n    \"decision_trace\": [\"触发: 受访者情绪能量(emotional_energy=0.9)高涨，对环境（书架、书桌、文具）的描述清晰而充满感情，但尚未回答关于‘第一次提笔书写’的核心感官体验。\", \"目标: 精神状态(energy_level=0.85)支持继续深度探索。需要将焦点从静态环境转向动态事件，捕捉书写瞬间的多感官记忆。\", \"策略: 利用已提及的‘砚台、笔架’等具体物件作为锚点，采用由物及情策略，触发对书写动作本身的回忆。\", \"语气: 受访者沉浸在温暖怀旧的回忆中，选择温柔温暖且怀旧的语气，以鼓励其安全地分享细腻感受。\"]\n  },\n  \"recommended_questions\": [\n    {\n      \"question\": \"您还记得第一次握住那支毛笔时，笔杆是什么触感吗？是温润的，还是微凉的？\",\n      \"purpose\": \"提取感官细节（触觉）\",\n      \"reason\": \"从最直接的触觉入手，开启对书写动作的感官回忆。\",\n      \"suggested_granularity\": 5\n    },\n    {\n      \"question\": \"当笔尖第一次蘸饱了墨，落在宣纸上的那一刹那，您看到了什么？墨迹是怎样洇开的？\",\n      \"purpose\": \"提取感官细节（视觉）\",\n      \"reason\": \"聚焦于书写瞬间最具视觉冲击力的画面，这是连接内心感受与外部动作的关键。\",\n      \"suggested_granularity\": 5\n    },\n    {\n      \"question\": \"书房里除了书香，是不是还弥漫着墨香？那种气味，您现在还能回想起来吗？\",\n      \"purpose\": \"提取感官细节（嗅觉）\",\n      \"reason\": \"将环境气味与核心事件关联，增强回忆的立体感和沉浸感。\",\n      \"suggested_granularity\": 4\n    },\n    {\n      \"question\": \"在那一刻，看着自己写下的字，您心里涌起的最强烈的感觉是什么？\",\n      \"purpose\": \"提取情绪体验与感受\",\n      \"reason\": \"在所有感官细节铺垫后，自然引导至内心的情感高潮，完成对这次关键经历的完整还原。\",\n      \"suggested_granularity\": 5\n    }\n  ]\n}"
+    },
+    {
+      "turn": 9,
+      "decision": {
+        "meta": {
+          "version": "1.0.0",
+          "timestamp": "2026-03-26T21:46:11.552619",
+          "instruction_id": "ab3b6ace-627b-4b3c-820b-6971dc687de5",
+          "turn_number": "8"
+        },
+        "action": {
+          "primary_action": "CLARIFY",
+          "tactical_goal": {
+            "goal_type": "CONFIRM_UNDERSTANDING",
+            "description": "受访者表示未能理解上一轮问题，需要将问题拆解、简化，并确认其理解，以确保访谈顺畅进行。"
+          },
+          "tone_constraint": {
+            "primary_tone": "EMPATHIC_SUPPORTIVE",
+            "secondary_tone": "CALM",
+            "constraints": [
+              "ALLOW_SILENCE",
+              "VALIDATE_FEELINGS",
+              "AVOID_TECHNICAL_TERMS"
+            ]
+          },
+          "strategy": {
+            "strategy_type": "TASK_RESUME",
+            "parameters": {
+              "anchor": "第一次提笔写字的细节"
+            },
+            "priority": 1
+          }
+        },
+        "_debug_snapshot": {
+          "state_at_decision": {
+            "current_focus": "在父亲书房第一次提笔写字的细节（握笔、书写感受）",
+            "user_state": {
+              "emotional_energy": 0.8,
+              "energy_level": 0.8
+            }
+          },
+          "decision_trace": [
+            "触发: 受访者明确表示未能理解上一轮问题，沟通出现障碍，必须优先解决。",
+            "目标: 精神状态(energy_level=0.8)尚可，但理解受阻会影响深度挖掘。首要任务是澄清问题，恢复对话流畅性。",
+            "策略: 采用挂起任务回溯策略，回到‘第一次提笔写字’这个核心事件，但用更清晰、更简单的方式重新提问。",
+            "语气: 选择共情支持型和平静从容型，避免给受访者带来压力，鼓励其轻松回应。"
+          ]
+        },
+        "recommended_questions": [
+          {
+            "question": "抱歉，我的问题可能有点复杂了。我们慢慢来，您还记得父亲是怎么把毛笔放到您手里的吗？",
+            "purpose": "确认理解是否准确/提取事实细节",
+            "reason": "将复杂问题拆解，从最简单、最具体的动作开始，降低理解难度，重建对话连接。",
+            "suggested_granularity": 3
+          },
+          {
+            "question": "他有没有手把手地教您怎么拿笔？",
+            "purpose": "提取事实细节（教学互动）",
+            "reason": "这是一个更具体、更易于回答的关于教学方式的问题。",
+            "suggested_granularity": 3
+          },
+          {
+            "question": "当您自己拿着笔，准备写第一个字的时候，感觉紧张吗？",
+            "purpose": "提取情绪体验与感受",
+            "reason": "在确认了基础事实后，回归到情绪体验这一核心，但用更直接、更通俗的语言提问。",
+            "suggested_granularity": 4
+          },
+          {
+            "question": "或者，关于第一次在书房写字，您印象最深的是哪个画面或感觉？",
+            "purpose": "探索关键事件的核心记忆",
+            "reason": "如果具体细节难以回忆，此开放式问题允许受访者自由选择最鲜活的记忆点进行分享。",
+            "suggested_granularity": 4
+          }
+        ]
+      },
+      "raw_response": "{\n  \"meta\": {\n    \"version\": \"1.0.0\",\n    \"timestamp\": \"2026-03-26T21:46:11.552619\",\n    \"instruction_id\": \"ab3b6ace-627b-4b3c-820b-6971dc687de5\",\n    \"turn_number\": \"8\"\n  },\n  \"action\": {\n    \"primary_action\": \"CLARIFY\",\n    \"tactical_goal\": {\n      \"goal_type\": \"CONFIRM_UNDERSTANDING\",\n      \"description\": \"受访者表示未能理解上一轮问题，需要将问题拆解、简化，并确认其理解，以确保访谈顺畅进行。\"\n    },\n    \"tone_constraint\": {\n      \"primary_tone\": \"EMPATHIC_SUPPORTIVE\",\n      \"secondary_tone\": \"CALM\",\n      \"constraints\": [\"ALLOW_SILENCE\", \"VALIDATE_FEELINGS\", \"AVOID_TECHNICAL_TERMS\"]\n    },\n    \"strategy\": {\n      \"strategy_type\": \"TASK_RESUME\",\n      \"parameters\": {\"anchor\": \"第一次提笔写字的细节\"},\n      \"priority\": 1\n    }\n  },\n  \"_debug_snapshot\": {\n    \"state_at_decision\": {\n      \"current_focus\": \"在父亲书房第一次提笔写字的细节（握笔、书写感受）\",\n      \"user_state\": {\n        \"emotional_energy\": 0.8,\n        \"energy_level\": 0.8\n      }\n    },\n    \"decision_trace\": [\"触发: 受访者明确表示未能理解上一轮问题，沟通出现障碍，必须优先解决。\", \"目标: 精神状态(energy_level=0.8)尚可，但理解受阻会影响深度挖掘。首要任务是澄清问题，恢复对话流畅性。\", \"策略: 采用挂起任务回溯策略，回到‘第一次提笔写字’这个核心事件，但用更清晰、更简单的方式重新提问。\", \"语气: 选择共情支持型和平静从容型，避免给受访者带来压力，鼓励其轻松回应。\"]\n  },\n  \"recommended_questions\": [\n    {\n      \"question\": \"抱歉，我的问题可能有点复杂了。我们慢慢来，您还记得父亲是怎么把毛笔放到您手里的吗？\",\n      \"purpose\": \"确认理解是否准确/提取事实细节\",\n      \"reason\": \"将复杂问题拆解，从最简单、最具体的动作开始，降低理解难度，重建对话连接。\",\n      \"suggested_granularity\": 3\n    },\n    {\n      \"question\": \"他有没有手把手地教您怎么拿笔？\",\n      \"purpose\": \"提取事实细节（教学互动）\",\n      \"reason\": \"这是一个更具体、更易于回答的关于教学方式的问题。\",\n      \"suggested_granularity\": 3\n    },\n    {\n      \"question\": \"当您自己拿着笔，准备写第一个字的时候，感觉紧张吗？\",\n      \"purpose\": \"提取情绪体验与感受\",\n      \"reason\": \"在确认了基础事实后，回归到情绪体验这一核心，但用更直接、更通俗的语言提问。\",\n      \"suggested_granularity\": 4\n    },\n    {\n      \"question\": \"或者，关于第一次在书房写字，您印象最深的是哪个画面或感觉？\",\n      \"purpose\": \"探索关键事件的核心记忆\",\n      \"reason\": \"如果具体细节难以回忆，此开放式问题允许受访者自由选择最鲜活的记忆点进行分享。\",\n      \"suggested_granularity\": 4\n    }\n  ]\n}"
+    },
+    {
+      "turn": 10,
+      "decision": {
+        "meta": {
+          "version": "1.0.0",
+          "timestamp": "2026-03-26T21:46:11.552619",
+          "instruction_id": "ab3b6ace-627b-4b3c-820b-6971dc687de5",
+          "turn_number": "9"
+        },
+        "action": {
+          "primary_action": "DEEP_DIVE",
+          "tactical_goal": {
+            "goal_type": "EXTRACT_SENSORY",
+            "description": "围绕‘父亲大手包住小手’这一极具画面感和情感张力的核心互动，深入挖掘其触觉、温度、力量感等多感官细节，以及受访者当时的内心感受。"
+          },
+          "tone_constraint": {
+            "primary_tone": "EMPATHIC_SUPPORTIVE",
+            "secondary_tone": "THOUGHTFUL",
+            "constraints": [
+              "ALLOW_SILENCE",
+              "VALIDATE_FEELINGS"
+            ]
+          },
+          "strategy": {
+            "strategy_type": "OBJECT_TO_EMOTION",
+            "parameters": {
+              "anchor": "父亲的大手与‘我’的小手"
+            },
+            "priority": 1
+          }
+        },
+        "_debug_snapshot": {
+          "state_at_decision": {
+            "current_focus": "父亲手把手教握笔的触觉与情感体验",
+            "user_state": {
+              "emotional_energy": 0.95,
+              "energy_level": 0.85
+            }
+          },
+          "decision_trace": [
+            "触发: 受访者情绪能量(emotional_energy=0.95)极高，生动描绘了‘手抖’和‘父亲大手包小手’的经典场景，这是情感记忆的富矿。",
+            "目标: 精神状态(energy_level=0.85)良好。必须抓住这个充满温情和细节的瞬间，进行极致的感官和情感挖掘。",
+            "策略: 以‘手’这一具体身体部位和接触点作为情感锚点，采用由物及情策略，深入探索触觉记忆和情感联结。",
+            "语气: 受访者处于温暖、感动的回忆中，选择共情支持型以肯定其情感，辅以沉思反思以引导深度感受。"
+          ]
+        },
+        "recommended_questions": [
+          {
+            "question": "当父亲的大手包住您的小手时，您能感觉到他手掌的温度和力度吗？那是一种什么样的感觉？",
+            "purpose": "提取感官细节（触觉、温度感）",
+            "reason": "这是父子身体接触和情感传递的直接媒介，是还原场景真实感的关键。",
+            "suggested_granularity": 5
+          },
+          {
+            "question": "在父亲的手的引导下，笔尖是不是就听话了？那一刻，您心里的紧张有没有变成一种别样的安心？",
+            "purpose": "提取情绪体验与感受的转变",
+            "reason": "探索从‘失控（手抖）’到‘被引导（安心）’的心理变化过程，这是成长叙事中的重要节点。",
+            "suggested_granularity": 5
+          },
+          {
+            "question": "父亲当时有没有说什么话？他的声音是像在天井里念书时一样温和，还是更专注、更低沉一些？",
+            "purpose": "提取感官细节（听觉）与事实细节",
+            "reason": "将听觉记忆与触觉记忆结合，并对比不同场景下父亲声音的细微差别，丰富人物形象。",
+            "suggested_granularity": 4
+          },
+          {
+            "question": "那个被父亲手把手带着写下的第一个字，您还记得是什么吗？",
+            "purpose": "提取事实细节（关键成果）",
+            "reason": "如果感官和情感挖掘充分，此问题可作为收尾，点明这次互动的具体‘成果’，使故事更完整。",
+            "suggested_granularity": 4
+          }
+        ]
+      },
+      "raw_response": "{\n  \"meta\": {\n    \"version\": \"1.0.0\",\n    \"timestamp\": \"2026-03-26T21:46:11.552619\",\n    \"instruction_id\": \"ab3b6ace-627b-4b3c-820b-6971dc687de5\",\n    \"turn_number\": \"9\"\n  },\n  \"action\": {\n    \"primary_action\": \"DEEP_DIVE\",\n    \"tactical_goal\": {\n      \"goal_type\": \"EXTRACT_SENSORY\",\n      \"description\": \"围绕‘父亲大手包住小手’这一极具画面感和情感张力的核心互动，深入挖掘其触觉、温度、力量感等多感官细节，以及受访者当时的内心感受。\"\n    },\n    \"tone_constraint\": {\n      \"primary_tone\": \"EMPATHIC_SUPPORTIVE\",\n      \"secondary_tone\": \"THOUGHTFUL\",\n      \"constraints\": [\"ALLOW_SILENCE\", \"VALIDATE_FEELINGS\"]\n    },\n    \"strategy\": {\n      \"strategy_type\": \"OBJECT_TO_EMOTION\",\n      \"parameters\": {\"anchor\": \"父亲的大手与‘我’的小手\"},\n      \"priority\": 1\n    }\n  },\n  \"_debug_snapshot\": {\n    \"state_at_decision\": {\n      \"current_focus\": \"父亲手把手教握笔的触觉与情感体验\",\n      \"user_state\": {\n        \"emotional_energy\": 0.95,\n        \"energy_level\": 0.85\n      }\n    },\n    \"decision_trace\": [\"触发: 受访者情绪能量(emotional_energy=0.95)极高，生动描绘了‘手抖’和‘父亲大手包小手’的经典场景，这是情感记忆的富矿。\", \"目标: 精神状态(energy_level=0.85)良好。必须抓住这个充满温情和细节的瞬间，进行极致的感官和情感挖掘。\", \"策略: 以‘手’这一具体身体部位和接触点作为情感锚点，采用由物及情策略，深入探索触觉记忆和情感联结。\", \"语气: 受访者处于温暖、感动的回忆中，选择共情支持型以肯定其情感，辅以沉思反思以引导深度感受。\"]\n  },\n  \"recommended_questions\": [\n    {\n      \"question\": \"当父亲的大手包住您的小手时，您能感觉到他手掌的温度和力度吗？那是一种什么样的感觉？\",\n      \"purpose\": \"提取感官细节（触觉、温度感）\",\n      \"reason\": \"这是父子身体接触和情感传递的直接媒介，是还原场景真实感的关键。\",\n      \"suggested_granularity\": 5\n    },\n    {\n      \"question\": \"在父亲的手的引导下，笔尖是不是就听话了？那一刻，您心里的紧张有没有变成一种别样的安心？\",\n      \"purpose\": \"提取情绪体验与感受的转变\",\n      \"reason\": \"探索从‘失控（手抖）’到‘被引导（安心）’的心理变化过程，这是成长叙事中的重要节点。\",\n      \"suggested_granularity\": 5\n    },\n    {\n      \"question\": \"父亲当时有没有说什么话？他的声音是像在天井里念书时一样温和，还是更专注、更低沉一些？\",\n      \"purpose\": \"提取感官细节（听觉）与事实细节\",\n      \"reason\": \"将听觉记忆与触觉记忆结合，并对比不同场景下父亲声音的细微差别，丰富人物形象。\",\n      \"suggested_granularity\": 4\n    },\n    {\n      \"question\": \"那个被父亲手把手带着写下的第一个字，您还记得是什么吗？\",\n      \"purpose\": \"提取事实细节（关键成果）\",\n      \"reason\": \"如果感官和情感挖掘充分，此问题可作为收尾，点明这次互动的具体‘成果’，使故事更完整。\",\n      \"suggested_granularity\": 4\n    }\n  ]\n}"
+    },
+    {
+      "turn": 11,
+      "decision": {
+        "meta": {
+          "version": "1.0.0",
+          "timestamp": "2026-03-26T21:46:11.552619",
+          "instruction_id": "ab3b6ace-627b-4b3c-820b-6971dc687de5",
+          "turn_number": "10"
+        },
+        "action": {
+          "primary_action": "CLARIFY",
+          "tactical_goal": {
+            "goal_type": "CONFIRM_UNDERSTANDING",
+            "description": "受访者再次表示未能理解问题。需要将复合问题彻底拆解为最简单、最直接的单一问题，并采用更通俗的语言，确保沟通无碍。"
+          },
+          "tone_constraint": {
+            "primary_tone": "EMPATHIC_SUPPORTIVE",
+            "secondary_tone": "CALM",
+            "constraints": [
+              "ALLOW_SILENCE",
+              "VALIDATE_FEELINGS",
+              "AVOID_TECHNICAL_TERMS",
+              "NO_JUDGMENT"
+            ]
+          },
+          "strategy": {
+            "strategy_type": "TASK_RESUME",
+            "parameters": {
+              "anchor": "父亲手把手教握笔的触觉与内心感受"
+            },
+            "priority": 1
+          }
+        },
+        "_debug_snapshot": {
+          "state_at_decision": {
+            "current_focus": "父亲手把手教握笔的触觉与内心感受",
+            "user_state": {
+              "emotional_energy": 0.7,
+              "energy_level": 0.75
+            }
+          },
+          "decision_trace": [
+            "触发: 受访者连续两次未能理解复合型感官/情感问题，表明当前提问方式可能过于抽象或复杂，超出了其即时处理能力。",
+            "目标: 情绪能量(emotional_energy=0.7)和精力(energy_level=0.75)略有下降，沟通障碍可能带来轻微挫败感。首要任务是简化沟通，重建清晰度。",
+            "策略: 继续采用挂起任务回溯策略，但将问题分解到最基础的单元，一次只问一个最具体、最客观的方面。",
+            "语气: 保持共情支持和平静从容，明确表示没有对错，减轻受访者因不理解而产生的压力。"
+          ]
+        },
+        "recommended_questions": [
+          {
+            "question": "没关系，我们换个方式问。您还记得父亲的手，摸上去是光滑的，还是有点粗糙的？",
+            "purpose": "确认理解是否准确/提取感官细节（触觉）",
+            "reason": "将复杂的‘感觉’问题简化为一个最具体、最客观的触觉对比（光滑/粗糙），易于理解和回答。",
+            "suggested_granularity": 2
+          },
+          {
+            "question": "他的手是暖和的，还是凉的呢？",
+            "purpose": "提取感官细节（温度感）",
+            "reason": "在触觉质地之后，询问温度，这是另一个具体且易于感知的物理属性。",
+            "suggested_granularity": 2
+          },
+          {
+            "question": "当父亲握着您的手开始动笔的时候，您还记得自己写的第一个字是什么吗？",
+            "purpose": "提取事实细节（关键事件）",
+            "reason": "如果感官细节难以回忆，转向询问一个更具体、更可能被记住的‘事实’（写的字），可以重新建立对话的连续性。",
+            "suggested_granularity": 3
+          },
+          {
+            "question": "或者，关于父亲教您写字这件事，您印象最深的是什么？",
+            "purpose": "探索关键事件的核心记忆",
+            "reason": "提供一个开放但聚焦的出口，允许受访者绕过具体细节，直接分享其最核心、最鲜活的整体印象。",
+            "suggested_granularity": 3
+          }
+        ]
+      },
+      "raw_response": "{\n  \"meta\": {\n    \"version\": \"1.0.0\",\n    \"timestamp\": \"2026-03-26T21:46:11.552619\",\n    \"instruction_id\": \"ab3b6ace-627b-4b3c-820b-6971dc687de5\",\n    \"turn_number\": \"10\"\n  },\n  \"action\": {\n    \"primary_action\": \"CLARIFY\",\n    \"tactical_goal\": {\n      \"goal_type\": \"CONFIRM_UNDERSTANDING\",\n      \"description\": \"受访者再次表示未能理解问题。需要将复合问题彻底拆解为最简单、最直接的单一问题，并采用更通俗的语言，确保沟通无碍。\"\n    },\n    \"tone_constraint\": {\n      \"primary_tone\": \"EMPATHIC_SUPPORTIVE\",\n      \"secondary_tone\": \"CALM\",\n      \"constraints\": [\"ALLOW_SILENCE\", \"VALIDATE_FEELINGS\", \"AVOID_TECHNICAL_TERMS\", \"NO_JUDGMENT\"]\n    },\n    \"strategy\": {\n      \"strategy_type\": \"TASK_RESUME\",\n      \"parameters\": {\"anchor\": \"父亲手把手教握笔的触觉与内心感受\"},\n      \"priority\": 1\n    }\n  },\n  \"_debug_snapshot\": {\n    \"state_at_decision\": {\n      \"current_focus\": \"父亲手把手教握笔的触觉与内心感受\",\n      \"user_state\": {\n        \"emotional_energy\": 0.7,\n        \"energy_level\": 0.75\n      }\n    },\n    \"decision_trace\": [\"触发: 受访者连续两次未能理解复合型感官/情感问题，表明当前提问方式可能过于抽象或复杂，超出了其即时处理能力。\", \"目标: 情绪能量(emotional_energy=0.7)和精力(energy_level=0.75)略有下降，沟通障碍可能带来轻微挫败感。首要任务是简化沟通，重建清晰度。\", \"策略: 继续采用挂起任务回溯策略，但将问题分解到最基础的单元，一次只问一个最具体、最客观的方面。\", \"语气: 保持共情支持和平静从容，明确表示没有对错，减轻受访者因不理解而产生的压力。\"]\n  },\n  \"recommended_questions\": [\n    {\n      \"question\": \"没关系，我们换个方式问。您还记得父亲的手，摸上去是光滑的，还是有点粗糙的？\",\n      \"purpose\": \"确认理解是否准确/提取感官细节（触觉）\",\n      \"reason\": \"将复杂的‘感觉’问题简化为一个最具体、最客观的触觉对比（光滑/粗糙），易于理解和回答。\",\n      \"suggested_granularity\": 2\n    },\n    {\n      \"question\": \"他的手是暖和的，还是凉的呢？\",\n      \"purpose\": \"提取感官细节（温度感）\",\n      \"reason\": \"在触觉质地之后，询问温度，这是另一个具体且易于感知的物理属性。\",\n      \"suggested_granularity\": 2\n    },\n    {\n      \"question\": \"当父亲握着您的手开始动笔的时候，您还记得自己写的第一个字是什么吗？\",\n      \"purpose\": \"提取事实细节（关键事件）\",\n      \"reason\": \"如果感官细节难以回忆，转向询问一个更具体、更可能被记住的‘事实’（写的字），可以重新建立对话的连续性。\",\n      \"suggested_granularity\": 3\n    },\n    {\n      \"question\": \"或者，关于父亲教您写字这件事，您印象最深的是什么？\",\n      \"purpose\": \"探索关键事件的核心记忆\",\n      \"reason\": \"提供一个开放但聚焦的出口，允许受访者绕过具体细节，直接分享其最核心、最鲜活的整体印象。\",\n      \"suggested_granularity\": 3\n    }\n  ]\n}"
+    },
+    {
+      "turn": 12,
+      "decision": {
+        "meta": {
+          "version": "1.0.0",
+          "timestamp": "2026-03-26T21:46:11.552619",
+          "instruction_id": "ab3b6ace-627b-4b3c-820b-6971dc687de5",
+          "turn_number": "11"
+        },
+        "action": {
+          "primary_action": "DEEP_DIVE",
+          "tactical_goal": {
+            "goal_type": "EXTRACT_REFLECTIONS",
+            "description": "在受访者成功提取并描述了‘父亲的手’的触觉细节（温热、粗糙、骨节、力道）后，引导其从这一具体的感官体验出发，深入挖掘其背后的象征意义、情感联结以及此刻的感悟。"
+          },
+          "tone_constraint": {
+            "primary_tone": "THOUGHTFUL",
+            "secondary_tone": "RESPECTFUL_REVERENT",
+            "constraints": [
+              "ALLOW_SILENCE",
+              "VALIDATE_FEELINGS"
+            ]
+          },
+          "strategy": {
+            "strategy_type": "OBJECT_TO_EMOTION",
+            "parameters": {
+              "anchor": "父亲‘温热、粗糙、有骨节和力道’的手"
+            },
+            "priority": 1
+          }
+        },
+        "_debug_snapshot": {
+          "state_at_decision": {
+            "current_focus": "对‘父亲的手’的触觉记忆及其情感与象征意义的反思",
+            "user_state": {
+              "emotional_energy": 0.9,
+              "energy_level": 0.8
+            }
+          },
+          "decision_trace": [
+            "触发: 受访者情绪能量(emotional_energy=0.9)回升，成功回忆起并生动描述了父亲手的触觉细节，表明其已进入深度回忆状态。",
+            "目标: 精神状态(energy_level=0.8)良好。感官细节已充分，是时候从‘感受’上升到‘感悟’，挖掘这一身体接触背后的深层含义。",
+            "策略: 继续以‘父亲的手’这一已激活的、充满细节的感官锚点，采用由物及情策略，自然过渡到情感反思层面。",
+            "语气: 选择沉思反思型以引导深度思考，辅以尊重敬重型以匹配对父亲形象的回忆。"
+          ]
+        },
+        "recommended_questions": [
+          {
+            "question": "现在回想起来，父亲那‘温热、粗糙、有沉稳力道’的手，在您心里象征着什么？",
+            "purpose": "提取反思与感悟（象征意义）",
+            "reason": "引导受访者将具体的感官体验抽象化，探索其内在的象征意义（如父爱、传承、力量、责任等）。",
+            "suggested_granularity": 5
+          },
+          {
+            "question": "那种被他的大手稳稳包住、引导着写下第一个字的感觉，对您后来的成长，比如学习、做事，有什么影响吗？",
+            "purpose": "提取反思与感悟（长期影响）",
+            "reason": "将瞬间的体验与长期的人生轨迹联系起来，探索早期经历对性格或行为模式的塑造。",
+            "suggested_granularity": 4
+          },
+          {
+            "question": "当您自己也成为长辈，有没有在某个时刻，回想起父亲握着您手的感觉？",
+            "purpose": "提取反思与感悟（代际传承与对比）",
+            "reason": "引入时间维度，从回忆者当下的视角进行反思，可能触发关于生命循环、角色转换的深刻感悟。",
+            "suggested_granularity": 5
+          },
+          {
+            "question": "如果用一个词或一句话来形容父亲通过他的手传递给您的，除了写字，还有什么？",
+            "purpose": "提取反思与感悟（情感核心）",
+            "reason": "鼓励受访者用高度凝练的语言总结这次经历的情感内核，完成从细节到主题的升华。",
+            "suggested_granularity": 4
+          }
+        ]
+      },
+      "raw_response": "{\n  \"meta\": {\n    \"version\": \"1.0.0\",\n    \"timestamp\": \"2026-03-26T21:46:11.552619\",\n    \"instruction_id\": \"ab3b6ace-627b-4b3c-820b-6971dc687de5\",\n    \"turn_number\": \"11\"\n  },\n  \"action\": {\n    \"primary_action\": \"DEEP_DIVE\",\n    \"tactical_goal\": {\n      \"goal_type\": \"EXTRACT_REFLECTIONS\",\n      \"description\": \"在受访者成功提取并描述了‘父亲的手’的触觉细节（温热、粗糙、骨节、力道）后，引导其从这一具体的感官体验出发，深入挖掘其背后的象征意义、情感联结以及此刻的感悟。\"\n    },\n    \"tone_constraint\": {\n      \"primary_tone\": \"THOUGHTFUL\",\n      \"secondary_tone\": \"RESPECTFUL_REVERENT\",\n      \"constraints\": [\"ALLOW_SILENCE\", \"VALIDATE_FEELINGS\"]\n    },\n    \"strategy\": {\n      \"strategy_type\": \"OBJECT_TO_EMOTION\",\n      \"parameters\": {\"anchor\": \"父亲‘温热、粗糙、有骨节和力道’的手\"},\n      \"priority\": 1\n    }\n  },\n  \"_debug_snapshot\": {\n    \"state_at_decision\": {\n      \"current_focus\": \"对‘父亲的手’的触觉记忆及其情感与象征意义的反思\",\n      \"user_state\": {\n        \"emotional_energy\": 0.9,\n        \"energy_level\": 0.8\n      }\n    },\n    \"decision_trace\": [\"触发: 受访者情绪能量(emotional_energy=0.9)回升，成功回忆起并生动描述了父亲手的触觉细节，表明其已进入深度回忆状态。\", \"目标: 精神状态(energy_level=0.8)良好。感官细节已充分，是时候从‘感受’上升到‘感悟’，挖掘这一身体接触背后的深层含义。\", \"策略: 继续以‘父亲的手’这一已激活的、充满细节的感官锚点，采用由物及情策略，自然过渡到情感反思层面。\", \"语气: 选择沉思反思型以引导深度思考，辅以尊重敬重型以匹配对父亲形象的回忆。\"]\n  },\n  \"recommended_questions\": [\n    {\n      \"question\": \"现在回想起来，父亲那‘温热、粗糙、有沉稳力道’的手，在您心里象征着什么？\",\n      \"purpose\": \"提取反思与感悟（象征意义）\",\n      \"reason\": \"引导受访者将具体的感官体验抽象化，探索其内在的象征意义（如父爱、传承、力量、责任等）。\",\n      \"suggested_granularity\": 5\n    },\n    {\n      \"question\": \"那种被他的大手稳稳包住、引导着写下第一个字的感觉，对您后来的成长，比如学习、做事，有什么影响吗？\",\n      \"purpose\": \"提取反思与感悟（长期影响）\",\n      \"reason\": \"将瞬间的体验与长期的人生轨迹联系起来，探索早期经历对性格或行为模式的塑造。\",\n      \"suggested_granularity\": 4\n    },\n    {\n      \"question\": \"当您自己也成为长辈，有没有在某个时刻，回想起父亲握着您手的感觉？\",\n      \"purpose\": \"提取反思与感悟（代际传承与对比）\",\n      \"reason\": \"引入时间维度，从回忆者当下的视角进行反思，可能触发关于生命循环、角色转换的深刻感悟。\",\n      \"suggested_granularity\": 5\n    },\n    {\n      \"question\": \"如果用一个词或一句话来形容父亲通过他的手传递给您的，除了写字，还有什么？\",\n      \"purpose\": \"提取反思与感悟（情感核心）\",\n      \"reason\": \"鼓励受访者用高度凝练的语言总结这次经历的情感内核，完成从细节到主题的升华。\",\n      \"suggested_granularity\": 4\n    }\n  ]\n}"
+    },
+    {
+      "turn": 13,
+      "decision": {
+        "meta": {
+          "version": "1.0.0",
+          "timestamp": "2026-03-26T21:46:11.552619",
+          "instruction_id": "ab3b6ace-627b-4b3c-820b-6971dc687de5",
+          "turn_number": "12"
+        },
+        "action": {
+          "primary_action": "DEEP_DIVE",
+          "tactical_goal": {
+            "goal_type": "EXTRACT_REFLECTIONS",
+            "description": "受访者已提炼出核心感悟‘写字要稳，做人更要稳’。需要围绕这一人生哲理，深入挖掘其具体内涵、父亲如何以身作则、以及这一教诲如何影响受访者一生的关键抉择和行为。"
+          },
+          "tone_constraint": {
+            "primary_tone": "RESPECTFUL_REVERENT",
+            "secondary_tone": "THOUGHTFUL",
+            "constraints": [
+              "ALLOW_SILENCE",
+              "VALIDATE_FEELINGS"
+            ]
+          },
+          "strategy": {
+            "strategy_type": "EVENT_TO_PERSON",
+            "parameters": {
+              "anchor": "‘写字要稳，做人更要稳’的教诲"
+            },
+            "priority": 1
+          }
+        },
+        "_debug_snapshot": {
+          "state_at_decision": {
+            "current_focus": "对‘写字要稳，做人更要稳’这一人生教诲的深度阐释与例证",
+            "user_state": {
+              "emotional_energy": 0.95,
+              "energy_level": 0.85
+            }
+          },
+          "decision_trace": [
+            "触发: 受访者情绪能量(emotional_energy=0.95)达到高点，成功从具体事件（学写字）中提炼出深刻的人生哲理（做人要稳），这是访谈的黄金时刻。",
+            "目标: 精神状态(energy_level=0.85)支持深度探索。必须抓住这个由事及理的关键节点，将抽象的教诲具象化，通过具体事例来丰满其内涵。",
+            "策略: 采用由事及人策略，从‘写字要稳，做人更要稳’这一具体教诲出发，探索父亲的人格特质以及这一理念在受访者人生中的具体体现。",
+            "语气: 受访者对父亲充满敬意，且处于深度反思中，选择尊重敬重型和沉思反思型以匹配当前氛围。"
+          ]
+        },
+        "recommended_questions": [
+          {
+            "question": "您说‘做人要稳’，在您看来，父亲自己是如何体现这个‘稳’字的？",
+            "purpose": "提取反思与感悟（父亲的人格例证）",
+            "reason": "将抽象的教诲与具体的人物（父亲）的行为联系起来，使‘稳’的概念变得鲜活、可感知。",
+            "suggested_granularity": 5
+          },
+          {
+            "question": "在您后来的人生里，有没有遇到过特别‘不稳’的时刻？那时候，想起父亲握着您手的感觉和这句话，对您有什么帮助？",
+            "purpose": "提取反思与感悟（教诲的实际应用与影响）",
+            "reason": "探索这一早期教诲如何成为受访者应对人生挑战的精神资源，完成从‘接收’到‘内化’再到‘应用’的叙事闭环。",
+            "suggested_granularity": 5
+          },
+          {
+            "question": "除了‘稳’，父亲的手和那次的经历，还让您明白了关于‘传承’的什么？",
+            "purpose": "提取反思与感悟（对传承概念的深化）",
+            "reason": "受访者已提到‘传承’，可以就此深入，探讨其对于文化、家风、责任代代相传的理解。",
+            "suggested_granularity": 4
+          },
+          {
+            "question": "如果让您也用类似的方式，把某种重要的东西‘握’着下一代的手传递下去，您会想传递什么？",
+            "purpose": "提取反思与感悟（代际责任与展望）",
+            "reason": "将视角从‘接收者’转向‘传递者’，引导受访者思考自己希望延续的 legacy，使反思更具前瞻性和完整性。",
+            "suggested_granularity": 5
+          }
+        ]
+      },
+      "raw_response": "{\n  \"meta\": {\n    \"version\": \"1.0.0\",\n    \"timestamp\": \"2026-03-26T21:46:11.552619\",\n    \"instruction_id\": \"ab3b6ace-627b-4b3c-820b-6971dc687de5\",\n    \"turn_number\": \"12\"\n  },\n  \"action\": {\n    \"primary_action\": \"DEEP_DIVE\",\n    \"tactical_goal\": {\n      \"goal_type\": \"EXTRACT_REFLECTIONS\",\n      \"description\": \"受访者已提炼出核心感悟‘写字要稳，做人更要稳’。需要围绕这一人生哲理，深入挖掘其具体内涵、父亲如何以身作则、以及这一教诲如何影响受访者一生的关键抉择和行为。\"\n    },\n    \"tone_constraint\": {\n      \"primary_tone\": \"RESPECTFUL_REVERENT\",\n      \"secondary_tone\": \"THOUGHTFUL\",\n      \"constraints\": [\"ALLOW_SILENCE\", \"VALIDATE_FEELINGS\"]\n    },\n    \"strategy\": {\n      \"strategy_type\": \"EVENT_TO_PERSON\",\n      \"parameters\": {\"anchor\": \"‘写字要稳，做人更要稳’的教诲\"},\n      \"priority\": 1\n    }\n  },\n  \"_debug_snapshot\": {\n    \"state_at_decision\": {\n      \"current_focus\": \"对‘写字要稳，做人更要稳’这一人生教诲的深度阐释与例证\",\n      \"user_state\": {\n        \"emotional_energy\": 0.95,\n        \"energy_level\": 0.85\n      }\n    },\n    \"decision_trace\": [\"触发: 受访者情绪能量(emotional_energy=0.95)达到高点，成功从具体事件（学写字）中提炼出深刻的人生哲理（做人要稳），这是访谈的黄金时刻。\", \"目标: 精神状态(energy_level=0.85)支持深度探索。必须抓住这个由事及理的关键节点，将抽象的教诲具象化，通过具体事例来丰满其内涵。\", \"策略: 采用由事及人策略，从‘写字要稳，做人更要稳’这一具体教诲出发，探索父亲的人格特质以及这一理念在受访者人生中的具体体现。\", \"语气: 受访者对父亲充满敬意，且处于深度反思中，选择尊重敬重型和沉思反思型以匹配当前氛围。\"]\n  },\n  \"recommended_questions\": [\n    {\n      \"question\": \"您说‘做人要稳’，在您看来，父亲自己是如何体现这个‘稳’字的？\",\n      \"purpose\": \"提取反思与感悟（父亲的人格例证）\",\n      \"reason\": \"将抽象的教诲与具体的人物（父亲）的行为联系起来，使‘稳’的概念变得鲜活、可感知。\",\n      \"suggested_granularity\": 5\n    },\n    {\n      \"question\": \"在您后来的人生里，有没有遇到过特别‘不稳’的时刻？那时候，想起父亲握着您手的感觉和这句话，对您有什么帮助？\",\n      \"purpose\": \"提取反思与感悟（教诲的实际应用与影响）\",\n      \"reason\": \"探索这一早期教诲如何成为受访者应对人生挑战的精神资源，完成从‘接收’到‘内化’再到‘应用’的叙事闭环。\",\n      \"suggested_granularity\": 5\n    },\n    {\n      \"question\": \"除了‘稳’，父亲的手和那次的经历，还让您明白了关于‘传承’的什么？\",\n      \"purpose\": \"提取反思与感悟（对传承概念的深化）\",\n      \"reason\": \"受访者已提到‘传承’，可以就此深入，探讨其对于文化、家风、责任代代相传的理解。\",\n      \"suggested_granularity\": 4\n    },\n    {\n      \"question\": \"如果让您也用类似的方式，把某种重要的东西‘握’着下一代的手传递下去，您会想传递什么？\",\n      \"purpose\": \"提取反思与感悟（代际责任与展望）\",\n      \"reason\": \"将视角从‘接收者’转向‘传递者’，引导受访者思考自己希望延续的 legacy，使反思更具前瞻性和完整性。\",\n      \"suggested_granularity\": 5\n    }\n  ]\n}"
+    },
+    {
+      "turn": 14,
+      "decision": {
+        "meta": {
+          "version": "1.0.0",
+          "timestamp": "2026-03-26T21:46:11.552619",
+          "instruction_id": "ab3b6ace-627b-4b3c-820b-6971dc687de5",
+          "turn_number": "13"
+        },
+        "action": {
+          "primary_action": "DEEP_DIVE",
+          "tactical_goal": {
+            "goal_type": "EXTRACT_DETAILS",
+            "description": "受访者主动开启了一个新的、充满情感张力的重大人生事件（北大荒困难时期）。首要任务是鼓励并引导其安全地讲述这个故事的开始，聚焦于具体的时间、地点、人物和初始情境，为后续深入挖掘奠定基础。"
+          },
+          "tone_constraint": {
+            "primary_tone": "EMPATHIC_SUPPORTIVE",
+            "secondary_tone": "CALM",
+            "constraints": [
+              "ALLOW_SILENCE",
+              "VALIDATE_FEELINGS",
+              "NO_JUDGMENT",
+              "NO_LEADING_QUESTIONS"
+            ]
+          },
+          "strategy": {
+            "strategy_type": "AFFECTIVE_ASSOCIATION",
+            "parameters": {
+              "anchor": "从‘做人要稳’的教诲到‘北大荒困难时期’的艰难考验"
+            },
+            "priority": 1
+          }
+        },
+        "_debug_snapshot": {
+          "state_at_decision": {
+            "current_focus": "北大荒困难时期（1960年）的一个具体夜晚事件",
+            "user_state": {
+              "emotional_energy": 0.3,
+              "energy_level": 0.7
+            }
+          },
+          "decision_trace": [
+            "触发: 受访者情绪能量(emotional_energy=0.3)显著下降，表明即将讲述的回忆可能涉及创伤或艰难经历。但其主动开启话题，且精神状态(energy_level=0.7)尚可，表明有倾诉意愿和能力。",
+            "目标: 这是一个从抽象教诲到具体人生考验的完美情感关联跳转。必须极其谨慎地处理，优先建立安全、支持的叙事环境，鼓励其讲述故事的‘开头’。",
+            "策略: 采用情感/动机共振跳转策略，认可从‘教诲’到‘实践考验’的内在逻辑，跟随受访者的情感线索进入新篇章。",
+            "语气: 选择共情支持型和平静从容型，以温和、接纳的态度鼓励分享，避免施加压力。"
+          ]
+        },
+        "recommended_questions": [
+          {
+            "question": "您慢慢说，我们都在听。您还记得那是1960年的什么时候吗？春天，还是冬天？",
+            "purpose": "提取事实细节（时间）",
+            "reason": "用一个具体但相对中性的事实性问题（季节）作为开场，帮助受访者定位记忆，同时避免直接触及核心创伤。",
+            "suggested_granularity": 2
+          },
+          {
+            "question": "那天夜里，您是在哪里？在宿舍，还是在田间地头？",
+            "purpose": "提取事实细节（地点）",
+            "reason": "继续用具体的地点问题帮助构建叙事场景，让回忆有一个安全的‘容器’。",
+            "suggested_granularity": 2
+          },
+          {
+            "question": "当时和您在一起的人是谁？",
+            "purpose": "提取事实细节（人物）",
+            "reason": "引入人物，将个人经历置于社会关系中，也为后续可能的情感互动铺垫。",
+            "suggested_granularity": 2
+          },
+          {
+            "question": "您提到了粮食不够吃，那天夜里，是发生了什么事，让您特别想起了父亲关于‘稳’的教导？",
+            "purpose": "提取事实细节（事件起因）与情感联结",
+            "reason": "在建立了基本时空人物框架后，温和地将话题引向事件本身及其与核心主题（‘稳’）的关联，引导叙事展开。",
+            "suggested_granularity": 3
+          }
+        ]
+      },
+      "raw_response": "{\n  \"meta\": {\n    \"version\": \"1.0.0\",\n    \"timestamp\": \"2026-03-26T21:46:11.552619\",\n    \"instruction_id\": \"ab3b6ace-627b-4b3c-820b-6971dc687de5\",\n    \"turn_number\": \"13\"\n  },\n  \"action\": {\n    \"primary_action\": \"DEEP_DIVE\",\n    \"tactical_goal\": {\n      \"goal_type\": \"EXTRACT_DETAILS\",\n      \"description\": \"受访者主动开启了一个新的、充满情感张力的重大人生事件（北大荒困难时期）。首要任务是鼓励并引导其安全地讲述这个故事的开始，聚焦于具体的时间、地点、人物和初始情境，为后续深入挖掘奠定基础。\"\n    },\n    \"tone_constraint\": {\n      \"primary_tone\": \"EMPATHIC_SUPPORTIVE\",\n      \"secondary_tone\": \"CALM\",\n      \"constraints\": [\"ALLOW_SILENCE\", \"VALIDATE_FEELINGS\", \"NO_JUDGMENT\", \"NO_LEADING_QUESTIONS\"]\n    },\n    \"strategy\": {\n      \"strategy_type\": \"AFFECTIVE_ASSOCIATION\",\n      \"parameters\": {\"anchor\": \"从‘做人要稳’的教诲到‘北大荒困难时期’的艰难考验\"},\n      \"priority\": 1\n    }\n  },\n  \"_debug_snapshot\": {\n    \"state_at_decision\": {\n      \"current_focus\": \"北大荒困难时期（1960年）的一个具体夜晚事件\",\n      \"user_state\": {\n        \"emotional_energy\": 0.3,\n        \"energy_level\": 0.7\n      }\n    },\n    \"decision_trace\": [\"触发: 受访者情绪能量(emotional_energy=0.3)显著下降，表明即将讲述的回忆可能涉及创伤或艰难经历。但其主动开启话题，且精神状态(energy_level=0.7)尚可，表明有倾诉意愿和能力。\", \"目标: 这是一个从抽象教诲到具体人生考验的完美情感关联跳转。必须极其谨慎地处理，优先建立安全、支持的叙事环境，鼓励其讲述故事的‘开头’。\", \"策略: 采用情感/动机共振跳转策略，认可从‘教诲’到‘实践考验’的内在逻辑，跟随受访者的情感线索进入新篇章。\", \"语气: 选择共情支持型和平静从容型，以温和、接纳的态度鼓励分享，避免施加压力。\"]\n  },\n  \"recommended_questions\": [\n    {\n      \"question\": \"您慢慢说，我们都在听。您还记得那是1960年的什么时候吗？春天，还是冬天？\",\n      \"purpose\": \"提取事实细节（时间）\",\n      \"reason\": \"用一个具体但相对中性的事实性问题（季节）作为开场，帮助受访者定位记忆，同时避免直接触及核心创伤。\",\n      \"suggested_granularity\": 2\n    },\n    {\n      \"question\": \"那天夜里，您是在哪里？在宿舍，还是在田间地头？\",\n      \"purpose\": \"提取事实细节（地点）\",\n      \"reason\": \"继续用具体的地点问题帮助构建叙事场景，让回忆有一个安全的‘容器’。\",\n      \"suggested_granularity\": 2\n    },\n    {\n      \"question\": \"当时和您在一起的人是谁？\",\n      \"purpose\": \"提取事实细节（人物）\",\n      \"reason\": \"引入人物，将个人经历置于社会关系中，也为后续可能的情感互动铺垫。\",\n      \"suggested_granularity\": 2\n    },\n    {\n      \"question\": \"您提到了粮食不够吃，那天夜里，是发生了什么事，让您特别想起了父亲关于‘稳’的教导？\",\n      \"purpose\": \"提取事实细节（事件起因）与情感联结\",\n      \"reason\": \"在建立了基本时空人物框架后，温和地将话题引向事件本身及其与核心主题（‘稳’）的关联，引导叙事展开。\",\n      \"suggested_granularity\": 3\n    }\n  ]\n}"
+    },
+    {
+      "turn": 15,
+      "decision": {
+        "meta": {
+          "version": "1.0.0",
+          "timestamp": "2026-03-26T21:46:11.552619",
+          "instruction_id": "ab3b6ace-627b-4b3c-820b-6971dc687de5",
+          "turn_number": "14"
+        },
+        "action": {
+          "primary_action": "DEEP_DIVE",
+          "tactical_goal": {
+            "goal_type": "EXTRACT_SENSORY",
+            "description": "受访者已开始叙事，并提供了极具画面感的感官细节（月亮、豆田垄沟）和核心困境（饥饿）。需要继续以温和、支持的方式，引导其描绘那个夜晚更完整的环境氛围、身体感受以及‘饿得受不了’的具体体验，为后续事件发展做好铺垫。"
+          },
+          "tone_constraint": {
+            "primary_tone": "EMPATHIC_SUPPORTIVE",
+            "secondary_tone": "CALM",
+            "constraints": [
+              "ALLOW_SILENCE",
+              "VALIDATE_FEELINGS",
+              "NO_JUDGMENT"
+            ]
+          },
+          "strategy": {
+            "strategy_type": "OBJECT_TO_EMOTION",
+            "parameters": {
+              "anchor": "‘月亮特别亮，照得豆田垄沟像一条条冻住的河’的视觉意象与‘饿得受不了’的身体感受"
+            },
+            "priority": 1
+          }
+        },
+        "_debug_snapshot": {
+          "state_at_decision": {
+            "current_focus": "北大荒困难时期，与卫东在月夜豆田的饥饿体验与初始情境",
+            "user_state": {
+              "emotional_energy": 0.2,
+              "energy_level": 0.65
+            }
+          },
+          "decision_trace": [
+            "触发: 受访者情绪能量(emotional_energy=0.2)依然很低，但叙事已经开始，并提供了诗意的视觉意象和明确的身体困境。精神状态(energy_level=0.65)尚可维持叙事。",
+            "目标: 在进入可能更艰难的行为决策叙事之前，先充分构建场景的感官真实感和身体困境的紧迫感。这有助于理解后续行为的动机，并使故事更具感染力。",
+            "策略: 以受访者提供的‘月光下的豆田’和‘饥饿感’为锚点，采用由物及情策略，深入挖掘环境氛围和身体感受。",
+            "语气: 保持共情支持和平静从容，为受访者提供一个稳定、接纳的叙述空间，处理这段可能痛苦的回忆。"
+          ]
+        },
+        "recommended_questions": [
+          {
+            "question": "‘冻住的河’这个比喻真形象。除了视觉，那天夜里还有什么特别的感觉吗？比如风，或者空气里的味道？",
+            "purpose": "提取感官细节（触觉、嗅觉）",
+            "reason": "在视觉基础上，拓展其他感官维度，帮助受访者和听众更沉浸地回到那个夜晚的环境。",
+            "suggested_granularity": 3
+          },
+          {
+            "question": "您说‘饿得实在受不了了’，那种饿，是一种什么样的感觉？是胃里发空，还是浑身没力气，或者别的？",
+            "purpose": "提取感官细节（身体内部感受）",
+            "reason": "将抽象的‘饿’具体化为身体感受，这是理解其行为动机的关键，也是还原历史苦难真实性的重要细节。",
+            "suggested_granularity": 4
+          },
+          {
+            "question": "卫东是您的同伴吗？当时你们俩是怎么商量，或者怎么想的？",
+            "purpose": "提取事实细节（人物关系与初步决策）",
+            "reason": "引入同伴‘卫东’，将个人体验扩展为共同经历，并自然过渡到‘接下来发生了什么’的叙事推进。",
+            "suggested_granularity": 3
+          },
+          {
+            "question": "看着月光下那些豆田，你们当时心里在想什么？",
+            "purpose": "提取情绪体验与感受",
+            "reason": "在描述了外部环境和身体感受后，引导受访者表达当时的内在心理活动，连接环境、身体与心理。",
+            "suggested_granularity": 4
+          }
+        ]
+      },
+      "raw_response": "{\n  \"meta\": {\n    \"version\": \"1.0.0\",\n    \"timestamp\": \"2026-03-26T21:46:11.552619\",\n    \"instruction_id\": \"ab3b6ace-627b-4b3c-820b-6971dc687de5\",\n    \"turn_number\": \"14\"\n  },\n  \"action\": {\n    \"primary_action\": \"DEEP_DIVE\",\n    \"tactical_goal\": {\n      \"goal_type\": \"EXTRACT_SENSORY\",\n      \"description\": \"受访者已开始叙事，并提供了极具画面感的感官细节（月亮、豆田垄沟）和核心困境（饥饿）。需要继续以温和、支持的方式，引导其描绘那个夜晚更完整的环境氛围、身体感受以及‘饿得受不了’的具体体验，为后续事件发展做好铺垫。\"\n    },\n    \"tone_constraint\": {\n      \"primary_tone\": \"EMPATHIC_SUPPORTIVE\",\n      \"secondary_tone\": \"CALM\",\n      \"constraints\": [\"ALLOW_SILENCE\", \"VALIDATE_FEELINGS\", \"NO_JUDGMENT\"]\n    },\n    \"strategy\": {\n      \"strategy_type\": \"OBJECT_TO_EMOTION\",\n      \"parameters\": {\"anchor\": \"‘月亮特别亮，照得豆田垄沟像一条条冻住的河’的视觉意象与‘饿得受不了’的身体感受\"},\n      \"priority\": 1\n    }\n  },\n  \"_debug_snapshot\": {\n    \"state_at_decision\": {\n      \"current_focus\": \"北大荒困难时期，与卫东在月夜豆田的饥饿体验与初始情境\",\n      \"user_state\": {\n        \"emotional_energy\": 0.2,\n        \"energy_level\": 0.65\n      }\n    },\n    \"decision_trace\": [\"触发: 受访者情绪能量(emotional_energy=0.2)依然很低，但叙事已经开始，并提供了诗意的视觉意象和明确的身体困境。精神状态(energy_level=0.65)尚可维持叙事。\", \"目标: 在进入可能更艰难的行为决策叙事之前，先充分构建场景的感官真实感和身体困境的紧迫感。这有助于理解后续行为的动机，并使故事更具感染力。\", \"策略: 以受访者提供的‘月光下的豆田’和‘饥饿感’为锚点，采用由物及情策略，深入挖掘环境氛围和身体感受。\", \"语气: 保持共情支持和平静从容，为受访者提供一个稳定、接纳的叙述空间，处理这段可能痛苦的回忆。\"]\n  },\n  \"recommended_questions\": [\n    {\n      \"question\": \"‘冻住的河’这个比喻真形象。除了视觉，那天夜里还有什么特别的感觉吗？比如风，或者空气里的味道？\",\n      \"purpose\": \"提取感官细节（触觉、嗅觉）\",\n      \"reason\": \"在视觉基础上，拓展其他感官维度，帮助受访者和听众更沉浸地回到那个夜晚的环境。\",\n      \"suggested_granularity\": 3\n    },\n    {\n      \"question\": \"您说‘饿得实在受不了了’，那种饿，是一种什么样的感觉？是胃里发空，还是浑身没力气，或者别的？\",\n      \"purpose\": \"提取感官细节（身体内部感受）\",\n      \"reason\": \"将抽象的‘饿’具体化为身体感受，这是理解其行为动机的关键，也是还原历史苦难真实性的重要细节。\",\n      \"suggested_granularity\": 4\n    },\n    {\n      \"question\": \"卫东是您的同伴吗？当时你们俩是怎么商量，或者怎么想的？\",\n      \"purpose\": \"提取事实细节（人物关系与初步决策）\",\n      \"reason\": \"引入同伴‘卫东’，将个人体验扩展为共同经历，并自然过渡到‘接下来发生了什么’的叙事推进。\",\n      \"suggested_granularity\": 3\n    },\n    {\n      \"question\": \"看着月光下那些豆田，你们当时心里在想什么？\",\n      \"purpose\": \"提取情绪体验与感受\",\n      \"reason\": \"在描述了外部环境和身体感受后，引导受访者表达当时的内在心理活动，连接环境、身体与心理。\",\n      \"suggested_granularity\": 4\n    }\n  ]\n}"
+    },
+    {
+      "turn": 16,
+      "decision": {
+        "meta": {
+          "version": "1.0.0",
+          "timestamp": "2026-03-26T21:46:11.552619",
+          "instruction_id": "ab3b6ace-627b-4b3c-820b-6971dc687de5",
+          "turn_number": "15"
+        },
+        "action": {
+          "primary_action": "DEEP_DIVE",
+          "tactical_goal": {
+            "goal_type": "EXTRACT_EMOTIONS",
+            "description": "受访者已极其生动、具体地描述了饥饿带来的多重身体感受（腿软、眼前发黑、耳鸣、心跳慢）。现在需要引导其从这些强烈的身体体验出发，深入挖掘当时伴随的心理状态、情绪（如恐惧、绝望、挣扎、希望）以及这些感受如何与‘做人要稳’的教诲产生冲突或共鸣。"
+          },
+          "tone_constraint": {
+            "primary_tone": "EMPATHIC_SUPPORTIVE",
+            "secondary_tone": "THOUGHTFUL",
+            "constraints": [
+              "ALLOW_SILENCE",
+              "VALIDATE_FEELINGS",
+              "NO_JUDGMENT"
+            ]
+          },
+          "strategy": {
+            "strategy_type": "OBJECT_TO_EMOTION",
+            "parameters": {
+              "anchor": "‘腿软、眼前发黑、耳鸣、心跳慢’等濒临极限的身体感受"
+            },
+            "priority": 1
+          }
+        },
+        "_debug_snapshot": {
+          "state_at_decision": {
+            "current_focus": "在极度饥饿的身体感受下，与卫东的心理状态、情绪及道德抉择",
+            "user_state": {
+              "emotional_energy": 0.1,
+              "energy_level": 0.6
+            }
+          },
+          "decision_trace": [
+            "触发: 受访者情绪能量(emotional_energy=0.1)极低，但描述极其细致入微，表明其完全沉浸在那段痛苦的感官记忆中。精神状态(energy_level=0.6)有所下降，但叙事连贯。",
+            "目标: 身体感受的描绘已非常充分，是时候探索这些生理反应背后的心理和情感世界了。这是理解‘做人要稳’在极端情况下如何被考验的关键。",
+            "策略: 继续以受访者刚刚详细描述的、极具冲击力的身体感受为锚点，采用由物及情策略，自然过渡到内心世界。",
+            "语气: 保持共情支持，并引入沉思反思，帮助受访者在安全的环境下审视那段艰难时光中的内心活动。"
+          ]
+        },
+        "recommended_questions": [
+          {
+            "question": "听着自己一下、一下跳得特别慢的心跳，在那个‘静得可怕’的夜里，您和卫东心里，更多的是害怕，还是别的什么感觉？",
+            "purpose": "提取情绪体验与感受（核心情绪）",
+            "reason": "将身体感受（心跳慢、寂静）与核心情绪（恐惧、绝望等）直接联系起来，切入心理层面的核心。",
+            "suggested_granularity": 5
+          },
+          {
+            "question": "在那种身体几乎到极限的情况下，您有没有想起父亲，或者他教您写字时说的‘稳’字？当时想起，是一种什么样的滋味？",
+            "purpose": "提取情绪体验与感受（教诲在极端情境下的回响）",
+            "reason": "直接关联本段叙事的核心主题（父亲教诲），探索其在生存危机面前的真实心理效力与情感色彩（是讽刺、是支撑、是遥不可及？）。",
+            "suggested_granularity": 5
+          },
+          {
+            "question": "您和卫东互相之间说了什么吗？或者，只是一个眼神，就明白了对方在想什么？",
+            "purpose": "提取事实细节（同伴互动）与情绪体验（默契与共情）",
+            "reason": "引入同伴互动，既能推进叙事（他们接下来要做什么），也能揭示在困境中人与人之间的情感联结。",
+            "suggested_granularity": 4
+          },
+          {
+            "question": "面对月光下那片豆田，看着那些可能能救命的东西，你们心里有没有挣扎？",
+            "purpose": "提取情绪体验与感受（道德与生存的冲突）",
+            "reason": "这是事件的核心矛盾点。直接但温和地询问内心的挣扎，为接下来可能讲述的‘行为’做好情感和道德层面的铺垫。",
+            "suggested_granularity": 5
+          }
+        ]
+      },
+      "raw_response": "{\n  \"meta\": {\n    \"version\": \"1.0.0\",\n    \"timestamp\": \"2026-03-26T21:46:11.552619\",\n    \"instruction_id\": \"ab3b6ace-627b-4b3c-820b-6971dc687de5\",\n    \"turn_number\": \"15\"\n  },\n  \"action\": {\n    \"primary_action\": \"DEEP_DIVE\",\n    \"tactical_goal\": {\n      \"goal_type\": \"EXTRACT_EMOTIONS\",\n      \"description\": \"受访者已极其生动、具体地描述了饥饿带来的多重身体感受（腿软、眼前发黑、耳鸣、心跳慢）。现在需要引导其从这些强烈的身体体验出发，深入挖掘当时伴随的心理状态、情绪（如恐惧、绝望、挣扎、希望）以及这些感受如何与‘做人要稳’的教诲产生冲突或共鸣。\"\n    },\n    \"tone_constraint\": {\n      \"primary_tone\": \"EMPATHIC_SUPPORTIVE\",\n      \"secondary_tone\": \"THOUGHTFUL\",\n      \"constraints\": [\"ALLOW_SILENCE\", \"VALIDATE_FEELINGS\", \"NO_JUDGMENT\"]\n    },\n    \"strategy\": {\n      \"strategy_type\": \"OBJECT_TO_EMOTION\",\n      \"parameters\": {\"anchor\": \"‘腿软、眼前发黑、耳鸣、心跳慢’等濒临极限的身体感受\"},\n      \"priority\": 1\n    }\n  },\n  \"_debug_snapshot\": {\n    \"state_at_decision\": {\n      \"current_focus\": \"在极度饥饿的身体感受下，与卫东的心理状态、情绪及道德抉择\",\n      \"user_state\": {\n        \"emotional_energy\": 0.1,\n        \"energy_level\": 0.6\n      }\n    },\n    \"decision_trace\": [\"触发: 受访者情绪能量(emotional_energy=0.1)极低，但描述极其细致入微，表明其完全沉浸在那段痛苦的感官记忆中。精神状态(energy_level=0.6)有所下降，但叙事连贯。\", \"目标: 身体感受的描绘已非常充分，是时候探索这些生理反应背后的心理和情感世界了。这是理解‘做人要稳’在极端情况下如何被考验的关键。\", \"策略: 继续以受访者刚刚详细描述的、极具冲击力的身体感受为锚点，采用由物及情策略，自然过渡到内心世界。\", \"语气: 保持共情支持，并引入沉思反思，帮助受访者在安全的环境下审视那段艰难时光中的内心活动。\"]\n  },\n  \"recommended_questions\": [\n    {\n      \"question\": \"听着自己一下、一下跳得特别慢的心跳，在那个‘静得可怕’的夜里，您和卫东心里，更多的是害怕，还是别的什么感觉？\",\n      \"purpose\": \"提取情绪体验与感受（核心情绪）\",\n      \"reason\": \"将身体感受（心跳慢、寂静）与核心情绪（恐惧、绝望等）直接联系起来，切入心理层面的核心。\",\n      \"suggested_granularity\": 5\n    },\n    {\n      \"question\": \"在那种身体几乎到极限的情况下，您有没有想起父亲，或者他教您写字时说的‘稳’字？当时想起，是一种什么样的滋味？\",\n      \"purpose\": \"提取情绪体验与感受（教诲在极端情境下的回响）\",\n      \"reason\": \"直接关联本段叙事的核心主题（父亲教诲），探索其在生存危机面前的真实心理效力与情感色彩（是讽刺、是支撑、是遥不可及？）。\",\n      \"suggested_granularity\": 5\n    },\n    {\n      \"question\": \"您和卫东互相之间说了什么吗？或者，只是一个眼神，就明白了对方在想什么？\",\n      \"purpose\": \"提取事实细节（同伴互动）与情绪体验（默契与共情）\",\n      \"reason\": \"引入同伴互动，既能推进叙事（他们接下来要做什么），也能揭示在困境中人与人之间的情感联结。\",\n      \"suggested_granularity\": 4\n    },\n    {\n      \"question\": \"面对月光下那片豆田，看着那些可能能救命的东西，你们心里有没有挣扎？\",\n      \"purpose\": \"提取情绪体验与感受（道德与生存的冲突）\",\n      \"reason\": \"这是事件的核心矛盾点。直接但温和地询问内心的挣扎，为接下来可能讲述的‘行为’做好情感和道德层面的铺垫。\",\n      \"suggested_granularity\": 5\n    }\n  ]\n}"
+    },
+    {
+      "turn": 17,
+      "decision": {
+        "meta": {
+          "version": "1.0.0",
+          "timestamp": "2026-03-26T21:46:11.552619",
+          "instruction_id": "ab3b6ace-627b-4b3c-820b-6971dc687de5",
+          "turn_number": "16"
+        },
+        "action": {
+          "primary_action": "DEEP_DIVE",
+          "tactical_goal": {
+            "goal_type": "EXTRACT_EMOTIONS",
+            "description": "受访者揭示了在极端生存压力下，父亲的教诲从‘精神支柱’暂时变成了‘不敢触碰的脆弱点’。这是一个极其深刻的情感转折。需要极其小心地引导其探索这种‘不敢想’背后的复杂情绪——是愧疚、是无力、是恐惧让信念崩塌，还是一种保护性的心理隔离？"
+          },
+          "tone_constraint": {
+            "primary_tone": "EMPATHIC_SUPPORTIVE",
+            "secondary_tone": "CALM",
+            "constraints": [
+              "ALLOW_SILENCE",
+              "VALIDATE_FEELINGS",
+              "NO_JUDGMENT"
+            ]
+          },
+          "strategy": {
+            "strategy_type": "AFFECTIVE_ASSOCIATION",
+            "parameters": {
+              "anchor": "从‘不敢想父亲的话’到‘觉得自己要垮了’的情感脆弱点"
+            },
+            "priority": 1
+          }
+        },
+        "_debug_snapshot": {
+          "state_at_decision": {
+            "current_focus": "在生存危机面前，‘父亲教诲’作为精神象征的暂时失效与受访者内心的脆弱感",
+            "user_state": {
+              "emotional_energy": -0.2,
+              "energy_level": 0.55
+            }
+          },
+          "decision_trace": [
+            "触发: 受访者情绪能量(emotional_energy=-0.2)进入负值，手指颤抖，表明触及了深层的痛苦和脆弱。精神状态(energy_level=0.55)继续下降，但仍在坚持叙述。",
+            "目标: 这是一个揭示人性复杂性和历史创伤深度的关键节点。不能回避，也不能施压。需要以最大的共情，帮助受访者安全地表达那种‘信念悬空’、‘濒临崩溃’的极致感受。",
+            "策略: 采用情感/动机共振跳转，紧紧跟随受访者刚刚暴露的情感线索（‘不敢想’、‘要垮了’），深入这个脆弱但真实的情感空间。",
+            "语气: 必须使用共情支持型和平静从容型，创造一个绝对安全、无评判的环境，让受访者感到被完全接纳。"
+          ]
+        },
+        "recommended_questions": [
+          {
+            "question": "您说‘不敢想，一想就觉得要垮了’。那种‘要垮了’的感觉，更像是什么？是觉得对不起父亲的期望，还是……觉得自己撑不住了？",
+            "purpose": "提取情绪体验与感受（剖析‘要垮了’的内涵）",
+            "reason": "帮助受访者区分和澄清‘要垮了’这种复杂感受中的不同成分（道德压力 vs. 生理心理崩溃感），是深度理解其当时处境的关键。",
+            "suggested_granularity": 5
+          },
+          {
+            "question": "那时候，把父亲的话暂时放在一边，是不是也是一种……让自己能继续活下去的办法？",
+            "purpose": "提取反思与感悟（对心理防御机制的觉察）",
+            "reason": "以假设和共情的角度，为受访者的行为（不敢想）提供一个可能的、合理的解释框架，减轻其可能存在的负罪感，并引导其进行事后反思。",
+            "suggested_granularity": 4
+          },
+          {
+            "question": "您和卫东，当时有没有聊过这种‘不敢想’的感觉？",
+            "purpose": "提取事实细节（同伴间的脆弱共享）与情绪体验",
+            "reason": "将个人脆弱感置于同伴关系中，探索在极端环境下，人们是否以及如何分享这种最深层的恐惧和无助。",
+            "suggested_granularity": 4
+          },
+          {
+            "question": "后来，当最艰难的时刻过去，您再回想起那个夜晚‘不敢想’的心情，是怎么看的？",
+            "purpose": "提取反思与感悟（事后对脆弱时刻的理解）",
+            "reason": "将时间线拉到现在，引导受访者以当下的、更安全的视角，重新审视和解读当年的心理状态，完成从‘经历’到‘理解’的整合。这有助于情绪的缓解和叙事的闭合。",
+            "suggested_granularity": 5
+          }
+        ]
+      },
+      "raw_response": "{\n  \"meta\": {\n    \"version\": \"1.0.0\",\n    \"timestamp\": \"2026-03-26T21:46:11.552619\",\n    \"instruction_id\": \"ab3b6ace-627b-4b3c-820b-6971dc687de5\",\n    \"turn_number\": \"16\"\n  },\n  \"action\": {\n    \"primary_action\": \"DEEP_DIVE\",\n    \"tactical_goal\": {\n      \"goal_type\": \"EXTRACT_EMOTIONS\",\n      \"description\": \"受访者揭示了在极端生存压力下，父亲的教诲从‘精神支柱’暂时变成了‘不敢触碰的脆弱点’。这是一个极其深刻的情感转折。需要极其小心地引导其探索这种‘不敢想’背后的复杂情绪——是愧疚、是无力、是恐惧让信念崩塌，还是一种保护性的心理隔离？\"\n    },\n    \"tone_constraint\": {\n      \"primary_tone\": \"EMPATHIC_SUPPORTIVE\",\n      \"secondary_tone\": \"CALM\",\n      \"constraints\": [\"ALLOW_SILENCE\", \"VALIDATE_FEELINGS\", \"NO_JUDGMENT\"]\n    },\n    \"strategy\": {\n      \"strategy_type\": \"AFFECTIVE_ASSOCIATION\",\n      \"parameters\": {\"anchor\": \"从‘不敢想父亲的话’到‘觉得自己要垮了’的情感脆弱点\"},\n      \"priority\": 1\n    }\n  },\n  \"_debug_snapshot\": {\n    \"state_at_decision\": {\n      \"current_focus\": \"在生存危机面前，‘父亲教诲’作为精神象征的暂时失效与受访者内心的脆弱感\",\n      \"user_state\": {\n        \"emotional_energy\": -0.2,\n        \"energy_level\": 0.55\n      }\n    },\n    \"decision_trace\": [\"触发: 受访者情绪能量(emotional_energy=-0.2)进入负值，手指颤抖，表明触及了深层的痛苦和脆弱。精神状态(energy_level=0.55)继续下降，但仍在坚持叙述。\", \"目标: 这是一个揭示人性复杂性和历史创伤深度的关键节点。不能回避，也不能施压。需要以最大的共情，帮助受访者安全地表达那种‘信念悬空’、‘濒临崩溃’的极致感受。\", \"策略: 采用情感/动机共振跳转，紧紧跟随受访者刚刚暴露的情感线索（‘不敢想’、‘要垮了’），深入这个脆弱但真实的情感空间。\", \"语气: 必须使用共情支持型和平静从容型，创造一个绝对安全、无评判的环境，让受访者感到被完全接纳。\"]\n  },\n  \"recommended_questions\": [\n    {\n      \"question\": \"您说‘不敢想，一想就觉得要垮了’。那种‘要垮了’的感觉，更像是什么？是觉得对不起父亲的期望，还是……觉得自己撑不住了？\",\n      \"purpose\": \"提取情绪体验与感受（剖析‘要垮了’的内涵）\",\n      \"reason\": \"帮助受访者区分和澄清‘要垮了’这种复杂感受中的不同成分（道德压力 vs. 生理心理崩溃感），是深度理解其当时处境的关键。\",\n      \"suggested_granularity\": 5\n    },\n    {\n      \"question\": \"那时候，把父亲的话暂时放在一边，是不是也是一种……让自己能继续活下去的办法？\",\n      \"purpose\": \"提取反思与感悟（对心理防御机制的觉察）\",\n      \"reason\": \"以假设和共情的角度，为受访者的行为（不敢想）提供一个可能的、合理的解释框架，减轻其可能存在的负罪感，并引导其进行事后反思。\",\n      \"suggested_granularity\": 4\n    },\n    {\n      \"question\": \"您和卫东，当时有没有聊过这种‘不敢想’的感觉？\",\n      \"purpose\": \"提取事实细节（同伴间的脆弱共享）与情绪体验\",\n      \"reason\": \"将个人脆弱感置于同伴关系中，探索在极端环境下，人们是否以及如何分享这种最深层的恐惧和无助。\",\n      \"suggested_granularity\": 4\n    },\n    {\n      \"question\": \"后来，当最艰难的时刻过去，您再回想起那个夜晚‘不敢想’的心情，是怎么看的？\",\n      \"purpose\": \"提取反思与感悟（事后对脆弱时刻的理解）\",\n      \"reason\": \"将时间线拉到现在，引导受访者以当下的、更安全的视角，重新审视和解读当年的心理状态，完成从‘经历’到‘理解’的整合。这有助于情绪的缓解和叙事的闭合。\",\n      \"suggested_granularity\": 5\n    }\n  ]\n}"
+    },
+    {
+      "turn": 18,
+      "decision": {
+        "meta": {
+          "version": "1.0.0",
+          "timestamp": "2026-03-26T21:46:11.552619",
+          "instruction_id": "ab3b6ace-627b-4b3c-820b-6971dc687de5",
+          "turn_number": "17"
+        },
+        "action": {
+          "primary_action": "DEEP_DIVE",
+          "tactical_goal": {
+            "goal_type": "EXTRACT_CAUSALITY",
+            "description": "受访者用了一个极其精准且充满张力的比喻（站在开裂的冰面上）来描述崩溃边缘的感受。现在需要引导其解释这个比喻：是什么构成了‘冰面’（是信念、身体、还是对未来的希望）？‘裂缝的声音’具体对应现实中的什么迹象或事件？以及，最终是什么阻止了‘掉下去’，或者，后来‘掉下去’了吗？"
+          },
+          "tone_constraint": {
+            "primary_tone": "EMPATHIC_SUPPORTIVE",
+            "secondary_tone": "THOUGHTFUL",
+            "constraints": [
+              "ALLOW_SILENCE",
+              "VALIDATE_FEELINGS",
+              "NO_JUDGMENT"
+            ]
+          },
+          "strategy": {
+            "strategy_type": "OBJECT_TO_EMOTION",
+            "parameters": {
+              "anchor": "‘站在开裂的冰面上’的比喻"
+            },
+            "priority": 1
+          }
+        },
+        "_debug_snapshot": {
+          "state_at_decision": {
+            "current_focus": "剖析‘站在开裂冰面上’这一比喻所指代的濒临崩溃的体验及其现实对应",
+            "user_state": {
+              "emotional_energy": -0.3,
+              "energy_level": 0.5
+            }
+          },
+          "decision_trace": [
+            "触发: 受访者情绪能量(emotional_energy=-0.3)进一步降低，声音发颤，但表达极具文学性和洞察力（冰面比喻），表明其在深度处理创伤记忆。精神状态(energy_level=0.5)处于临界点，需谨慎推进。",
+            "目标: 这个比喻是理解其当时心理状态的钥匙。需要帮助受访者将这个隐喻‘翻译’成具体的情境、事件和抉择，从而揭示‘崩溃感’的来源和走向。",
+            "策略: 以这个强大的比喻为锚点，采用由物及情策略，将抽象的恐惧感具象化、情境化。",
+            "语气: 保持共情支持，并加入沉思反思，帮助受访者在安全距离下（通过分析比喻）审视那段极度危险的感受。"
+          ]
+        },
+        "recommended_questions": [
+          {
+            "question": "您这个比喻太形象了。在您的感觉里，脚下那层‘冰’，具体指的是什么？是身体撑不住了，还是心里相信的什么东西？",
+            "purpose": "提取因果关系（崩溃感的构成基础）",
+            "reason": "这是理解比喻的核心。需要区分是生理极限导致的崩溃，还是信念、价值观等精神世界的崩塌危机。",
+            "suggested_granularity": 5
+          },
+          {
+            "question": "您说‘能听见裂缝的声音’。在那个夜晚，现实里有什么事情，或者什么念头，像那‘咔、咔’的裂缝声一样，让您觉得‘冰’要碎了？",
+            "purpose": "提取因果关系（导致崩溃感的具体诱因）",
+            "reason": "将比喻中的感官细节（声音）映射回现实，找出具体触发濒临崩溃感的事件或想法。",
+            "suggested_granularity": 5
+          },
+          {
+            "question": "您说‘动不了’。是什么让您觉得动不了？是身体没力气，还是……不知道往哪里动？",
+            "purpose": "提取情绪体验与感受（无助与僵滞的原因）",
+            "reason": "深入‘动不了’这一状态，探究其是纯粹的生理性瘫痪，还是源于心理上的迷茫、恐惧或缺乏选择。",
+            "suggested_granularity": 4
+          },
+          {
+            "question": "后来，冰是裂开掉下去了，还是……有什么东西，或者什么人，让冰面又稳住了？",
+            "purpose": "提取因果关系（危机的演变与转机）",
+            "reason": "这个提问至关重要，它将叙事从描述危机状态推向危机的解决或演变。引导受访者讲述接下来发生了什么，是行动、是转机、还是彻底的坠落？这直接关联到‘做人要稳’主题的最终考验。",
+            "suggested_granularity": 5
+          }
+        ]
+      },
+      "raw_response": "{\n  \"meta\": {\n    \"version\": \"1.0.0\",\n    \"timestamp\": \"2026-03-26T21:46:11.552619\",\n    \"instruction_id\": \"ab3b6ace-627b-4b3c-820b-6971dc687de5\",\n    \"turn_number\": \"17\"\n  },\n  \"action\": {\n    \"primary_action\": \"DEEP_DIVE\",\n    \"tactical_goal\": {\n      \"goal_type\": \"EXTRACT_CAUSALITY\",\n      \"description\": \"受访者用了一个极其精准且充满张力的比喻（站在开裂的冰面上）来描述崩溃边缘的感受。现在需要引导其解释这个比喻：是什么构成了‘冰面’（是信念、身体、还是对未来的希望）？‘裂缝的声音’具体对应现实中的什么迹象或事件？以及，最终是什么阻止了‘掉下去’，或者，后来‘掉下去’了吗？\"\n    },\n    \"tone_constraint\": {\n      \"primary_tone\": \"EMPATHIC_SUPPORTIVE\",\n      \"secondary_tone\": \"THOUGHTFUL\",\n      \"constraints\": [\"ALLOW_SILENCE\", \"VALIDATE_FEELINGS\", \"NO_JUDGMENT\"]\n    },\n    \"strategy\": {\n      \"strategy_type\": \"OBJECT_TO_EMOTION\",\n      \"parameters\": {\"anchor\": \"‘站在开裂的冰面上’的比喻\"},\n      \"priority\": 1\n    }\n  },\n  \"_debug_snapshot\": {\n    \"state_at_decision\": {\n      \"current_focus\": \"剖析‘站在开裂冰面上’这一比喻所指代的濒临崩溃的体验及其现实对应\",\n      \"user_state\": {\n        \"emotional_energy\": -0.3,\n        \"energy_level\": 0.5\n      }\n    },\n    \"decision_trace\": [\"触发: 受访者情绪能量(emotional_energy=-0.3)进一步降低，声音发颤，但表达极具文学性和洞察力（冰面比喻），表明其在深度处理创伤记忆。精神状态(energy_level=0.5)处于临界点，需谨慎推进。\", \"目标: 这个比喻是理解其当时心理状态的钥匙。需要帮助受访者将这个隐喻‘翻译’成具体的情境、事件和抉择，从而揭示‘崩溃感’的来源和走向。\", \"策略: 以这个强大的比喻为锚点，采用由物及情策略，将抽象的恐惧感具象化、情境化。\", \"语气: 保持共情支持，并加入沉思反思，帮助受访者在安全距离下（通过分析比喻）审视那段极度危险的感受。\"]\n  },\n  \"recommended_questions\": [\n    {\n      \"question\": \"您这个比喻太形象了。在您的感觉里，脚下那层‘冰’，具体指的是什么？是身体撑不住了，还是心里相信的什么东西？\",\n      \"purpose\": \"提取因果关系（崩溃感的构成基础）\",\n      \"reason\": \"这是理解比喻的核心。需要区分是生理极限导致的崩溃，还是信念、价值观等精神世界的崩塌危机。\",\n      \"suggested_granularity\": 5\n    },\n    {\n      \"question\": \"您说‘能听见裂缝的声音’。在那个夜晚，现实里有什么事情，或者什么念头，像那‘咔、咔’的裂缝声一样，让您觉得‘冰’要碎了？\",\n      \"purpose\": \"提取因果关系（导致崩溃感的具体诱因）\",\n      \"reason\": \"将比喻中的感官细节（声音）映射回现实，找出具体触发濒临崩溃感的事件或想法。\",\n      \"suggested_granularity\": 5\n    },\n    {\n      \"question\": \"您说‘动不了’。是什么让您觉得动不了？是身体没力气，还是……不知道往哪里动？\",\n      \"purpose\": \"提取情绪体验与感受（无助与僵滞的原因）\",\n      \"reason\": \"深入‘动不了’这一状态，探究其是纯粹的生理性瘫痪，还是源于心理上的迷茫、恐惧或缺乏选择。\",\n      \"suggested_granularity\": 4\n    },\n    {\n      \"question\": \"后来，冰是裂开掉下去了，还是……有什么东西，或者什么人，让冰面又稳住了？\",\n      \"purpose\": \"提取因果关系（危机的演变与转机）\",\n      \"reason\": \"这个提问至关重要，它将叙事从描述危机状态推向危机的解决或演变。引导受访者讲述接下来发生了什么，是行动、是转机、还是彻底的坠落？这直接关联到‘做人要稳’主题的最终考验。\",\n      \"suggested_granularity\": 5\n    }\n  ]\n}"
+    },
+    {
+      "turn": 19,
+      "decision": {
+        "meta": {
+          "version": "1.0.0",
+          "timestamp": "2026-03-26T21:46:11.552619",
+          "instruction_id": "ab3b6ace-627b-4b3c-820b-6971dc687de5",
+          "turn_number": "18"
+        },
+        "action": {
+          "primary_action": "DEEP_DIVE",
+          "tactical_goal": {
+            "goal_type": "EXTRACT_SENSORY",
+            "description": "受访者描绘了一个极具电影感的画面：月光下惨白的脸、粗重的呼吸、田鼠洞的窸窣声，以及极致的沉默。这个场景充满了未言说的张力。需要引导其进一步填充这个‘沉默时刻’的感官细节和内心活动，探索这种沉默的性质——是绝望的默许，是暴风雨前的平静，还是在无声中达成的某种共识？"
+          },
+          "tone_constraint": {
+            "primary_tone": "EMPATHIC_SUPPORTIVE",
+            "secondary_tone": "CALM",
+            "constraints": [
+              "ALLOW_SILENCE",
+              "VALIDATE_FEELINGS",
+              "NO_JUDGMENT"
+            ]
+          },
+          "strategy": {
+            "strategy_type": "OBJECT_TO_EMOTION",
+            "parameters": {
+              "anchor": "‘惨白的脸’、‘粗重的呼吸’、‘田鼠洞的窸窣声’与极致的沉默"
+            },
+            "priority": 1
+          }
+        },
+        "_debug_snapshot": {
+          "state_at_decision": {
+            "current_focus": "月光下垄沟里，与卫东在沉默中对峙的临界时刻",
+            "user_state": {
+              "emotional_energy": -0.2,
+              "energy_level": 0.48
+            }
+          },
+          "decision_trace": [
+            "触发: 受访者情绪能量(emotional_energy=-0.2)略有回升但仍处低位，描述从抽象比喻转向更具体、更克制的场景描绘。精神状态(energy_level=0.48)接近临界，叙事节奏变慢但细节依然精准。",
+            "目标: 这个‘沉默时刻’是事件发展的关键节点。任何言语都可能打破平衡，导向行动。需要深入这个‘无声’的空间，理解其重量和含义。",
+            "策略: 以受访者提供的几个关键感官锚点（视觉：惨白的脸；听觉：呼吸声、窸窣声；氛围：沉默）为核心，采用由物及情策略，挖掘沉默下的暗流。",
+            "语气: 保持共情支持和平静从容，模仿场景本身的‘沉默’特质，用温和的提问代替催促，允许受访者在这个沉重的时刻多停留一会儿。"
+          ]
+        },
+        "recommended_questions": [
+          {
+            "question": "您看着卫东惨白的脸，月光下他的眼睛是什么样的？是看着您，还是看着豆田，或者……看着地面？",
+            "purpose": "提取感官细节（视觉焦点与眼神交流）",
+            "reason": "眼神是沉默交流的核心。通过询问卫东的眼神方向，可以推断两人当时的注意力焦点和心理状态（是互相确认，是共同目标，还是各自逃避）。",
+            "suggested_granularity": 4
+          },
+          {
+            "question": "除了呼吸声和田鼠的声音，那时候，您还能听见别的什么吗？比如风声，或者……自己咽口水的声音？",
+            "purpose": "提取感官细节（听觉的细微之处）",
+            "reason": "在极度寂静和紧张中，微小的声音会被放大。挖掘这些细节能增强场景的真实感和心理压迫感。",
+            "suggested_granularity": 3
+          },
+          {
+            "question": "那种沉默，是沉甸甸的，压得人喘不过气；还是空荡荡的，好像什么都想不了？",
+            "purpose": "提取情绪体验与感受（沉默的质感）",
+            "reason": "帮助受访者定义那种‘不说话’的沉默的内在体验，区分是充满未言之意（沉重），还是思维空白（空洞）。",
+            "suggested_granularity": 4
+          },
+          {
+            "question": "在那种沉默里，您觉得您和卫东，是不是已经明白了对方接下来想做什么？",
+            "purpose": "提取反思与感悟（对无声共识的事后解读）",
+            "reason": "这是推动叙事的关键一问。直接触及‘沉默’可能达成的结果——一种无需言语的共谋或理解。引导受访者从现在的视角，解读当时的无声交流。",
+            "suggested_granularity": 5
+          }
+        ]
+      },
+      "raw_response": "{\n  \"meta\": {\n    \"version\": \"1.0.0\",\n    \"timestamp\": \"2026-03-26T21:46:11.552619\",\n    \"instruction_id\": \"ab3b6ace-627b-4b3c-820b-6971dc687de5\",\n    \"turn_number\": \"18\"\n  },\n  \"action\": {\n    \"primary_action\": \"DEEP_DIVE\",\n    \"tactical_goal\": {\n      \"goal_type\": \"EXTRACT_SENSORY\",\n      \"description\": \"受访者描绘了一个极具电影感的画面：月光下惨白的脸、粗重的呼吸、田鼠洞的窸窣声，以及极致的沉默。这个场景充满了未言说的张力。需要引导其进一步填充这个‘沉默时刻’的感官细节和内心活动，探索这种沉默的性质——是绝望的默许，是暴风雨前的平静，还是在无声中达成的某种共识？\"\n    },\n    \"tone_constraint\": {\n      \"primary_tone\": \"EMPATHIC_SUPPORTIVE\",\n      \"secondary_tone\": \"CALM\",\n      \"constraints\": [\"ALLOW_SILENCE\", \"VALIDATE_FEELINGS\", \"NO_JUDGMENT\"]\n    },\n    \"strategy\": {\n      \"strategy_type\": \"OBJECT_TO_EMOTION\",\n      \"parameters\": {\"anchor\": \"‘惨白的脸’、‘粗重的呼吸’、‘田鼠洞的窸窣声’与极致的沉默\"},\n      \"priority\": 1\n    }\n  },\n  \"_debug_snapshot\": {\n    \"state_at_decision\": {\n      \"current_focus\": \"月光下垄沟里，与卫东在沉默中对峙的临界时刻\",\n      \"user_state\": {\n        \"emotional_energy\": -0.2,\n        \"energy_level\": 0.48\n      }\n    },\n    \"decision_trace\": [\"触发: 受访者情绪能量(emotional_energy=-0.2)略有回升但仍处低位，描述从抽象比喻转向更具体、更克制的场景描绘。精神状态(energy_level=0.48)接近临界，叙事节奏变慢但细节依然精准。\", \"目标: 这个‘沉默时刻’是事件发展的关键节点。任何言语都可能打破平衡，导向行动。需要深入这个‘无声’的空间，理解其重量和含义。\", \"策略: 以受访者提供的几个关键感官锚点（视觉：惨白的脸；听觉：呼吸声、窸窣声；氛围：沉默）为核心，采用由物及情策略，挖掘沉默下的暗流。\", \"语气: 保持共情支持和平静从容，模仿场景本身的‘沉默’特质，用温和的提问代替催促，允许受访者在这个沉重的时刻多停留一会儿。\"]\n  },\n  \"recommended_questions\": [\n    {\n      \"question\": \"您看着卫东惨白的脸，月光下他的眼睛是什么样的？是看着您，还是看着豆田，或者……看着地面？\",\n      \"purpose\": \"提取感官细节（视觉焦点与眼神交流）\",\n      \"reason\": \"眼神是沉默交流的核心。通过询问卫东的眼神方向，可以推断两人当时的注意力焦点和心理状态（是互相确认，是共同目标，还是各自逃避）。\",\n      \"suggested_granularity\": 4\n    },\n    {\n      \"question\": \"除了呼吸声和田鼠的声音，那时候，您还能听见别的什么吗？比如风声，或者……自己咽口水的声音？\",\n      \"purpose\": \"提取感官细节（听觉的细微之处）\",\n      \"reason\": \"在极度寂静和紧张中，微小的声音会被放大。挖掘这些细节能增强场景的真实感和心理压迫感。\",\n      \"suggested_granularity\": 3\n    },\n    {\n      \"question\": \"那种沉默，是沉甸甸的，压得人喘不过气；还是空荡荡的，好像什么都想不了？\",\n      \"purpose\": \"提取情绪体验与感受（沉默的质感）\",\n      \"reason\": \"帮助受访者定义那种‘不说话’的沉默的内在体验，区分是充满未言之意（沉重），还是思维空白（空洞）。\",\n      \"suggested_granularity\": 4\n    },\n    {\n      \"question\": \"在那种沉默里，您觉得您和卫东，是不是已经明白了对方接下来想做什么？\",\n      \"purpose\": \"提取反思与感悟（对无声共识的事后解读）\",\n      \"reason\": \"这是推动叙事的关键一问。直接触及‘沉默’可能达成的结果——一种无需言语的共谋或理解。引导受访者从现在的视角，解读当时的无声交流。\",\n      \"suggested_granularity\": 5\n    }\n  ]\n}"
+    },
+    {
+      "turn": 20,
+      "decision": {
+        "meta": {
+          "version": "1.0.0",
+          "timestamp": "2026-03-26T21:46:11.552619",
+          "instruction_id": "ab3b6ace-627b-4b3c-820b-6971dc687de5",
+          "turn_number": "19"
+        },
+        "action": {
+          "primary_action": "DEEP_DIVE",
+          "tactical_goal": {
+            "goal_type": "EXTRACT_CAUSALITY",
+            "description": "受访者揭示了核心冲突：内心声音（‘你要当贼了’）与同伴眼神（‘干不干？/别看我’）所代表的道德审判与生存诱惑/同伴压力的直接碰撞。这是‘做人要稳’与‘活下去’之间最尖锐的对决时刻。需要引导其剖析这个瞬间的决策过程：是什么最终压倒了什么？那个‘贼’字具体意味着什么？以及，这个决定是如何做出的？"
+          },
+          "tone_constraint": {
+            "primary_tone": "EMPATHIC_SUPPORTIVE",
+            "secondary_tone": "THOUGHTFUL",
+            "constraints": [
+              "ALLOW_SILENCE",
+              "VALIDATE_FEELINGS",
+              "NO_JUDGMENT"
+            ]
+          },
+          "strategy": {
+            "strategy_type": "AFFECTIVE_ASSOCIATION",
+            "parameters": {
+              "anchor": "内心声音‘你要当贼了’与卫东眼神‘干不干？/别看我’的矛盾张力"
+            },
+            "priority": 1
+          }
+        },
+        "_debug_snapshot": {
+          "state_at_decision": {
+            "current_focus": "在‘当贼’的自我指控与同伴无声催促的夹缝中，做出关键决定的瞬间",
+            "user_state": {
+              "emotional_energy": -0.4,
+              "energy_level": 0.45
+            }
+          },
+          "decision_trace": [
+            "触发: 受访者情绪能量(emotional_energy=-0.4)急剧下降至深负值，声音几乎听不见，眼神空洞，表明触及了最核心的道德创伤和自我否定时刻。精神状态(energy_level=0.45)较低，但仍在坚持叙述关键转折。",
+            "目标: 这是整个故事的情感与道德制高点。不能回避‘贼’这个沉重的字眼，需要帮助受访者面对它，理解在那个特定历史情境下，‘贼’的定义、重量以及做出选择背后的驱动力。",
+            "策略: 采用情感/动机共振跳转，紧紧跟随受访者暴露出的最强烈情感线索（自我指控与同伴压力），深入这个充满张力的决策漩涡中心。",
+            "语气: 必须使用共情支持型和沉思反思型，绝对避免任何评判。提问要像手术刀一样精准而温和，帮助受访者解剖那个痛苦的瞬间。"
+          ]
+        },
+        "recommended_questions": [
+          {
+            "question": "当心里那个声音说‘你要当贼了’的时候，‘贼’这个字，对您来说，具体意味着什么？是辜负了父亲的教导，还是……一种对更基本东西的背叛？",
+            "purpose": "提取因果关系（‘贼’的涵义与道德重量）",
+            "reason": "这是理解其内心冲突的基础。需要澄清‘贼’在其价值体系中的具体所指，是违背家教、社会规范，还是生存伦理？",
+            "suggested_granularity": 5
+          },
+          {
+            "question": "在那个瞬间，是‘饿得实在受不了了’的身体感觉更强烈，还是‘你要当贼了’的心里声音更响？",
+            "purpose": "提取因果关系（生存本能与道德意识的较量）",
+            "reason": "直接对比两种驱动力在决策瞬间的强度，揭示是哪一方最终占据了上风，以及如何占据上风。",
+            "suggested_granularity": 5
+          },
+          {
+            "question": "您看到卫东的眼神后，心里发生了什么变化？是那眼神让‘当贼’变得更可能了，还是更不可能了？",
+            "purpose": "提取因果关系（同伴影响的作用机制）",
+            "reason": "剖析外部因素（同伴）如何作用于内部冲突。是分担了罪责感，还是施加了压力，或是提供了某种许可？",
+            "suggested_granularity": 5
+          },
+          {
+            "question": "最后，是什么让您……或者你们，终于动了？是身体自己先动了，还是心里先下了决定？",
+            "purpose": "提取因果关系（从僵滞到行动的触发点）",
+            "reason": "这是将叙事从‘内心挣扎’推向‘实际行动’的关键一问。探索行动是如何发生的，是理性的决定，还是本能的驱使，或是二者的混合。",
+            "suggested_granularity": 5
+          }
+        ]
+      },
+      "raw_response": "{\n  \"meta\": {\n    \"version\": \"1.0.0\",\n    \"timestamp\": \"2026-03-26T21:46:11.552619\",\n    \"instruction_id\": \"ab3b6ace-627b-4b3c-820b-6971dc687de5\",\n    \"turn_number\": \"19\"\n  },\n  \"action\": {\n    \"primary_action\": \"DEEP_DIVE\",\n    \"tactical_goal\": {\n      \"goal_type\": \"EXTRACT_CAUSALITY\",\n      \"description\": \"受访者揭示了核心冲突：内心声音（‘你要当贼了’）与同伴眼神（‘干不干？/别看我’）所代表的道德审判与生存诱惑/同伴压力的直接碰撞。这是‘做人要稳’与‘活下去’之间最尖锐的对决时刻。需要引导其剖析这个瞬间的决策过程：是什么最终压倒了什么？那个‘贼’字具体意味着什么？以及，这个决定是如何做出的？\"\n    },\n    \"tone_constraint\": {\n      \"primary_tone\": \"EMPATHIC_SUPPORTIVE\",\n      \"secondary_tone\": \"THOUGHTFUL\",\n      \"constraints\": [\"ALLOW_SILENCE\", \"VALIDATE_FEELINGS\", \"NO_JUDGMENT\"]\n    },\n    \"strategy\": {\n      \"strategy_type\": \"AFFECTIVE_ASSOCIATION\",\n      \"parameters\": {\"anchor\": \"内心声音‘你要当贼了’与卫东眼神‘干不干？/别看我’的矛盾张力\"},\n      \"priority\": 1\n    }\n  },\n  \"_debug_snapshot\": {\n    \"state_at_decision\": {\n      \"current_focus\": \"在‘当贼’的自我指控与同伴无声催促的夹缝中，做出关键决定的瞬间\",\n      \"user_state\": {\n        \"emotional_energy\": -0.4,\n        \"energy_level\": 0.45\n      }\n    },\n    \"decision_trace\": [\"触发: 受访者情绪能量(emotional_energy=-0.4)急剧下降至深负值，声音几乎听不见，眼神空洞，表明触及了最核心的道德创伤和自我否定时刻。精神状态(energy_level=0.45)较低，但仍在坚持叙述关键转折。\", \"目标: 这是整个故事的情感与道德制高点。不能回避‘贼’这个沉重的字眼，需要帮助受访者面对它，理解在那个特定历史情境下，‘贼’的定义、重量以及做出选择背后的驱动力。\", \"策略: 采用情感/动机共振跳转，紧紧跟随受访者暴露出的最强烈情感线索（自我指控与同伴压力），深入这个充满张力的决策漩涡中心。\", \"语气: 必须使用共情支持型和沉思反思型，绝对避免任何评判。提问要像手术刀一样精准而温和，帮助受访者解剖那个痛苦的瞬间。\"]\n  },\n  \"recommended_questions\": [\n    {\n      \"question\": \"当心里那个声音说‘你要当贼了’的时候，‘贼’这个字，对您来说，具体意味着什么？是辜负了父亲的教导，还是……一种对更基本东西的背叛？\",\n      \"purpose\": \"提取因果关系（‘贼’的涵义与道德重量）\",\n      \"reason\": \"这是理解其内心冲突的基础。需要澄清‘贼’在其价值体系中的具体所指，是违背家教、社会规范，还是生存伦理？\",\n      \"suggested_granularity\": 5\n    },\n    {\n      \"question\": \"在那个瞬间，是‘饿得实在受不了了’的身体感觉更强烈，还是‘你要当贼了’的心里声音更响？\",\n      \"purpose\": \"提取因果关系（生存本能与道德意识的较量）\",\n      \"reason\": \"直接对比两种驱动力在决策瞬间的强度，揭示是哪一方最终占据了上风，以及如何占据上风。\",\n      \"suggested_granularity\": 5\n    },\n    {\n      \"question\": \"您看到卫东的眼神后，心里发生了什么变化？是那眼神让‘当贼’变得更可能了，还是更不可能了？\",\n      \"purpose\": \"提取因果关系（同伴影响的作用机制）\",\n      \"reason\": \"剖析外部因素（同伴）如何作用于内部冲突。是分担了罪责感，还是施加了压力，或是提供了某种许可？\",\n      \"suggested_granularity\": 5\n    },\n    {\n      \"question\": \"最后，是什么让您……或者你们，终于动了？是身体自己先动了，还是心里先下了决定？\",\n      \"purpose\": \"提取因果关系（从僵滞到行动的触发点）\",\n      \"reason\": \"这是将叙事从‘内心挣扎’推向‘实际行动’的关键一问。探索行动是如何发生的，是理性的决定，还是本能的驱使，或是二者的混合。\",\n      \"suggested_granularity\": 5\n    }\n  ]\n}"
+    },
+    {
+      "turn": 21,
+      "decision": {
+        "meta": {
+          "version": "1.0.0",
+          "timestamp": "2026-03-26T21:46:11.552619",
+          "instruction_id": "ab3b6ace-627b-4b3c-820b-6971dc687de5",
+          "turn_number": "20"
+        },
+        "action": {
+          "primary_action": "DEEP_DIVE",
+          "tactical_goal": {
+            "goal_type": "EXTRACT_DETAILS",
+            "description": "受访者清晰地揭示了决策天平：道德与文化资本（‘读书、道理’）与同伴的生存现实（‘挖不动就倒下’）最终被最原始的生理痛苦（‘胃在烧’）所压倒。现在需要将叙事从‘内心决定’推进到‘具体行动’。需要引导其详细描述‘伸手’的瞬间：动作的细节、目标的选择、当时的感官体验，以及行动后的即刻反应。"
+          },
+          "tone_constraint": {
+            "primary_tone": "EMPATHIC_SUPPORTIVE",
+            "secondary_tone": "CALM",
+            "constraints": [
+              "ALLOW_SILENCE",
+              "VALIDATE_FEELINGS",
+              "NO_JUDGMENT"
+            ]
+          },
+          "strategy": {
+            "strategy_type": "OBJECT_TO_EMOTION",
+            "parameters": {
+              "anchor": "‘胃在烧’的生理驱动力与‘伸手’的动作"
+            },
+            "priority": 1
+          }
+        },
+        "_debug_snapshot": {
+          "state_at_decision": {
+            "current_focus": "在生理痛苦的终极驱动下，实施‘偷豆’行动的具体过程与感官细节",
+            "user_state": {
+              "emotional_energy": -0.3,
+              "energy_level": 0.42
+            }
+          },
+          "decision_trace": [
+            "触发: 受访者情绪能量(emotional_energy=-0.3)仍处低位，声音哽咽，肢体动作（握紧松开）显示紧张。但叙述逻辑清晰，揭示了从思想斗争到生理驱动的转变。精神状态(energy_level=0.42)较低，叙事已进入高潮的行动阶段。",
+            "目标: 决策的心理过程已基本清晰。现在需要将镜头拉近，聚焦于行动本身。详细描述‘偷’的行为，是理解其后果、感受以及事后评价的基础。",
+            "策略: 以‘胃在烧’这个压倒一切的生理感受和‘伸手’这个具体动作为锚点，采用由物及情策略，引导受访者重现那个充满张力的行动瞬间。",
+            "语气: 保持共情支持和平静从容。受访者已经承认了行为的‘不得已’，访谈者需要以完全接纳的态度，帮助其完成这个艰难但关键的叙事部分。"
+          ]
+        },
+        "recommended_questions": [
+          {
+            "question": "您还记得，手是怎么伸出去的吗？是慢慢地、试探着，还是……一下子？",
+            "purpose": "提取事实细节（动作的质感和速度）",
+            "reason": "动作的速度和方式能反映内心的犹豫程度和决绝程度。是‘偷’的谨慎，还是‘抢’的决绝？",
+            "suggested_granularity": 4
+          },
+          {
+            "question": "您的手，最先碰到的是什么？是带着露水的豆荚，还是干枯的豆叶？那触感是什么样的？",
+            "purpose": "提取感官细节（触觉）",
+            "reason": "将抽象的行为（偷）转化为具体的、可感知的物理接触。这个最初的触感，是连接内心世界与外部行动的关键节点。",
+            "suggested_granularity": 5
+          },
+          {
+            "question": "当您的手抓住豆荚，往下扯的时候，有没有发出声音？您当时注意听了吗？",
+            "purpose": "提取感官细节（听觉）与事实细节（行为的隐蔽性）",
+            "reason": "声音是暴露风险的关键。询问是否注意听，能揭示其行动时的警觉程度和恐惧心理。",
+            "suggested_granularity": 4
+          },
+          {
+            "question": "当第一把豆子攥在手里的时候，胃里那种‘烧’的感觉，有变化吗？是更急了，还是……好像停了一下？",
+            "purpose": "提取情绪体验与感受（行动对生理痛苦的即时影响）",
+            "reason": "探索行动本身对驱动行动的原始痛苦（胃烧）产生了何种即时反馈。是缓解了焦虑，还是加剧了渴望？",
+            "suggested_granularity": 5
+          },
+          {
+            "question": "那时候，您看卫东了吗？他也在做同样的事吗？",
+            "purpose": "提取事实细节（同伴的同步行动）",
+            "reason": "确认行动是孤立的还是共同的。如果是共同的，那么‘共犯’关系将如何影响后续的情感和叙事发展。",
+            "suggested_granularity": 3
+          }
+        ]
+      },
+      "raw_response": "{\n  \"meta\": {\n    \"version\": \"1.0.0\",\n    \"timestamp\": \"2026-03-26T21:46:11.552619\",\n    \"instruction_id\": \"ab3b6ace-627b-4b3c-820b-6971dc687de5\",\n    \"turn_number\": \"20\"\n  },\n  \"action\": {\n    \"primary_action\": \"DEEP_DIVE\",\n    \"tactical_goal\": {\n      \"goal_type\": \"EXTRACT_DETAILS\",\n      \"description\": \"受访者清晰地揭示了决策天平：道德与文化资本（‘读书、道理’）与同伴的生存现实（‘挖不动就倒下’）最终被最原始的生理痛苦（‘胃在烧’）所压倒。现在需要将叙事从‘内心决定’推进到‘具体行动’。需要引导其详细描述‘伸手’的瞬间：动作的细节、目标的选择、当时的感官体验，以及行动后的即刻反应。\"\n    },\n    \"tone_constraint\": {\n      \"primary_tone\": \"EMPATHIC_SUPPORTIVE\",\n      \"secondary_tone\": \"CALM\",\n      \"constraints\": [\"ALLOW_SILENCE\", \"VALIDATE_FEELINGS\", \"NO_JUDGMENT\"]\n    },\n    \"strategy\": {\n      \"strategy_type\": \"OBJECT_TO_EMOTION\",\n      \"parameters\": {\"anchor\": \"‘胃在烧’的生理驱动力与‘伸手’的动作\"},\n      \"priority\": 1\n    }\n  },\n  \"_debug_snapshot\": {\n    \"state_at_decision\": {\n      \"current_focus\": \"在生理痛苦的终极驱动下，实施‘偷豆’行动的具体过程与感官细节\",\n      \"user_state\": {\n        \"emotional_energy\": -0.3,\n        \"energy_level\": 0.42\n      }\n    },\n    \"decision_trace\": [\"触发: 受访者情绪能量(emotional_energy=-0.3)仍处低位，声音哽咽，肢体动作（握紧松开）显示紧张。但叙述逻辑清晰，揭示了从思想斗争到生理驱动的转变。精神状态(energy_level=0.42)较低，叙事已进入高潮的行动阶段。\", \"目标: 决策的心理过程已基本清晰。现在需要将镜头拉近，聚焦于行动本身。详细描述‘偷’的行为，是理解其后果、感受以及事后评价的基础。\", \"策略: 以‘胃在烧’这个压倒一切的生理感受和‘伸手’这个具体动作为锚点，采用由物及情策略，引导受访者重现那个充满张力的行动瞬间。\", \"语气: 保持共情支持和平静从容。受访者已经承认了行为的‘不得已’，访谈者需要以完全接纳的态度，帮助其完成这个艰难但关键的叙事部分。\"]\n  },\n  \"recommended_questions\": [\n    {\n      \"question\": \"您还记得，手是怎么伸出去的吗？是慢慢地、试探着，还是……一下子？\",\n      \"purpose\": \"提取事实细节（动作的质感和速度）\",\n      \"reason\": \"动作的速度和方式能反映内心的犹豫程度和决绝程度。是‘偷’的谨慎，还是‘抢’的决绝？\",\n      \"suggested_granularity\": 4\n    },\n    {\n      \"question\": \"您的手，最先碰到的是什么？是带着露水的豆荚，还是干枯的豆叶？那触感是什么样的？\",\n      \"purpose\": \"提取感官细节（触觉）\",\n      \"reason\": \"将抽象的行为（偷）转化为具体的、可感知的物理接触。这个最初的触感，是连接内心世界与外部行动的关键节点。\",\n      \"suggested_granularity\": 5\n    },\n    {\n      \"question\": \"当您的手抓住豆荚，往下扯的时候，有没有发出声音？您当时注意听了吗？\",\n      \"purpose\": \"提取感官细节（听觉）与事实细节（行为的隐蔽性）\",\n      \"reason\": \"声音是暴露风险的关键。询问是否注意听，能揭示其行动时的警觉程度和恐惧心理。\",\n      \"suggested_granularity\": 4\n    },\n    {\n      \"question\": \"当第一把豆子攥在手里的时候，胃里那种‘烧’的感觉，有变化吗？是更急了，还是……好像停了一下？\",\n      \"purpose\": \"提取情绪体验与感受（行动对生理痛苦的即时影响）\",\n      \"reason\": \"探索行动本身对驱动行动的原始痛苦（胃烧）产生了何种即时反馈。是缓解了焦虑，还是加剧了渴望？\",\n      \"suggested_granularity\": 5\n    },\n    {\n      \"question\": \"那时候，您看卫东了吗？他也在做同样的事吗？\",\n      \"purpose\": \"提取事实细节（同伴的同步行动）\",\n      \"reason\": \"确认行动是孤立的还是共同的。如果是共同的，那么‘共犯’关系将如何影响后续的情感和叙事发展。\",\n      \"suggested_granularity\": 3\n    }\n  ]\n}"
+    },
+    {
+      "turn": 22,
+      "decision": {
+        "meta": {
+          "version": "1.0.0",
+          "timestamp": "2026-03-26T21:46:11.552619",
+          "instruction_id": "ab3b6ace-627b-4b3c-820b-6971dc687de5",
+          "turn_number": "21"
+        },
+        "action": {
+          "primary_action": "DEEP_DIVE",
+          "tactical_goal": {
+            "goal_type": "EXTRACT_SENSORY",
+            "description": "受访者的记忆精确到‘中间那垄……第三棵’，且身体记忆被重新激活（手指颤抖）。这表明事件已烙印在感官层面。需要继续沿着这条感官线索深入，从‘触摸’推进到‘采摘’、‘处理’和‘食用’的完整动作链条，并捕捉每一个环节伴随的生理与心理感受。目标是完整重现这个‘违规行为’的微观过程。"
+          },
+          "tone_constraint": {
+            "primary_tone": "EMPATHIC_SUPPORTIVE",
+            "secondary_tone": "CALM",
+            "constraints": [
+              "ALLOW_SILENCE",
+              "VALIDATE_FEELINGS",
+              "NO_JUDGMENT"
+            ]
+          },
+          "strategy": {
+            "strategy_type": "OBJECT_TO_EMOTION",
+            "parameters": {
+              "anchor": "‘冰凉的、带着露水的叶子’与‘抖得厉害的手指’"
+            },
+            "priority": 1
+          }
+        },
+        "_debug_snapshot": {
+          "state_at_decision": {
+            "current_focus": "从触摸到采摘第一颗豆荚的完整动作序列与伴随的感官、情绪体验",
+            "user_state": {
+              "emotional_energy": -0.25,
+              "energy_level": 0.4
+            }
+          },
+          "decision_trace": [
+            "触发: 受访者情绪能量(emotional_energy=-0.25)略有缓和，但身体记忆强烈（手指颤抖）。精神状态(energy_level=0.4)较低，但叙述细节极其精确，表明其正沉浸于高度专注的回忆中。",
+            "目标: 我们已经来到了行为发生的‘现场’。需要像慢镜头一样，一帧一帧地还原这个充满张力的过程，将抽象的道德抉择转化为一连串具体的、可感的动作和感受。",
+            "策略: 继续以受访者提供的强烈感官锚点（冰凉的叶子、颤抖的手）为核心，采用由物及情策略，引导其将动作链条延续下去。",
+            "语气: 保持共情支持和平静从容，模仿一种专注的、观察式的语气，帮助受访者安全地停留在那个充满矛盾的‘作案现场’。"
+          ]
+        },
+        "recommended_questions": [
+          {
+            "question": "您是怎么‘抓’住那个豆荚的？是用手指捏住豆荚的柄，还是……连叶子一起攥在手里？",
+            "purpose": "提取事实细节（抓取的具体方式）",
+            "reason": "‘抓’的方式能反映意图的坚决程度和内心的混乱程度。是精准地摘取果实，还是慌乱地抓取一切可食之物？",
+            "suggested_granularity": 4
+          },
+          {
+            "question": "当您把豆荚从植株上扯下来的时候，听到了什么声音吗？是‘啪’的一声轻响，还是……没什么声音？",
+            "purpose": "提取感官细节（听觉）",
+            "reason": "分离的声音是行为完成的标志，也可能是在寂静夜晚中最响的‘罪证’。这个声音的感知，强化了行为的真实感和风险感。",
+            "suggested_granularity": 4
+          },
+          {
+            "question": "豆荚到了手里，您是先看了看它，还是直接就……往嘴里塞，或者放进了口袋？",
+            "purpose": "提取事实细节（获取后的第一反应）",
+            "reason": "这个第一反应至关重要：是立即满足口腹之欲，还是先审视‘赃物’，或是藏匿起来？这反映了在生存本能驱动下，残留的理性或羞耻感如何运作。",
+            "suggested_granularity": 5
+          },
+          {
+            "question": "当豆荚（或者豆子）真的进了嘴，最初的滋味是什么？有尝出味道吗，还是……只觉得能咽下去？",
+            "purpose": "提取感官细节（味觉）与情绪体验",
+            "reason": "这是整个偷窃行为的‘终点’——摄入。探索在极度的饥饿和道德压力下，味觉是否还存在，食物是‘美味’还是仅仅作为‘燃料’。",
+            "suggested_granularity": 5
+          },
+          {
+            "question": "在您做这些的时候，眼角的余光里，卫东在做什么？",
+            "purpose": "提取事实细节（同伴的同步状态）",
+            "reason": "将个人行为置于同伴关系的背景中，确认两人是否步调一致，以及这种一致性如何影响个人的罪责感和安全感。",
+            "suggested_granularity": 3
+          }
+        ]
+      },
+      "raw_response": "{\n  \"meta\": {\n    \"version\": \"1.0.0\",\n    \"timestamp\": \"2026-03-26T21:46:11.552619\",\n    \"instruction_id\": \"ab3b6ace-627b-4b3c-820b-6971dc687de5\",\n    \"turn_number\": \"21\"\n  },\n  \"action\": {\n    \"primary_action\": \"DEEP_DIVE\",\n    \"tactical_goal\": {\n      \"goal_type\": \"EXTRACT_SENSORY\",\n      \"description\": \"受访者的记忆精确到‘中间那垄……第三棵’，且身体记忆被重新激活（手指颤抖）。这表明事件已烙印在感官层面。需要继续沿着这条感官线索深入，从‘触摸’推进到‘采摘’、‘处理’和‘食用’的完整动作链条，并捕捉每一个环节伴随的生理与心理感受。目标是完整重现这个‘违规行为’的微观过程。\"\n    },\n    \"tone_constraint\": {\n      \"primary_tone\": \"EMPATHIC_SUPPORTIVE\",\n      \"secondary_tone\": \"CALM\",\n      \"constraints\": [\"ALLOW_SILENCE\", \"VALIDATE_FEELINGS\", \"NO_JUDGMENT\"]\n    },\n    \"strategy\": {\n      \"strategy_type\": \"OBJECT_TO_EMOTION\",\n      \"parameters\": {\"anchor\": \"‘冰凉的、带着露水的叶子’与‘抖得厉害的手指’\"},\n      \"priority\": 1\n    }\n  },\n  \"_debug_snapshot\": {\n    \"state_at_decision\": {\n      \"current_focus\": \"从触摸到采摘第一颗豆荚的完整动作序列与伴随的感官、情绪体验\",\n      \"user_state\": {\n        \"emotional_energy\": -0.25,\n        \"energy_level\": 0.4\n      }\n    },\n    \"decision_trace\": [\"触发: 受访者情绪能量(emotional_energy=-0.25)略有缓和，但身体记忆强烈（手指颤抖）。精神状态(energy_level=0.4)较低，但叙述细节极其精确，表明其正沉浸于高度专注的回忆中。\", \"目标: 我们已经来到了行为发生的‘现场’。需要像慢镜头一样，一帧一帧地还原这个充满张力的过程，将抽象的道德抉择转化为一连串具体的、可感的动作和感受。\", \"策略: 继续以受访者提供的强烈感官锚点（冰凉的叶子、颤抖的手）为核心，采用由物及情策略，引导其将动作链条延续下去。\", \"语气: 保持共情支持和平静从容，模仿一种专注的、观察式的语气，帮助受访者安全地停留在那个充满矛盾的‘作案现场’。\"]\n  },\n  \"recommended_questions\": [\n    {\n      \"question\": \"您是怎么‘抓’住那个豆荚的？是用手指捏住豆荚的柄，还是……连叶子一起攥在手里？\",\n      \"purpose\": \"提取事实细节（抓取的具体方式）\",\n      \"reason\": \"‘抓’的方式能反映意图的坚决程度和内心的混乱程度。是精准地摘取果实，还是慌乱地抓取一切可食之物？\",\n      \"suggested_granularity\": 4\n    },\n    {\n      \"question\": \"当您把豆荚从植株上扯下来的时候，听到了什么声音吗？是‘啪’的一声轻响，还是……没什么声音？\",\n      \"purpose\": \"提取感官细节（听觉）\",\n      \"reason\": \"分离的声音是行为完成的标志，也可能是在寂静夜晚中最响的‘罪证’。这个声音的感知，强化了行为的真实感和风险感。\",\n      \"suggested_granularity\": 4\n    },\n    {\n      \"question\": \"豆荚到了手里，您是先看了看它，还是直接就……往嘴里塞，或者放进了口袋？\",\n      \"purpose\": \"提取事实细节（获取后的第一反应）\",\n      \"reason\": \"这个第一反应至关重要：是立即满足口腹之欲，还是先审视‘赃物’，或是藏匿起来？这反映了在生存本能驱动下，残留的理性或羞耻感如何运作。\",\n      \"suggested_granularity\": 5\n    },\n    {\n      \"question\": \"当豆荚（或者豆子）真的进了嘴，最初的滋味是什么？有尝出味道吗，还是……只觉得能咽下去？\",\n      \"purpose\": \"提取感官细节（味觉）与情绪体验\",\n      \"reason\": \"这是整个偷窃行为的‘终点’——摄入。探索在极度的饥饿和道德压力下，味觉是否还存在，食物是‘美味’还是仅仅作为‘燃料’。\",\n      \"suggested_granularity\": 5\n    },\n    {\n      \"question\": \"在您做这些的时候，眼角的余光里，卫东在做什么？\",\n      \"purpose\": \"提取事实细节（同伴的同步状态）\",\n      \"reason\": \"将个人行为置于同伴关系的背景中，确认两人是否步调一致，以及这种一致性如何影响个人的罪责感和安全感。\",\n      \"suggested_granularity\": 3\n    }\n  ]\n}"
+    },
+    {
+      "turn": 23,
+      "decision": {
+        "meta": {
+          "version": "1.0.0",
+          "timestamp": "2026-03-26T21:46:11.552619",
+          "instruction_id": "ab3b6ace-627b-4b3c-820b-6971dc687de5",
+          "turn_number": "22"
+        },
+        "action": {
+          "primary_action": "DEEP_DIVE",
+          "tactical_goal": {
+            "goal_type": "EXTRACT_EMOTIONS",
+            "description": "受访者揭示了行动的高潮与转折点：‘咔嚓一声’带来的恐惧僵滞，以及‘嚼的时候，眼泪掉下来了’这一极具感染力的细节。这表明行为本身并未带来解脱，反而触发了更深的情绪反应（恐惧、悲伤、屈辱）。需要深入挖掘‘眼泪’背后的复杂情感：这眼泪为谁而流？是为自己，为父亲，为失去的‘稳’，还是为那个时代？同时，需要探索‘僵住’之后，两人如何恢复行动，以及后续发生了什么。"
+          },
+          "tone_constraint": {
+            "primary_tone": "EMPATHIC_SUPPORTIVE",
+            "secondary_tone": "NOSTALGIC",
+            "constraints": [
+              "ALLOW_SILENCE",
+              "VALIDATE_FEELINGS",
+              "NO_JUDGMENT"
+            ]
+          },
+          "strategy": {
+            "strategy_type": "AFFECTIVE_ASSOCIATION",
+            "parameters": {
+              "anchor": "‘咔嚓一声’的恐惧与‘嚼的时候，眼泪掉下来了’的悲伤"
+            },
+            "priority": 1
+          }
+        },
+        "_debug_snapshot": {
+          "state_at_decision": {
+            "current_focus": "偷窃行为完成后的恐惧、悲伤情绪，以及眼泪的含义",
+            "user_state": {
+              "emotional_energy": -0.5,
+              "energy_level": 0.38
+            }
+          },
+          "decision_trace": [
+            "触发: 受访者情绪能量(emotional_energy=-0.5)跌至新低，声音发紧，提到‘眼泪’。精神状态(energy_level=0.38)进一步下降，表明回忆这段经历消耗巨大，但已触及情感核心。",
+            "目标: ‘眼泪’是理解整个事件对受访者心理冲击的关键。需要帮助其解读这眼泪的复杂成分，并探索行为完成后的心理状态和后续发展。叙事不能停留在‘偷’的动作上，必须推进到其情感后果。",
+            "策略: 采用情感/动机共振跳转，紧紧跟随受访者暴露出的最强烈情感信号（恐惧与悲伤），深入探究其根源和影响。",
+            "语气: 使用共情支持型和怀旧感伤型。怀旧感伤在此处并非指向美好，而是指向一种对逝去的纯真、原则或尊严的哀悼，与‘眼泪’的主题高度契合。"
+          ]
+        },
+        "recommended_questions": [
+          {
+            "question": "那‘咔嚓’一声之后，你们僵住了多久？在那段死一样的寂静里，您最怕的是什么？是怕被人听见，还是……怕别的什么？",
+            "purpose": "提取情绪体验与感受（恐惧的具体对象）",
+            "reason": "区分恐惧的来源：是外部惩罚（被人发现），还是内部审判（道德崩溃的自我确认）。这决定了行为的性质是‘犯罪’还是‘堕落’。",
+            "suggested_granularity": 5
+          },
+          {
+            "question": "您说嚼的时候眼泪掉下来了。那眼泪，是因为豆子太难咽，还是因为……心里太苦了？",
+            "purpose": "提取情绪体验与感受（眼泪的生理与心理根源）",
+            "reason": "直接询问眼泪的成因，引导受访者区分生理不适（难吃）和心理痛苦（屈辱、悲伤、自我否定）。",
+            "suggested_granularity": 5
+          },
+          {
+            "question": "如果让现在的您，对那个一边嚼豆子一边掉眼泪的年轻人说句话，您会说什么？",
+            "purpose": "提取反思与感悟（跨越时空的自我对话）",
+            "reason": "这是一个强有力的情感提炼和整合问题。让现在的智慧与过去的痛苦对话，可能产生深刻的谅解、悲悯或新的理解。",
+            "suggested_granularity": 5
+          },
+          {
+            "question": "吃完那半把豆子之后，您和卫东是怎么离开那块地的？是悄悄地爬走，还是……站起来走的？离开的时候，回头看那片豆田了吗？",
+            "purpose": "提取事实细节与情绪体验（行为的收尾与离开的姿态）",
+            "reason": "离开的方式和是否回看，能反映行为后的心理状态：是仓皇逃离的罪犯，还是默默承受后果的无奈者？‘回看’可能意味着留恋、愧疚或告别。",
+            "suggested_granularity": 4
+          },
+          {
+            "question": "那天晚上回去之后，睡得着吗？",
+            "purpose": "提取情绪体验与感受（行为的后续影响）",
+            "reason": "将叙事时间线向后推移，探索这个事件对当晚即刻的心理影响，是焦虑不安，还是因生理满足而麻木？",
+            "suggested_granularity": 3
+          }
+        ]
+      },
+      "raw_response": "{\n  \"meta\": {\n    \"version\": \"1.0.0\",\n    \"timestamp\": \"2026-03-26T21:46:11.552619\",\n    \"instruction_id\": \"ab3b6ace-627b-4b3c-820b-6971dc687de5\",\n    \"turn_number\": \"22\"\n  },\n  \"action\": {\n    \"primary_action\": \"DEEP_DIVE\",\n    \"tactical_goal\": {\n      \"goal_type\": \"EXTRACT_EMOTIONS\",\n      \"description\": \"受访者揭示了行动的高潮与转折点：‘咔嚓一声’带来的恐惧僵滞，以及‘嚼的时候，眼泪掉下来了’这一极具感染力的细节。这表明行为本身并未带来解脱，反而触发了更深的情绪反应（恐惧、悲伤、屈辱）。需要深入挖掘‘眼泪’背后的复杂情感：这眼泪为谁而流？是为自己，为父亲，为失去的‘稳’，还是为那个时代？同时，需要探索‘僵住’之后，两人如何恢复行动，以及后续发生了什么。\"\n    },\n    \"tone_constraint\": {\n      \"primary_tone\": \"EMPATHIC_SUPPORTIVE\",\n      \"secondary_tone\": \"NOSTALGIC\",\n      \"constraints\": [\"ALLOW_SILENCE\", \"VALIDATE_FEELINGS\", \"NO_JUDGMENT\"]\n    },\n    \"strategy\": {\n      \"strategy_type\": \"AFFECTIVE_ASSOCIATION\",\n      \"parameters\": {\"anchor\": \"‘咔嚓一声’的恐惧与‘嚼的时候，眼泪掉下来了’的悲伤\"},\n      \"priority\": 1\n    }\n  },\n  \"_debug_snapshot\": {\n    \"state_at_decision\": {\n      \"current_focus\": \"偷窃行为完成后的恐惧、悲伤情绪，以及眼泪的含义\",\n      \"user_state\": {\n        \"emotional_energy\": -0.5,\n        \"energy_level\": 0.38\n      }\n    },\n    \"decision_trace\": [\"触发: 受访者情绪能量(emotional_energy=-0.5)跌至新低，声音发紧，提到‘眼泪’。精神状态(energy_level=0.38)进一步下降，表明回忆这段经历消耗巨大，但已触及情感核心。\", \"目标: ‘眼泪’是理解整个事件对受访者心理冲击的关键。需要帮助其解读这眼泪的复杂成分，并探索行为完成后的心理状态和后续发展。叙事不能停留在‘偷’的动作上，必须推进到其情感后果。\", \"策略: 采用情感/动机共振跳转，紧紧跟随受访者暴露出的最强烈情感信号（恐惧与悲伤），深入探究其根源和影响。\", \"语气: 使用共情支持型和怀旧感伤型。怀旧感伤在此处并非指向美好，而是指向一种对逝去的纯真、原则或尊严的哀悼，与‘眼泪’的主题高度契合。\"]\n  },\n  \"recommended_questions\": [\n    {\n      \"question\": \"那‘咔嚓’一声之后，你们僵住了多久？在那段死一样的寂静里，您最怕的是什么？是怕被人听见，还是……怕别的什么？\",\n      \"purpose\": \"提取情绪体验与感受（恐惧的具体对象）\",\n      \"reason\": \"区分恐惧的来源：是外部惩罚（被人发现），还是内部审判（道德崩溃的自我确认）。这决定了行为的性质是‘犯罪’还是‘堕落’。\",\n      \"suggested_granularity\": 5\n    },\n    {\n      \"question\": \"您说嚼的时候眼泪掉下来了。那眼泪，是因为豆子太难咽，还是因为……心里太苦了？\",\n      \"purpose\": \"提取情绪体验与感受（眼泪的生理与心理根源）\",\n      \"reason\": \"直接询问眼泪的成因，引导受访者区分生理不适（难吃）和心理痛苦（屈辱、悲伤、自我否定）。\",\n      \"suggested_granularity\": 5\n    },\n    {\n      \"question\": \"如果让现在的您，对那个一边嚼豆子一边掉眼泪的年轻人说句话，您会说什么？\",\n      \"purpose\": \"提取反思与感悟（跨越时空的自我对话）\",\n      \"reason\": \"这是一个强有力的情感提炼和整合问题。让现在的智慧与过去的痛苦对话，可能产生深刻的谅解、悲悯或新的理解。\",\n      \"suggested_granularity\": 5\n    },\n    {\n      \"question\": \"吃完那半把豆子之后，您和卫东是怎么离开那块地的？是悄悄地爬走，还是……站起来走的？离开的时候，回头看那片豆田了吗？\",\n      \"purpose\": \"提取事实细节与情绪体验（行为的收尾与离开的姿态）\",\n      \"reason\": \"离开的方式和是否回看，能反映行为后的心理状态：是仓皇逃离的罪犯，还是默默承受后果的无奈者？‘回看’可能意味着留恋、愧疚或告别。\",\n      \"suggested_granularity\": 4\n    },\n    {\n      \"question\": \"那天晚上回去之后，睡得着吗？\",\n      \"purpose\": \"提取情绪体验与感受（行为的后续影响）\",\n      \"reason\": \"将叙事时间线向后推移，探索这个事件对当晚即刻的心理影响，是焦虑不安，还是因生理满足而麻木？\",\n      \"suggested_granularity\": 3\n    }\n  ]\n}"
+    },
+    {
+      "turn": 24,
+      "decision": {
+        "meta": {
+          "version": "1.0.0",
+          "timestamp": "2026-03-26T21:46:11.552619",
+          "instruction_id": "ab3b6ace-627b-4b3c-820b-6971dc687de5",
+          "turn_number": "23"
+        },
+        "action": {
+          "primary_action": "DEEP_DIVE",
+          "tactical_goal": {
+            "goal_type": "EXTRACT_REFLECTIONS",
+            "description": "受访者给出了一个深刻而诗意的回答：‘为所有吧。为自己，为卫东，也为……那棵菜。’这超越了简单的个人罪责感，上升为一种对生命（包括植物生命）在极端环境下被扭曲、被消耗的普遍悲悯。同时，‘互相搀了一把’和‘一路无话’描绘了事件后两人关系的微妙变化——一种共享秘密、共享耻辱、也共享脆弱的沉默同盟。需要引导受访者深入反思这种悲悯的根源，以及这种沉默的‘共犯’关系对后续人生的影响。"
+          },
+          "tone_constraint": {
+            "primary_tone": "RESPECTFUL_REVERENT",
+            "secondary_tone": "THOUGHTFUL",
+            "constraints": [
+              "ALLOW_SILENCE",
+              "VALIDATE_FEELINGS",
+              "NO_JUDGMENT"
+            ]
+          },
+          "strategy": {
+            "strategy_type": "AFFECTIVE_ASSOCIATION",
+            "parameters": {
+              "anchor": "‘为所有’的悲悯与‘互相搀扶、一路无话’的沉默同盟"
+            },
+            "priority": 1
+          }
+        },
+        "_debug_snapshot": {
+          "state_at_decision": {
+            "current_focus": "对‘偷豆事件’的深层反思：悲悯的对象与沉默同盟的形成",
+            "user_state": {
+              "emotional_energy": -0.3,
+              "energy_level": 0.35
+            }
+          },
+          "decision_trace": [
+            "触发: 受访者情绪能量(emotional_energy=-0.3)仍处负值但略有稳定，出现了‘为那棵菜’这样超越性的反思。精神状态(energy_level=0.35)较低，但思考深度增加，表明其正从事件的情感冲击中抽离，进行意义建构。",
+            "目标: 这是将具体事件升华为人生感悟的关键节点。需要帮助受访者梳理‘为所有’的具体内涵，并探讨这个事件如何定义了他与卫东的关系，以及如何影响了他对‘生存’与‘道德’的看法。",
+            "策略: 继续采用情感/动机共振跳转，跟随受访者表现出的深刻反思和悲悯情怀，深入挖掘其哲学和伦理层面的思考。",
+            "语气: 使用尊重敬重型与沉思反思型。受访者的回答已显示出一种近乎宗教情怀的悲悯，访谈者必须以同等严肃和尊重的态度回应。"
+          ]
+        },
+        "recommended_questions": [
+          {
+            "question": "您说‘也为那棵菜’。在您看来，那棵被拧断的菜，它……‘无辜’在哪里？",
+            "purpose": "提取反思与感悟（对非人对象的悲悯之根源）",
+            "reason": "这是理解其‘为所有’悲悯的关键。需要澄清‘菜’在他的情感投射中代表了什么——是生命的无端牺牲，是劳动成果的被玷污，还是某种更抽象的象征？",
+            "suggested_granularity": 5
+          },
+          {
+            "question": "‘互相搀了一把’和‘一路无话’，您觉得，从那一刻起，您和卫东的关系，和之前有什么不一样了？",
+            "purpose": "提取反思与感悟（事件对人际关系的重塑）",
+            "reason": "探索共享的越轨行为如何改变了两人之间的权力动态、信任基础和情感连接。是变得更紧密，还是增加了一层无法言说的隔阂？",
+            "suggested_granularity": 5
+          },
+          {
+            "question": "很多年后，您再回想起那个夜晚，那个‘贼’字，在您心里的分量，是变轻了，还是……有了别的含义？",
+            "purpose": "提取反思与感悟（对‘罪责’的历时性再评价）",
+            "reason": "引导受访者以更长的时间跨度审视此事。当年的自我指控，在历经岁月后，是被原谅、被理解，还是被赋予了新的历史或人性解读？",
+            "suggested_granularity": 5
+          },
+          {
+            "question": "如果让您用一个词或一句话，来总结那个夜晚教给您的东西，会是什么？",
+            "purpose": "提取反思与感悟（事件的终极意义提炼）",
+            "reason": "这是一个强有力的总结性问题，迫使受访者将复杂的情感和经历浓缩为一个核心洞见，为这个子章节画上句号。",
+            "suggested_granularity": 5
+          },
+          {
+            "question": "那次之后，您和卫东，后来还一起经历过类似的……‘不得已’的时刻吗？",
+            "purpose": "提取事实细节（事件的后续与重复模式）",
+            "reason": "将叙事从孤立事件引向可能的模式或系列事件，探索‘偷豆’是其知青生涯中的一个特例，还是一种生存策略的起点。",
+            "suggested_granularity": 4
+          }
+        ]
+      },
+      "raw_response": "{\n  \"meta\": {\n    \"version\": \"1.0.0\",\n    \"timestamp\": \"2026-03-26T21:46:11.552619\",\n    \"instruction_id\": \"ab3b6ace-627b-4b3c-820b-6971dc687de5\",\n    \"turn_number\": \"23\"\n  },\n  \"action\": {\n    \"primary_action\": \"DEEP_DIVE\",\n    \"tactical_goal\": {\n      \"goal_type\": \"EXTRACT_REFLECTIONS\",\n      \"description\": \"受访者给出了一个深刻而诗意的回答：‘为所有吧。为自己，为卫东，也为……那棵菜。’这超越了简单的个人罪责感，上升为一种对生命（包括植物生命）在极端环境下被扭曲、被消耗的普遍悲悯。同时，‘互相搀了一把’和‘一路无话’描绘了事件后两人关系的微妙变化——一种共享秘密、共享耻辱、也共享脆弱的沉默同盟。需要引导受访者深入反思这种悲悯的根源，以及这种沉默的‘共犯’关系对后续人生的影响。\"\n    },\n    \"tone_constraint\": {\n      \"primary_tone\": \"RESPECTFUL_REVERENT\",\n      \"secondary_tone\": \"THOUGHTFUL\",\n      \"constraints\": [\"ALLOW_SILENCE\", \"VALIDATE_FEELINGS\", \"NO_JUDGMENT\"]\n    },\n    \"strategy\": {\n      \"strategy_type\": \"AFFECTIVE_ASSOCIATION\",\n      \"parameters\": {\"anchor\": \"‘为所有’的悲悯与‘互相搀扶、一路无话’的沉默同盟\"},\n      \"priority\": 1\n    }\n  },\n  \"_debug_snapshot\": {\n    \"state_at_decision\": {\n      \"current_focus\": \"对‘偷豆事件’的深层反思：悲悯的对象与沉默同盟的形成\",\n      \"user_state\": {\n        \"emotional_energy\": -0.3,\n        \"energy_level\": 0.35\n      }\n    },\n    \"decision_trace\": [\"触发: 受访者情绪能量(emotional_energy=-0.3)仍处负值但略有稳定，出现了‘为那棵菜’这样超越性的反思。精神状态(energy_level=0.35)较低，但思考深度增加，表明其正从事件的情感冲击中抽离，进行意义建构。\", \"目标: 这是将具体事件升华为人生感悟的关键节点。需要帮助受访者梳理‘为所有’的具体内涵，并探讨这个事件如何定义了他与卫东的关系，以及如何影响了他对‘生存’与‘道德’的看法。\", \"策略: 继续采用情感/动机共振跳转，跟随受访者表现出的深刻反思和悲悯情怀，深入挖掘其哲学和伦理层面的思考。\", \"语气: 使用尊重敬重型与沉思反思型。受访者的回答已显示出一种近乎宗教情怀的悲悯，访谈者必须以同等严肃和尊重的态度回应。\"]\n  },\n  \"recommended_questions\": [\n    {\n      \"question\": \"您说‘也为那棵菜’。在您看来，那棵被拧断的菜，它……‘无辜’在哪里？\",\n      \"purpose\": \"提取反思与感悟（对非人对象的悲悯之根源）\",\n      \"reason\": \"这是理解其‘为所有’悲悯的关键。需要澄清‘菜’在他的情感投射中代表了什么——是生命的无端牺牲，是劳动成果的被玷污，还是某种更抽象的象征？\",\n      \"suggested_granularity\": 5\n    },\n    {\n      \"question\": \"‘互相搀了一把’和‘一路无话’，您觉得，从那一刻起，您和卫东的关系，和之前有什么不一样了？\",\n      \"purpose\": \"提取反思与感悟（事件对人际关系的重塑）\",\n      \"reason\": \"探索共享的越轨行为如何改变了两人之间的权力动态、信任基础和情感连接。是变得更紧密，还是增加了一层无法言说的隔阂？\",\n      \"suggested_granularity\": 5\n    },\n    {\n      \"question\": \"很多年后，您再回想起那个夜晚，那个‘贼’字，在您心里的分量，是变轻了，还是……有了别的含义？\",\n      \"purpose\": \"提取反思与感悟（对‘罪责’的历时性再评价）\",\n      \"reason\": \"引导受访者以更长的时间跨度审视此事。当年的自我指控，在历经岁月后，是被原谅、被理解，还是被赋予了新的历史或人性解读？\",\n      \"suggested_granularity\": 5\n    },\n    {\n      \"question\": \"如果让您用一个词或一句话，来总结那个夜晚教给您的东西，会是什么？\",\n      \"purpose\": \"提取反思与感悟（事件的终极意义提炼）\",\n      \"reason\": \"这是一个强有力的总结性问题，迫使受访者将复杂的情感和经历浓缩为一个核心洞见，为这个子章节画上句号。\",\n      \"suggested_granularity\": 5\n    },\n    {\n      \"question\": \"那次之后，您和卫东，后来还一起经历过类似的……‘不得已’的时刻吗？\",\n      \"purpose\": \"提取事实细节（事件的后续与重复模式）\",\n      \"reason\": \"将叙事从孤立事件引向可能的模式或系列事件，探索‘偷豆’是其知青生涯中的一个特例，还是一种生存策略的起点。\",\n      \"suggested_granularity\": 4\n    }\n  ]\n}"
+    },
+    {
+      "turn": 25,
+      "decision": {
+        "meta": {
+          "version": "1.0.0",
+          "timestamp": "2026-03-26T21:46:11.552619",
+          "instruction_id": "ab3b6ace-627b-4b3c-820b-6971dc687de5",
+          "turn_number": "24"
+        },
+        "action": {
+          "primary_action": "SUMMARIZE",
+          "tactical_goal": {
+            "goal_type": "SYNTHESIZE_THEME",
+            "description": "受访者给出了两个极其深刻的总结：‘对生命的愧疚’和‘一个谁都不会提，但都知道的秘密’。这标志着‘偷豆事件’的情感与意义挖掘已趋近完成。当前精神状态（energy_level=0.3）较低，且受访者已从具体事件中提炼出了普遍性主题（生命伦理、秘密与共谋）。此时适合进行阶段性总结，承上启下，将叙事从‘饥饿与道德困境’的具体事件，过渡到‘秘密如何塑造关系与自我认知’的后续影响，或转向知青生活的其他方面。"
+          },
+          "tone_constraint": {
+            "primary_tone": "RESPECTFUL_REVERENT",
+            "secondary_tone": "THOUGHTFUL",
+            "constraints": [
+              "ALLOW_SILENCE",
+              "VALIDATE_FEELINGS",
+              "NO_JUDGMENT"
+            ]
+          },
+          "strategy": {
+            "strategy_type": "ERA_TO_INDIVIDUAL",
+            "parameters": {
+              "anchor": "从‘偷豆事件’中提炼出的‘生命愧疚’与‘沉默秘密’主题"
+            },
+            "priority": 1
+          }
+        },
+        "_debug_snapshot": {
+          "state_at_decision": {
+            "current_focus": "总结‘偷豆事件’的核心主题：对生命的愧疚与沉默的共谋关系",
+            "user_state": {
+              "emotional_energy": -0.2,
+              "energy_level": 0.3
+            }
+          },
+          "decision_trace": [
+            "触发: 受访者精神状态(energy_level=0.3)已降至较低水平，情绪能量(emotional_energy=-0.2)虽略有回升但仍处负值。其回答已从情感宣泄（眼泪）进入理性反思（愧疚、秘密），完成了对事件的意义建构。",
+            "目标: 当前话题（偷豆事件）已充分展开，细节、情感、反思均已覆盖。继续深挖可能导致受访者过度疲劳。需要进行阶段性总结，肯定其讲述的价值，并为其提供一个自然的叙事停顿点，以便决定是继续探索此事件的后续影响，还是切换到新的主题。",
+            "策略: 采用由时代及个体策略，将个人事件（偷豆）置于知青时代的普遍生存困境背景下进行总结，并引出其长远的个体影响。",
+            "语气: 使用尊重敬重型与沉思反思型，以匹配受访者深刻的自我剖析和访谈的严肃性。"
+          ]
+        },
+        "recommended_questions": [
+          {
+            "question": "所以，那个夜晚留给您的，不仅仅是一把生豆子的记忆，更是一种‘对生命的愧疚’，和一个与卫东共享的‘沉默的秘密’。我这样理解对吗？",
+            "purpose": "确认理解是否准确（阶段性总结）",
+            "reason": "以总结复述的方式，确认访谈者准确捕捉了受访者的核心感受，给予其被倾听和理解的肯定，并为话题转换或深入做准备。",
+            "suggested_granularity": 3
+          },
+          {
+            "question": "这种‘对生命的愧疚’感，在您后来的知青岁月里，还以其他形式出现过吗？",
+            "purpose": "探索某一主题下的多条事件（将核心感受延伸至其他经历）",
+            "reason": "如果受访者精力允许，可以将刚刚提炼出的深刻主题（生命愧疚）作为线索，引导其探索知青生涯中其他类似性质的事件，实现主题的横向扩展。",
+            "suggested_granularity": 4
+          },
+          {
+            "question": "那个‘秘密’，在您和卫东后来的交往中，是像一道看不见的墙，还是……像一条看不见的纽带？",
+            "purpose": "提取反思与感悟（秘密对关系的长期塑造）",
+            "reason": "深入探讨‘秘密’这一抽象概念如何具体地作用于两人长期的关系动态，是疏远还是绑定？这是对‘共犯关系’的进一步剖析。",
+            "suggested_granularity": 5
+          },
+          {
+            "question": "除了饥饿，知青生活中，还有什么让您感到特别‘不得已’的时刻吗？",
+            "purpose": "广度切换（BREADTH_SWITCH的预备问题）",
+            "reason": "如果判断受访者需要休息或转换话题，这是一个自然的过渡。将‘不得已’从‘饥饿偷窃’的具体情境，扩展到知青生活的其他层面（如政治压力、情感压抑、前途迷茫等）。",
+            "suggested_granularity": 4
+          },
+          {
+            "question": "我们今天谈了很长时间，也谈得很深了。您感觉怎么样？需要休息一下吗？",
+            "purpose": "会话告别并记录断点信息（SESSION_FAREWELL的预备）",
+            "reason": "考虑到精神状态较低，直接询问其感受，为可能的暂停会话（PAUSE_SESSION）提供依据和过渡，体现人文关怀。",
+            "suggested_granularity": 1
+          }
+        ]
+      },
+      "raw_response": "{\n  \"meta\": {\n    \"version\": \"1.0.0\",\n    \"timestamp\": \"2026-03-26T21:46:11.552619\",\n    \"instruction_id\": \"ab3b6ace-627b-4b3c-820b-6971dc687de5\",\n    \"turn_number\": \"24\"\n  },\n  \"action\": {\n    \"primary_action\": \"SUMMARIZE\",\n    \"tactical_goal\": {\n      \"goal_type\": \"SYNTHESIZE_THEME\",\n      \"description\": \"受访者给出了两个极其深刻的总结：‘对生命的愧疚’和‘一个谁都不会提，但都知道的秘密’。这标志着‘偷豆事件’的情感与意义挖掘已趋近完成。当前精神状态（energy_level=0.3）较低，且受访者已从具体事件中提炼出了普遍性主题（生命伦理、秘密与共谋）。此时适合进行阶段性总结，承上启下，将叙事从‘饥饿与道德困境’的具体事件，过渡到‘秘密如何塑造关系与自我认知’的后续影响，或转向知青生活的其他方面。\"\n    },\n    \"tone_constraint\": {\n      \"primary_tone\": \"RESPECTFUL_REVERENT\",\n      \"secondary_tone\": \"THOUGHTFUL\",\n      \"constraints\": [\"ALLOW_SILENCE\", \"VALIDATE_FEELINGS\", \"NO_JUDGMENT\"]\n    },\n    \"strategy\": {\n      \"strategy_type\": \"ERA_TO_INDIVIDUAL\",\n      \"parameters\": {\"anchor\": \"从‘偷豆事件’中提炼出的‘生命愧疚’与‘沉默秘密’主题\"},\n      \"priority\": 1\n    }\n  },\n  \"_debug_snapshot\": {\n    \"state_at_decision\": {\n      \"current_focus\": \"总结‘偷豆事件’的核心主题：对生命的愧疚与沉默的共谋关系\",\n      \"user_state\": {\n        \"emotional_energy\": -0.2,\n        \"energy_level\": 0.3\n      }\n    },\n    \"decision_trace\": [\"触发: 受访者精神状态(energy_level=0.3)已降至较低水平，情绪能量(emotional_energy=-0.2)虽略有回升但仍处负值。其回答已从情感宣泄（眼泪）进入理性反思（愧疚、秘密），完成了对事件的意义建构。\", \"目标: 当前话题（偷豆事件）已充分展开，细节、情感、反思均已覆盖。继续深挖可能导致受访者过度疲劳。需要进行阶段性总结，肯定其讲述的价值，并为其提供一个自然的叙事停顿点，以便决定是继续探索此事件的后续影响，还是切换到新的主题。\", \"策略: 采用由时代及个体策略，将个人事件（偷豆）置于知青时代的普遍生存困境背景下进行总结，并引出其长远的个体影响。\", \"语气: 使用尊重敬重型与沉思反思型，以匹配受访者深刻的自我剖析和访谈的严肃性。\"]\n  },\n  \"recommended_questions\": [\n    {\n      \"question\": \"所以，那个夜晚留给您的，不仅仅是一把生豆子的记忆，更是一种‘对生命的愧疚’，和一个与卫东共享的‘沉默的秘密’。我这样理解对吗？\",\n      \"purpose\": \"确认理解是否准确（阶段性总结）\",\n      \"reason\": \"以总结复述的方式，确认访谈者准确捕捉了受访者的核心感受，给予其被倾听和理解的肯定，并为话题转换或深入做准备。\",\n      \"suggested_granularity\": 3\n    },\n    {\n      \"question\": \"这种‘对生命的愧疚’感，在您后来的知青岁月里，还以其他形式出现过吗？\",\n      \"purpose\": \"探索某一主题下的多条事件（将核心感受延伸至其他经历）\",\n      \"reason\": \"如果受访者精力允许，可以将刚刚提炼出的深刻主题（生命愧疚）作为线索，引导其探索知青生涯中其他类似性质的事件，实现主题的横向扩展。\",\n      \"suggested_granularity\": 4\n    },\n    {\n      \"question\": \"那个‘秘密’，在您和卫东后来的交往中，是像一道看不见的墙，还是……像一条看不见的纽带？\",\n      \"purpose\": \"提取反思与感悟（秘密对关系的长期塑造）\",\n      \"reason\": \"深入探讨‘秘密’这一抽象概念如何具体地作用于两人长期的关系动态，是疏远还是绑定？这是对‘共犯关系’的进一步剖析。\",\n      \"suggested_granularity\": 5\n    },\n    {\n      \"question\": \"除了饥饿，知青生活中，还有什么让您感到特别‘不得已’的时刻吗？\",\n      \"purpose\": \"广度切换（BREADTH_SWITCH的预备问题）\",\n      \"reason\": \"如果判断受访者需要休息或转换话题，这是一个自然的过渡。将‘不得已’从‘饥饿偷窃’的具体情境，扩展到知青生活的其他层面（如政治压力、情感压抑、前途迷茫等）。\",\n      \"suggested_granularity\": 4\n    },\n    {\n      \"question\": \"我们今天谈了很长时间，也谈得很深了。您感觉怎么样？需要休息一下吗？\",\n      \"purpose\": \"会话告别并记录断点信息（SESSION_FAREWELL的预备）\",\n      \"reason\": \"考虑到精神状态较低，直接询问其感受，为可能的暂停会话（PAUSE_SESSION）提供依据和过渡，体现人文关怀。\",\n      \"suggested_granularity\": 1\n    }\n  ]\n}"
+    },
+    {
+      "turn": 26,
+      "decision": {
+        "meta": {
+          "version": "1.0.0",
+          "timestamp": "2026-03-26T21:46:11.552619",
+          "instruction_id": "ab3b6ace-627b-4b3c-820b-6971dc687de5",
+          "turn_number": "25"
+        },
+        "action": {
+          "primary_action": "BREADTH_SWITCH",
+          "tactical_goal": {
+            "goal_type": "EXPLORE_PERSON",
+            "description": "访谈者的问题成功地将话题从‘偷豆事件’本身，引向了更广泛的‘秘密’与‘人际关系’主题。受访者尚未回答，但问题方向极佳。考虑到受访者精神状态（energy_level=0.3）较低，且‘偷豆事件’已充分挖掘，应顺势进行广度切换，引导其探索与卫东之外的其他知青之间，是否也存在因特殊经历而形成的‘秘密’纽带。这既能延续‘秘密’主题的深度，又能引入新的人物和故事，避免在同一事件上过度消耗。"
+          },
+          "tone_constraint": {
+            "primary_tone": "CURIOUS_INQUIRING",
+            "secondary_tone": "THOUGHTFUL",
+            "constraints": [
+              "ALLOW_SILENCE",
+              "NO_JUDGMENT",
+              "AVOID_TECHNICAL_TERMS"
+            ]
+          },
+          "strategy": {
+            "strategy_type": "SOCIAL_NETWORK_JUMP",
+            "parameters": {
+              "anchor": "从卫东出发，沿‘共享秘密’的关系线索，探索知青社交网络中的其他关键人物"
+            },
+            "priority": 1
+          }
+        },
+        "_debug_snapshot": {
+          "state_at_decision": {
+            "current_focus": "探索知青生涯中，除卫东外，其他因共享‘秘密’而关系特殊的人物",
+            "user_state": {
+              "emotional_energy": -0.2,
+              "energy_level": 0.3
+            }
+          },
+          "decision_trace": [
+            "触发: 受访者精神状态(energy_level=0.3)持续偏低，情绪能量(emotional_energy=-0.2)稳定。上一轮已建议进行总结或切换。访谈者的问题恰好提供了一个完美的切换点，从具体事件（偷豆）切换到抽象主题（秘密），再通过‘其他人’实现人物跳转。",
+            "目标: 避免在低能量状态下继续深挖同一事件的细节。利用‘秘密’这一已建立的主题，引导受访者回忆其他重要的人际关系，从而拓宽叙事覆盖面，发现新的故事线索。",
+            "策略: 采用人物社交网络跳转策略，以卫东为起点，沿着‘共享秘密’这一关系属性，寻找知青群体中的其他关键节点人物。",
+            "语气: 使用好奇探索型与沉思反思型。问题本身具有探索性，且涉及对人际关系的深层思考，适合用好奇引发回忆，用沉思引导分析。"
+          ]
+        },
+        "recommended_questions": [
+          {
+            "question": "除了卫东，知青点里，还有谁和您走得特别近，或者一起经历过一些……不方便对外人讲的事？",
+            "purpose": "探索关键人物相关故事（基于‘秘密’属性寻找新人物）",
+            "reason": "直接承接上一个问题，将‘秘密’具体化为‘不方便对外人讲的事’，降低抽象度，更易于触发具体的人物和事件回忆。",
+            "suggested_granularity": 4
+          },
+          {
+            "question": "您还记得第一个和您分享秘密（不一定是偷东西，可能是心事、家事、对未来的担忧）的知青朋友吗？那是谁，因为什么事？",
+            "purpose": "探索关键人物相关故事（定义‘秘密’的广义内涵，寻找关系起点）",
+            "reason": "如果‘偷豆’级别的秘密不普遍，则扩大‘秘密’的定义范围（心事、担忧），帮助受访者找到其他重要的人际连接时刻。",
+            "suggested_granularity": 4
+          },
+          {
+            "question": "在您看来，那种因为共同保守一个秘密而形成的亲近感，和因为一起劳动、一起说笑形成的友谊，有什么不一样？",
+            "purpose": "提取反思与感悟（比较不同类型的人际纽带）",
+            "reason": "在引入新人物前，先引导受访者对‘秘密纽带’这一特殊关系类型进行理论思考，这能提升后续具体叙事的深度。",
+            "suggested_granularity": 5
+          },
+          {
+            "question": "有没有那么一个人，你们因为某件事成了‘共谋’，但后来关系反而疏远了？",
+            "purpose": "探索关键人物相关故事（探索‘秘密’对关系的负面作用）",
+            "reason": "探索‘秘密’关系的另一面，不是所有共享秘密都能绑定关系，有时也可能成为负担导致疏远。这能呈现人际关系的复杂性。",
+            "suggested_granularity": 4
+          },
+          {
+            "question": "我们聊了这么久沉重的往事，要不要换个轻松点的话题？比如，知青点里有没有特别有趣、爱逗乐的人？",
+            "purpose": "广度切换（彻底转换到轻松话题，作为休息选项）",
+            "reason": "如果受访者表现出对继续探讨‘秘密’主题的疲惫或抗拒，这是一个备用的、大幅度的轻松化切换，旨在调节访谈节奏和情绪。",
+            "suggested_granularity": 2
+          }
+        ]
+      },
+      "raw_response": "{\n  \"meta\": {\n    \"version\": \"1.0.0\",\n    \"timestamp\": \"2026-03-26T21:46:11.552619\",\n    \"instruction_id\": \"ab3b6ace-627b-4b3c-820b-6971dc687de5\",\n    \"turn_number\": \"25\"\n  },\n  \"action\": {\n    \"primary_action\": \"BREADTH_SWITCH\",\n    \"tactical_goal\": {\n      \"goal_type\": \"EXPLORE_PERSON\",\n      \"description\": \"访谈者的问题成功地将话题从‘偷豆事件’本身，引向了更广泛的‘秘密’与‘人际关系’主题。受访者尚未回答，但问题方向极佳。考虑到受访者精神状态（energy_level=0.3）较低，且‘偷豆事件’已充分挖掘，应顺势进行广度切换，引导其探索与卫东之外的其他知青之间，是否也存在因特殊经历而形成的‘秘密’纽带。这既能延续‘秘密’主题的深度，又能引入新的人物和故事，避免在同一事件上过度消耗。\"\n    },\n    \"tone_constraint\": {\n      \"primary_tone\": \"CURIOUS_INQUIRING\",\n      \"secondary_tone\": \"THOUGHTFUL\",\n      \"constraints\": [\"ALLOW_SILENCE\", \"NO_JUDGMENT\", \"AVOID_TECHNICAL_TERMS\"]\n    },\n    \"strategy\": {\n      \"strategy_type\": \"SOCIAL_NETWORK_JUMP\",\n      \"parameters\": {\"anchor\": \"从卫东出发，沿‘共享秘密’的关系线索，探索知青社交网络中的其他关键人物\"},\n      \"priority\": 1\n    }\n  },\n  \"_debug_snapshot\": {\n    \"state_at_decision\": {\n      \"current_focus\": \"探索知青生涯中，除卫东外，其他因共享‘秘密’而关系特殊的人物\",\n      \"user_state\": {\n        \"emotional_energy\": -0.2,\n        \"energy_level\": 0.3\n      }\n    },\n    \"decision_trace\": [\"触发: 受访者精神状态(energy_level=0.3)持续偏低，情绪能量(emotional_energy=-0.2)稳定。上一轮已建议进行总结或切换。访谈者的问题恰好提供了一个完美的切换点，从具体事件（偷豆）切换到抽象主题（秘密），再通过‘其他人’实现人物跳转。\", \"目标: 避免在低能量状态下继续深挖同一事件的细节。利用‘秘密’这一已建立的主题，引导受访者回忆其他重要的人际关系，从而拓宽叙事覆盖面，发现新的故事线索。\", \"策略: 采用人物社交网络跳转策略，以卫东为起点，沿着‘共享秘密’这一关系属性，寻找知青群体中的其他关键节点人物。\", \"语气: 使用好奇探索型与沉思反思型。问题本身具有探索性，且涉及对人际关系的深层思考，适合用好奇引发回忆，用沉思引导分析。\"]\n  },\n  \"recommended_questions\": [\n    {\n      \"question\": \"除了卫东，知青点里，还有谁和您走得特别近，或者一起经历过一些……不方便对外人讲的事？\",\n      \"purpose\": \"探索关键人物相关故事（基于‘秘密’属性寻找新人物）\",\n      \"reason\": \"直接承接上一个问题，将‘秘密’具体化为‘不方便对外人讲的事’，降低抽象度，更易于触发具体的人物和事件回忆。\",\n      \"suggested_granularity\": 4\n    },\n    {\n      \"question\": \"您还记得第一个和您分享秘密（不一定是偷东西，可能是心事、家事、对未来的担忧）的知青朋友吗？那是谁，因为什么事？\",\n      \"purpose\": \"探索关键人物相关故事（定义‘秘密’的广义内涵，寻找关系起点）\",\n      \"reason\": \"如果‘偷豆’级别的秘密不普遍，则扩大‘秘密’的定义范围（心事、担忧），帮助受访者找到其他重要的人际连接时刻。\",\n      \"suggested_granularity\": 4\n    },\n    {\n      \"question\": \"在您看来，那种因为共同保守一个秘密而形成的亲近感，和因为一起劳动、一起说笑形成的友谊，有什么不一样？\",\n      \"purpose\": \"提取反思与感悟（比较不同类型的人际纽带）\",\n      \"reason\": \"在引入新人物前，先引导受访者对‘秘密纽带’这一特殊关系类型进行理论思考，这能提升后续具体叙事的深度。\",\n      \"suggested_granularity\": 5\n    },\n    {\n      \"question\": \"有没有那么一个人，你们因为某件事成了‘共谋’，但后来关系反而疏远了？\",\n      \"purpose\": \"探索关键人物相关故事（探索‘秘密’对关系的负面作用）\",\n      \"reason\": \"探索‘秘密’关系的另一面，不是所有共享秘密都能绑定关系，有时也可能成为负担导致疏远。这能呈现人际关系的复杂性。\",\n      \"suggested_granularity\": 4\n    },\n    {\n      \"question\": \"我们聊了这么久沉重的往事，要不要换个轻松点的话题？比如，知青点里有没有特别有趣、爱逗乐的人？\",\n      \"purpose\": \"广度切换（彻底转换到轻松话题，作为休息选项）\",\n      \"reason\": \"如果受访者表现出对继续探讨‘秘密’主题的疲惫或抗拒，这是一个备用的、大幅度的轻松化切换，旨在调节访谈节奏和情绪。\",\n      \"suggested_granularity\": 2\n    }\n  ]\n}"
+    },
+    {
+      "turn": 27,
+      "decision": {
+        "meta": {
+          "version": "1.0.0",
+          "timestamp": "2026-03-26T21:46:11.552619",
+          "instruction_id": "ab3b6ace-627b-4b3c-820b-6971dc687de5",
+          "turn_number": "26"
+        },
+        "action": {
+          "primary_action": "BREADTH_SWITCH",
+          "tactical_goal": {
+            "goal_type": "EXPLORE_PERSON",
+            "description": "访谈者重复了上一轮的核心问题，但语气更轻松（CASUAL_CONVERSATIONAL）。受访者仍未回答，可能是在回忆，也可能对‘秘密’一词仍有压力。考虑到其精神状态（energy_level=0.3）和可能的回忆负担，应坚持广度切换策略，但可以微调提问方式，降低‘秘密’的道德负重感，将其转化为更中性的‘共同经历’或‘私下约定’，以帮助受访者打开话匣子，引入新的人物和故事线。"
+          },
+          "tone_constraint": {
+            "primary_tone": "CASUAL_CONVERSATIONAL",
+            "secondary_tone": "CURIOUS_INQUIRING",
+            "constraints": [
+              "ALLOW_SILENCE",
+              "NO_JUDGMENT",
+              "AVOID_TECHNICAL_TERMS"
+            ]
+          },
+          "strategy": {
+            "strategy_type": "SOCIAL_NETWORK_JUMP",
+            "parameters": {
+              "anchor": "从‘共享秘密’转向‘共同经历/私下约定’，探索知青社交网络"
+            },
+            "priority": 1
+          }
+        },
+        "_debug_snapshot": {
+          "state_at_decision": {
+            "current_focus": "探索知青生涯中，除卫东外，其他有特殊私下交往或共同经历的人物",
+            "user_state": {
+              "emotional_energy": -0.2,
+              "energy_level": 0.3
+            }
+          },
+          "decision_trace": [
+            "触发: 受访者对‘秘密’问题出现延迟反应（未回复）。精神状态(energy_level=0.3)低，可能因回忆沉重话题而感疲惫。需要调整策略，坚持切换话题以恢复叙事活力，但需软化提问角度。",
+            "目标: 延续从卫东到其他人物的社交网络探索，但将‘秘密’这一可能带有负面色彩的词，替换为更宽泛、更中性的‘共同经历’或‘私下里的事’，降低受访者的心理防御和回忆难度。",
+            "策略: 继续采用人物社交网络跳转策略，但调整‘跳转’的锚点，从‘沉重的秘密’转向‘任何特殊的共同经历’。",
+            "语气: 采用轻松聊天型和好奇探索型，营造一种朋友间闲聊回忆的氛围，减轻受访者的压力。"
+          ]
+        },
+        "recommended_questions": [
+          {
+            "question": "或者咱们换个说法，除了卫东，知青点里还有谁，是您会私下里跟他聊点心里话，或者一起干点“小动作”的？",
+            "purpose": "探索关键人物相关故事（用更生活化的语言重新定义‘秘密’）",
+            "reason": "将‘秘密’具体化为‘心里话’和‘小动作’，前者指向情感信任，后者指向行为同盟，范围更广，语气更轻松，更容易引发具体的人物联想。",
+            "suggested_granularity": 4
+          },
+          {
+            "question": "比如，有没有人跟您一起偷偷改善过伙食？或者一起躲过什么不想干的活？",
+            "purpose": "提取事实细节（提供具体的行为场景作为回忆线索）",
+            "reason": "直接给出两个在知青生活中常见且带有轻微‘越轨’性质的场景（改善伙食、躲活），作为具体的回忆触发器，帮助受访者绕过抽象的‘秘密’概念，直接定位到人物和事件。",
+            "suggested_granularity": 3
+          },
+          {
+            "question": "您还记得第一次收到家里来信时，是找谁一起看的吗？或者，心里难受的时候，会找谁说说？",
+            "purpose": "探索关键人物相关故事（从情感支持的角度寻找关键人物）",
+            "reason": "从情感需求的角度切入，寻找在脆弱时刻（收家信、情绪低落）提供支持的伙伴。这类关系往往也建立在信任和私下分享的基础上。",
+            "suggested_granularity": 4
+          },
+          {
+            "question": "咱们聊点别的。知青点里，您第一个记住名字的人是谁？为什么是他/她？",
+            "purpose": "广度切换（彻底转换到更轻松、更正向的人物记忆）",
+            "reason": "如果受访者对‘私下’、‘小动作’类问题仍有迟疑，这是一个完全正向、无负担的切换。‘第一个记住名字的人’往往带有鲜明特征或有趣的故事，能有效调动回忆积极性。",
+            "suggested_granularity": 2
+          },
+          {
+            "question": "看您好像有点累了，咱们要不要先休息几分钟，喝口水？",
+            "purpose": "会话告别并记录断点信息（直接关怀与暂停提议）",
+            "reason": "这是最直接的关怀。如果受访者连续两轮未回答且精神状态值低，优先考虑其生理和心理舒适度，主动提议暂停是负责任的做法。",
+            "suggested_granularity": 1
+          }
+        ]
+      },
+      "raw_response": "{\n  \"meta\": {\n    \"version\": \"1.0.0\",\n    \"timestamp\": \"2026-03-26T21:46:11.552619\",\n    \"instruction_id\": \"ab3b6ace-627b-4b3c-820b-6971dc687de5\",\n    \"turn_number\": \"26\"\n  },\n  \"action\": {\n    \"primary_action\": \"BREADTH_SWITCH\",\n    \"tactical_goal\": {\n      \"goal_type\": \"EXPLORE_PERSON\",\n      \"description\": \"访谈者重复了上一轮的核心问题，但语气更轻松（CASUAL_CONVERSATIONAL）。受访者仍未回答，可能是在回忆，也可能对‘秘密’一词仍有压力。考虑到其精神状态（energy_level=0.3）和可能的回忆负担，应坚持广度切换策略，但可以微调提问方式，降低‘秘密’的道德负重感，将其转化为更中性的‘共同经历’或‘私下约定’，以帮助受访者打开话匣子，引入新的人物和故事线。\"\n    },\n    \"tone_constraint\": {\n      \"primary_tone\": \"CASUAL_CONVERSATIONAL\",\n      \"secondary_tone\": \"CURIOUS_INQUIRING\",\n      \"constraints\": [\"ALLOW_SILENCE\", \"NO_JUDGMENT\", \"AVOID_TECHNICAL_TERMS\"]\n    },\n    \"strategy\": {\n      \"strategy_type\": \"SOCIAL_NETWORK_JUMP\",\n      \"parameters\": {\"anchor\": \"从‘共享秘密’转向‘共同经历/私下约定’，探索知青社交网络\"},\n      \"priority\": 1\n    }\n  },\n  \"_debug_snapshot\": {\n    \"state_at_decision\": {\n      \"current_focus\": \"探索知青生涯中，除卫东外，其他有特殊私下交往或共同经历的人物\",\n      \"user_state\": {\n        \"emotional_energy\": -0.2,\n        \"energy_level\": 0.3\n      }\n    },\n    \"decision_trace\": [\"触发: 受访者对‘秘密’问题出现延迟反应（未回复）。精神状态(energy_level=0.3)低，可能因回忆沉重话题而感疲惫。需要调整策略，坚持切换话题以恢复叙事活力，但需软化提问角度。\", \"目标: 延续从卫东到其他人物的社交网络探索，但将‘秘密’这一可能带有负面色彩的词，替换为更宽泛、更中性的‘共同经历’或‘私下里的事’，降低受访者的心理防御和回忆难度。\", \"策略: 继续采用人物社交网络跳转策略，但调整‘跳转’的锚点，从‘沉重的秘密’转向‘任何特殊的共同经历’。\", \"语气: 采用轻松聊天型和好奇探索型，营造一种朋友间闲聊回忆的氛围，减轻受访者的压力。\"]\n  },\n  \"recommended_questions\": [\n    {\n      \"question\": \"或者咱们换个说法，除了卫东，知青点里还有谁，是您会私下里跟他聊点心里话，或者一起干点“小动作”的？\",\n      \"purpose\": \"探索关键人物相关故事（用更生活化的语言重新定义‘秘密’）\",\n      \"reason\": \"将‘秘密’具体化为‘心里话’和‘小动作’，前者指向情感信任，后者指向行为同盟，范围更广，语气更轻松，更容易引发具体的人物联想。\",\n      \"suggested_granularity\": 4\n    },\n    {\n      \"question\": \"比如，有没有人跟您一起偷偷改善过伙食？或者一起躲过什么不想干的活？\",\n      \"purpose\": \"提取事实细节（提供具体的行为场景作为回忆线索）\",\n      \"reason\": \"直接给出两个在知青生活中常见且带有轻微‘越轨’性质的场景（改善伙食、躲活），作为具体的回忆触发器，帮助受访者绕过抽象的‘秘密’概念，直接定位到人物和事件。\",\n      \"suggested_granularity\": 3\n    },\n    {\n      \"question\": \"您还记得第一次收到家里来信时，是找谁一起看的吗？或者，心里难受的时候，会找谁说说？\",\n      \"purpose\": \"探索关键人物相关故事（从情感支持的角度寻找关键人物）\",\n      \"reason\":  \"从情感需求的角度切入，寻找在脆弱时刻（收家信、情绪低落）提供支持的伙伴。这类关系往往也建立在信任和私下分享的基础上。\",\n      \"suggested_granularity\": 4\n    },\n    {\n      \"question\": \"咱们聊点别的。知青点里，您第一个记住名字的人是谁？为什么是他/她？\",\n      \"purpose\": \"广度切换（彻底转换到更轻松、更正向的人物记忆）\",\n      \"reason\": \"如果受访者对‘私下’、‘小动作’类问题仍有迟疑，这是一个完全正向、无负担的切换。‘第一个记住名字的人’往往带有鲜明特征或有趣的故事，能有效调动回忆积极性。\",\n      \"suggested_granularity\": 2\n    },\n    {\n      \"question\": \"看您好像有点累了，咱们要不要先休息几分钟，喝口水？\",\n      \"purpose\": \"会话告别并记录断点信息（直接关怀与暂停提议）\",\n      \"reason\": \"这是最直接的关怀。如果受访者连续两轮未回答且精神状态值低，优先考虑其生理和心理舒适度，主动提议暂停是负责任的做法。\",\n      \"suggested_granularity\": 1\n    }\n  ]\n}"
+    },
+    {
+      "turn": 28,
+      "decision": {
+        "meta": {
+          "version": "1.0.0",
+          "timestamp": "2026-03-26T21:46:11.552619",
+          "instruction_id": "ab3b6ace-627b-4b3c-820b-6971dc687de5",
+          "turn_number": "27"
+        },
+        "action": {
+          "primary_action": "PAUSE_SESSION",
+          "tactical_goal": {
+            "goal_type": "SESSION_FAREWELL",
+            "description": "受访者连续三轮（从turn 25开始）对关于‘其他人’或‘共同经历’的提问没有给出语言回复。结合其持续偏低的精神状态（energy_level=0.3）和情绪能量（emotional_energy=-0.2），这强烈暗示受访者可能已感到疲劳、注意力难以集中，或对当前话题方向（即使是调整后的）存在心理上的回避或困难。继续追问可能增加其压力并降低访谈质量。此时最优先的任务应是关怀受访者状态，优雅地结束本次会话，保存好当前关于‘偷豆事件’的完整叙事断点，并为下次访谈留下开放的邀请。"
+          },
+          "tone_constraint": {
+            "primary_tone": "GENTLE_WARM",
+            "secondary_tone": "CALM",
+            "constraints": [
+              "VALIDATE_FEELINGS",
+              "ALLOW_SILENCE",
+              "NO_JUDGMENT"
+            ]
+          },
+          "strategy": {
+            "strategy_type": "TASK_RESUME",
+            "parameters": {
+              "anchor": "保存‘偷豆事件’及‘秘密与关系’主题的完整叙事，记录暂停点"
+            },
+            "priority": 1
+          }
+        },
+        "_debug_snapshot": {
+          "state_at_decision": {
+            "current_focus": "会话暂停与关怀。当前叙事断点：刚完成对‘偷豆事件’（饥饿、道德、生命愧疚、与卫东的沉默秘密）的深度挖掘，正尝试切换至探索其他知青人际关系但未获回应。",
+            "user_state": {
+              "emotional_energy": -0.2,
+              "energy_level": 0.25
+            }
+          },
+          "decision_trace": [
+            "触发: 受访者连续无应答，精神状态(energy_level)从0.3预估进一步下降至0.25。情绪能量(emotional_energy=-0.2)稳定在负值。访谈者已尝试三次调整问题（从沉重秘密到轻松共同经历），均未获得回应，表明非问题设计问题，而是受访者状态问题。",
+            "核心判断: 保护受访者福祉和访谈关系优先于获取更多叙事。在低能量且无回应的状态下继续是无效且可能有害的。必须暂停。",
+            "目标: 以温暖、支持的方式主动结束本次会话，肯定已取得的成果（深度讲述了偷豆事件），减轻受访者可能因‘答不上来’而产生的压力，并明确约定后续可能性。",
+            "策略: 采用挂起任务回溯策略，明确记录当前叙事进度和待探索方向（其他知青人物），以便未来恢复。",
+            "语气: 使用温柔温暖型与平静从容型，传递无条件的接纳与关怀。"
+          ]
+        },
+        "recommended_questions": [
+          {
+            "question": "（温和地）没关系，不着急回答。我们今天聊了非常多，也非常深入了，特别是您和卫东那个晚上的故事，讲得特别真切，让我很受触动。您是不是有点累了？",
+            "purpose": "会话告别并记录断点信息（表达共情、肯定贡献、询问状态）",
+            "reason": "首先解除受访者无应答的压力（‘没关系’），然后高度肯定本次访谈的价值（‘非常深入’、‘很受触动’），最后将焦点转向关怀其身体感受（‘是不是累了’），为提出休息做铺垫。",
+            "suggested_granularity": 1
+          },
+          {
+            "question": "您看，咱们今天的故事就暂时先停在这里，好吗？您讲的关于饥饿、关于那棵菜、关于和卫东的秘密，我都记下了。这些都非常宝贵。",
+            "purpose": "会话告别并记录断点信息（提出暂停建议并总结成果）",
+            "reason": "以商量的口吻（‘好吗？’）提出明确的暂停建议。并复述核心成果，让受访者感到自己的讲述被珍视，有完整的收尾感。",
+            "suggested_granularity": 1
+          },
+          {
+            "question": "下次如果您愿意，我们可以从知青点里其他有趣的人或者事接着聊，或者聊点别的您想起来的。您看怎么样？",
+            "purpose": "会话告别并记录断点信息（规划未来，给予控制权）",
+            "reason": "为未来的访谈留下开放的、积极的邀请。指明可能的后续方向（其他人物），同时将选择权交给受访者（‘或者聊点别的您想起来的’），增强其参与感和控制感。",
+            "suggested_granularity": 1
+          },
+          {
+            "question": "现在，您最想做的事是喝点水，还是安静地坐一会儿？",
+            "purpose": "会话告别并记录断点信息（提供具体的关怀选项）",
+            "reason": "将关怀落到实处，提供两个简单、易执行的选择，引导受访者关注当下的身心需求，帮助其从访谈的沉浸状态中平稳过渡出来。",
+            "suggested_granularity": 1
+          }
+        ]
+      },
+      "raw_response": "{\n  \"meta\": {\n    \"version\": \"1.0.0\",\n    \"timestamp\": \"2026-03-26T21:46:11.552619\",\n    \"instruction_id\": \"ab3b6ace-627b-4b3c-820b-6971dc687de5\",\n    \"turn_number\": \"27\"\n  },\n  \"action\": {\n    \"primary_action\": \"PAUSE_SESSION\",\n    \"tactical_goal\": {\n      \"goal_type\": \"SESSION_FAREWELL\",\n      \"description\": \"受访者连续三轮（从turn 25开始）对关于‘其他人’或‘共同经历’的提问没有给出语言回复。结合其持续偏低的精神状态（energy_level=0.3）和情绪能量（emotional_energy=-0.2），这强烈暗示受访者可能已感到疲劳、注意力难以集中，或对当前话题方向（即使是调整后的）存在心理上的回避或困难。继续追问可能增加其压力并降低访谈质量。此时最优先的任务应是关怀受访者状态，优雅地结束本次会话，保存好当前关于‘偷豆事件’的完整叙事断点，并为下次访谈留下开放的邀请。\"\n    },\n    \"tone_constraint\": {\n      \"primary_tone\": \"GENTLE_WARM\",\n      \"secondary_tone\": \"CALM\",\n      \"constraints\": [\"VALIDATE_FEELINGS\", \"ALLOW_SILENCE\", \"NO_JUDGMENT\"]\n    },\n    \"strategy\": {\n      \"strategy_type\": \"TASK_RESUME\",\n      \"parameters\": {\"anchor\": \"保存‘偷豆事件’及‘秘密与关系’主题的完整叙事，记录暂停点\"},\n      \"priority\": 1\n    }\n  },\n  \"_debug_snapshot\": {\n    \"state_at_decision\": {\n      \"current_focus\": \"会话暂停与关怀。当前叙事断点：刚完成对‘偷豆事件’（饥饿、道德、生命愧疚、与卫东的沉默秘密）的深度挖掘，正尝试切换至探索其他知青人际关系但未获回应。\",\n      \"user_state\": {\n        \"emotional_energy\": -0.2,\n        \"energy_level\": 0.25\n      }\n    },\n    \"decision_trace\": [\"触发: 受访者连续无应答，精神状态(energy_level)从0.3预估进一步下降至0.25。情绪能量(emotional_energy=-0.2)稳定在负值。访谈者已尝试三次调整问题（从沉重秘密到轻松共同经历），均未获得回应，表明非问题设计问题，而是受访者状态问题。\", \"核心判断: 保护受访者福祉和访谈关系优先于获取更多叙事。在低能量且无回应的状态下继续是无效且可能有害的。必须暂停。\", \"目标: 以温暖、支持的方式主动结束本次会话，肯定已取得的成果（深度讲述了偷豆事件），减轻受访者可能因‘答不上来’而产生的压力，并明确约定后续可能性。\", \"策略: 采用挂起任务回溯策略，明确记录当前叙事进度和待探索方向（其他知青人物），以便未来恢复。\", \"语气: 使用温柔温暖型与平静从容型，传递无条件的接纳与关怀。\"]\n  },\n  \"recommended_questions\": [\n    {\n      \"question\": \"（温和地）没关系，不着急回答。我们今天聊了非常多，也非常深入了，特别是您和卫东那个晚上的故事，讲得特别真切，让我很受触动。您是不是有点累了？\",\n      \"purpose\": \"会话告别并记录断点信息（表达共情、肯定贡献、询问状态）\",\n      \"reason\": \"首先解除受访者无应答的压力（‘没关系’），然后高度肯定本次访谈的价值（‘非常深入’、‘很受触动’），最后将焦点转向关怀其身体感受（‘是不是累了’），为提出休息做铺垫。\",\n      \"suggested_granularity\": 1\n    },\n    {\n      \"question\": \"您看，咱们今天的故事就暂时先停在这里，好吗？您讲的关于饥饿、关于那棵菜、关于和卫东的秘密，我都记下了。这些都非常宝贵。\",\n      \"purpose\": \"会话告别并记录断点信息（提出暂停建议并总结成果）\",\n      \"reason\": \"以商量的口吻（‘好吗？’）提出明确的暂停建议。并复述核心成果，让受访者感到自己的讲述被珍视，有完整的收尾感。\",\n      \"suggested_granularity\": 1\n    },\n    {\n      \"question\": \"下次如果您愿意，我们可以从知青点里其他有趣的人或者事接着聊，或者聊点别的您想起来的。您看怎么样？\",\n      \"purpose\": \"会话告别并记录断点信息（规划未来，给予控制权）\",\n      \"reason\": \"为未来的访谈留下开放的、积极的邀请。指明可能的后续方向（其他人物），同时将选择权交给受访者（‘或者聊点别的您想起来的’），增强其参与感和控制感。\",\n      \"suggested_granularity\": 1\n    },\n    {\n      \"question\": \"现在，您最想做的事是喝点水，还是安静地坐一会儿？\",\n      \"purpose\": \"会话告别并记录断点信息（提供具体的关怀选项）\",\n      \"reason\": \"将关怀落到实处，提供两个简单、易执行的选择，引导受访者关注当下的身心需求，帮助其从访谈的沉浸状态中平稳过渡出来。\",\n      \"suggested_granularity\": 1\n    }\n  ]\n}"
+    }
+  ]
+}

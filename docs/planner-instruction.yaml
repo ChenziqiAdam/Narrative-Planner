@@ -49,7 +49,7 @@ instructions:
       - ALLOW_SILENCE: "允许沉默，给用户思考时间"
       - VALIDATE_FEELINGS: "肯定并接纳用户情绪"
       - AVOID_TECHNICAL_TERMS: "使用通俗语言，避免专业术语"
-
+      
   - name: strategy
     description: "用于 action.strategy 字段：执行策略类型与简要说明。"
     values:

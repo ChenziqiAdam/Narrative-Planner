@@ -30,10 +30,10 @@ class BaseAgent:
       - get_name() 的默认实现
     """
 
-    def __init__(self,  tools: Optional[List[Any]] = None):
+    def __init__(self,  tools: Optional[List[Any]] = None, max_message_window_size: int = 10):
         self.tools: List[Any] = tools or []
         self.model = self._setup_model()
-        self._init_chat_agent()
+        self._init_chat_agent(message_window_size=max_message_window_size)
 
     def _load_profile(self, profile_path) -> Dict[str, Any]:
         """加载 profile 文件，支持 JSON 和 YAML 格式；若路径无效或加载失败则返回空字典"""
@@ -70,15 +70,15 @@ class BaseAgent:
         """子类必须实现：返回用于 ChatAgent 的对话"""
         raise NotImplementedError("_create_step_message must be implemented by subclasses")
 
-    def _init_chat_agent(self) -> None:
+    def _init_chat_agent(self,message_window_size = 10) -> None:
         """基于系统消息、模型和可选工具初始化 ChatAgent"""
         # 子类必须保证在调用此方法时 _create_system_message 可用
         system_message = self._create_system_message()
 
         if self.tools:
-            self.agent = ChatAgent(system_message=system_message, model=self.model, tools=self.tools)
+            self.agent = ChatAgent(system_message=system_message, model=self.model, tools=self.tools, message_window_size=message_window_size)
         else:
-            self.agent = ChatAgent(system_message=system_message, model=self.model)
+            self.agent = ChatAgent(system_message=system_message, model=self.model, message_window_size=message_window_size)
 
     def parse_json_response(self, content: str) -> Dict[str, Any]:
         """

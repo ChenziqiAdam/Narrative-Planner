@@ -1,141 +1,110 @@
-#!/usr/bin/env python3
-"""
-Baseline Agent - 无 Planner 的基线对话 Agent
-
-用于评估对比，纯 LLM 对话访谈。
-"""
-
 import os
-import sys
-import logging
-from datetime import datetime
+from camel.models import ModelFactory
+from camel.types import ModelPlatformType
+from camel.messages import BaseMessage
+from prompts.roles.elderly_promot import ElderPromptGenerator
 
-# 添加项目根目录到路径
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
-
-from src.config import Config
-from openai import OpenAI
-
-# 设置日志
-logging.basicConfig(
-    level=Config.LOG_LEVEL,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler('logs/baseline_agent.log'),
-        logging.StreamHandler()
-    ]
-)
-logger = logging.getLogger(__name__)
+# 查找记忆的工具
+from tools.elder_tools import ElderMemorySystem, get_tools
+from src.agents.base_agents import BaseAgent
 
 
-class BaselineAgent:
-    """无Planner的基线对话Agent"""
+class IntervieweeAgent(BaseAgent):
+    def __init__(self, profile_path, model_type, model_base_url, api_key, save_path):
+        self.profile_path = profile_path
+        self.example_text = None
+        self.model_type = model_type
+        self.model_base_url = model_base_url
+        self.api_key = api_key
+        self.save_path = save_path
+        self.history = ""
+        
+        # 加载老年人角色信息
+        self.generator = ElderPromptGenerator()
+        self.profile_data = self.generator.load_elder_profile(self.profile_path)
+        
+        # 加载工具
+        self._load_tools()
+        
+        # 调用父类初始化
+        super().__init__(tools=self.tool_schemas)
 
-    def __init__(self, session_id: str = None):
-        """
-        初始化 Baseline Agent
+    def _load_tools(self):
+        """加载记忆系统工具"""
+        self.memory_system = ElderMemorySystem(self.profile_path)
+        self.tool_schemas = get_tools(self.memory_system)
 
-        Args:
-            session_id: 会话 ID，用于日志和结果保存
-        """
-        self.session_id = session_id or datetime.now().strftime("%Y%m%d_%H%M%S")
-        # 支持自定义 base_url（如 Kimi、智谱等 OpenAI 兼容 API）
-        client_kwargs = {"api_key": Config.OPENAI_API_KEY}
-        if Config.OPENAI_BASE_URL:
-            client_kwargs["base_url"] = Config.OPENAI_BASE_URL
-        self.client = OpenAI(**client_kwargs)
-        self.conversation_history = []
+    def _setup_model(self):
+        """覆盖父类方法，使用自定义的模型参数"""
+        return ModelFactory.create(
+            model_platform=ModelPlatformType.OPENAI_COMPATIBLE_MODEL,
+            model_type=self.model_type,
+            url=self.model_base_url,
+            api_key=self.api_key,
+        )
+    
+    def _create_system_message(self) -> BaseMessage:
+        """创建系统消息：生成老年人角色prompt"""
+        sys_prompt = self.generator.generate_prompt(self.profile_data)
+        return BaseMessage.make_system_message(sys_prompt)
 
-        # 加载系统提示词
-        prompt_path = os.path.join(Config.PROMPTS_DIR, 'baseline_system_prompt.txt')
-        with open(prompt_path, 'r', encoding='utf-8') as f:
-            self.system_prompt = f.read()
+    def _create_step_message(self) -> BaseMessage:
+        """创建步骤消息（采访问题）"""
+        # 这个方法用于单个问题的prompt构建
+        raise NotImplementedError("_create_step_message is not used directly in IntervieweeAgent")
 
-        logger.info(f"Baseline Agent 初始化完成 (Session: {self.session_id})")
+    def _load_step_prompt(self, history, question):
+        """为采访构建prompt：包含采访历史和当前问题"""
+        
+        
+        
+        prompt = f"采访问题：{question} "
+        return prompt
+    
+    def respond(self, message):
+        reply = self.agent.step(message).msg.content
+        return self.parse_json_response(reply)
+    
+    # test mode
+    def answer_questions(self, questions, save_path=None, test=False):
+        """回答采访问题"""
+        if save_path is None:
+            save_path = self.save_path
+        responses = []
+        if test:
+            while True:
+                question = input("请输入问题（输入exit退出）：")
+                if question.lower() == "exit":
+                    break
+                response = self.agent.step(str(question))
+                answer = response.msg.content
+                print(f"问题：{question}\n回答：{answer}\n")
+                self.history += f"Q: {question}\nA: {answer}\n"
+        else:
+            for idx, question in enumerate(questions):
+                if idx == 0:
+                    prompt = self._load_step_prompt("", question)
+                else:
+                    prompt = self._load_step_prompt(self.history, question)
+                response = self.agent.step(prompt)
+                answer = response.msg.content
+                self.history += f"Q: {question}\nA: {answer}\n"
+                responses.append(answer)
+                print(f"问题：{question}\n回答：{answer}\n")
+        with open(save_path, "w", encoding="utf-8") as f:
+            f.write(self.history)
+        print(f"已保存到 {save_path}")
+        return responses
 
-    def initialize_conversation(self, basic_info: str):
-        """初始化对话"""
-        system_message = self.system_prompt.replace("[用户的基本生平信息]", basic_info)
-        self.conversation_history = [{"role": "system", "content": system_message}]
-        logger.info(f"对话已初始化，基本信息: {basic_info}")
-
-    def get_next_question(self, user_response: str = None):
-        """获取下一个问题"""
-        # 添加用户回复到历史（如果是第一轮，user_response为None）
-        if user_response:
-            self.conversation_history.append({"role": "user", "content": user_response})
-
-        try:
-            response = self.client.chat.completions.create(
-                model=Config.MODEL_NAME,
-                messages=self.conversation_history,
-                max_tokens=500,
-                temperature=0.7
-            )
-
-            question = response.choices[0].message.content
-            self.conversation_history.append({"role": "assistant", "content": question})
-
-            logger.info(f"生成问题: {question[:100]}...")
-            return question
-
-        except Exception as e:
-            logger.error(f"API调用失败: {e}")
-            return "抱歉，我遇到了一些技术问题，请稍后再试。"
-
-    def save_conversation(self):
-        """保存对话记录"""
-        results_dir = "results/conversations"
-        os.makedirs(results_dir, exist_ok=True)
-
-        output_file = os.path.join(results_dir, f"baseline_{self.session_id}.txt")
-        with open(output_file, 'w', encoding='utf-8') as f:
-            for msg in self.conversation_history:
-                f.write(f"[{msg['role']}]: {msg['content']}\n\n")
-
-        logger.info(f"对话记录已保存到: {output_file}")
-
-    def run_interview(self):
-        """运行访谈循环"""
-        print("=== 传记访谈助手 Baseline ===")
-        print("请输入老人的基本信息（如：出生于1950年代，曾是一名工程师，现居北京）:")
-
-        basic_info = input("基本信息: ").strip()
-        self.initialize_conversation(basic_info)
-
-        # 第一轮问题
-        question = self.get_next_question()
-        print(f"\n助手: {question}")
-
-        # 对话循环
-        turn_count = 0
-        while True:
-            user_input = input("\n老人: ").strip()
-
-            if user_input.lower() in ['退出', 'exit', 'quit', '结束']:
-                print("访谈结束，感谢参与！")
-                self.save_conversation()
-                break
-
-            if not user_input:
-                print("请输入有效回答")
-                continue
-
-            question = self.get_next_question(user_input)
-            print(f"\n助手: {question}")
-
-            turn_count += 1
-            if turn_count >= 50:
-                print("\n已达到最大轮次（50），访谈结束。")
-                self.save_conversation()
-                break
-
-
+# test 
 if __name__ == "__main__":
-    # 检查API密钥
-    if not Config.OPENAI_API_KEY:
-        print("错误: 请先在 .env 文件中设置 OPENAI_API_KEY")
-        sys.exit(1)
-
-    agent = BaselineAgent()
-    agent.run_interview()
+    from dotenv import load_dotenv
+    load_dotenv()
+    agent = IntervieweeAgent(
+        "prompts/roles/elder_profile_example.json",
+        model_type=os.getenv("MODEL_TYPE"),
+        model_base_url=os.getenv("MODEL_BASE_URL"),
+        api_key=os.getenv("API_KEY"),
+        save_path="data/raw/interviewee_answers.txt",
+    )  
+    agent.answer_questions([], test=True)

@@ -7,7 +7,7 @@ from typing import Any, Dict, List, Optional
 from jinja2 import Template
 from camel.messages import BaseMessage
 
-from base_agents import BaseAgent
+from src.agents.base_agents import BaseAgent
 from prompts.planner_interview_prompts import PLANNER_PROMPT_TEMPLATE
 import yaml
 
@@ -64,16 +64,16 @@ class PlannerAgent(BaseAgent):
             timestamp=datetime.now().isoformat(),
             instruction_id=str(uuid.uuid4()),
         )
-    
+        
         return BaseMessage.make_system_message(role_name="system", content=rendered)
 
-
-    def _create_step_message(self, interviewee_text: str) -> BaseMessage:
+    def _create_step_message(self, last_question, interviewee_text: str) -> BaseMessage:
         """Create a interviewee message to send to ChatAgent from a raw string."""
-        return BaseMessage.make_user_message(role_name="interviewee", content=interviewee_text)
+        promot = f"{{last question by interviewer: {last_question}, interviewee reply: {interviewee_text}}}"
+        return BaseMessage.make_user_message(role_name="interviewee", content=promot)
     
     # -------- core respond (uses history) --------
-    def respond(self, message: str) -> str:
+    def respond(self, message, last_question:str) -> str:
         """Send the interviewee's message (plus history) to the chat agent and return the agent's text response.
 
         Behavior:
@@ -84,9 +84,15 @@ class PlannerAgent(BaseAgent):
         """
         # append interviewee message to history
         self.add_interviewee_message(message)
-        parsed = self.parse_json_response(message)
-        interviewee_msg = parsed.get("reply", parsed if isinstance(parsed, str) else "") if self.test else parsed
-        input_msg = self._create_step_message(interviewee_msg)
+        if isinstance(message,str):
+            if self.test:
+                parsed = self.parse_json_response(message)
+                interviewee_msg = parsed.get("reply", parsed if isinstance(parsed, str) else "") 
+            else:
+                interviewee_msg = message
+        else:
+            interviewee_msg = message.get("reply", message if isinstance(message, str) else "") 
+        input_msg = self._create_step_message(last_question, interviewee_msg)
         # try using agent.step if available; keep compatibility with different camel versions
         agent = getattr(self, "agent", None)
         if agent is None:
@@ -94,7 +100,6 @@ class PlannerAgent(BaseAgent):
             simulated = json.dumps({"ack": interviewee_msg or message})
             self.add_planner_message(simulated)
             return simulated
-
         # If agent has a step or chat method that accepts a single message, try those.
         for method_name in ("step", "chat", "respond", "run", "send"):
             method = getattr(agent, method_name, None)
@@ -132,7 +137,7 @@ if __name__ == "__main__":
     
     for msg in sample_msgs:
         print(">>>Interviewee ->", msg)
-        planner_resp = agent.respond(msg)
+        planner_resp = agent.respond(msg, last_question="What was your childhood like?")
         print(">>>Planner  ->", planner_resp)
         # append both sides to records (store parsed interviewee content and planner reply)
         parsed = agent.parse_json_response(msg)
