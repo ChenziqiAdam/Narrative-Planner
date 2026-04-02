@@ -11,6 +11,8 @@ __pycache__/
 
 logs
 data
+!frontend/src/data/
+!frontend/src/data/relationLexicon.json
 nohup.out
 .log
 
