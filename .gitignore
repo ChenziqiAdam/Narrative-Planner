@@ -2,7 +2,22 @@
 __pycache__/
 *.pyc
 
+# 虚拟环境
+.venv/
+venv/
+env/
+
 # 环境变量（包含敏感信息）
 .env
 .env.local
 .env.*.local
+
+# 依赖目录
+node_modules/
+
+# 日志文件
+logs/*.log
+logs/*.png
+
+# 前端残留（切换分支遗留）
+frontend/

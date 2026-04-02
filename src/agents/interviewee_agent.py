@@ -63,7 +63,11 @@ class IntervieweeAgent(BaseAgent):
     
     def respond(self, message):
         reply = self.agent.step(message).msg.content
-        return self.parse_json_response(reply)
+        parsed = self.parse_json_response(reply)
+        # 如果解析成功且有 reply 字段，返回 reply；否则返回原始内容
+        if isinstance(parsed, dict) and "reply" in parsed:
+            return parsed["reply"]
+        return reply
     
     # test mode
     def answer_questions(self, questions, save_path=None, test=False):
