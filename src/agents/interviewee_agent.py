@@ -180,17 +180,27 @@ class IntervieweeAgent:
 
     def step(self, prompt: str) -> str:
         """Send a prompt and return the text reply, executing any tool calls."""
+        reply, _ = self.step_with_metadata(prompt)
+        return reply
+
+    def step_with_metadata(self, prompt: str) -> tuple[str, list[dict]]:
+        """Send a prompt and return (reply, tool_calls_metadata).
+
+        tool_calls_metadata is a list of dicts:
+          {"tool": str, "args": dict, "result": any}
+        """
         messages = [
             {"role": "system", "content": self.sys_prompt},
             {"role": "user", "content": prompt},
         ]
+        tool_calls_log: list[dict] = []
 
         while True:
             response = self._create_completion(messages)
             message = response.choices[0].message
 
             if not message.tool_calls:
-                return self._normalize_reply(message.content or "")
+                return self._normalize_reply(message.content or ""), tool_calls_log
 
             assistant_message = {
                 "role": "assistant",
@@ -222,6 +232,7 @@ class IntervieweeAgent:
                 fn_args = json.loads(fn_args_raw)
                 fn = self.tool_callables.get(fn_name)
                 result = fn(**fn_args) if fn else {"error": f"unknown tool: {fn_name}"}
+                tool_calls_log.append({"tool": fn_name, "args": fn_args, "result": result})
                 messages.append(
                     {
                         "role": "tool",
