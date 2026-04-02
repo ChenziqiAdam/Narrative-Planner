@@ -71,11 +71,13 @@ def _build_compare_interviewee(session_data: dict) -> IntervieweeAgent:
     return interviewee
 
 
-def _run_compare_interviewee_turn(interviewee: IntervieweeAgent, question: str) -> str:
+def _run_compare_interviewee_turn(interviewee: IntervieweeAgent, question: str) -> tuple[str, list[dict]]:
+    """Returns (answer, memory_calls) where memory_calls is the tool call log."""
     prompt = interviewee._load_step_prompt(interviewee.history, question)
-    answer = extract_reply(interviewee.step(prompt))
+    raw_reply, memory_calls = interviewee.step_with_metadata(prompt)
+    answer = extract_reply(raw_reply)
     interviewee.record_turn(question, answer)
-    return answer
+    return answer, memory_calls
 
 
 # ── Routes ───────────────────────────────────────────────────────────────────
@@ -180,11 +182,11 @@ def auto_interview():
         while True:
             # Interviewee answers
             prompt = agents["interviewee"]._load_step_prompt(agents["interviewee"].history, last_question)
-            raw_answer = agents["interviewee"].step(prompt)
+            raw_answer, memory_calls = agents["interviewee"].step_with_metadata(prompt)
             answer = extract_reply(raw_answer)
             agents["interviewee"].history += f"Q: {last_question}\nA: {answer}\n"
             agents["history"].append({"role": "interviewee", "text": answer})
-            yield f"data: {json.dumps({'role': 'interviewee', 'action': 'answer', 'text': answer}, ensure_ascii=False)}\n\n"
+            yield f"data: {json.dumps({'role': 'interviewee', 'action': 'answer', 'text': answer, 'memory_calls': memory_calls}, ensure_ascii=False)}\n\n"
 
             # Interviewer gets next question
             question = agents["interviewer"].get_next_question(answer)
@@ -266,6 +268,10 @@ header h1 { font-size: 1.1rem; font-weight: bold; }
 .action-badge.end { background: #ffe0e0; color: #7a0000; }
 .msg.interviewee { align-self: flex-end; background: #fff; color: #333; border-bottom-right-radius: 4px; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
 .msg.system { align-self: center; background: transparent; color: #999; font-size: .8rem; font-style: italic; }
+.msg-memory-calls { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.msg-memory-chip { display: inline-flex; align-items: center; gap: 3px; padding: 2px 7px; border-radius: 999px; font-size: .66rem; font-weight: 600; background: #f0e8ff; color: #5b21b6; border: 1px solid #d8b4fe; cursor: default; position: relative; }
+.msg-memory-chip:hover .msg-memory-tip, .msg-memory-tip:hover { display: block; }
+.msg-memory-tip { display: none; position: absolute; bottom: calc(100% + 5px); left: 0; min-width: 200px; max-width: 300px; max-height: 300px; overflow-y: auto; background: #1e1b2e; color: #e2d9ff; font-size: .7rem; font-weight: 400; padding: 7px 9px; border-radius: 7px; z-index: 100; white-space: pre-wrap; word-break: break-word; box-shadow: 0 4px 12px rgba(0,0,0,.3); line-height: 1.4; }
 .typing-dots span { display: inline-block; animation: blink 1.2s infinite; }
 .typing-dots span:nth-child(2) { animation-delay: .2s; }
 .typing-dots span:nth-child(3) { animation-delay: .4s; }
@@ -378,7 +384,7 @@ function selectMode(mode) {
 
 const actionLabels = { continue: '深入', next_phase: '下一阶段', end: '结束访谈' };
 
-function appendMsg(role, text, action) {
+function appendMsg(role, text, action, memoryCalls) {
   const labels = { interviewer: '访谈者', interviewee: '受访者（您）', system: '' };
   const d = document.createElement('div');
   d.className = 'msg ' + role;
@@ -397,6 +403,23 @@ function appendMsg(role, text, action) {
   const p = document.createElement('p');
   p.textContent = text;
   d.appendChild(p);
+  if (memoryCalls && memoryCalls.length > 0) {
+    const toolNames = { search_memories_by_keywords: '🔍 关键词', search_memories_by_tags: '🏷 标签', get_memories_by_period: '📅 时期', get_memory_by_id: '📌 记忆ID', get_related_memories: '🔗 关联' };
+    const memDiv = document.createElement('div');
+    memDiv.className = 'msg-memory-calls';
+    for (const call of memoryCalls) {
+      const chip = document.createElement('span');
+      chip.className = 'msg-memory-chip';
+      const cnt = Array.isArray(call.result) ? call.result.length : (call.result ? 1 : 0);
+      const label = toolNames[call.tool] || call.tool;
+      const argsStr = JSON.stringify(call.args, null, 2);
+      const chipLabel = Array.isArray(call.result) ? call.result.map(r => r.memory?.event_name || r.memory_id || '?').join(', ') : (call.result?.event_name || '');
+      const fullResult = JSON.stringify(call.result, null, 2);
+      chip.innerHTML = `${label} (${cnt})<span class="msg-memory-tip">工具：${call.tool}\n参数：${argsStr}\n结果：${fullResult || '无'}</span>`;
+      memDiv.appendChild(chip);
+    }
+    d.appendChild(memDiv);
+  }
   chatEl.appendChild(d);
   chatEl.scrollTop = chatEl.scrollHeight;
   return d;
@@ -548,7 +571,7 @@ function runAutoInterview() {
       appendMsg('system', '访谈已由访谈者自然结束');
       return;
     }
-    appendMsg(msg.role, msg.text, msg.action);
+    appendMsg(msg.role, msg.text, msg.action, msg.memory_calls);
   };
 
   evtSource.onerror = () => {
@@ -766,10 +789,10 @@ def baseline_auto():
             last_question = last_question_entry.get("text", "")
 
             # AI受访者回答
-            answer = _run_compare_interviewee_turn(interviewee, last_question)
+            answer, memory_calls = _run_compare_interviewee_turn(interviewee, last_question)
 
             session["history"].append({"role": "interviewee", "text": answer})
-            yield f"data: {json.dumps({'role': 'interviewee', 'action': 'answer', 'text': answer}, ensure_ascii=False)}\n\n"
+            yield f"data: {json.dumps({'role': 'interviewee', 'action': 'answer', 'text': answer, 'memory_calls': memory_calls}, ensure_ascii=False)}\n\n"
 
             # 访谈者提问
             result = agent.get_next_question(answer)
@@ -949,10 +972,10 @@ def planner_auto():
             last_question = session["history"][-1]["text"] if session["history"] else ""
 
             # AI受访者回答
-            answer = _run_compare_interviewee_turn(interviewee, last_question)
+            answer, memory_calls = _run_compare_interviewee_turn(interviewee, last_question)
 
             session["history"].append({"role": "interviewee", "text": answer})
-            yield f"data: {json.dumps({'role': 'interviewee', 'text': answer, 'extracted_events': [], 'graph_delta': {}}, ensure_ascii=False)}\n\n"
+            yield f"data: {json.dumps({'role': 'interviewee', 'text': answer, 'extracted_events': [], 'graph_delta': {}, 'memory_calls': memory_calls}, ensure_ascii=False)}\n\n"
 
             # 获取下一个问题（包含事件提取）
             result = agent.get_next_question(answer)
@@ -1515,6 +1538,53 @@ COMPARE_HTML = '''<!DOCTYPE html>
         .evaluation-chip.notes {
             background: #fff3f0;
             color: #8f3b2e;
+        }
+
+        /* Memory calls */
+        .memory-calls {
+            margin-top: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        .memory-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 8px;
+            border-radius: 999px;
+            font-size: 0.68rem;
+            font-weight: 600;
+            background: #f0e8ff;
+            color: #5b21b6;
+            cursor: pointer;
+            border: 1px solid #d8b4fe;
+            position: relative;
+        }
+        .memory-chip:hover .memory-tooltip,
+        .memory-tooltip:hover {
+            display: block;
+        }
+        .memory-tooltip {
+            display: none;
+            position: absolute;
+            bottom: calc(100% + 6px);
+            left: 0;
+            min-width: 220px;
+            max-width: 320px;
+            max-height: 300px;
+            overflow-y: auto;
+            background: #1e1b2e;
+            color: #e2d9ff;
+            font-size: 0.72rem;
+            font-weight: 400;
+            padding: 8px 10px;
+            border-radius: 8px;
+            z-index: 100;
+            white-space: pre-wrap;
+            word-break: break-word;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            line-height: 1.5;
         }
 
         /* Controls */
@@ -2506,7 +2576,7 @@ COMPARE_HTML = '''<!DOCTYPE html>
 
         }
 
-        function appendMessage(container, role, text, action) {
+        function appendMessage(container, role, text, action, memoryCalls) {
             const msg = document.createElement("div");
             msg.className = `message ${role}`;
 
@@ -2520,6 +2590,32 @@ COMPARE_HTML = '''<!DOCTYPE html>
                 <div class="msg-label">${label}${actionTag}</div>
                 <div class="msg-text">${text}</div>
             `;
+
+            if (memoryCalls && memoryCalls.length > 0) {
+                const memDiv = document.createElement("div");
+                memDiv.className = "memory-calls";
+                for (const call of memoryCalls) {
+                    const chip = document.createElement("span");
+                    chip.className = "memory-chip";
+                    const toolLabel = {
+                        search_memories_by_keywords: "🔍 关键词",
+                        search_memories_by_tags: "🏷 标签",
+                        get_memories_by_period: "📅 时期",
+                        get_memory_by_id: "📌 记忆ID",
+                        get_related_memories: "🔗 关联记忆",
+                    }[call.tool] || call.tool;
+
+                    const resultCount = Array.isArray(call.result) ? call.result.length : (call.result ? 1 : 0);
+                    const argsStr = JSON.stringify(call.args, null, 2);
+                    const fullResult = JSON.stringify(call.result, null, 2);
+
+                    chip.innerHTML = `${toolLabel} (${resultCount})
+                        <span class="memory-tooltip">调用：${call.tool}\n参数：${argsStr}\n结果：${fullResult || "无"}</span>`;
+                    memDiv.appendChild(chip);
+                }
+                msg.appendChild(memDiv);
+            }
+
             container.appendChild(msg);
             container.scrollTop = container.scrollHeight;
             return msg;
@@ -2558,7 +2654,7 @@ COMPARE_HTML = '''<!DOCTYPE html>
                     bindPendingBaselineTurnEvaluation(msg.turn_evaluation);
                     appendBaselineQuestion(chat, msg.text, msg.action);
                 } else {
-                    appendMessage(chat, msg.role, msg.text, msg.action);
+                    appendMessage(chat, msg.role, msg.text, msg.action, msg.memory_calls);
                 }
             };
 
@@ -2626,7 +2722,7 @@ COMPARE_HTML = '''<!DOCTYPE html>
                 }
 
                 if (msg.role === "interviewee") {
-                    appendMessage(chat, "interviewee", msg.text);
+                    appendMessage(chat, "interviewee", msg.text, null, msg.memory_calls);
                 } else {
                     if (msg.action === "end") {
                         interviewEnded = true;
