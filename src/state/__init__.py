@@ -19,6 +19,7 @@ from .models import (
     SessionMetrics,
     SessionState,
     ThemeState,
+    ThemeSummary,
     TurnRecord,
 )
 
@@ -42,6 +43,7 @@ __all__ = [
     "SessionMetrics",
     "SessionState",
     "ThemeState",
+    "ThemeSummary",
     "TurnEvaluation",
     "TurnRecord",
 ]

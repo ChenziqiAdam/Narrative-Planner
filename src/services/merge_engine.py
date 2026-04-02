@@ -5,9 +5,18 @@ from dataclasses import dataclass, field
 from difflib import SequenceMatcher
 from typing import Iterable, List, Optional
 
-from src.core.interfaces import ExtractedEvent
+from src.core.interfaces import ExtractedEvent, SimilarityHint
 from src.services.relation_lexicon import infer_relation_code, is_self_reference
 from src.state import CanonicalEvent, PersonProfile, SessionState
+
+
+@dataclass
+class MergeAction:
+    """合并决策动作"""
+    action_type: str  # "UPDATE" | "VERIFY_THEN_UPDATE" | "CREATE_NEW"
+    target_event: Optional[CanonicalEvent]
+    confidence: float
+    reason: str
 
 
 @dataclass
@@ -21,8 +30,161 @@ class MergeResult:
 
 
 class MergeEngine:
+    # 大模型建议置信度阈值
+    HIGH_CONFIDENCE_THRESHOLD = 0.80
+    MEDIUM_CONFIDENCE_THRESHOLD = 0.50
+
     def __init__(self, similarity_threshold: float = 0.72):
         self.similarity_threshold = similarity_threshold
+
+    def _decide_merge_action(
+        self,
+        state: SessionState,
+        extracted: ExtractedEvent
+    ) -> MergeAction:
+        """
+        基于大模型建议决定合并动作
+
+        Args:
+            state: 会话状态
+            extracted: 提取的事件
+
+        Returns:
+            MergeAction决策对象
+        """
+        from src.config import Config
+
+        # 如果功能关闭或没有相似度建议，返回CREATE_NEW让硬编码兜底
+        if not getattr(Config, 'ENABLE_LLM_MERGE_HINTS', True):
+            return MergeAction(
+                action_type="CREATE_NEW",
+                target_event=None,
+                confidence=0.0,
+                reason="llm_merge_hints_disabled"
+            )
+
+        hints = extracted.similarity_hints
+
+        if not hints:
+            return MergeAction(
+                action_type="CREATE_NEW",
+                target_event=None,
+                confidence=0.0,
+                reason="no_llm_hints"
+            )
+
+        # 取最高置信度的建议
+        best_hint = max(hints, key=lambda h: h.confidence)
+        target_event = state.canonical_events.get(best_hint.candidate_id)
+
+        if not target_event:
+            return MergeAction(
+                action_type="CREATE_NEW",
+                target_event=None,
+                confidence=0.0,
+                reason="candidate_not_found"
+            )
+
+        # 分层决策
+        if best_hint.confidence >= self.HIGH_CONFIDENCE_THRESHOLD:
+            return MergeAction(
+                action_type="UPDATE",
+                target_event=target_event,
+                confidence=best_hint.confidence,
+                reason=f"high_confidence_llm_hint: {best_hint.reason}"
+            )
+
+        elif best_hint.confidence >= self.MEDIUM_CONFIDENCE_THRESHOLD:
+            return MergeAction(
+                action_type="VERIFY_THEN_UPDATE",
+                target_event=target_event,
+                confidence=best_hint.confidence,
+                reason=f"medium_confidence_llm_hint: {best_hint.reason}"
+            )
+
+        else:
+            return MergeAction(
+                action_type="CREATE_NEW",
+                target_event=None,
+                confidence=best_hint.confidence,
+                reason="low_confidence_llm_hints"
+            )
+
+    def _verify_with_rules(
+        self,
+        existing: CanonicalEvent,
+        extracted: ExtractedEvent
+    ) -> bool:
+        """
+        用硬编码规则验证是否应该合并
+
+        Args:
+            existing: 已有事件
+            extracted: 提取的事件
+
+        Returns:
+            是否验证通过
+        """
+        # 使用原有的相似度计算逻辑
+        score = self._event_similarity(existing, extracted)
+        return score >= self.similarity_threshold
+
+    def _event_similarity(
+        self,
+        existing: CanonicalEvent,
+        extracted: ExtractedEvent
+    ) -> float:
+        """
+        计算两个事件的相似度（用于硬编码验证）
+        """
+        from difflib import SequenceMatcher
+
+        candidate_text = extracted.slots.event or ""
+        if not candidate_text:
+            return 0.0
+
+        summary_score = SequenceMatcher(
+            None, existing.summary or "", candidate_text
+        ).ratio()
+
+        time_score = 0.0
+        if existing.time and extracted.slots.time:
+            time_score = (
+                1.0
+                if existing.time == extracted.slots.time
+                else SequenceMatcher(
+                    None, existing.time, extracted.slots.time
+                ).ratio() * 0.6
+            )
+
+        location_score = 0.0
+        if existing.location and extracted.slots.location:
+            location_score = (
+                1.0
+                if existing.location == extracted.slots.location
+                else SequenceMatcher(
+                    None, existing.location, extracted.slots.location
+                ).ratio() * 0.5
+            )
+
+        extracted_people = {
+            self._normalize_key(name)
+            for name in extracted.slots.people or []
+        }
+        existing_people = {
+            self._normalize_key(name) for name in existing.people_names
+        }
+        people_score = 0.0
+        if extracted_people and existing_people:
+            overlap = len(extracted_people & existing_people)
+            people_score = overlap / max(len(extracted_people | existing_people), 1)
+
+        return (
+            summary_score * 0.65 +
+            time_score * 0.15 +
+            location_score * 0.1 +
+            people_score * 0.1
+        )
 
     def merge(
         self,
@@ -30,6 +192,17 @@ class MergeEngine:
         extracted_events: List[ExtractedEvent],
         turn_id: str,
     ) -> MergeResult:
+        """
+        合并提取的事件到会话状态
+
+        使用分层决策逻辑：
+        1. 高置信度LLM建议（>=0.8）-> 直接合并
+        2. 中等置信度LLM建议（0.5-0.8）-> LLM建议 + 硬编码验证
+        3. 低置信度或无建议 -> 原有硬编码流程兜底
+        """
+        import logging
+        logger = logging.getLogger(__name__)
+
         result = MergeResult()
 
         for extracted in extracted_events:
@@ -44,21 +217,63 @@ class MergeEngine:
                 person_id for person_id in person_ids if person_id not in result.touched_person_ids
             )
 
-            matched_event = self._find_match(state, extracted)
-            if matched_event:
-                self._update_event(matched_event, extracted, person_ids, turn_id)
-                matched_event.merge_status = "updated"
-                result.updated_event_ids.append(matched_event.event_id)
-                if matched_event.event_id not in result.touched_event_ids:
-                    result.touched_event_ids.append(matched_event.event_id)
-                self._link_people(state, person_ids, matched_event.event_id)
-                continue
+            # ⭐ 优先使用大模型建议
+            merge_action = self._decide_merge_action(state, extracted)
 
-            canonical_event = self._create_event(extracted, person_ids, turn_id)
-            state.canonical_events[canonical_event.event_id] = canonical_event
-            result.new_event_ids.append(canonical_event.event_id)
-            result.touched_event_ids.append(canonical_event.event_id)
-            self._link_people(state, person_ids, canonical_event.event_id)
+            if merge_action.action_type == "UPDATE" and merge_action.target_event:
+                # 高置信度：直接使用LLM建议
+                self._update_event(
+                    merge_action.target_event, extracted, person_ids, turn_id
+                )
+                merge_action.target_event.merge_status = "updated_by_llm_hint"
+                result.updated_event_ids.append(merge_action.target_event.event_id)
+                result.touched_event_ids.append(merge_action.target_event.event_id)
+                self._link_people(state, person_ids, merge_action.target_event.event_id)
+
+            elif merge_action.action_type == "VERIFY_THEN_UPDATE":
+                # 中等置信度：LLM建议 + 硬编码验证
+                if merge_action.target_event and self._verify_with_rules(
+                    merge_action.target_event, extracted
+                ):
+                    self._update_event(
+                        merge_action.target_event, extracted, person_ids, turn_id
+                    )
+                    merge_action.target_event.merge_status = "updated_verified"
+                    result.updated_event_ids.append(merge_action.target_event.event_id)
+                    result.touched_event_ids.append(merge_action.target_event.event_id)
+                    self._link_people(state, person_ids, merge_action.target_event.event_id)
+                else:
+                    # 验证失败，创建新事件
+                    canonical_event = self._create_event(extracted, person_ids, turn_id)
+                    state.canonical_events[canonical_event.event_id] = canonical_event
+                    result.new_event_ids.append(canonical_event.event_id)
+                    result.touched_event_ids.append(canonical_event.event_id)
+                    self._link_people(state, person_ids, canonical_event.event_id)
+
+            else:
+                # 低置信度或无建议：走原有硬编码流程
+                matched_event = self._find_match(state, extracted)
+                if matched_event:
+                    self._update_event(matched_event, extracted, person_ids, turn_id)
+                    matched_event.merge_status = "updated_legacy"
+                    result.updated_event_ids.append(matched_event.event_id)
+                    result.touched_event_ids.append(matched_event.event_id)
+                    self._link_people(state, person_ids, matched_event.event_id)
+                else:
+                    canonical_event = self._create_event(extracted, person_ids, turn_id)
+                    state.canonical_events[canonical_event.event_id] = canonical_event
+                    result.new_event_ids.append(canonical_event.event_id)
+                    result.touched_event_ids.append(canonical_event.event_id)
+                    self._link_people(state, person_ids, canonical_event.event_id)
+
+            # 调试日志：记录决策
+            logger.debug(
+                "Merge decision for %s: %s (confidence=%.2f, reason=%s)",
+                extracted.event_id,
+                merge_action.action_type,
+                merge_action.confidence,
+                merge_action.reason
+            )
 
         return result
 

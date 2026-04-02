@@ -2,13 +2,12 @@ from __future__ import annotations
 
 import json
 import logging
-import os
 from typing import Any, Dict, List, Optional
 
 from openai import OpenAI
 
 from src.config import Config
-from src.state import ElderProfile, GraphSummary, MemoryCapsule, QuestionPlan, TurnRecord
+from src.state import ElderProfile, GraphSummary, MemoryCapsule, TurnRecord
 
 try:
     from json_repair import repair_json
@@ -21,23 +20,23 @@ logger = logging.getLogger(__name__)
 
 
 class InterviewerAgent:
-    ACTION_GUIDANCE = {
-        "DEEP_DIVE": "Stay on the current event and ask for one more important layer of detail, feeling, or meaning.",
-        "BREADTH_SWITCH": "Move naturally to a new life stage or theme without sounding abrupt.",
-        "CLARIFY": "Gently resolve an ambiguity or contradiction in time, place, people, or sequence.",
-        "SUMMARIZE": "Briefly checkpoint what was shared and invite one more representative detail.",
-        "PAUSE_SESSION": "Land softly and avoid opening a large new thread.",
-        "CLOSE_INTERVIEW": "End gracefully with a warm closing prompt instead of opening a new topic.",
-    }
-    SLOT_GUIDANCE = {
-        "time": "when it happened",
-        "location": "where it happened",
-        "people": "who was there and how they were related",
-        "event": "what concretely happened",
-        "feeling": "what the elder felt at that moment",
-        "reflection": "what it means looking back now",
-        "cause": "what led to it",
-        "result": "what changed afterward",
+    """
+    统一访谈助手（Planner + Interviewer 合并版）
+
+    将 Planner 的决策逻辑以"思维链"形式整合到 System Prompt 中，
+    单次 LLM 调用完成策略分析和问题生成。
+    """
+
+    # 槽位中文映射
+    SLOT_NAMES = {
+        "time": "时间",
+        "location": "地点",
+        "people": "人物",
+        "event": "事件",
+        "feeling": "感受",
+        "reflection": "反思",
+        "cause": "起因",
+        "result": "结果",
     }
 
     def __init__(self):
@@ -45,9 +44,6 @@ class InterviewerAgent:
         self.model_candidates = Config.get_model_candidates("interviewer")
         self.model = self.model_candidates[0]
         self.max_tokens = 4096 if self._is_reasoning_heavy_model() else 1024
-        prompt_path = os.path.join(Config.PROMPTS_DIR, "baseline_system_prompt.txt")
-        with open(prompt_path, "r", encoding="utf-8") as file:
-            self.system_prompt_template = file.read()
 
     def generate_question(
         self,
@@ -55,21 +51,25 @@ class InterviewerAgent:
         recent_transcript: List[TurnRecord],
         memory_capsule: MemoryCapsule,
         graph_summary: GraphSummary,
-        plan: QuestionPlan,
         focus_event_payload: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, str]:
-        if not recent_transcript:
-            return self._opening_response(elder_profile, plan)
+        """
+        生成下一个访谈问题
 
-        system_prompt = self._render_system_prompt(elder_profile)
+        单次 LLM 调用，在模型内部完成策略决策和问题生成
+        """
+        if not recent_transcript:
+            return self._opening_response(elder_profile)
+
+        system_prompt = self._render_system_prompt()
         user_prompt = self._build_user_prompt(
             elder_profile,
             recent_transcript,
             memory_capsule,
             graph_summary,
-            plan,
             focus_event_payload,
         )
+
         max_attempts = max(1, min(Config.MAX_RETRIES, 2))
         last_error: Optional[Exception] = None
 
@@ -87,6 +87,7 @@ class InterviewerAgent:
                     )
                     message = response.choices[0].message
                     raw_content = (message.content or "").strip()
+
                     if not raw_content:
                         reasoning_content = getattr(message, "reasoning_content", "") or ""
                         logger.warning(
@@ -95,11 +96,13 @@ class InterviewerAgent:
                             response.choices[0].finish_reason,
                             len(reasoning_content),
                         )
-                    parsed = self._parse_response(raw_content, plan)
+
+                    parsed = self._parse_response(raw_content)
                     if parsed.get("question"):
                         self.model = model_name
                         self.max_tokens = candidate_max_tokens
                         return parsed
+
                 except Exception as exc:
                     last_error = exc
                     logger.warning(
@@ -113,20 +116,134 @@ class InterviewerAgent:
                         break
 
         logger.error("InterviewerAgent returning retry response: %s", last_error)
-        return self._retry_response(plan, opening_turn=not recent_transcript)
+        return self._retry_response(opening_turn=False)
 
-    def _render_system_prompt(self, elder_profile: ElderProfile) -> str:
-        basic_info = self._build_basic_info_text(elder_profile)
-        replacements = [
-            "{{elder_basic_info}}",
-            "[用户的基本生平信息]",
-            "[闁活潿鍔嶉崺娑㈡儍閸曨偆鍞ㄩ柡鍫墰閺佹捇鐛崗鍛箚闁诡厾妫?",
-            "[閻劍鍩涢惃鍕唨閺堫剛鏁撻獮鍏呬繆閹棇",
-        ]
-        rendered = self.system_prompt_template
-        for placeholder in replacements:
-            rendered = rendered.replace(placeholder, basic_info)
-        return rendered
+    def _render_system_prompt(self) -> str:
+        """
+        渲染 System Prompt
+
+        整合 Planner 的访谈规划思维链，单次调用完成策略分析+问题生成
+        """
+        return """你是一位充满好奇心、善于倾听的传记访谈者，正在陪一位老人重温他/她的人生旅程。
+
+你的目标不是"收集信息"，而是帮老人讲述一个完整、有温度的生命故事。让老人感到被理解、被珍视。
+
+---
+
+## 【访谈覆盖主题】（供参考，不必一次问完）
+
+根据《人生故事访谈》(Life Story Interview) 规程，一个好的回忆录应覆盖以下维度：
+
+**1. 人生篇章** —— 帮助老人划分人生阶段，建立时间骨架
+   - 例："如果人生是一本书，各个章节的标题会是什么？"
+
+**2. 关键场景**（深度挖掘重点）
+   - 高光时刻：最自豪、最快乐的经历
+   - 低谷时刻：最困难、最具挑战的经历
+   - 转折点：改变人生方向的关键决定
+   - 童年记忆：早期对性格形成有影响的事
+   - 智慧时刻：展现洞察力的经历
+
+**3. 重要人物** —— 生命中影响深远的人
+   - 家人、恩师、挚友、对手
+
+**4. 价值观与信仰** —— 人生的指南针
+   - 经历了这么多，老人最看重什么？
+
+**5. 未来展望** —— 对剩余生命的期待
+   - 还有什么心愿？想留下什么话？
+
+---
+
+## 【行为准则】
+
+1. **先回应，后提问** —— 不要干巴巴地接着问，先对老人的分享做出真诚的情感回应
+   - 好的回应："听起来那真的不容易"、"我能感觉到您当时的兴奋"
+   - 避免：机械地"嗯嗯"后立刻转入下一个问题
+
+2. **好奇多于礼貌** —— 像老朋友聊天一样自然，不要过分客套
+   - 好的："后来呢？我特别想知道..."
+   - 避免："不好意思打扰一下，请问您能否..."
+
+3. **问题类型灵活选择**
+   - **问事实/确认信息** → 多用**封闭式问题**（是/否、具体数字）
+     * 例："是1968年吗？" "当时厂里大概多少人？"
+   - **问感受/故事** → 多用**开放式问题**
+     * 例："那时候您心里是什么感觉？" "能给我讲讲当时的情景吗？"
+
+4. **一次只问一件事** —— 问题清晰、聚焦，不堆叠多个问题
+
+5. **隐藏技术细节** —— 永远不提"图谱"、"节点"、"槽位"、"覆盖率"等概念
+
+---
+
+## 【访谈规划思维链】
+
+在生成下一个问题之前，请先基于以下维度进行分析：
+
+### 1. 当前事件分析
+- 老人刚才讲的故事完整吗？（时间、地点、人物、起因、经过、结果、感受）
+- 哪些细节值得深挖？老人是否对某个细节特别有感触？
+- **策略方向**：
+  * 如果信息缺失且需要确认 → 封闭式确认
+  * 如果老人流露出情感 → 开放式追问感受
+  * 如果故事还有延伸空间 → 开放式引导继续
+
+### 2. 情绪状态判断
+- 老人的精力如何？（低 → 简短温和；高 → 可适当深入）
+- 情绪是积极、中性还是消极？（消极 → **先真诚共情，再问问题**）
+- 是否表现出话题疲劳？（是 → 考虑广度跳转）
+
+### 3. 策略决策（三选一）
+
+**路径 A：深度挖掘 (Deep Dive)**
+- 适用：当前故事有温度但还不完整，老人愿意聊
+- 方法（结合具体场景，不要照搬例句）：
+  * 由事及人 —— 从事件延伸到人物性格和关系
+  * 由物及情 —— 用具体的物品、场景触发情感记忆
+  * 追问感受 —— 关注情绪变化和内心活动
+  * 挖掘反思 —— 问"回头看"的意义，而非当时的事实
+
+**路径 B：广度跳转 (Breadth Switch)**
+- 适用：当前故事已足够完整，或老人出现疲劳
+- 跳转方法（按优先级，结合场景选择）：
+  * 情感/人物路径 —— 抓住情绪线索，连接到其他人生时刻
+  * 地理/时间路径 —— 顺着时空线索自然过渡
+  * 时代背景路径 —— 用历史事件作为切入点
+  * 回溯之前的话题 —— 捡起之前放下的线索
+
+**路径 C：温和澄清 (Clarify)**
+- 适用：发现时间、地点或人物关系有矛盾/模糊
+- 方法：用温和的封闭式问题确认，不给压力
+  * 例："是1968年吗？" "您说的那位是张师傅还是李师傅？"
+
+### 4. 判停与结束判断
+- 童年、青年、中年、晚年是否都有涉及？
+- 是否有足够的高光、低谷、转折点故事？
+- 老人是否表现出结束访谈的意愿？
+- 如满足 → 优雅结束，表达感谢
+
+---
+
+## 【输出要求】
+
+返回严格的 JSON 格式：
+
+```json
+{
+  "action": "continue|next_phase|end",
+  "question": "你的访谈问题"
+}
+```
+
+- `action=continue`：继续深入当前话题
+- `action=next_phase`：切换到新话题或总结过渡
+- `action=end`：结束访谈
+
+**重要**：
+- question 字段只能包含**一个问题**
+- 问感受时用**开放式问题**，问确认时用**封闭式问题**
+- 语气自然、温暖、好奇，像老朋友聊天一样"""
 
     def _build_user_prompt(
         self,
@@ -134,87 +251,87 @@ class InterviewerAgent:
         recent_transcript: List[TurnRecord],
         memory_capsule: MemoryCapsule,
         graph_summary: GraphSummary,
-        plan: QuestionPlan,
         focus_event_payload: Optional[Dict[str, Any]],
     ) -> str:
+        """
+        构建 User Prompt
+
+        整合所有上下文信息，以叙事化方式呈现
+        """
         prompt_stage = self._prompt_stage(recent_transcript)
+
+        parts = []
+
+        # 1. 受访者基本信息
+        parts.append("## 受访者基本信息")
+        parts.append(self._build_basic_info_text(elder_profile))
+
+        # 2. 对话回顾
+        parts.append("\n## 最近对话")
         transcript_limit = 1 if prompt_stage == "early" else 2 if prompt_stage == "mid" else 3
-        transcript_payload = [
-            {
-                "turn_index": turn.turn_index,
-                "interviewer_question": turn.interviewer_question,
-                "interviewee_answer": turn.interviewee_answer,
-            }
-            for turn in recent_transcript[-transcript_limit:]
-        ]
-        latest_answer = recent_transcript[-1].interviewee_answer if recent_transcript else ""
-        memory_payload = self._build_memory_payload(memory_capsule, prompt_stage)
-        graph_payload = self._build_graph_payload(graph_summary, prompt_stage)
-        plan_payload = {
-            "primary_action": plan.primary_action,
-            "tactical_goal": plan.tactical_goal,
-            "tactical_goal_type": plan.tactical_goal_type,
-            "target_theme_id": plan.target_theme_id,
-            "target_event_id": plan.target_event_id,
-            "target_person_id": plan.target_person_id,
-            "target_slots": plan.target_slots,
-            "tone": plan.tone,
-            "secondary_tone": plan.secondary_tone,
-            "tone_constraints": plan.tone_constraints,
-            "strategy": plan.strategy,
-            "strategy_parameters": plan.strategy_parameters,
-            "strategy_priority": plan.strategy_priority,
-            "reference_anchor": plan.reference_anchor,
-            "reasoning_trace": plan.reasoning_trace,
-            "instruction_set": plan.instruction_set,
-        }
-        action_hint = self.ACTION_GUIDANCE.get(plan.primary_action, "Follow the planner decision faithfully.")
-        slot_focus = (
-            ", ".join(f"{slot} ({self.SLOT_GUIDANCE.get(slot, slot)})" for slot in plan.target_slots)
-            if plan.target_slots
-            else "none"
-        )
-        follow_up_note = self._follow_up_note(prompt_stage)
-        focus_payload = self._build_focus_event_payload(focus_event_payload, prompt_stage)
-        elder_profile_payload = self._build_elder_profile_payload(elder_profile, prompt_stage)
+        for turn in recent_transcript[-transcript_limit:]:
+            parts.append(f"问：{turn.interviewer_question}")
+            parts.append(f"答：{turn.interviewee_answer}")
+            parts.append("")
 
-        return (
-            "You are the interviewer language layer.\n"
-            "Use the same interviewing style as the baseline interviewer, but you now have richer planner and memory context.\n"
-            "The planner decision is the source of truth for WHAT to ask about. Your job is to turn it into one natural question.\n\n"
-            "Return strict JSON with keys `action` and `question` only.\n"
-            "Hard constraints:\n"
-            "- Ask exactly one question.\n"
-            "- Keep the question concise, natural, warm, and non-redundant.\n"
-            "- Do not expose internal labels like planner, strategy, target_slots, graph, memory, or theme IDs.\n"
-            "- Prefer staying close to the latest interviewee answer unless the planner explicitly requests a breadth switch.\n"
-            "- If there is a focus event, use it as the main anchor for wording.\n"
-            "- Respect do_not_repeat and avoid repeating nearly identical wording from recent turns.\n"
-            "- If cognitive energy is low, make the question shorter and gentler.\n"
-            "- If emotional valence is negative, you may add a very short validating clause before the question, but still ask only one question.\n"
-            "- If the planner action is CLOSE_INTERVIEW, return action=`end` with a short warm closing prompt.\n"
-            "- If the planner action is BREADTH_SWITCH, SUMMARIZE, or PAUSE_SESSION, action should usually be `next_phase`.\n"
-            "- Otherwise action should usually be `continue`.\n"
-            "- Use progressive disclosure: prioritize the most recent answer and the focus event before broader session state.\n\n"
-            f"Planning note:\n{follow_up_note}\n\n"
-            f"Prompt stage: {prompt_stage}\n\n"
-            "Planner guidance summary:\n"
-            f"- primary_action={plan.primary_action}: {action_hint}\n"
-            f"- target_slots={slot_focus}\n"
-            f"- tone={plan.tone}\n"
-            f"- strategy={plan.strategy}\n"
-            f"- reference_anchor={plan.reference_anchor or 'none'}\n\n"
-            f"Elder profile:\n{json.dumps(elder_profile_payload, ensure_ascii=False, indent=2)}\n\n"
-            f"Planner decision:\n{json.dumps(plan_payload, ensure_ascii=False, indent=2)}\n\n"
-            f"Focus event payload:\n{json.dumps(focus_payload, ensure_ascii=False, indent=2)}\n\n"
-            f"Memory capsule:\n{json.dumps(memory_payload, ensure_ascii=False, indent=2)}\n\n"
-            f"Graph summary:\n{json.dumps(graph_payload, ensure_ascii=False, indent=2)}\n\n"
-            f"Recent transcript:\n{json.dumps(transcript_payload, ensure_ascii=False, indent=2)}\n\n"
-            f"Latest interviewee answer:\n{latest_answer or '(opening turn)'}"
-        )
+        # 3. 正在聊的事件
+        if focus_event_payload:
+            parts.append("## 正在聊的事件")
+            summary = focus_event_payload.get("summary", "")
+            if summary:
+                parts.append(f"事件：{summary}")
 
-    def _parse_response(self, raw_content: str, plan: QuestionPlan) -> Dict[str, str]:
+            known = focus_event_payload.get("known_slots", {})
+            if known:
+                known_parts = [f"{self.SLOT_NAMES.get(k, k)}：{v}" for k, v in known.items() if v]
+                if known_parts:
+                    parts.append(f"已知的细节：{', '.join(known_parts)}")
+
+            missing = focus_event_payload.get("missing_slots", [])
+            if missing:
+                missing_parts = [self.SLOT_NAMES.get(m, m) for m in missing]
+                parts.append(f"还欠缺的细节：{', '.join(missing_parts)}")
+
+            unexpanded = focus_event_payload.get("unexpanded_clues", [])
+            if unexpanded:
+                parts.append(f"值得追问的线索：{', '.join(unexpanded[:2])}")
+
+        # 4. 人生故事覆盖情况
+        parts.append("\n## 人生故事覆盖情况")
+        parts.append(self._build_coverage_summary(graph_summary))
+
+        # 5. 待探索的话题线索
+        if memory_capsule.open_loops:
+            parts.append("\n## 待探索的话题线索")
+            for i, loop in enumerate(memory_capsule.open_loops[:3], 1):
+                parts.append(f"{i}. {loop.description}")
+
+        # 6. 情绪观察
+        emotional_note = self._build_emotional_note(memory_capsule)
+        if emotional_note:
+            parts.append(f"\n## 情绪观察")
+            parts.append(emotional_note)
+
+        # 7. 任务指令
+        parts.append("\n## 你的任务")
+        parts.append("基于以上上下文，先进行【访谈规划思维链】分析，然后生成下一个问题。")
+        parts.append("")
+        parts.append("记住：")
+        parts.append("1. 问题要自然、温暖、像聊天")
+        parts.append("2. 不要暴露任何技术概念")
+        parts.append("3. 如果老人情绪低落，先共情再提问")
+        parts.append("4. 如果老人疲劳，切换到轻松话题")
+        parts.append("")
+        parts.append("返回严格 JSON 格式：")
+        parts.append('{\'action\': \'continue|next_phase|end\', \'question\': \'你的问题\'}')
+
+        return "\n".join(parts)
+
+    def _parse_response(self, raw_content: str) -> Dict[str, str]:
+        """解析 LLM 响应"""
         text = raw_content.strip()
+
+        # 提取 JSON 块
         if "```json" in text:
             text = text.split("```json", 1)[1].split("```", 1)[0].strip()
         elif "```" in text:
@@ -226,67 +343,88 @@ class InterviewerAgent:
         try:
             parsed = json.loads(repair_json(text))
         except json.JSONDecodeError:
-            return {
-                "action": self._map_action(plan.primary_action),
-                "question": text.strip().strip('"'),
-            }
+            # 如果不是 JSON，尝试直接用文本作为问题
+            return {"action": "continue", "question": text.strip().strip('"')}
 
-        action = str(parsed.get("action", self._map_action(plan.primary_action))).strip() or "continue"
+        action = str(parsed.get("action", "continue")).strip() or "continue"
         question = str(parsed.get("question", "")).strip()
+
         if action == "end" and not question:
             question = "今天聊了很多珍贵的回忆，谢谢您愿意和我分享。"
+
         if not question:
             raise ValueError("Interviewer response missing question.")
+
         return {"action": action, "question": question}
 
-    def _retry_response(self, plan: QuestionPlan, opening_turn: bool = False) -> Dict[str, str]:
+    def _opening_response(self, elder_profile: ElderProfile) -> Dict[str, str]:
+        """生成开场问题"""
+        question = self._build_opening_question(elder_profile)
+        return {"action": "continue", "question": question}
+
+    def _retry_response(self, opening_turn: bool = False) -> Dict[str, str]:
+        """重试响应"""
         if opening_turn:
             question = "抱歉，我想先根据您刚才的信息整理一下，再继续向您请教，可以稍等一下吗？"
-        elif plan.primary_action == "CLOSE_INTERVIEW":
-            question = "抱歉，我想把刚才的内容整理得更准确一些，稍后再陪您收个尾。"
         else:
             question = "抱歉，我想更准确地接着您刚才的话问一句，请稍等我整理一下再继续。"
-        return {
-            "action": self._map_action(plan.primary_action),
-            "question": question,
-        }
+        return {"action": "continue", "question": question}
 
-    def _opening_response(self, elder_profile: ElderProfile, plan: QuestionPlan) -> Dict[str, str]:
-        question = self._build_opening_question(elder_profile, plan)
-        return {
-            "action": self._map_action(plan.primary_action),
-            "question": question,
-        }
-
-    def _build_opening_question(self, elder_profile: ElderProfile, plan: QuestionPlan) -> str:
+    def _build_opening_question(self, elder_profile: ElderProfile) -> str:
+        """构建开场问题"""
         background = (elder_profile.background_summary or "").strip()
         hometown = (elder_profile.hometown or "").strip()
         birth_year = elder_profile.birth_year
+        name = elder_profile.name or "您"
 
         if any(keyword in background for keyword in ["工厂", "上班", "工作", "纺织", "车间"]):
-            return "您刚才的经历里提到过年轻时工作那段日子。您还记得自己刚参加工作时最难忘的一幕吗？那大概是什么时候、在什么地方？"
-        if any(keyword in background for keyword in ["结婚", "家庭", "孩子", "成家", "老伴"]):
-            return "您的人生里一定有一段和成家有关的经历特别重要。您愿意先从那件最难忘的事讲起吗？那大概是什么时候、在哪里发生的？"
-        if hometown and birth_year:
-            return f"您是{birth_year}年出生的，又和{hometown}有很深的缘分。要是从最早记得的一段经历说起，您最先想到的是哪件事？"
-        if birth_year:
-            return f"您是{birth_year}年出生的，走过了这么长的人生路。您愿意先从一段年轻时至今还记得很清楚的经历讲起吗？"
-        if background:
-            return "从您的人生经历里，一定有一段故事一直留在心里。您愿意先从那件最难忘的事讲起吗？"
-        return "您愿意先和我讲一段您年轻时至今还记得很清楚的具体经历吗？"
+            return f"{name}，从您的人生经历里，年轻时工作那段日子一定很值得一提。您还记得自己刚参加工作时最难忘的一幕吗？"
 
-    def _map_action(self, primary_action: Optional[str]) -> str:
-        action_map = {
-            "DEEP_DIVE": "continue",
-            "CLARIFY": "continue",
-            "BREADTH_SWITCH": "next_phase",
-            "SUMMARIZE": "next_phase",
-            "PAUSE_SESSION": "next_phase",
-            "CLOSE_INTERVIEW": "end",
-        }
-        return action_map.get(primary_action or "", "continue")
+        if any(keyword in background for keyword in ["结婚", "家庭", "孩子", "成家", "老伴"]):
+            return f"{name}，您的人生里一定有一段和成家有关的经历特别重要。您愿意先从那件最难忘的事讲起吗？"
+
+        if hometown and birth_year:
+            return f"{name}，您是{birth_year}年出生的，又和{hometown}有很深的缘分。要是从最早记得的一段经历说起，您最先想到的是哪件事？"
+
+        if birth_year:
+            return f"{name}，您是{birth_year}年出生的，走过了这么长的人生路。您愿意先从一段年轻时至今还记得很清楚的经历讲起吗？"
+
+        if background:
+            return f"{name}，从您的人生经历里，一定有一段故事一直留在心里。您愿意先从那件最难忘的事讲起吗？"
+
+        return f"{name}，您愿意先和我讲一段您年轻时至今还记得很清楚的具体经历吗？"
+
+    def _build_coverage_summary(self, graph_summary: GraphSummary) -> str:
+        """构建覆盖率的自然语言描述"""
+        parts = []
+
+        # 整体进度
+        coverage_pct = int(graph_summary.overall_coverage * 100)
+        parts.append(f"整体进度：约{coverage_pct}%")
+
+        # 各主题覆盖情况
+        if graph_summary.theme_coverage:
+            covered = []
+            uncovered = []
+            for theme_id, ratio in sorted(graph_summary.theme_coverage.items()):
+                if ratio > 0.5:
+                    covered.append(theme_id)
+                elif ratio < 0.2:
+                    uncovered.append(theme_id)
+
+            if covered:
+                parts.append(f"已聊到：{', '.join(covered[:3])}")
+            if uncovered:
+                parts.append(f"还很少涉及：{', '.join(uncovered[:3])}")
+
+        # 当前焦点
+        if graph_summary.current_focus_theme_id:
+            parts.append(f"当前话题：{graph_summary.current_focus_theme_id}")
+
+        return "；".join(parts) if parts else "刚开始访谈"
 
     def _build_basic_info_text(self, elder_profile: ElderProfile) -> str:
+        """构建基本信息文本"""
         parts = []
         if elder_profile.name:
             parts.append(f"姓名：{elder_profile.name}")
@@ -298,19 +436,29 @@ class InterviewerAgent:
             parts.append(f"背景：{elder_profile.background_summary}")
         return "；".join(parts) if parts else "一位受访老人"
 
-    def _is_reasoning_heavy_model(self, model_name: Optional[str] = None) -> bool:
-        model_name = (model_name or self.model or "").lower()
-        return "thinking" in model_name or "k2.5" in model_name or "reasoning" in model_name
+    def _build_emotional_note(self, memory_capsule: MemoryCapsule) -> str:
+        """构建情感状态提示"""
+        if not memory_capsule.emotional_state:
+            return ""
 
-    def _should_fallback_model(self, error: Exception) -> bool:
-        message = str(error).lower()
-        return (
-            "not found the model" in message
-            or "permission denied" in message
-            or "resource_not_found_error" in message
-        )
+        notes = []
+        energy = memory_capsule.emotional_state.cognitive_energy
+        valence = memory_capsule.emotional_state.valence
+
+        if energy < 0.4:
+            notes.append("老人精力较低，问题要简短、温和")
+        elif energy > 0.7:
+            notes.append("老人精力不错，可以适当深入")
+
+        if valence < -0.3:
+            notes.append("老人情绪偏负面，提问前先共情")
+        elif valence > 0.3:
+            notes.append("老人情绪积极，保持轻松氛围")
+
+        return "；".join(notes) if notes else ""
 
     def _prompt_stage(self, recent_transcript: List[TurnRecord]) -> str:
+        """判断提示阶段"""
         turn_count = len(recent_transcript)
         if turn_count <= 2:
             return "early"
@@ -318,103 +466,16 @@ class InterviewerAgent:
             return "mid"
         return "full"
 
-    def _follow_up_note(self, prompt_stage: str) -> str:
-        if prompt_stage == "early":
-            return (
-                "This is an early follow-up turn. Stay tightly anchored to the newest answer and ask for one concrete next layer."
-            )
-        if prompt_stage == "mid":
-            return (
-                "This is a middle interview turn. Use the planner guidance plus one or two compact memory/graph hints, but keep the question natural."
-            )
+    def _is_reasoning_heavy_model(self, model_name: Optional[str] = None) -> bool:
+        """判断是否为推理型模型"""
+        model_name = (model_name or self.model or "").lower()
+        return "thinking" in model_name or "k2.5" in model_name or "reasoning" in model_name
+
+    def _should_fallback_model(self, error: Exception) -> bool:
+        """判断是否应回退模型"""
+        message = str(error).lower()
         return (
-            "This is a later interview turn. You may use broader session context, but the final wording should still feel grounded in the active thread."
+            "not found the model" in message
+            or "permission denied" in message
+            or "resource_not_found_error" in message
         )
-
-    def _build_elder_profile_payload(self, elder_profile: ElderProfile, prompt_stage: str) -> Dict[str, Any]:
-        payload = elder_profile.to_dict()
-        stable_facts = payload.get("stable_facts", {})
-        if prompt_stage == "early" and isinstance(stable_facts, dict):
-            payload["stable_facts"] = {
-                key: stable_facts[key]
-                for key in list(stable_facts.keys())[:4]
-            }
-        return payload
-
-    def _build_memory_payload(self, memory_capsule: MemoryCapsule, prompt_stage: str) -> Dict[str, Any]:
-        emotional_state = (
-            memory_capsule.emotional_state.to_dict()
-            if memory_capsule.emotional_state
-            else {}
-        )
-        if prompt_stage == "early":
-            return {
-                "current_storyline": memory_capsule.current_storyline,
-                "recent_topics": memory_capsule.recent_topics[:2],
-                "open_loops": [loop.to_dict() for loop in memory_capsule.open_loops[:2]],
-                "do_not_repeat": memory_capsule.do_not_repeat[-2:],
-                "emotional_state": emotional_state,
-            }
-        if prompt_stage == "mid":
-            return {
-                "session_summary": memory_capsule.session_summary,
-                "current_storyline": memory_capsule.current_storyline,
-                "recent_topics": memory_capsule.recent_topics[:3],
-                "open_loops": [loop.to_dict() for loop in memory_capsule.open_loops[:4]],
-                "do_not_repeat": memory_capsule.do_not_repeat[-3:],
-                "emotional_state": emotional_state,
-            }
-        return {
-            "session_summary": memory_capsule.session_summary,
-            "current_storyline": memory_capsule.current_storyline,
-            "recent_topics": memory_capsule.recent_topics,
-            "do_not_repeat": memory_capsule.do_not_repeat[-3:],
-            "open_loops": [loop.to_dict() for loop in memory_capsule.open_loops[:5]],
-            "emotional_state": emotional_state,
-        }
-
-    def _build_graph_payload(self, graph_summary: GraphSummary, prompt_stage: str) -> Dict[str, Any]:
-        ranked_slot_gaps = sorted(graph_summary.slot_coverage.items(), key=lambda item: item[1])
-        ranked_theme_gaps = sorted(graph_summary.theme_coverage.items(), key=lambda item: item[1])
-        if prompt_stage == "early":
-            return {
-                "overall_coverage": graph_summary.overall_coverage,
-                "current_focus_theme_id": graph_summary.current_focus_theme_id,
-                "top_undercovered_slots": ranked_slot_gaps[:3],
-                "active_event_ids": graph_summary.active_event_ids[:3],
-            }
-        if prompt_stage == "mid":
-            return {
-                "overall_coverage": graph_summary.overall_coverage,
-                "theme_coverage": dict(ranked_theme_gaps[:3]),
-                "slot_coverage": dict(ranked_slot_gaps[:4]),
-                "current_focus_theme_id": graph_summary.current_focus_theme_id,
-                "active_event_ids": graph_summary.active_event_ids[:4],
-                "unresolved_theme_ids": graph_summary.unresolved_theme_ids[:3],
-            }
-        return graph_summary.to_dict()
-
-    def _build_focus_event_payload(
-        self,
-        focus_event_payload: Optional[Dict[str, Any]],
-        prompt_stage: str,
-    ) -> Dict[str, Any]:
-        payload = dict(focus_event_payload or {})
-        if prompt_stage == "early":
-            return {
-                "summary": payload.get("summary"),
-                "people_names": payload.get("people_names", [])[:3],
-                "missing_slots": payload.get("missing_slots", [])[:3],
-                "recent_answer_span": payload.get("recent_answer_span"),
-                "unexpanded_clues": payload.get("unexpanded_clues", [])[:2],
-            }
-        if prompt_stage == "mid":
-            return {
-                "summary": payload.get("summary"),
-                "known_slots": payload.get("known_slots", {}),
-                "missing_slots": payload.get("missing_slots", [])[:4],
-                "people_names": payload.get("people_names", [])[:4],
-                "recent_answer_span": payload.get("recent_answer_span"),
-                "unexpanded_clues": payload.get("unexpanded_clues", [])[:3],
-            }
-        return payload

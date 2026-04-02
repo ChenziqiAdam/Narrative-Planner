@@ -4,7 +4,7 @@ from statistics import mean
 from typing import Dict, Iterable, List
 
 from src.core.graph_manager import GraphManager
-from src.state import GraphSummary, SessionMetrics, SessionState
+from src.state import GraphSummary, SessionMetrics, SessionState, ThemeSummary
 
 
 class CoverageCalculator:
@@ -16,11 +16,41 @@ class CoverageCalculator:
             theme_id: theme.completion_ratio
             for theme_id, theme in state.theme_state.items()
         }
-        unresolved_theme_ids = [
-            theme_id
-            for theme_id, theme in state.theme_state.items()
-            if theme.status != "exhausted"
-        ]
+
+        # 构建主题详细列表
+        all_themes: List[ThemeSummary] = []
+        pending_themes: List[ThemeSummary] = []
+        mentioned_themes: List[ThemeSummary] = []
+        exhausted_themes: List[ThemeSummary] = []
+
+        for theme_id, theme_state in state.theme_state.items():
+            theme_node = graph_manager.theme_nodes.get(theme_id)
+            if not theme_node:
+                continue
+
+            summary = ThemeSummary(
+                theme_id=theme_id,
+                title=theme_node.title,
+                description=theme_node.description[:100] if theme_node.description else "",
+                status=theme_state.status,
+                completion_ratio=theme_state.completion_ratio,
+                priority=theme_state.priority,
+                extracted_event_count=len(theme_state.extracted_event_ids),
+                depends_on=list(theme_node.depends_on),
+            )
+
+            all_themes.append(summary)
+            if theme_state.status == "pending":
+                pending_themes.append(summary)
+            elif theme_state.status == "mentioned":
+                mentioned_themes.append(summary)
+            elif theme_state.status == "exhausted":
+                exhausted_themes.append(summary)
+
+        # 按优先级排序空白主题，按完成度排序进行中主题
+        pending_themes.sort(key=lambda x: x.priority, reverse=True)
+        mentioned_themes.sort(key=lambda x: x.completion_ratio)
+
         return GraphSummary(
             overall_coverage=graph_coverage.get("overall", 0.0),
             theme_coverage=theme_coverage,
@@ -28,7 +58,10 @@ class CoverageCalculator:
             people_coverage=self._calculate_people_coverage(state),
             current_focus_theme_id=state.current_focus_theme_id,
             active_event_ids=list(state.memory_capsule.active_event_ids if state.memory_capsule else []),
-            unresolved_theme_ids=unresolved_theme_ids,
+            all_themes=all_themes,
+            pending_themes=pending_themes,
+            mentioned_themes=mentioned_themes,
+            exhausted_themes=exhausted_themes,
         )
 
     def calculate_session_metrics(self, state: SessionState, graph_manager: GraphManager) -> SessionMetrics:

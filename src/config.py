@@ -51,6 +51,18 @@ class Config:
     DATA_DIR = "data"
     LOGS_DIR = "logs"
 
+    # ⭐ Extraction-Merge 统一化功能开关（Phase 1新增）
+    ENABLE_LLM_MERGE_HINTS = os.getenv("ENABLE_LLM_MERGE_HINTS", "true").lower() in {
+        "1", "true", "yes", "on"
+    }
+    LLM_MERGE_HIGH_CONFIDENCE_THRESHOLD = float(
+        os.getenv("LLM_MERGE_HIGH_CONFIDENCE_THRESHOLD", "0.80")
+    )
+    LLM_MERGE_MEDIUM_CONFIDENCE_THRESHOLD = float(
+        os.getenv("LLM_MERGE_MEDIUM_CONFIDENCE_THRESHOLD", "0.50")
+    )
+    LLM_MERGE_MAX_CANDIDATES = int(os.getenv("LLM_MERGE_MAX_CANDIDATES", "3"))
+
     # Optional prompt overrides
     INTERVIEWEE_PROMPT_TEMPLATE = os.getenv(
         "INTERVIEWEE_PROMPT_TEMPLATE",

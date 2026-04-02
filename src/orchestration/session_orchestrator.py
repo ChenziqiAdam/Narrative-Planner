@@ -10,11 +10,10 @@ from typing import Any, Dict, List, Optional
 from src.agents.evaluator_agent import EvaluatorAgent
 from src.agents.extraction_agent import ExtractionAgent
 from src.agents.interviewer_agent import InterviewerAgent
-from src.agents.planner_agent import PlannerAgent
 from src.core.graph_manager import GraphManager
 from src.orchestration.state_store import InMemorySessionStateStore
 from src.services import CoverageCalculator, GraphProjector, MemoryProjector, MergeEngine
-from src.state import ElderProfile, PlannerContext, SessionState, TurnRecord
+from src.state import ElderProfile, SessionState, TurnRecord
 
 
 class SessionOrchestrator:
@@ -23,7 +22,6 @@ class SessionOrchestrator:
         session_id: str,
         mode: str = "planner",
         store: Optional[InMemorySessionStateStore] = None,
-        planner_agent: Optional[PlannerAgent] = None,
         interviewer_agent: Optional[InterviewerAgent] = None,
         extraction_agent: Optional[ExtractionAgent] = None,
         evaluator_agent: Optional[EvaluatorAgent] = None,
@@ -36,7 +34,6 @@ class SessionOrchestrator:
         self.mode = mode
         self.store = store or InMemorySessionStateStore()
         self.graph_manager = GraphManager()
-        self.planner_agent = planner_agent or PlannerAgent()
         self.interviewer_agent = interviewer_agent or InterviewerAgent()
         self.extraction_agent = extraction_agent or ExtractionAgent()
         self.evaluator_agent = evaluator_agent or EvaluatorAgent()
@@ -60,29 +57,18 @@ class SessionOrchestrator:
         self.graph_projector.initialize_from_elder_profile(self.graph_manager, elder_info)
         state.theme_state = self.graph_projector.build_theme_state(self.graph_manager)
         graph_summary = self.coverage_calculator.build_graph_summary(state, self.graph_manager)
-        plan = self.planner_agent.create_plan(
-            PlannerContext(
-                session_id=state.session_id,
-                turn_index=0,
-                elder_profile=state.elder_profile,
-                recent_transcript=[],
-                graph_summary=graph_summary,
-                memory_capsule=state.memory_capsule,
-                last_turn_evaluation=None,
-            )
-        )
+        # 统一架构：不再调用 PlannerAgent，规划逻辑整合到 InterviewerAgent 中
         generated = self.interviewer_agent.generate_question(
             state.elder_profile,
             [],
             state.memory_capsule,
             graph_summary,
-            plan,
             focus_event_payload=None,
         )
-        state.pending_plan = plan
+        state.pending_plan = None  # 统一架构不再使用 Plan 对象
         state.pending_question = generated["question"]
         state.pending_action = generated["action"]
-        state.current_focus_theme_id = plan.target_theme_id
+        state.current_focus_theme_id = graph_summary.current_focus_theme_id
         state.session_metrics = self.coverage_calculator.calculate_session_metrics(state, self.graph_manager)
         self.store.save(state)
         return state
@@ -96,7 +82,7 @@ class SessionOrchestrator:
             timestamp=datetime.now(),
             interviewer_question=state.pending_question or "",
             interviewee_answer=user_response,
-            planner_plan=state.pending_plan,
+            planner_plan=None,  # 统一架构不再使用 Plan 对象
         )
         current_interviewer_action = state.pending_action or "continue"
 
@@ -112,40 +98,23 @@ class SessionOrchestrator:
 
         state.transcript.append(turn_record)
         state.theme_state = self.graph_projector.build_theme_state(self.graph_manager)
-        state.current_focus_theme_id = (
-            turn_record.planner_plan.target_theme_id
-            if turn_record.planner_plan and turn_record.planner_plan.target_theme_id
-            else state.current_focus_theme_id
-        )
+        # 统一架构：current_focus_theme_id 已在 transcript 更新时维护
         state.memory_capsule = self.memory_projector.refresh(state)
         post_graph_summary = self.coverage_calculator.build_graph_summary(state, self.graph_manager)
         state.session_metrics = self.coverage_calculator.calculate_session_metrics(state, self.graph_manager)
-        last_turn_evaluation = state.evaluation_trace[-1] if state.evaluation_trace else None
 
-        next_plan = self.planner_agent.create_plan(
-            PlannerContext(
-                session_id=state.session_id,
-                turn_index=state.turn_count,
-                elder_profile=state.elder_profile,
-                recent_transcript=state.recent_transcript(3),
-                graph_summary=post_graph_summary,
-                memory_capsule=state.memory_capsule,
-                last_turn_evaluation=last_turn_evaluation,
-            )
-        )
-        focus_event_payload = self._build_focus_event_payload(state, next_plan)
+        focus_event_payload = self._build_focus_event_payload(state)
         generated = self.interviewer_agent.generate_question(
             state.elder_profile,
             state.recent_transcript(3),
             state.memory_capsule,
             post_graph_summary,
-            next_plan,
             focus_event_payload=focus_event_payload,
         )
-        state.pending_plan = next_plan
+        state.pending_plan = None  # 统一架构不再使用 Plan 对象
         state.pending_question = generated["question"]
         state.pending_action = generated["action"]
-        state.current_focus_theme_id = next_plan.target_theme_id or state.current_focus_theme_id
+        state.current_focus_theme_id = state.memory_capsule.current_storyline or state.current_focus_theme_id
         self.store.save(state)
         self._schedule_turn_evaluation(
             turn_record.turn_id,
@@ -163,7 +132,7 @@ class SessionOrchestrator:
             "turn_count": state.turn_count,
             "turn_evaluation": {"status": "pending", "turn_id": turn_record.turn_id},
             "session_metrics": state.session_metrics.to_dict() if state.session_metrics else {},
-            "planner_plan": next_plan.to_dict(),
+            "planner_plan": None,  # 统一架构不再使用 Plan 对象
         }
 
     def get_pending_question_result(self) -> Dict[str, Any]:
@@ -177,7 +146,7 @@ class SessionOrchestrator:
             "turn_count": state.turn_count,
             "turn_evaluation": {},
             "session_metrics": state.session_metrics.to_dict() if state.session_metrics else {},
-            "planner_plan": state.pending_plan.to_dict() if state.pending_plan else {},
+            "planner_plan": None,  # 统一架构不再使用 Plan 对象
         }
 
     def get_graph_state(self) -> Dict[str, Any]:
@@ -261,11 +230,10 @@ class SessionOrchestrator:
     async def close(self) -> None:
         await self.extraction_agent.close()
 
-    def _build_focus_event_payload(self, state: SessionState, plan) -> Optional[Dict[str, Any]]:
-        target_event_id = plan.target_event_id if plan else None
-        if not target_event_id:
-            active_event_ids = state.memory_capsule.active_event_ids if state.memory_capsule else []
-            target_event_id = active_event_ids[-1] if active_event_ids else None
+    def _build_focus_event_payload(self, state: SessionState) -> Optional[Dict[str, Any]]:
+        # 获取当前活跃的事件作为焦点
+        active_event_ids = state.memory_capsule.active_event_ids if state.memory_capsule else []
+        target_event_id = active_event_ids[-1] if active_event_ids else None
         if not target_event_id:
             return None
 

@@ -15,7 +15,7 @@ from openai import OpenAI
 
 from src.core.interfaces import (
     IEventExtractor, ExtractedEvent, EventSlots,
-    DialogueTurn
+    DialogueTurn, SimilarityHint
 )
 from src.config import Config
 
@@ -161,45 +161,16 @@ class EventExtractor(IEventExtractor):
         """
         构建完整的提示词
 
-        根据新的提示词格式，构建JSON格式的输入数据。
-
-        Args:
-            turn: 当前对话轮次
-            conversation_context: 对话上下文
-
-        Returns:
-            完整的提示词字符串（JSON格式输入）
+        根据配置选择使用统一提示词或旧版提示词
         """
-        # 构建上下文列表
-        context_list = []
-        for i, ctx_turn in enumerate(conversation_context[-3:], start=-len(conversation_context[-3:])):
-            context_list.append({
-                "turn": i,
-                "interviewer": ctx_turn.interviewer_question,
-                "respondent": ctx_turn.interviewee_raw_reply
-            })
+        if not getattr(Config, 'ENABLE_LLM_MERGE_HINTS', True):
+            return self._build_legacy_prompt(turn, conversation_context, existing_events)
 
-        # 构建输入JSON
-        input_data = {
-            "current_turn": {
-                "interviewer": turn.interviewer_question,
-                "respondent": turn.interviewee_raw_reply
-            },
-            "context": context_list,
-            "existing_events": existing_events or []
-        }
+        # 预选候选事件
+        candidate_events = self._select_candidate_events(turn, existing_events or [])
 
-        # 返回提示词模板 + JSON输入
-        return f"""{self._prompt_template}
-
-## 当前输入数据
-
-```json
-{json.dumps(input_data, ensure_ascii=False, indent=2)}
-```
-
-请根据以上输入数据，按照输出格式要求返回事件提取结果。
-"""
+        # 构建统一提示词
+        return self._build_unified_prompt(turn, conversation_context, candidate_events)
 
     def _parse_llm_response(self, response_text: str) -> tuple[List[dict], float, Optional[str], bool]:
         """
@@ -410,6 +381,7 @@ class EventExtractor(IEventExtractor):
         Args:
             turn: 当前对话轮次
             conversation_context: 对话上下文
+            existing_events: 已有事件列表（用于智能合并判断）
 
         Returns:
             提取到的事件列表
@@ -421,20 +393,27 @@ class EventExtractor(IEventExtractor):
             # 调用LLM
             response_text = await self._call_llm(prompt)
 
-            # 解析响应
-            events_data, confidence, related_event_id, is_update = self._parse_llm_response(response_text)
+            # 根据配置选择解析器
+            if getattr(Config, 'ENABLE_LLM_MERGE_HINTS', True):
+                # 使用统一解析器（新格式）
+                events, _ = self._parse_unified_llm_response(response_text)
+                # 设置来源轮次
+                for event in events:
+                    event.source_turns = [turn.turn_id]
+            else:
+                # 使用旧版解析器
+                events_data, confidence, related_event_id, is_update = self._parse_llm_response(response_text)
+                events = [
+                    self._create_event_from_data(
+                        data, confidence, turn, is_update, related_event_id
+                    )
+                    for data in events_data
+                ]
 
-            # 创建事件对象
-            events = [
-                self._create_event_from_data(
-                    data, confidence, turn, is_update, related_event_id
-                )
-                for data in events_data
-            ]
-
+            avg_confidence = sum(e.confidence for e in events) / len(events) if events else 0.0
             logger.info(
                 f"Extracted {len(events)} events from turn {turn.turn_id} "
-                f"with confidence {confidence:.2f}"
+                f"with confidence {avg_confidence:.2f}"
             )
 
             return events
@@ -687,6 +666,298 @@ class EventExtractor(IEventExtractor):
             return most_similar
 
         return None
+
+    def _select_candidate_events(
+        self,
+        current_turn: DialogueTurn,
+        existing_events: List[dict]
+    ) -> List[dict]:
+        """
+        用轻量级规则预选TOP-N候选事件供大模型参考
+
+        策略：标题相似度 + 主题匹配 + 时间关键词匹配
+
+        Args:
+            current_turn: 当前对话轮次
+            existing_events: 已有事件列表
+
+        Returns:
+            TOP-N候选事件列表（按相似度排序）
+        """
+        if not existing_events:
+            return []
+
+        candidates = []
+        answer = current_turn.interviewee_raw_reply or ""
+
+        for event in existing_events:
+            score = 0.0
+
+            # 标题/摘要相似度 (0-0.4)
+            title = event.get("title", "")
+            summary = event.get("summary", "")
+            title_score = SequenceMatcher(
+                None, answer[:50], title or summary
+            ).ratio() * 0.4
+            score += title_score
+
+            # 主题匹配 (0-0.3)
+            theme_id = event.get("theme_id", "")
+            if theme_id:
+                theme_keywords = {
+                    "career": ["工作", "工厂", "上班", "车间", "师傅"],
+                    "migration": ["离开", "去了", "搬家", "下乡"],
+                    "marriage": ["结婚", "对象", "爱人", "老伴"],
+                    "family": ["父亲", "母亲", "孩子", "家庭"],
+                    "childhood": ["小时候", "童年", "上学"],
+                }
+                keywords = theme_keywords.get(theme_id, [])
+                if any(kw in answer for kw in keywords):
+                    score += 0.3
+
+            # 时间关键词匹配 (0-0.3)
+            event_time = event.get("time", "")
+            if event_time:
+                import re
+                time_nums = re.findall(r'\d+', str(event_time))
+                if time_nums and any(num in answer for num in time_nums):
+                    score += 0.3
+
+            if score > 0.15:  # 阈值过滤
+                candidates.append({"event": event, "score": score})
+
+        # 按分数排序取TOP-N
+        candidates.sort(key=lambda x: x["score"], reverse=True)
+        max_candidates = getattr(Config, 'LLM_MERGE_MAX_CANDIDATES', 3)
+        return [c["event"] for c in candidates[:max_candidates]]
+
+    def _format_candidate_events(self, candidates: List[dict]) -> str:
+        """
+        格式化候选事件为Prompt文本
+
+        Args:
+            candidates: 候选事件列表
+
+        Returns:
+            格式化后的文本
+        """
+        if not candidates:
+            return "（无候选事件）"
+
+        lines = []
+        for i, event in enumerate(candidates, 1):
+            event_id = event.get("event_id", f"evt_{i}")
+            title = event.get("title", "未命名事件")
+            time = event.get("time", "")
+            location = event.get("location", "")
+            people = event.get("people_names", [])
+            theme = event.get("theme_id", "")
+
+            line = f"  候选{i} [{event_id}]: {title}"
+            if time:
+                line += f"\n    - 时间: {time}"
+            if location:
+                line += f"\n    - 地点: {location}"
+            if people:
+                line += f"\n    - 人物: {', '.join(people[:3])}"
+            if theme:
+                line += f"\n    - 主题: {theme}"
+            lines.append(line)
+
+        return "\n\n".join(lines)
+
+    def _load_unified_prompt_template(self) -> str:
+        """
+        加载统一提取+合并判断的提示词模板
+
+        Returns:
+            提示词模板字符串
+        """
+        try:
+            prompt_path = f"{Config.PROJECT_ROOT}/prompts/unified_extraction_prompt_v2.txt"
+            with open(prompt_path, "r", encoding="utf-8") as f:
+                return f.read()
+        except FileNotFoundError:
+            logger.error("Unified extraction prompt file not found, using legacy")
+            return self._load_prompt_template()
+        except Exception as e:
+            logger.error(f"Error loading unified prompt template: {e}")
+            return self._load_prompt_template()
+
+    def _build_legacy_prompt(
+        self,
+        turn: DialogueTurn,
+        conversation_context: List[DialogueTurn],
+        existing_events: Optional[List[dict]] = None,
+    ) -> str:
+        """
+        构建旧版提示词（兼容模式）
+        """
+        # 构建上下文列表
+        context_list = []
+        for i, ctx_turn in enumerate(conversation_context[-3:], start=-len(conversation_context[-3:])):
+            context_list.append({
+                "turn": i,
+                "interviewer": ctx_turn.interviewer_question,
+                "respondent": ctx_turn.interviewee_raw_reply
+            })
+
+        # 构建输入JSON
+        input_data = {
+            "current_turn": {
+                "interviewer": turn.interviewer_question,
+                "respondent": turn.interviewee_raw_reply
+            },
+            "context": context_list,
+            "existing_events": existing_events or []
+        }
+
+        # 返回提示词模板 + JSON输入
+        return f"""{self._prompt_template}
+
+## 当前输入数据
+
+```json
+{json.dumps(input_data, ensure_ascii=False, indent=2)}
+```
+
+请根据以上输入数据，按照输出格式要求返回事件提取结果。
+"""
+
+    def _build_unified_prompt(
+        self,
+        turn: DialogueTurn,
+        conversation_context: List[DialogueTurn],
+        candidate_events: List[dict],
+    ) -> str:
+        """
+        构建统一提取+合并判断的提示词
+
+        Args:
+            turn: 当前对话轮次
+            conversation_context: 对话上下文
+            candidate_events: 预选候选事件
+
+        Returns:
+            完整的提示词字符串
+        """
+        # 加载统一提示词模板
+        template = self._load_unified_prompt_template()
+
+        # 格式化上下文
+        context_lines = []
+        for i, ctx_turn in enumerate(conversation_context[-3:], 1):
+            context_lines.append(
+                f"轮次{i}:\n"
+                f"  问: {ctx_turn.interviewer_question}\n"
+                f"  答: {ctx_turn.interviewee_raw_reply}"
+            )
+        context_str = "\n\n".join(context_lines) if context_lines else "无"
+
+        # 格式化候选事件
+        candidates_str = self._format_candidate_events(candidate_events)
+
+        # 填充模板
+        prompt = template.replace(
+            "{{ interviewer_question }}", turn.interviewer_question or ""
+        ).replace(
+            "{{ interviewee_answer }}", turn.interviewee_raw_reply or ""
+        ).replace(
+            "{{ transcript_context }}", context_str
+        ).replace(
+            "{{ candidate_events }}", candidates_str
+        )
+
+        return prompt
+
+    def _parse_similarity_hints(self, hints_data: List[dict]) -> List[SimilarityHint]:
+        """
+        解析相似度建议数据
+
+        Args:
+            hints_data: 从LLM响应中解析的相似度建议列表
+
+        Returns:
+            SimilarityHint对象列表
+        """
+        hints = []
+        for hint_data in hints_data:
+            try:
+                hint = SimilarityHint(
+                    candidate_id=hint_data.get("candidate_id", ""),
+                    confidence=float(hint_data.get("confidence", 0.0)),
+                    reason=hint_data.get("reason", ""),
+                    matched_slots=hint_data.get("matched_slots", [])
+                )
+                hints.append(hint)
+            except Exception as e:
+                logger.warning(f"Failed to parse similarity hint: {e}")
+                continue
+        return hints
+
+    def _parse_unified_llm_response(self, response_text: str) -> tuple[List[ExtractedEvent], List[dict]]:
+        """
+        解析统一提取+合并判断的LLM响应
+
+        Args:
+            response_text: LLM返回的原始文本
+
+        Returns:
+            (ExtractedEvent列表, open_loops列表) 元组
+        """
+        try:
+            # 清理响应文本，提取JSON部分
+            if "```json" in response_text:
+                json_str = response_text.split("```json")[1].split("```")[0].strip()
+            elif "```" in response_text:
+                json_str = response_text.split("```")[1].split("```")[0].strip()
+            else:
+                json_str = response_text.strip()
+
+            data = json.loads(json_str)
+            events_data = data.get("events", [])
+            events = []
+
+            for event_data in events_data:
+                slots_data = event_data.get("slots", {})
+                slots = EventSlots(
+                    time=slots_data.get("time"),
+                    location=slots_data.get("location"),
+                    people=slots_data.get("people"),
+                    event=slots_data.get("event"),
+                    feeling=slots_data.get("feeling"),
+                    unexpanded_clues=slots_data.get("unexpanded_clues"),
+                    cause=slots_data.get("cause"),
+                    result=slots_data.get("result"),
+                    reflection=slots_data.get("reflection")
+                )
+
+                # 解析相似度建议
+                hints_data = event_data.get("similarity_hints", [])
+                similarity_hints = self._parse_similarity_hints(hints_data)
+
+                event = ExtractedEvent(
+                    event_id=event_data.get("event_id") or f"evt_{uuid.uuid4().hex[:12]}",
+                    extracted_at=datetime.now(),
+                    slots=slots,
+                    confidence=float(event_data.get("confidence", 0.5)),
+                    theme_id=event_data.get("theme_id"),
+                    source_turns=[],
+                    is_update=False,
+                    similarity_hints=similarity_hints
+                )
+                events.append(event)
+
+            open_loops = data.get("open_loops", [])
+            return events, open_loops
+
+        except json.JSONDecodeError as e:
+            logger.error(f"Failed to parse unified LLM response as JSON: {e}")
+            logger.debug(f"Response text: {response_text}")
+            return [], []
+        except Exception as e:
+            logger.error(f"Error parsing unified LLM response: {e}")
+            return [], []
 
     async def stop(self):
         """

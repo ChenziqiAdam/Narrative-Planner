@@ -27,6 +27,23 @@ class ExtractionStrategy(Enum):
 
 
 @dataclass
+class SimilarityHint:
+    """大模型给出的相似度建议（用于智能合并）"""
+    candidate_id: str          # 候选事件ID
+    confidence: float          # 置信度 0.0-1.0
+    reason: str                # 判断理由（用于调试）
+    matched_slots: List[str] = field(default_factory=list)  # 匹配的槽位
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "candidate_id": self.candidate_id,
+            "confidence": self.confidence,
+            "reason": self.reason,
+            "matched_slots": self.matched_slots
+        }
+
+
+@dataclass
 class EventSlots:
     """
     事件6核心槽位 + 3扩展槽位
@@ -79,6 +96,9 @@ class ExtractedEvent:
     is_update: bool = False                # 是否是对已有事件的更新
     updated_event_id: Optional[str] = None # 如更新，填写原事件ID
 
+    # ⭐ 新增：大模型给出的相似度建议（向后兼容，默认为空列表）
+    similarity_hints: List[SimilarityHint] = field(default_factory=list)
+
     def to_dict(self) -> Dict[str, Any]:
         """转换为字典"""
         return {
@@ -89,7 +109,8 @@ class ExtractedEvent:
             "theme_id": self.theme_id,
             "source_turns": self.source_turns,
             "is_update": self.is_update,
-            "updated_event_id": self.updated_event_id
+            "updated_event_id": self.updated_event_id,
+            "similarity_hints": [hint.to_dict() for hint in self.similarity_hints]
         }
 
 

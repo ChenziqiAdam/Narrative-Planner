@@ -12,6 +12,7 @@ from jinja2 import Template
 from openai import OpenAI
 
 from src.config import Config
+from src.agents.prompt_formatter import PromptFormatter
 from src.prompts.planner_interview_prompts import PLANNER_PROMPT_TEMPLATE
 from src.state import MemoryCapsule, PlannerContext, QuestionPlan
 
@@ -52,6 +53,7 @@ class PlannerAgent:
         self.instruction_path = instruction_path or os.path.join(Config.PROJECT_ROOT, "docs", "planner-instruction.yaml")
         self.instruction_payload = self._load_instruction_payload()
         self.max_tokens = 4096 if self._is_reasoning_heavy_model() else 1600
+        self.prompt_formatter = PromptFormatter()
 
     def create_plan(self, context: PlannerContext) -> QuestionPlan:
         if context.turn_index == 0:
@@ -111,41 +113,67 @@ class PlannerAgent:
         )
 
     def _build_user_prompt(self, context: PlannerContext) -> str:
+        """
+        构建 Planner 的用户提示词
+
+        使用 PromptFormatter 将结构化数据转写为自然语言描述，
+        使 LLM 更容易理解访谈上下文并做出决策。
+        """
         prompt_stage = self._prompt_stage(context.turn_index)
-        transcript_limit = 1 if prompt_stage == "early" else 2 if prompt_stage == "mid" else 3
-        transcript_payload = [
-            {
-                "turn_index": turn.turn_index,
-                "interviewer_question": turn.interviewer_question,
-                "interviewee_answer": turn.interviewee_answer,
-            }
-            for turn in context.recent_transcript[-transcript_limit:]
-        ]
+        planning_note = self._planning_note(prompt_stage)
+
+        # 使用转写格式化器生成自然语言上下文
+        formatted_context = self.prompt_formatter.format_for_planner_decision(context)
+
+        # 提取关键决策信息
         memory = context.memory_capsule or MemoryCapsule.empty()
-        memory_payload = self._build_memory_payload(memory, prompt_stage)
-        graph_payload = self._build_graph_payload(context, prompt_stage)
-        evaluation_payload = self._build_evaluation_payload(context, prompt_stage)
-        elder_profile_payload = self._build_elder_profile_payload(context, prompt_stage)
         available_ids = {
             "theme_ids": list(context.graph_summary.theme_coverage.keys()),
             "active_event_ids": list(context.graph_summary.active_event_ids),
             "active_people_ids": list(memory.active_people_ids),
-            "unresolved_theme_ids": list(context.graph_summary.unresolved_theme_ids),
         }
-        planning_note = self._planning_note(prompt_stage)
 
         return (
-            "You are deciding the next structured interview action.\n"
-            "Use only the IDs provided below. If you are uncertain, return null instead of inventing one.\n"
-            "Do not generate the final natural-language question; only produce the planner JSON.\n\n"
-            f"Planning note:\n{planning_note}\n\n"
-            f"Prompt stage: {prompt_stage}\n\n"
-            f"Elder profile:\n{json.dumps(elder_profile_payload, ensure_ascii=False, indent=2)}\n\n"
-            f"Recent transcript:\n{json.dumps(transcript_payload, ensure_ascii=False, indent=2)}\n\n"
-            f"Memory capsule:\n{json.dumps(memory_payload, ensure_ascii=False, indent=2)}\n\n"
-            f"Graph summary:\n{json.dumps(graph_payload, ensure_ascii=False, indent=2)}\n\n"
-            f"Last turn evaluation:\n{json.dumps(evaluation_payload, ensure_ascii=False, indent=2)}\n\n"
-            f"Available IDs:\n{json.dumps(available_ids, ensure_ascii=False, indent=2)}"
+            "你是老年回忆录访谈的规划模块（Planner）。\n\n"
+            "【任务】\n"
+            "基于访谈上下文，决定下一个最优动作。你需要：\n"
+            "1. 关注受访者的情绪和精力状态\n"
+            "2. 优先处理高优先级的开环线索\n"
+            "3. 平衡深度追问与广度覆盖\n"
+            "4. 避免重复提问\n\n"
+            f"{planning_note}\n\n"
+            f"{formatted_context}\n\n"
+            "【可用主题ID】（必须使用这些ID，不能编造）\n"
+            f"{json.dumps(available_ids, ensure_ascii=False, indent=2)}\n\n"
+            "【输出要求】\n"
+            "返回严格的 JSON 格式，包含 action 对象：\n"
+            "{\n"
+            '  "action": {\n'
+            '    "primary_action": "DEEP_DIVE|BREADTH_SWITCH|CLARIFY|SUMMARIZE|PAUSE_SESSION|CLOSE_INTERVIEW",\n'
+            '    "tactical_goal": {\n'
+            '      "goal_type": "EXTRACT_DETAILS|EXTRACT_EMOTIONS|...",\n'
+            '      "description": "简短描述"\n'
+            '    },\n'
+            '    "targets": {\n'
+            '      "target_theme_id": "使用可用ID列表中的ID",\n'
+            '      "target_event_id": "事件ID或null",\n'
+            '      "target_slots": ["time", "location", ...]\n'
+            '    },\n'
+            '    "tone_constraint": {\n'
+            '      "primary_tone": "EMPATHIC_SUPPORTIVE|...",\n'
+            '      "secondary_tone": null,\n'
+            '      "constraints": ["NO_LEADING_QUESTIONS", ...]\n'
+            '    },\n'
+            '    "strategy": {\n'
+            '      "strategy_type": "OBJECT_TO_EMOTION|...",\n'
+            '      "parameters": {},\n'
+            '      "priority": 1\n'
+            '    }\n'
+            '  },\n'
+            '  "_debug_snapshot": {\n'
+            '    "decision_trace": ["决策理由1", "决策理由2"]\n'
+            '  }\n'
+            '}'
         )
 
     def _parse_response(self, raw_content: str) -> Dict[str, Any]:
@@ -459,14 +487,16 @@ class PlannerAgent:
         return emotional_state.cognitive_energy >= 0.35
 
     def _pick_undercovered_theme(self, context: PlannerContext) -> Optional[str]:
-        unresolved = context.graph_summary.unresolved_theme_ids
-        if not unresolved:
-            return None
-        ranked = sorted(
-            unresolved,
-            key=lambda theme_id: context.graph_summary.theme_coverage.get(theme_id, 0.0),
+        """选择覆盖率最低的主题（优先从 pending 和 mentioned 中选择）"""
+        candidates = (
+            context.graph_summary.pending_themes +
+            context.graph_summary.mentioned_themes
         )
-        return ranked[0]
+        if not candidates:
+            return None
+        # 按完成度排序，返回完成度最低的主题
+        ranked = sorted(candidates, key=lambda t: t.completion_ratio)
+        return ranked[0].theme_id
 
     def _slots_from_loop(self, loop) -> List[str]:
         if loop.loop_type == "unexpanded_clue":
@@ -532,92 +562,10 @@ class PlannerAgent:
             "This is a later interview turn. You can use the broader session state to balance depth, coverage, and open-loop closure."
         )
 
-    def _build_elder_profile_payload(self, context: PlannerContext, prompt_stage: str) -> Dict[str, Any]:
-        profile = context.elder_profile.to_dict()
-        stable_facts = profile.get("stable_facts", {})
-        if prompt_stage == "early" and isinstance(stable_facts, dict):
-            profile["stable_facts"] = {
-                key: stable_facts[key]
-                for key in list(stable_facts.keys())[:4]
-            }
-        return profile
-
-    def _build_memory_payload(self, memory: MemoryCapsule, prompt_stage: str) -> Dict[str, Any]:
-        emotional_state = memory.emotional_state.to_dict() if memory.emotional_state else {}
-        if prompt_stage == "early":
-            return {
-                "session_summary": memory.session_summary,
-                "current_storyline": memory.current_storyline,
-                "recent_topics": memory.recent_topics[:2],
-                "open_loops": [loop.to_dict() for loop in memory.open_loops[:3]],
-                "do_not_repeat": memory.do_not_repeat[-2:],
-                "emotional_state": emotional_state,
-            }
-        if prompt_stage == "mid":
-            return {
-                "session_summary": memory.session_summary,
-                "current_storyline": memory.current_storyline,
-                "active_event_ids": memory.active_event_ids[:4],
-                "active_people_ids": memory.active_people_ids[:4],
-                "recent_topics": memory.recent_topics[:3],
-                "do_not_repeat": memory.do_not_repeat[-3:],
-                "open_loops": [loop.to_dict() for loop in memory.open_loops[:4]],
-                "contradictions": [note.to_dict() for note in memory.contradictions[:2]],
-                "emotional_state": emotional_state,
-            }
-        return {
-            "session_summary": memory.session_summary,
-            "current_storyline": memory.current_storyline,
-            "active_event_ids": memory.active_event_ids,
-            "active_people_ids": memory.active_people_ids,
-            "recent_topics": memory.recent_topics,
-            "do_not_repeat": memory.do_not_repeat[-3:],
-            "open_loops": [loop.to_dict() for loop in memory.open_loops[:6]],
-            "contradictions": [note.to_dict() for note in memory.contradictions[:4]],
-            "emotional_state": emotional_state,
-        }
-
-    def _build_graph_payload(self, context: PlannerContext, prompt_stage: str) -> Dict[str, Any]:
-        summary = context.graph_summary
-        ranked_slot_gaps = sorted(summary.slot_coverage.items(), key=lambda item: item[1])
-        ranked_theme_gaps = sorted(summary.theme_coverage.items(), key=lambda item: item[1])
-        if prompt_stage == "early":
-            return {
-                "overall_coverage": summary.overall_coverage,
-                "current_focus_theme_id": summary.current_focus_theme_id,
-                "top_undercovered_slots": ranked_slot_gaps[:3],
-                "top_undercovered_themes": ranked_theme_gaps[:2],
-                "active_event_ids": summary.active_event_ids[:3],
-                "unresolved_theme_ids": summary.unresolved_theme_ids[:3],
-            }
-        if prompt_stage == "mid":
-            return {
-                "overall_coverage": summary.overall_coverage,
-                "theme_coverage": dict(ranked_theme_gaps[:4]),
-                "slot_coverage": dict(ranked_slot_gaps[:4]),
-                "people_coverage": summary.people_coverage,
-                "current_focus_theme_id": summary.current_focus_theme_id,
-                "active_event_ids": summary.active_event_ids[:4],
-                "unresolved_theme_ids": summary.unresolved_theme_ids[:4],
-            }
-        return summary.to_dict()
-
-    def _build_evaluation_payload(self, context: PlannerContext, prompt_stage: str) -> Dict[str, Any]:
-        if not context.last_turn_evaluation:
-            return {}
-        if prompt_stage == "early":
-            return {
-                "question_quality_score": context.last_turn_evaluation.question_quality_score,
-                "information_gain_score": context.last_turn_evaluation.information_gain_score,
-                "planner_alignment_score": context.last_turn_evaluation.planner_alignment_score,
-                "coverage_gain": context.last_turn_evaluation.coverage_gain,
-            }
-        return context.last_turn_evaluation.to_dict()
-
     def _opening_plan(self, context: PlannerContext) -> QuestionPlan:
         target_theme_id = context.graph_summary.current_focus_theme_id
-        if not target_theme_id and context.graph_summary.unresolved_theme_ids:
-            target_theme_id = context.graph_summary.unresolved_theme_ids[0]
+        if not target_theme_id and context.graph_summary.pending_themes:
+            target_theme_id = context.graph_summary.pending_themes[0].theme_id
 
         background = (context.elder_profile.background_summary or "").strip()
         hometown = (context.elder_profile.hometown or "").strip()

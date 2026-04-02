@@ -163,6 +163,22 @@ class ThemeState:
 
 
 @dataclass
+class ThemeSummary:
+    """主题摘要信息，用于 PlannerContext"""
+    theme_id: str
+    title: str
+    description: str
+    status: str
+    completion_ratio: float
+    priority: int
+    extracted_event_count: int
+    depends_on: List[str] = field(default_factory=list)
+
+    def to_dict(self) -> Dict[str, Any]:
+        return serialize_value(self)
+
+
+@dataclass
 class GraphSummary:
     overall_coverage: float
     theme_coverage: Dict[str, float]
@@ -170,7 +186,12 @@ class GraphSummary:
     people_coverage: float
     current_focus_theme_id: Optional[str]
     active_event_ids: List[str] = field(default_factory=list)
-    unresolved_theme_ids: List[str] = field(default_factory=list)
+
+    # 主题详细列表（新增）
+    all_themes: List[ThemeSummary] = field(default_factory=list)
+    pending_themes: List[ThemeSummary] = field(default_factory=list)      # 空白主题
+    mentioned_themes: List[ThemeSummary] = field(default_factory=list)   # 已提及主题
+    exhausted_themes: List[ThemeSummary] = field(default_factory=list)   # 已穷尽主题
 
     def to_dict(self) -> Dict[str, Any]:
         return serialize_value(self)
@@ -253,7 +274,6 @@ class PlannerContext:
     recent_transcript: List["TurnRecord"]
     graph_summary: GraphSummary
     memory_capsule: MemoryCapsule
-    last_turn_evaluation: Optional["TurnEvaluation"] = None
 
     def to_dict(self) -> Dict[str, Any]:
         return serialize_value(self)
