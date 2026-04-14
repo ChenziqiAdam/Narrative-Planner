@@ -77,6 +77,18 @@ class Config:
         "prompts/interviewer_system_prompt.md",
     )
 
+    # Planner 信息权重配置（可用于实验与A/B）
+    PLANNER_NEW_INFO_WEIGHT = float(os.getenv("PLANNER_NEW_INFO_WEIGHT", "1.0"))
+    PLANNER_MISSING_SLOT_WEIGHT = float(os.getenv("PLANNER_MISSING_SLOT_WEIGHT", "1.15"))
+    PLANNER_THEME_COVERAGE_WEIGHT = float(os.getenv("PLANNER_THEME_COVERAGE_WEIGHT", "1.0"))
+    PLANNER_EMOTION_ENERGY_WEIGHT = float(os.getenv("PLANNER_EMOTION_ENERGY_WEIGHT", "0.9"))
+    PLANNER_MEMORY_STABILITY_WEIGHT = float(os.getenv("PLANNER_MEMORY_STABILITY_WEIGHT", "0.85"))
+    PLANNER_CONFLICT_CLARIFICATION_WEIGHT = float(os.getenv("PLANNER_CONFLICT_CLARIFICATION_WEIGHT", "1.0"))
+    PLANNER_INFORMATION_QUALITY_WEIGHT = float(os.getenv("PLANNER_INFORMATION_QUALITY_WEIGHT", "0.95"))
+    PLANNER_LOW_GAIN_PENALTY = float(os.getenv("PLANNER_LOW_GAIN_PENALTY", "1.1"))
+    PLANNER_REFLECTION_SLOT_WEIGHT = float(os.getenv("PLANNER_REFLECTION_SLOT_WEIGHT", "0.75"))
+    PLANNER_FACTUAL_SLOT_WEIGHT = float(os.getenv("PLANNER_FACTUAL_SLOT_WEIGHT", "1.0"))
+
     @classmethod
     def get_api_key(cls):
         return getattr(cls, "OPENAI_API_KEY", None) or getattr(cls, "MOONSHOT_API_KEY", None)

@@ -1,0 +1,57 @@
+{
+  "target_interviewer_turns": 20,
+  "baseline": {
+    "session_id": "636d9b694b53448e9fec81c6b1c332b2",
+    "first_question": "王阿姨，您好！很高兴今天能和您一起回顾您的一生。首先，想请您分享一下，您出生在上海的1948年，那个时代的童年生活是怎样的？",
+    "interviewer_turns": 20,
+    "actions": [
+      "continue",
+      "continue",
+      "continue",
+      "continue",
+      "continue",
+      "continue",
+      "continue",
+      "continue",
+      "continue",
+      "continue",
+      "continue",
+      "continue",
+      "continue",
+      "continue",
+      "continue",
+      "continue",
+      "continue",
+      "continue",
+      "continue",
+      "continue"
+    ]
+  },
+  "planner": {
+    "session_id": "16b955869bbc4cfead613b1b27a1fe49",
+    "first_question": "王阿姨，从您的人生经历里，年轻时工作那段日子一定很值得一提。您还记得自己刚参加工作时最难忘的一幕吗？",
+    "interviewer_turns": 20,
+    "actions": [
+      "next_phase",
+      "continue",
+      "continue",
+      "continue",
+      "continue",
+      "continue",
+      "continue",
+      "next_phase",
+      "continue",
+      "continue",
+      "continue",
+      "continue",
+      "continue",
+      "continue",
+      "next_phase",
+      "continue",
+      "next_phase",
+      "next_phase",
+      "next_phase",
+      "next_phase"
+    ]
+  }
+}

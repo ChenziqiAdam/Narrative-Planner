@@ -1,0 +1,65 @@
+{
+  "generated_at": "2026-04-12T18:15:53.750361",
+  "directory": "results/conversation",
+  "count": 2,
+  "scores": [
+    {
+      "session_id": "16b955869bbc4cfead613b1b27a1fe49",
+      "conversation_file": "results/conversation/planner_16b955869bbc4cfead613b1b27a1fe49.txt",
+      "state_file": "results/conversation/planner_state_16b955869bbc4cfead613b1b27a1fe49.json",
+      "score": {
+        "overall_score": 0.6983,
+        "deterministic_score": 0.6983,
+        "llm_score": null,
+        "deterministic_breakdown": {
+          "information_effectiveness": 0.6875,
+          "structure_coverage": 0.5443,
+          "action_balance": 0.885,
+          "efficiency": 1.0,
+          "overall_theme_coverage": 0.0971,
+          "slot_coverage": 0.75,
+          "people_coverage": 1.0,
+          "avg_turn_quality": 0.7077,
+          "avg_info_gain": 0.6407,
+          "non_redundancy": 0.7074,
+          "low_gain_ratio": 0.0
+        },
+        "llm_breakdown": {},
+        "analysis_notes": [
+          "turns=20",
+          "low_gain_ratio=0.000",
+          "action_mix=continue:0.650,next_phase:0.350,end:0.000"
+        ]
+      }
+    },
+    {
+      "session_id": "bffef8c02a184e3cbb975e9fa5e887c5",
+      "conversation_file": "results/conversation/planner_bffef8c02a184e3cbb975e9fa5e887c5.txt",
+      "state_file": "results/conversation/planner_state_bffef8c02a184e3cbb975e9fa5e887c5.json",
+      "score": {
+        "overall_score": 0.6772,
+        "deterministic_score": 0.6772,
+        "llm_score": null,
+        "deterministic_breakdown": {
+          "information_effectiveness": 0.8095,
+          "structure_coverage": 0.4711,
+          "action_balance": 0.59,
+          "efficiency": 1.0,
+          "overall_theme_coverage": 0.0348,
+          "slot_coverage": 0.8571,
+          "people_coverage": 1.0,
+          "avg_turn_quality": 0.783,
+          "avg_info_gain": 0.7266,
+          "non_redundancy": 1.0,
+          "low_gain_ratio": 0.0
+        },
+        "llm_breakdown": {},
+        "analysis_notes": [
+          "turns=1",
+          "low_gain_ratio=0.000",
+          "action_mix=continue:1.000,next_phase:0.000,end:0.000"
+        ]
+      }
+    }
+  ]
+}

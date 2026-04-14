@@ -1,0 +1,27 @@
+{
+  "experiment_id": "exp2_factual_vs_reflection_slot",
+  "goal": "比较事实槽位与反思槽位优先级对提问风格的影响",
+  "variants": [
+    {
+      "name": "factual_first",
+      "weights": {
+        "factual_slot_weight": 1.3,
+        "reflection_slot_weight": 0.55
+      }
+    },
+    {
+      "name": "balanced",
+      "weights": {
+        "factual_slot_weight": 1.0,
+        "reflection_slot_weight": 0.75
+      }
+    },
+    {
+      "name": "reflection_first",
+      "weights": {
+        "factual_slot_weight": 0.8,
+        "reflection_slot_weight": 1.2
+      }
+    }
+  ]
+}

@@ -57,6 +57,7 @@ class EventExtractor(IEventExtractor):
 
         # 加载提示词模板
         self._prompt_template = self._load_prompt_template()
+        self._debug_trace_by_turn: dict[str, dict] = {}
 
         logger.info(f"EventExtractor initialized with model: {self.model}")
 
@@ -164,13 +165,28 @@ class EventExtractor(IEventExtractor):
         根据配置选择使用统一提示词或旧版提示词
         """
         if not getattr(Config, 'ENABLE_LLM_MERGE_HINTS', True):
+            self._debug_trace_by_turn[turn.turn_id] = {
+                "prompt_mode": "legacy",
+                "llm_merge_hints_enabled": False,
+                "candidate_events": [],
+                "fallback_reason": "llm_merge_hints_disabled",
+            }
             return self._build_legacy_prompt(turn, conversation_context, existing_events)
 
         # 预选候选事件
         candidate_events = self._select_candidate_events(turn, existing_events or [])
+        self._debug_trace_by_turn[turn.turn_id] = {
+            "prompt_mode": "unified",
+            "llm_merge_hints_enabled": True,
+            "candidate_events": candidate_events,
+            "candidate_count": len(candidate_events),
+        }
 
         # 构建统一提示词
         return self._build_unified_prompt(turn, conversation_context, candidate_events)
+
+    def consume_debug_trace(self, turn_id: str) -> dict:
+        return self._debug_trace_by_turn.pop(turn_id, {})
 
     def _parse_llm_response(self, response_text: str) -> tuple[List[dict], float, Optional[str], bool]:
         """
@@ -411,6 +427,24 @@ class EventExtractor(IEventExtractor):
                 ]
 
             avg_confidence = sum(e.confidence for e in events) / len(events) if events else 0.0
+            total_hints = sum(len(event.similarity_hints) for event in events)
+            trace = self._debug_trace_by_turn.get(turn.turn_id, {})
+            trace.update(
+                {
+                    "extracted_event_count": len(events),
+                    "avg_confidence": avg_confidence,
+                    "similarity_hint_count": total_hints,
+                    "similarity_hints": [
+                        {
+                            "event_id": event.event_id,
+                            "hints": [hint.to_dict() for hint in event.similarity_hints],
+                        }
+                        for event in events
+                        if event.similarity_hints
+                    ],
+                }
+            )
+            self._debug_trace_by_turn[turn.turn_id] = trace
             logger.info(
                 f"Extracted {len(events)} events from turn {turn.turn_id} "
                 f"with confidence {avg_confidence:.2f}"
@@ -419,6 +453,14 @@ class EventExtractor(IEventExtractor):
             return events
 
         except Exception as e:
+            trace = self._debug_trace_by_turn.get(turn.turn_id, {})
+            trace.update(
+                {
+                    "error": str(e),
+                    "fallback_reason": "extraction_exception",
+                }
+            )
+            self._debug_trace_by_turn[turn.turn_id] = trace
             logger.error(f"Event extraction failed: {e}")
             return []
 
@@ -705,7 +747,7 @@ class EventExtractor(IEventExtractor):
             theme_id = event.get("theme_id", "")
             if theme_id:
                 theme_keywords = {
-                    "career": ["工作", "工厂", "上班", "车间", "师傅"],
+                    "career": ["工作", "工厂", "纺织厂", "上班", "车间", "师傅"],
                     "migration": ["离开", "去了", "搬家", "下乡"],
                     "marriage": ["结婚", "对象", "爱人", "老伴"],
                     "family": ["父亲", "母亲", "孩子", "家庭"],

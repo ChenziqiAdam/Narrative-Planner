@@ -38,6 +38,7 @@ class InterviewerAgent:
         "cause": "起因",
         "result": "结果",
     }
+    SLOT_PRIORITY = ["time", "location", "people", "event", "cause", "result", "feeling", "reflection"]
 
     def __init__(self):
         self.client = OpenAI(**Config.get_openai_client_kwargs())
@@ -52,6 +53,7 @@ class InterviewerAgent:
         memory_capsule: MemoryCapsule,
         graph_summary: GraphSummary,
         focus_event_payload: Optional[Dict[str, Any]] = None,
+        generation_hints: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, str]:
         """
         生成下一个访谈问题
@@ -68,6 +70,7 @@ class InterviewerAgent:
             memory_capsule,
             graph_summary,
             focus_event_payload,
+            generation_hints=generation_hints,
         )
 
         max_attempts = max(1, min(Config.MAX_RETRIES, 2))
@@ -116,7 +119,11 @@ class InterviewerAgent:
                         break
 
         logger.error("InterviewerAgent returning retry response: %s", last_error)
-        return self._retry_response(opening_turn=False)
+        return self._retry_response(
+            opening_turn=False,
+            focus_event_payload=focus_event_payload,
+            generation_hints=generation_hints,
+        )
 
     def _render_system_prompt(self) -> str:
         """
@@ -252,6 +259,7 @@ class InterviewerAgent:
         memory_capsule: MemoryCapsule,
         graph_summary: GraphSummary,
         focus_event_payload: Optional[Dict[str, Any]],
+        generation_hints: Optional[Dict[str, Any]] = None,
     ) -> str:
         """
         构建 User Prompt
@@ -291,6 +299,11 @@ class InterviewerAgent:
             if missing:
                 missing_parts = [self.SLOT_NAMES.get(m, m) for m in missing]
                 parts.append(f"还欠缺的细节：{', '.join(missing_parts)}")
+                preferred_order = generation_hints.get("recommended_slots", []) if generation_hints else []
+                prioritized_missing = self._normalize_missing_slots(missing, preferred_order=preferred_order)[:2]
+                if prioritized_missing:
+                    prioritized_parts = [self.SLOT_NAMES.get(m, m) for m in prioritized_missing]
+                    parts.append(f"本轮优先补齐：{', '.join(prioritized_parts)}")
 
             unexpanded = focus_event_payload.get("unexpanded_clues", [])
             if unexpanded:
@@ -311,6 +324,31 @@ class InterviewerAgent:
         if emotional_note:
             parts.append(f"\n## 情绪观察")
             parts.append(emotional_note)
+
+        # 7. 生成提示（用于降低重复追问）
+        if generation_hints:
+            parts.append("\n## 策略提示")
+            low_info_streak = int(generation_hints.get("low_info_streak", 0) or 0)
+            if low_info_streak >= 2:
+                parts.append(
+                    f"最近连续 {low_info_streak} 轮信息增益偏低。"
+                    "优先换一个新切口（人物/时间/地点/主题）再问。"
+                )
+            recommended_theme_title = str(generation_hints.get("recommended_theme_title", "") or "")
+            if recommended_theme_title:
+                parts.append(f"建议切换主题：{recommended_theme_title}")
+            preferred_focus = str(generation_hints.get("preferred_focus", "") or "")
+            if preferred_focus:
+                parts.append(f"焦点建议：{preferred_focus}")
+            top_slot = ""
+            for item in generation_hints.get("slot_rankings", []):
+                if isinstance(item, dict) and item.get("slot"):
+                    top_slot = str(item["slot"])
+                    break
+            if top_slot:
+                parts.append(f"建议优先补槽位：{self.SLOT_NAMES.get(top_slot, top_slot)}")
+            if generation_hints.get("suggest_close"):
+                parts.append("覆盖率较高且连续低增益，可考虑温和收尾。")
 
         # 7. 任务指令
         parts.append("\n## 你的任务")
@@ -362,13 +400,81 @@ class InterviewerAgent:
         question = self._build_opening_question(elder_profile)
         return {"action": "continue", "question": question}
 
-    def _retry_response(self, opening_turn: bool = False) -> Dict[str, str]:
+    def _retry_response(
+        self,
+        opening_turn: bool = False,
+        focus_event_payload: Optional[Dict[str, Any]] = None,
+        generation_hints: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, str]:
         """重试响应"""
         if opening_turn:
             question = "抱歉，我想先根据您刚才的信息整理一下，再继续向您请教，可以稍等一下吗？"
-        else:
-            question = "抱歉，我想更准确地接着您刚才的话问一句，请稍等我整理一下再继续。"
+            return {"action": "continue", "question": question}
+
+        if generation_hints and generation_hints.get("suggest_close"):
+            return {
+                "action": "end",
+                "question": "今天和您聊到了很多珍贵的故事，真的非常感谢您愿意分享。我们先聊到这里，改天再继续好吗？",
+            }
+        if generation_hints and generation_hints.get("prefer_breadth_switch"):
+            repeat_count = int(generation_hints.get("fallback_repeat_count", 0) or 0)
+            recommended_theme_title = str(generation_hints.get("recommended_theme_title", "") or "").strip()
+            breadth_questions = [
+                "我们换一个轻松一点的角度聊聊吧。回头看您的人生，还有哪段经历是您一直记在心里的？",
+                "我们先换个话题，不着急想刚才那件事。您人生里有没有一段让您特别自豪的时刻？",
+                "没关系，我们顺着您更有感觉的部分聊。您愿意讲讲生命里一个对您影响很大的人吗？",
+            ]
+            if recommended_theme_title:
+                breadth_questions = [
+                    f"我们先换个角度，聊聊“{recommended_theme_title}”这部分吧。您最先想到的是哪件事？",
+                    f"不着急回想刚才那段，我们换到“{recommended_theme_title}”这个话题。有没有一件您印象很深的事？",
+                    f"我们沿着“{recommended_theme_title}”继续聊，您愿意先说一段最想分享的经历吗？",
+                ]
+            question = breadth_questions[repeat_count % len(breadth_questions)]
+            return {
+                "action": "next_phase",
+                "question": question,
+            }
+
+        if focus_event_payload:
+            preferred_order = generation_hints.get("recommended_slots", []) if generation_hints else []
+            missing = self._normalize_missing_slots(
+                focus_event_payload.get("missing_slots", []),
+                preferred_order=preferred_order,
+            )
+            if missing:
+                slot_name = missing[0]
+                question_by_slot = {
+                    "time": "这件事大概发生在什么时候，您还记得吗？",
+                    "location": "这件事当时是在哪里发生的，您能再说说吗？",
+                    "people": "当时身边还有哪些人在场，您还记得吗？",
+                    "event": "当时具体发生了什么，您愿意再详细讲一点吗？",
+                    "cause": "这件事最初是怎么开始的，您还有印象吗？",
+                    "result": "后来事情是怎么收尾的，结果怎么样？",
+                    "feeling": "那一刻您心里最强烈的感受是什么？",
+                    "reflection": "回头看这件事，对您最大的影响是什么？",
+                }
+                return {"action": "continue", "question": question_by_slot.get(slot_name, "您愿意再讲讲这件事里的一个细节吗？")}
+
+        question = "抱歉，我想更准确地接着您刚才的话问一句，请稍等我整理一下再继续。"
         return {"action": "continue", "question": question}
+
+    def _normalize_missing_slots(self, missing_slots: Any, preferred_order: Optional[List[str]] = None) -> List[str]:
+        if not isinstance(missing_slots, list):
+            return []
+        filtered = [slot for slot in missing_slots if isinstance(slot, str) and slot in self.SLOT_NAMES]
+        if preferred_order:
+            preferred_priority = {
+                slot: index
+                for index, slot in enumerate(preferred_order)
+                if isinstance(slot, str) and slot in self.SLOT_NAMES
+            }
+            if preferred_priority:
+                return sorted(filtered, key=lambda slot: preferred_priority.get(slot, len(preferred_priority) + 100))
+
+        # 默认按固定优先级排序，优先补齐事实槽位，减少抽象追问。
+        priority = {slot: index for index, slot in enumerate(self.SLOT_PRIORITY)}
+        return sorted(filtered, key=lambda slot: priority.get(slot, len(self.SLOT_PRIORITY)))
 
     def _build_opening_question(self, elder_profile: ElderProfile) -> str:
         """构建开场问题"""

@@ -1,0 +1,27 @@
+{
+  "experiment_id": "exp1_missing_slot_vs_new_info",
+  "goal": "比较 Planner 更偏向补齐当前事件缺口还是追踪新信息",
+  "variants": [
+    {
+      "name": "gap_priority",
+      "weights": {
+        "missing_slot_weight": 1.5,
+        "new_info_weight": 0.8
+      }
+    },
+    {
+      "name": "balanced",
+      "weights": {
+        "missing_slot_weight": 1.15,
+        "new_info_weight": 1.0
+      }
+    },
+    {
+      "name": "new_info_priority",
+      "weights": {
+        "missing_slot_weight": 0.85,
+        "new_info_weight": 1.5
+      }
+    }
+  ]
+}

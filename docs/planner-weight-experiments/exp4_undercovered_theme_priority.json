@@ -1,0 +1,24 @@
+{
+  "experiment_id": "exp4_undercovered_theme_priority",
+  "goal": "比较低覆盖主题优先级对主题覆盖速度和切题连贯性的影响",
+  "variants": [
+    {
+      "name": "weak_theme_push",
+      "weights": {
+        "theme_coverage_weight": 0.7
+      }
+    },
+    {
+      "name": "balanced",
+      "weights": {
+        "theme_coverage_weight": 1.0
+      }
+    },
+    {
+      "name": "strong_theme_push",
+      "weights": {
+        "theme_coverage_weight": 1.5
+      }
+    }
+  ]
+}

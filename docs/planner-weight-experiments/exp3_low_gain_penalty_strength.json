@@ -1,0 +1,24 @@
+{
+  "experiment_id": "exp3_low_gain_penalty_strength",
+  "goal": "比较低信息增益惩罚强度对切题和收尾决策的影响",
+  "variants": [
+    {
+      "name": "low_penalty",
+      "weights": {
+        "low_gain_penalty": 0.6
+      }
+    },
+    {
+      "name": "medium_penalty",
+      "weights": {
+        "low_gain_penalty": 1.1
+      }
+    },
+    {
+      "name": "high_penalty",
+      "weights": {
+        "low_gain_penalty": 1.6
+      }
+    }
+  ]
+}

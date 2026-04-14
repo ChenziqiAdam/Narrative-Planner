@@ -621,6 +621,39 @@ async function sendAiIntervention() {
 _compare_sessions: dict[str, dict] = {}
 
 
+def _build_aligned_turn_payload(
+    *,
+    question: str = "",
+    action: str = "continue",
+    done: bool = False,
+    extracted_events: list | None = None,
+    graph_update: dict | None = None,
+    current_graph_state: dict | None = None,
+    turn_evaluation: dict | None = None,
+    session_metrics: dict | None = None,
+    planner_plan: dict | None = None,
+    memory_calls: list | None = None,
+    debug_trace: dict | None = None,
+) -> dict:
+    """
+    Build a stable cross-mode response schema for frontend integration.
+    Baseline/Planner both expose the same keys; unsupported fields are empty.
+    """
+    return {
+        "question": question,
+        "action": action,
+        "done": done,
+        "extracted_events": extracted_events or [],
+        "graph_update": graph_update or {},
+        "current_graph_state": current_graph_state or {},
+        "turn_evaluation": turn_evaluation or {},
+        "session_metrics": session_metrics or {},
+        "planner_plan": planner_plan or {},
+        "memory_calls": memory_calls or [],
+        "debug_trace": debug_trace or {},
+    }
+
+
 @app.route("/compare")
 def compare_interface():
     """返回对比调试界面"""
@@ -748,12 +781,15 @@ def baseline_reply():
         # 保存对话
         _save_conversation(session_id, session)
 
-    return jsonify({
-        "question": question,
-        "action": action,
-        "done": done,
-        "turn_evaluation": turn_evaluation,
-    })
+    return jsonify(
+        _build_aligned_turn_payload(
+            question=question,
+            action=action,
+            done=done,
+            turn_evaluation=turn_evaluation,
+            debug_trace={"pipeline": "baseline"},
+        )
+    )
 
 
 @app.route("/api/baseline/auto")
@@ -809,7 +845,14 @@ def baseline_auto():
                 last_question_entry.get("action", "continue"),
             )
             session["history"].append({"role": "interviewer", "text": question, "action": action})
-            yield f"data: {json.dumps({'role': 'interviewer', 'action': action, 'text': question, 'turn_evaluation': turn_evaluation}, ensure_ascii=False)}\n\n"
+            aligned = _build_aligned_turn_payload(
+                question=question,
+                action=action,
+                done=False,
+                turn_evaluation=turn_evaluation,
+                debug_trace={"pipeline": "baseline"},
+            )
+            yield f"data: {json.dumps({'role': 'interviewer', 'action': aligned['action'], 'text': aligned['question'], 'turn_evaluation': aligned['turn_evaluation'], 'debug_trace': aligned['debug_trace']}, ensure_ascii=False)}\n\n"
 
             if action == "end":
                 break
@@ -844,25 +887,48 @@ def baseline_evaluation(session_id):
 def planner_start():
     """
     启动Planner访谈
-    Body: { "elder_info": dict, "mode": "ai"|"user" }
-    Response: { "session_id": str, "first_question": str, "initial_graph": dict }
+    Body: {
+      "elder_info": dict,
+      "mode": "ai"|"user",
+      "decision_weight_vector": [float, ...],   # 可选，按固定顺序
+      "decision_weights": {"new_info_weight": ...}  # 可选
+    }
+    Response: { "session_id": str, "first_question": str, "initial_graph": dict, "decision_weight_payload": dict }
     """
     data = request.get_json(force=True)
     elder_info = data.get("elder_info", {})
     mode = data.get("mode", "ai")
+    decision_weight_vector = data.get("decision_weight_vector")
+    decision_weights = data.get("decision_weights")
 
     if not elder_info:
         return jsonify({"error": "请提供受访者基本信息"}), 400
+
+    weight_input = None
+    if decision_weight_vector is not None:
+        if not isinstance(decision_weight_vector, list) or not all(
+            isinstance(item, (int, float)) for item in decision_weight_vector
+        ):
+            return jsonify({"error": "decision_weight_vector 必须是数字列表"}), 400
+        weight_input = [float(item) for item in decision_weight_vector]
+    elif decision_weights is not None:
+        if not isinstance(decision_weights, dict):
+            return jsonify({"error": "decision_weights 必须是字典"}), 400
+        weight_input = decision_weights
 
     # 生成会话ID
     session_id = uuid.uuid4().hex
 
     # 创建PlannerAgent（同步包装器）
-    agent = PlannerInterviewAgentSync(session_id)
+    try:
+        agent = PlannerInterviewAgentSync(session_id, decision_weights=weight_input)
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 400
     agent.initialize_conversation(elder_info)
 
     # 获取首条问题
     result = agent.get_next_question()
+    decision_weight_payload = agent.async_agent.orchestrator.get_decision_weight_payload()
 
     # 存储会话
     _compare_sessions[session_id] = {
@@ -872,14 +938,16 @@ def planner_start():
         "mode": mode,
         "elder_info": elder_info,
         "start_time": datetime.now().isoformat(),
-        "extracted_events": []
+        "extracted_events": [],
+        "decision_weight_payload": decision_weight_payload,
     }
 
     return jsonify({
         "session_id": session_id,
         "first_question": result["question"],
         "mode": mode,
-        "initial_graph": result.get("current_graph_state", {})
+        "initial_graph": result.get("current_graph_state", {}),
+        "decision_weight_payload": decision_weight_payload,
     })
 
 
@@ -926,17 +994,20 @@ def planner_reply():
         # 保存对话和图谱
         _save_conversation(session_id, session)
 
-    return jsonify({
-        "question": result["question"],
-        "action": result["action"],
-        "done": done,
-        "extracted_events": result.get("extracted_events", []),
-        "graph_update": result.get("graph_changes", {}),
-        "current_graph_state": result.get("current_graph_state", {}),
-        "turn_evaluation": result.get("turn_evaluation", {}),
-        "session_metrics": result.get("session_metrics", {}),
-        "planner_plan": result.get("planner_plan", {}),
-    })
+    return jsonify(
+        _build_aligned_turn_payload(
+            question=result.get("question", ""),
+            action=result.get("action", "continue"),
+            done=done,
+            extracted_events=result.get("extracted_events", []),
+            graph_update=result.get("graph_changes", {}),
+            current_graph_state=result.get("current_graph_state", {}),
+            turn_evaluation=result.get("turn_evaluation", {}),
+            session_metrics=result.get("session_metrics", {}),
+            planner_plan=result.get("planner_plan", {}),
+            debug_trace=result.get("debug_trace", {}),
+        )
+    )
 
 
 @app.route("/api/planner/auto")
@@ -987,15 +1058,28 @@ def planner_auto():
             # 发送事件
             session["history"].append({"role": "interviewer", "text": result["question"]})
 
+            aligned = _build_aligned_turn_payload(
+                question=result.get("question", ""),
+                action=result.get("action", "continue"),
+                done=False,
+                extracted_events=result.get("extracted_events", []),
+                graph_update=result.get("graph_changes", {}),
+                current_graph_state=result.get("current_graph_state", {}),
+                turn_evaluation=result.get("turn_evaluation", {}),
+                session_metrics=result.get("session_metrics", {}),
+                planner_plan=result.get("planner_plan", {}),
+                debug_trace=result.get("debug_trace", {}),
+            )
             interviewer_data = {
                 'role': 'interviewer',
-                'action': result['action'],
-                'text': result['question'],
-                'extracted_events': result.get('extracted_events', []),
-                'graph_delta': result.get('graph_changes', {}),
-                'turn_evaluation': result.get('turn_evaluation', {}),
-                'session_metrics': result.get('session_metrics', {}),
-                'planner_plan': result.get('planner_plan', {}),
+                'action': aligned['action'],
+                'text': aligned['question'],
+                'extracted_events': aligned['extracted_events'],
+                'graph_delta': aligned['graph_update'],
+                'turn_evaluation': aligned['turn_evaluation'],
+                'session_metrics': aligned['session_metrics'],
+                'planner_plan': aligned['planner_plan'],
+                'debug_trace': aligned['debug_trace'],
             }
             yield f"data: {json.dumps(interviewer_data, ensure_ascii=False)}\n\n"
 
@@ -1581,6 +1665,56 @@ COMPARE_HTML = '''<!DOCTYPE html>
             padding: 8px 10px;
             border-radius: 8px;
             z-index: 100;
+            white-space: pre-wrap;
+            word-break: break-word;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            line-height: 1.5;
+        }
+        .debug-calls {
+            margin-top: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        .debug-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 8px;
+            border-radius: 999px;
+            font-size: 0.68rem;
+            font-weight: 600;
+            background: #e8f6ea;
+            color: #1b5e20;
+            cursor: pointer;
+            border: 1px solid #b7dfbe;
+            position: relative;
+        }
+        .debug-chip.warning {
+            background: #fff3e0;
+            color: #8a5300;
+            border-color: #ffd194;
+        }
+        .debug-chip:hover .debug-tooltip,
+        .debug-tooltip:hover {
+            display: block;
+        }
+        .debug-tooltip {
+            display: none;
+            position: absolute;
+            bottom: calc(100% + 6px);
+            left: 0;
+            min-width: 240px;
+            max-width: 420px;
+            max-height: 340px;
+            overflow-y: auto;
+            background: #102027;
+            color: #d9f5ff;
+            font-size: 0.72rem;
+            font-weight: 400;
+            padding: 8px 10px;
+            border-radius: 8px;
+            z-index: 101;
             white-space: pre-wrap;
             word-break: break-word;
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
@@ -2238,8 +2372,8 @@ COMPARE_HTML = '''<!DOCTYPE html>
             `;
         }
 
-        function appendScoredQuestion(queueRef, container, text, action) {
-            const msg = appendMessage(container, "interviewer", text, action);
+        function appendScoredQuestion(queueRef, container, text, action, debugTrace) {
+            const msg = appendMessage(container, "interviewer", text, action, null, debugTrace);
             const evaluationEl = document.createElement("div");
             evaluationEl.className = "message-evaluation";
             renderPendingEvaluation(evaluationEl);
@@ -2254,12 +2388,12 @@ COMPARE_HTML = '''<!DOCTYPE html>
             return item;
         }
 
-        function appendBaselineQuestion(container, text, action) {
-            return appendScoredQuestion(baselineQuestionQueue, container, text, action);
+        function appendBaselineQuestion(container, text, action, debugTrace) {
+            return appendScoredQuestion(baselineQuestionQueue, container, text, action, debugTrace);
         }
 
-        function appendPlannerQuestion(container, text, action) {
-            return appendScoredQuestion(plannerQuestionQueue, container, text, action);
+        function appendPlannerQuestion(container, text, action, debugTrace) {
+            return appendScoredQuestion(plannerQuestionQueue, container, text, action, debugTrace);
         }
 
         function bindPendingEvaluation(queueRef, mapRef, turnEvaluation, statusUpdater) {
@@ -2576,7 +2710,7 @@ COMPARE_HTML = '''<!DOCTYPE html>
 
         }
 
-        function appendMessage(container, role, text, action, memoryCalls) {
+        function appendMessage(container, role, text, action, memoryCalls, debugTrace) {
             const msg = document.createElement("div");
             msg.className = `message ${role}`;
 
@@ -2616,6 +2750,53 @@ COMPARE_HTML = '''<!DOCTYPE html>
                 msg.appendChild(memDiv);
             }
 
+            if (role === "interviewer" && debugTrace && Object.keys(debugTrace).length > 0) {
+                const dbgDiv = document.createElement("div");
+                dbgDiv.className = "debug-calls";
+
+                const extraction = debugTrace.extraction || {};
+                const merge = debugTrace.merge || {};
+                const candidateCount = extraction.candidate_count || (extraction.candidate_events || []).length || 0;
+                const hintCount = extraction.similarity_hint_count || 0;
+                const decisions = merge.decisions || [];
+                const fallbackReasons = merge.fallback_reasons || [];
+
+                const chips = [
+                    {
+                        label: `候选 ${candidateCount}`,
+                        tooltip: `候选事件:\n${JSON.stringify(extraction.candidate_events || [], null, 2)}`,
+                        warning: false,
+                    },
+                    {
+                        label: `Hints ${hintCount}`,
+                        tooltip: `相似度建议:\n${JSON.stringify(extraction.similarity_hints || [], null, 2)}`,
+                        warning: false,
+                    },
+                    {
+                        label: `Merge ${decisions.length}`,
+                        tooltip: `Merge 决策:\n${JSON.stringify(decisions, null, 2)}`,
+                        warning: false,
+                    },
+                ];
+
+                if (fallbackReasons.length > 0) {
+                    chips.push({
+                        label: `Fallback ${fallbackReasons.length}`,
+                        tooltip: `Fallback 原因:\n${JSON.stringify(fallbackReasons, null, 2)}`,
+                        warning: true,
+                    });
+                }
+
+                chips.forEach((item) => {
+                    const chip = document.createElement("span");
+                    chip.className = `debug-chip ${item.warning ? "warning" : ""}`.trim();
+                    chip.innerHTML = `${item.label}<span class="debug-tooltip">${item.tooltip}</span>`;
+                    dbgDiv.appendChild(chip);
+                });
+
+                msg.appendChild(dbgDiv);
+            }
+
             container.appendChild(msg);
             container.scrollTop = container.scrollHeight;
             return msg;
@@ -2652,7 +2833,7 @@ COMPARE_HTML = '''<!DOCTYPE html>
                 }
                 if (msg.role === "interviewer") {
                     bindPendingBaselineTurnEvaluation(msg.turn_evaluation);
-                    appendBaselineQuestion(chat, msg.text, msg.action);
+                    appendBaselineQuestion(chat, msg.text, msg.action, msg.debug_trace);
                 } else {
                     appendMessage(chat, msg.role, msg.text, msg.action, msg.memory_calls);
                 }
@@ -2683,7 +2864,7 @@ COMPARE_HTML = '''<!DOCTYPE html>
                 body: JSON.stringify({ session_id: baselineSessionId, answer })
             });
             bindPendingBaselineTurnEvaluation(data.turn_evaluation);
-            appendBaselineQuestion(chat, data.question, data.action);
+            appendBaselineQuestion(chat, data.question, data.action, data.debug_trace);
 
             if (data.done) {
                 document.getElementById("baseline-status").textContent = "已完成";
@@ -2728,7 +2909,7 @@ COMPARE_HTML = '''<!DOCTYPE html>
                         interviewEnded = true;
                     }
                     bindPendingTurnEvaluation(msg.turn_evaluation);
-                    appendPlannerQuestion(chat, msg.text, msg.action);
+                    appendPlannerQuestion(chat, msg.text, msg.action, msg.debug_trace);
                     if (msg.extracted_events && msg.extracted_events.length > 0) {
                         allExtractedEvents.push(...msg.extracted_events);
                         updateEventList(allExtractedEvents);
@@ -2766,7 +2947,7 @@ COMPARE_HTML = '''<!DOCTYPE html>
                 body: JSON.stringify({ session_id: plannerSessionId, answer })
             });
             bindPendingTurnEvaluation(data.turn_evaluation);
-            appendPlannerQuestion(chat, data.question, data.action);
+            appendPlannerQuestion(chat, data.question, data.action, data.debug_trace);
 
             // Accumulate and update extracted events
             if (data.extracted_events && data.extracted_events.length > 0) {

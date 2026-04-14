@@ -27,6 +27,8 @@ class MergeResult:
     new_person_ids: List[str] = field(default_factory=list)
     touched_person_ids: List[str] = field(default_factory=list)
     theme_hints: List[str] = field(default_factory=list)
+    merge_decisions: List[dict] = field(default_factory=list)
+    fallback_reasons: List[str] = field(default_factory=list)
 
 
 class MergeEngine:
@@ -125,8 +127,31 @@ class MergeEngine:
         Returns:
             是否验证通过
         """
-        # 使用原有的相似度计算逻辑
+        # 使用原有相似度作为基础，再结合 similarity_hints 的槽位匹配线索做轻量加权
         score = self._event_similarity(existing, extracted)
+
+        hint_for_existing = None
+        for hint in extracted.similarity_hints or []:
+            if hint.candidate_id == existing.event_id:
+                hint_for_existing = hint
+                break
+
+        if hint_for_existing:
+            matched_slots = set(hint_for_existing.matched_slots or [])
+            # 槽位加权：命中关键信息（时间/地点/人物/事件）时，给验证阶段小幅提振
+            slot_bonus = 0.0
+            if "time" in matched_slots:
+                slot_bonus += 0.06
+            if "location" in matched_slots:
+                slot_bonus += 0.06
+            if "people" in matched_slots:
+                slot_bonus += 0.04
+            if "event" in matched_slots:
+                slot_bonus += 0.04
+
+            confidence_bonus = 0.05 if hint_for_existing.confidence >= self.MEDIUM_CONFIDENCE_THRESHOLD else 0.0
+            score = min(1.0, score + slot_bonus + confidence_bonus)
+
         return score >= self.similarity_threshold
 
     def _event_similarity(
@@ -219,6 +244,21 @@ class MergeEngine:
 
             # ⭐ 优先使用大模型建议
             merge_action = self._decide_merge_action(state, extracted)
+            decision: dict = {
+                "event_id": extracted.event_id,
+                "action": merge_action.action_type,
+                "confidence": merge_action.confidence,
+                "reason": merge_action.reason,
+                "target_event_id": merge_action.target_event.event_id if merge_action.target_event else None,
+                "similarity_hints": [hint.to_dict() for hint in extracted.similarity_hints],
+            }
+            if merge_action.reason in {
+                "llm_merge_hints_disabled",
+                "no_llm_hints",
+                "candidate_not_found",
+                "low_confidence_llm_hints",
+            }:
+                result.fallback_reasons.append(merge_action.reason)
 
             if merge_action.action_type == "UPDATE" and merge_action.target_event:
                 # 高置信度：直接使用LLM建议
@@ -229,6 +269,7 @@ class MergeEngine:
                 result.updated_event_ids.append(merge_action.target_event.event_id)
                 result.touched_event_ids.append(merge_action.target_event.event_id)
                 self._link_people(state, person_ids, merge_action.target_event.event_id)
+                decision["final_action"] = "updated_by_llm_hint"
 
             elif merge_action.action_type == "VERIFY_THEN_UPDATE":
                 # 中等置信度：LLM建议 + 硬编码验证
@@ -242,6 +283,8 @@ class MergeEngine:
                     result.updated_event_ids.append(merge_action.target_event.event_id)
                     result.touched_event_ids.append(merge_action.target_event.event_id)
                     self._link_people(state, person_ids, merge_action.target_event.event_id)
+                    decision["verification_passed"] = True
+                    decision["final_action"] = "updated_verified"
                 else:
                     # 验证失败，创建新事件
                     canonical_event = self._create_event(extracted, person_ids, turn_id)
@@ -249,6 +292,9 @@ class MergeEngine:
                     result.new_event_ids.append(canonical_event.event_id)
                     result.touched_event_ids.append(canonical_event.event_id)
                     self._link_people(state, person_ids, canonical_event.event_id)
+                    decision["verification_passed"] = False
+                    decision["final_action"] = "created_new_after_verification"
+                    result.fallback_reasons.append("verification_failed_create_new")
 
             else:
                 # 低置信度或无建议：走原有硬编码流程
@@ -259,12 +305,17 @@ class MergeEngine:
                     result.updated_event_ids.append(matched_event.event_id)
                     result.touched_event_ids.append(matched_event.event_id)
                     self._link_people(state, person_ids, matched_event.event_id)
+                    decision["final_action"] = "updated_legacy"
                 else:
                     canonical_event = self._create_event(extracted, person_ids, turn_id)
                     state.canonical_events[canonical_event.event_id] = canonical_event
                     result.new_event_ids.append(canonical_event.event_id)
                     result.touched_event_ids.append(canonical_event.event_id)
                     self._link_people(state, person_ids, canonical_event.event_id)
+                    decision["final_action"] = "created_new_legacy"
+                    result.fallback_reasons.append("legacy_no_match_create_new")
+
+            result.merge_decisions.append(decision)
 
             # 调试日志：记录决策
             logger.debug(

@@ -261,6 +261,7 @@ class ExtractionResult:
     metadata: ExtractionMetadata
     memory_delta: MemoryDelta
     graph_delta: GraphDelta
+    debug_trace: Dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
         return serialize_value(self)
@@ -289,6 +290,7 @@ class TurnRecord:
     planner_plan: Optional[QuestionPlan] = None
     extraction_result: Optional[ExtractionResult] = None
     turn_evaluation: Optional["TurnEvaluation"] = None
+    debug_trace: Dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
         return serialize_value(self)

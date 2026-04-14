@@ -5,12 +5,17 @@ import os
 import threading
 import uuid
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Sequence
 
 from src.agents.evaluator_agent import EvaluatorAgent
 from src.agents.extraction_agent import ExtractionAgent
 from src.agents.interviewer_agent import InterviewerAgent
 from src.core.graph_manager import GraphManager
+from src.orchestration.planner_decision_policy import (
+    PlannerDecisionPolicy,
+    PlannerDecisionWeights,
+    pick_undercovered_theme,
+)
 from src.orchestration.state_store import InMemorySessionStateStore
 from src.services import CoverageCalculator, GraphProjector, MemoryProjector, MergeEngine
 from src.state import ElderProfile, SessionState, TurnRecord
@@ -29,6 +34,7 @@ class SessionOrchestrator:
         graph_projector: Optional[GraphProjector] = None,
         memory_projector: Optional[MemoryProjector] = None,
         coverage_calculator: Optional[CoverageCalculator] = None,
+        decision_weights: Optional[Any] = None,
     ):
         self.session_id = session_id
         self.mode = mode
@@ -41,7 +47,23 @@ class SessionOrchestrator:
         self.graph_projector = graph_projector or GraphProjector()
         self.memory_projector = memory_projector or MemoryProjector()
         self.coverage_calculator = coverage_calculator or CoverageCalculator()
+        self.decision_policy = PlannerDecisionPolicy(
+            PlannerDecisionWeights.from_external(decision_weights)
+        )
         self._evaluation_threads: Dict[str, threading.Thread] = {}
+
+    def set_decision_weight_vector(self, vector: Sequence[float]) -> None:
+        self.decision_policy = PlannerDecisionPolicy(PlannerDecisionWeights.from_vector(vector))
+
+    def set_decision_weights(self, weights: Dict[str, float]) -> None:
+        self.decision_policy = PlannerDecisionPolicy(PlannerDecisionWeights.from_config(weights))
+
+    def get_decision_weight_payload(self) -> Dict[str, Any]:
+        return {
+            "weights": self.decision_policy.weights.to_dict(),
+            "weight_vector": self.decision_policy.weights.to_vector(),
+            "weight_vector_order": list(self.decision_policy.weights.VECTOR_ORDER),
+        }
 
     def initialize_session(self, elder_info: Dict[str, Any]) -> SessionState:
         elder_profile = self._build_elder_profile(elder_info)
@@ -104,13 +126,40 @@ class SessionOrchestrator:
         state.session_metrics = self.coverage_calculator.calculate_session_metrics(state, self.graph_manager)
 
         focus_event_payload = self._build_focus_event_payload(state)
+        generation_hints = self._build_generation_hints(
+            state,
+            post_overall_coverage=post_graph_summary.overall_coverage,
+            focus_event_payload=focus_event_payload,
+            last_question=turn_record.interviewer_question,
+        )
         generated = self.interviewer_agent.generate_question(
             state.elder_profile,
             state.recent_transcript(3),
             state.memory_capsule,
             post_graph_summary,
             focus_event_payload=focus_event_payload,
+            generation_hints=generation_hints,
         )
+        preferred_action = generation_hints.get("preferred_action")
+        if preferred_action == "next_phase" and generated.get("action") == "continue":
+            missing_slots = focus_event_payload.get("missing_slots", []) if focus_event_payload else []
+            if not missing_slots:
+                generated["action"] = "next_phase"
+        if preferred_action == "end" and generation_hints.get("suggest_close"):
+            generated["action"] = "end"
+            if not generated.get("question"):
+                generated["question"] = "今天聊到这里已经很完整了，谢谢您愿意分享这么多珍贵回忆。"
+        self._update_generation_metadata(state, generated, turn_record.interviewer_question)
+        turn_debug_trace = self._build_turn_debug_trace(
+            turn_record,
+            extraction_result.debug_trace,
+            merge_result,
+            pre_graph_summary.overall_coverage,
+            post_graph_summary.overall_coverage,
+            generation_hints,
+            generated.get("action", ""),
+        )
+        turn_record.debug_trace = turn_debug_trace
         state.pending_plan = None  # 统一架构不再使用 Plan 对象
         state.pending_question = generated["question"]
         state.pending_action = generated["action"]
@@ -133,6 +182,7 @@ class SessionOrchestrator:
             "turn_evaluation": {"status": "pending", "turn_id": turn_record.turn_id},
             "session_metrics": state.session_metrics.to_dict() if state.session_metrics else {},
             "planner_plan": None,  # 统一架构不再使用 Plan 对象
+            "debug_trace": turn_debug_trace,
         }
 
     def get_pending_question_result(self) -> Dict[str, Any]:
@@ -147,6 +197,7 @@ class SessionOrchestrator:
             "turn_evaluation": {},
             "session_metrics": state.session_metrics.to_dict() if state.session_metrics else {},
             "planner_plan": None,  # 统一架构不再使用 Plan 对象
+            "debug_trace": {},
         }
 
     def get_graph_state(self) -> Dict[str, Any]:
@@ -174,6 +225,7 @@ class SessionOrchestrator:
                 "interviewee_answer": turn.interviewee_answer,
                 "evaluation_status": "completed" if turn.turn_evaluation else "pending",
                 "turn_evaluation": turn.turn_evaluation.to_dict() if turn.turn_evaluation else None,
+                "debug_trace": turn.debug_trace,
             }
             for turn in state.transcript
         ]
@@ -187,6 +239,53 @@ class SessionOrchestrator:
             "session_metrics": state.session_metrics.to_dict() if state.session_metrics else {},
             "coverage_metrics": graph_state.get("coverage_metrics", {}),
             "latest_turn_evaluation": graph_state.get("latest_turn_evaluation", {}),
+            "planner_decision_metrics": self._build_planner_decision_metrics(state),
+            "decision_weight_payload": self.get_decision_weight_payload(),
+        }
+
+    def _build_turn_debug_trace(
+        self,
+        turn_record: TurnRecord,
+        extraction_trace: Dict[str, Any],
+        merge_result: Any,
+        pre_coverage: float,
+        post_coverage: float,
+        generation_hints: Optional[Dict[str, Any]] = None,
+        next_action: str = "",
+    ) -> Dict[str, Any]:
+        return {
+            "schema_version": "planner_debug_v1",
+            "turn_id": turn_record.turn_id,
+            "extraction": extraction_trace or {},
+            "merge": {
+                "decisions": list(getattr(merge_result, "merge_decisions", [])),
+                "fallback_reasons": list(getattr(merge_result, "fallback_reasons", [])),
+                "new_event_ids": list(getattr(merge_result, "new_event_ids", [])),
+                "updated_event_ids": list(getattr(merge_result, "updated_event_ids", [])),
+            },
+            "coverage": {
+                "before": pre_coverage,
+                "after": post_coverage,
+                "delta": post_coverage - pre_coverage,
+            },
+            "planning": {
+                "low_info_streak": int((generation_hints or {}).get("low_info_streak", 0) or 0),
+                "prefer_breadth_switch": bool((generation_hints or {}).get("prefer_breadth_switch", False)),
+                "suggest_close": bool((generation_hints or {}).get("suggest_close", False)),
+                "fallback_repeat_count": int((generation_hints or {}).get("fallback_repeat_count", 0) or 0),
+                "preferred_action": (generation_hints or {}).get("preferred_action"),
+                "preferred_focus": (generation_hints or {}).get("preferred_focus"),
+                "recommended_theme_id": (generation_hints or {}).get("recommended_theme_id"),
+                "recommended_theme_title": (generation_hints or {}).get("recommended_theme_title"),
+                "decision_weights": (generation_hints or {}).get("weights", {}),
+                "decision_weight_vector": (generation_hints or {}).get("weight_vector", []),
+                "decision_weight_vector_order": (generation_hints or {}).get("weight_vector_order", []),
+                "decision_signals": (generation_hints or {}).get("decision_signals", {}),
+                "decision_scores": (generation_hints or {}).get("decision_scores", {}),
+                "slot_rankings": (generation_hints or {}).get("slot_rankings", []),
+                "theme_rankings": (generation_hints or {}).get("theme_rankings", []),
+                "next_action": next_action or "",
+            },
         }
 
     def build_conversation_history(self) -> List[Dict[str, str]]:
@@ -272,6 +371,144 @@ class SessionOrchestrator:
             "unexpanded_clues": list(event.unexpanded_clues),
             "source_turn_ids": list(event.source_turn_ids),
         }
+
+    def _build_generation_hints(
+        self,
+        state: SessionState,
+        post_overall_coverage: float,
+        focus_event_payload: Optional[Dict[str, Any]] = None,
+        last_question: str = "",
+    ) -> Dict[str, Any]:
+        fallback_repeat_count = int(state.metadata.get("fallback_repeat_count", 0) or 0)
+        last_fallback_question = str(state.metadata.get("last_fallback_question", "") or "")
+        if last_fallback_question and last_question and last_fallback_question == last_question:
+            fallback_repeat_count += 1
+        policy_result = self.decision_policy.evaluate(
+            state=state,
+            post_overall_coverage=post_overall_coverage,
+            focus_event_payload=focus_event_payload,
+            fallback_repeat_count=fallback_repeat_count,
+        )
+        low_info_streak = int(policy_result.get("low_info_streak", 0) or 0)
+        preferred_action = str(policy_result.get("preferred_action", "continue"))
+
+        slot_rankings = list(policy_result.get("slot_rankings", []))
+        recommended_slots = [
+            item.get("slot")
+            for item in slot_rankings
+            if isinstance(item, dict) and isinstance(item.get("slot"), str)
+        ]
+
+        recommended_theme_id = policy_result.get("recommended_theme_id")
+        recommended_theme_title = policy_result.get("recommended_theme_title")
+        if not recommended_theme_id:
+            recommended_theme_id, recommended_theme_title = self._pick_breadth_switch_theme_from_state(state)
+
+        suggest_close = (
+            (preferred_action == "end" and low_info_streak >= 2 and post_overall_coverage >= 0.60)
+            or (low_info_streak >= 3 and post_overall_coverage >= 0.78)
+        )
+        return {
+            "low_info_streak": low_info_streak,
+            "prefer_breadth_switch": preferred_action == "next_phase",
+            "suggest_close": suggest_close,
+            "fallback_repeat_count": fallback_repeat_count,
+            "weights": policy_result.get("weights", {}),
+            "weight_vector": policy_result.get("weight_vector", []),
+            "weight_vector_order": policy_result.get("weight_vector_order", []),
+            "decision_signals": policy_result.get("signals", {}),
+            "decision_scores": policy_result.get("scores", {}),
+            "preferred_action": preferred_action,
+            "preferred_focus": policy_result.get("preferred_focus", "stay_current_event"),
+            "slot_rankings": slot_rankings,
+            "recommended_slots": recommended_slots,
+            "recommended_theme_id": recommended_theme_id,
+            "recommended_theme_title": recommended_theme_title,
+            "theme_rankings": policy_result.get("theme_rankings", []),
+        }
+
+    def _recent_low_information_streak(self, state: SessionState, max_window: int = 3) -> int:
+        streak = 0
+        for turn in reversed(state.transcript[-max_window:]):
+            if self._is_low_information_turn(turn):
+                streak += 1
+            else:
+                break
+        return streak
+
+    def _is_low_information_turn(self, turn: TurnRecord) -> bool:
+        if turn.turn_evaluation and turn.turn_evaluation.information_gain_score <= 0.08:
+            return True
+
+        extracted_count = 0
+        if turn.extraction_result:
+            extracted_count = len(turn.extraction_result.graph_delta.event_candidates)
+        coverage_delta = (
+            (turn.debug_trace.get("coverage", {}) or {}).get("delta", 0.0)
+            if isinstance(turn.debug_trace, dict)
+            else 0.0
+        )
+        answer_len = len((turn.interviewee_answer or "").strip())
+        return extracted_count == 0 and coverage_delta <= 0.005 and answer_len < 40
+
+    def _pick_breadth_switch_theme_from_state(self, state: SessionState) -> tuple[Optional[str], Optional[str]]:
+        return pick_undercovered_theme(state.theme_state)
+
+    def _build_planner_decision_metrics(self, state: SessionState) -> Dict[str, Any]:
+        action_counts = {"continue": 0, "next_phase": 0, "end": 0}
+        low_gain_streak_max = 0
+        low_gain_streak = 0
+        previous_question = ""
+        repeated_question_count = 0
+
+        for turn in state.transcript:
+            action = str((turn.debug_trace.get("planning", {}) or {}).get("next_action", ""))
+            if action in action_counts:
+                action_counts[action] += 1
+
+            if self._is_low_information_turn(turn):
+                low_gain_streak += 1
+                low_gain_streak_max = max(low_gain_streak_max, low_gain_streak)
+            else:
+                low_gain_streak = 0
+
+            question = (turn.interviewer_question or "").strip()
+            if question and previous_question and question == previous_question:
+                repeated_question_count += 1
+            previous_question = question or previous_question
+
+        early_end_count = 0
+        for turn in state.transcript:
+            planning = (turn.debug_trace.get("planning", {}) or {})
+            if planning.get("next_action") == "end":
+                coverage_after = ((turn.debug_trace.get("coverage", {}) or {}).get("after", 0.0) or 0.0)
+                if coverage_after < 0.70:
+                    early_end_count += 1
+
+        return {
+            "action_counts": action_counts,
+            "phase_switch_count": action_counts["next_phase"],
+            "repeated_question_count": repeated_question_count,
+            "low_gain_streak_max": low_gain_streak_max,
+            "early_end_count": early_end_count,
+        }
+
+    def _update_generation_metadata(
+        self,
+        state: SessionState,
+        generated: Dict[str, Any],
+        last_question: str,
+    ) -> None:
+        question = str(generated.get("question", "") or "")
+        if generated.get("action") == "next_phase":
+            state.metadata["last_fallback_question"] = question
+            if question and question == last_question:
+                state.metadata["fallback_repeat_count"] = int(state.metadata.get("fallback_repeat_count", 0) or 0) + 1
+            else:
+                state.metadata["fallback_repeat_count"] = 0
+            return
+
+        state.metadata["fallback_repeat_count"] = 0
 
     def _require_state(self) -> SessionState:
         state = self.store.get(self.session_id)

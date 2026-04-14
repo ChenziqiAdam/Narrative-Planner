@@ -1,0 +1,396 @@
+{
+  "generated_at": "2026-04-12T18:17:16.931374",
+  "vectors_file": "docs/planner-weight-experiments/vector_groups.sample.json",
+  "turns_per_run": 1,
+  "repeats": 1,
+  "llm_scorer_enabled": false,
+  "llm_weight": 0.3,
+  "analysis_methods": [
+    "Descriptive statistics: mean/std/min/max of overall score per vector.",
+    "Bootstrap confidence interval: non-parametric CI for mean overall score per vector.",
+    "Pareto front analysis: identify vectors not dominated on multi-objectives.",
+    "Stability analysis: compare score variance across repeated runs (repeats).",
+    "Action-distribution analysis: compare continue/next_phase/end mix against target interviewing behavior."
+  ],
+  "best_vector": "missing_slot_priority",
+  "ranking_by_overall_mean": [
+    {
+      "vector_name": "missing_slot_priority",
+      "overall_mean": 0.6554,
+      "overall_std": 0.0,
+      "bootstrap_ci": {
+        "mean": 0.6554,
+        "ci_low": 0.6554,
+        "ci_high": 0.6554
+      }
+    },
+    {
+      "vector_name": "new_info_priority",
+      "overall_mean": 0.6239,
+      "overall_std": 0.0,
+      "bootstrap_ci": {
+        "mean": 0.6239,
+        "ci_low": 0.6239,
+        "ci_high": 0.6239
+      }
+    },
+    {
+      "vector_name": "balanced_default",
+      "overall_mean": 0.6217,
+      "overall_std": 0.0,
+      "bootstrap_ci": {
+        "mean": 0.6217,
+        "ci_low": 0.6217,
+        "ci_high": 0.6217
+      }
+    }
+  ],
+  "pareto_front_vectors": [
+    "missing_slot_priority",
+    "new_info_priority"
+  ],
+  "vector_summary": {
+    "balanced_default": {
+      "aggregate": {
+        "run_count": 1,
+        "overall_mean": 0.6217,
+        "overall_std": 0.0,
+        "deterministic_mean": 0.6217,
+        "llm_mean": null,
+        "overall_min": 0.6217,
+        "overall_max": 0.6217
+      },
+      "bootstrap_ci": {
+        "mean": 0.6217,
+        "ci_low": 0.6217,
+        "ci_high": 0.6217
+      },
+      "pareto_metrics": {
+        "overall_score_mean": 0.6217,
+        "information_effectiveness_mean": 0.7488,
+        "structure_coverage_mean": 0.3819,
+        "non_redundancy_mean": 1.0
+      },
+      "runs": [
+        {
+          "vector_name": "balanced_default",
+          "vector": [
+            1.0,
+            1.15,
+            1.0,
+            0.9,
+            0.85,
+            1.0,
+            0.95,
+            1.1,
+            0.75,
+            1.0
+          ],
+          "run_index": 1,
+          "session_id": "d16172c671bc45038a445c76021efd36",
+          "interviewer_turns": 1,
+          "actions": [
+            "continue"
+          ],
+          "action_counts": {
+            "continue": 1,
+            "next_phase": 0,
+            "end": 0
+          },
+          "decision_weight_payload": {
+            "weight_vector": [
+              1.0,
+              1.15,
+              1.0,
+              0.9,
+              0.85,
+              1.0,
+              0.95,
+              1.1,
+              0.75,
+              1.0
+            ],
+            "weight_vector_order": [
+              "new_info_weight",
+              "missing_slot_weight",
+              "theme_coverage_weight",
+              "emotion_energy_weight",
+              "memory_stability_weight",
+              "conflict_clarification_weight",
+              "information_quality_weight",
+              "low_gain_penalty",
+              "reflection_slot_weight",
+              "factual_slot_weight"
+            ],
+            "weights": {
+              "conflict_clarification_weight": 1.0,
+              "emotion_energy_weight": 0.9,
+              "factual_slot_weight": 1.0,
+              "information_quality_weight": 0.95,
+              "low_gain_penalty": 1.1,
+              "memory_stability_weight": 0.85,
+              "missing_slot_weight": 1.15,
+              "new_info_weight": 1.0,
+              "reflection_slot_weight": 0.75,
+              "theme_coverage_weight": 1.0
+            }
+          },
+          "conversation_file": "results/conversations/planner_d16172c671bc45038a445c76021efd36.txt",
+          "state_file": "results/conversations/planner_state_d16172c671bc45038a445c76021efd36.json",
+          "score": {
+            "overall_score": 0.6217,
+            "deterministic_score": 0.6217,
+            "llm_score": null,
+            "deterministic_breakdown": {
+              "information_effectiveness": 0.7488,
+              "structure_coverage": 0.3819,
+              "action_balance": 0.59,
+              "efficiency": 1.0,
+              "overall_theme_coverage": 0.0261,
+              "slot_coverage": 0.5714,
+              "people_coverage": 1.0,
+              "avg_turn_quality": 0.7576,
+              "avg_info_gain": 0.5668,
+              "non_redundancy": 1.0,
+              "low_gain_ratio": 0.0
+            },
+            "llm_breakdown": {},
+            "analysis_notes": [
+              "turns=1",
+              "low_gain_ratio=0.000",
+              "action_mix=continue:1.000,next_phase:0.000,end:0.000"
+            ]
+          }
+        }
+      ]
+    },
+    "missing_slot_priority": {
+      "aggregate": {
+        "run_count": 1,
+        "overall_mean": 0.6554,
+        "overall_std": 0.0,
+        "deterministic_mean": 0.6554,
+        "llm_mean": null,
+        "overall_min": 0.6554,
+        "overall_max": 0.6554
+      },
+      "bootstrap_ci": {
+        "mean": 0.6554,
+        "ci_low": 0.6554,
+        "ci_high": 0.6554
+      },
+      "pareto_metrics": {
+        "overall_score_mean": 0.6554,
+        "information_effectiveness_mean": 0.7926,
+        "structure_coverage_mean": 0.4282,
+        "non_redundancy_mean": 1.0
+      },
+      "runs": [
+        {
+          "vector_name": "missing_slot_priority",
+          "vector": [
+            0.8,
+            1.6,
+            0.9,
+            0.9,
+            0.95,
+            1.0,
+            1.0,
+            1.0,
+            0.65,
+            1.2
+          ],
+          "run_index": 1,
+          "session_id": "e146f2b46e8f40c5b33c6c7aefaff23e",
+          "interviewer_turns": 1,
+          "actions": [
+            "continue"
+          ],
+          "action_counts": {
+            "continue": 1,
+            "next_phase": 0,
+            "end": 0
+          },
+          "decision_weight_payload": {
+            "weight_vector": [
+              0.8,
+              1.6,
+              0.9,
+              0.9,
+              0.95,
+              1.0,
+              1.0,
+              1.0,
+              0.65,
+              1.2
+            ],
+            "weight_vector_order": [
+              "new_info_weight",
+              "missing_slot_weight",
+              "theme_coverage_weight",
+              "emotion_energy_weight",
+              "memory_stability_weight",
+              "conflict_clarification_weight",
+              "information_quality_weight",
+              "low_gain_penalty",
+              "reflection_slot_weight",
+              "factual_slot_weight"
+            ],
+            "weights": {
+              "conflict_clarification_weight": 1.0,
+              "emotion_energy_weight": 0.9,
+              "factual_slot_weight": 1.2,
+              "information_quality_weight": 1.0,
+              "low_gain_penalty": 1.0,
+              "memory_stability_weight": 0.95,
+              "missing_slot_weight": 1.6,
+              "new_info_weight": 0.8,
+              "reflection_slot_weight": 0.65,
+              "theme_coverage_weight": 0.9
+            }
+          },
+          "conversation_file": "results/conversations/planner_e146f2b46e8f40c5b33c6c7aefaff23e.txt",
+          "state_file": "results/conversations/planner_state_e146f2b46e8f40c5b33c6c7aefaff23e.json",
+          "score": {
+            "overall_score": 0.6554,
+            "deterministic_score": 0.6554,
+            "llm_score": null,
+            "deterministic_breakdown": {
+              "information_effectiveness": 0.7926,
+              "structure_coverage": 0.4282,
+              "action_balance": 0.59,
+              "efficiency": 1.0,
+              "overall_theme_coverage": 0.0348,
+              "slot_coverage": 0.7143,
+              "people_coverage": 1.0,
+              "avg_turn_quality": 0.7867,
+              "avg_info_gain": 0.6641,
+              "non_redundancy": 1.0,
+              "low_gain_ratio": 0.0
+            },
+            "llm_breakdown": {},
+            "analysis_notes": [
+              "turns=1",
+              "low_gain_ratio=0.000",
+              "action_mix=continue:1.000,next_phase:0.000,end:0.000"
+            ]
+          }
+        }
+      ]
+    },
+    "new_info_priority": {
+      "aggregate": {
+        "run_count": 1,
+        "overall_mean": 0.6239,
+        "overall_std": 0.0,
+        "deterministic_mean": 0.6239,
+        "llm_mean": null,
+        "overall_min": 0.6239,
+        "overall_max": 0.6239
+      },
+      "bootstrap_ci": {
+        "mean": 0.6239,
+        "ci_low": 0.6239,
+        "ci_high": 0.6239
+      },
+      "pareto_metrics": {
+        "overall_score_mean": 0.6239,
+        "information_effectiveness_mean": 0.8601,
+        "structure_coverage_mean": 0.5139,
+        "non_redundancy_mean": 1.0
+      },
+      "runs": [
+        {
+          "vector_name": "new_info_priority",
+          "vector": [
+            1.6,
+            0.8,
+            1.1,
+            0.9,
+            0.7,
+            1.0,
+            0.9,
+            1.2,
+            0.85,
+            0.95
+          ],
+          "run_index": 1,
+          "session_id": "b29e24cd0c744cd4a66480e5273c43d3",
+          "interviewer_turns": 1,
+          "actions": [
+            "next_phase"
+          ],
+          "action_counts": {
+            "continue": 0,
+            "next_phase": 1,
+            "end": 0
+          },
+          "decision_weight_payload": {
+            "weight_vector": [
+              1.6,
+              0.8,
+              1.1,
+              0.9,
+              0.7,
+              1.0,
+              0.9,
+              1.2,
+              0.85,
+              0.95
+            ],
+            "weight_vector_order": [
+              "new_info_weight",
+              "missing_slot_weight",
+              "theme_coverage_weight",
+              "emotion_energy_weight",
+              "memory_stability_weight",
+              "conflict_clarification_weight",
+              "information_quality_weight",
+              "low_gain_penalty",
+              "reflection_slot_weight",
+              "factual_slot_weight"
+            ],
+            "weights": {
+              "conflict_clarification_weight": 1.0,
+              "emotion_energy_weight": 0.9,
+              "factual_slot_weight": 0.95,
+              "information_quality_weight": 0.9,
+              "low_gain_penalty": 1.2,
+              "memory_stability_weight": 0.7,
+              "missing_slot_weight": 0.8,
+              "new_info_weight": 1.6,
+              "reflection_slot_weight": 0.85,
+              "theme_coverage_weight": 1.1
+            }
+          },
+          "conversation_file": "results/conversations/planner_b29e24cd0c744cd4a66480e5273c43d3.txt",
+          "state_file": "results/conversations/planner_state_b29e24cd0c744cd4a66480e5273c43d3.json",
+          "score": {
+            "overall_score": 0.6239,
+            "deterministic_score": 0.6239,
+            "llm_score": null,
+            "deterministic_breakdown": {
+              "information_effectiveness": 0.8601,
+              "structure_coverage": 0.5139,
+              "action_balance": 0.0,
+              "efficiency": 1.0,
+              "overall_theme_coverage": 0.0348,
+              "slot_coverage": 1.0,
+              "people_coverage": 1.0,
+              "avg_turn_quality": 0.8467,
+              "avg_info_gain": 0.7891,
+              "non_redundancy": 1.0,
+              "low_gain_ratio": 0.0
+            },
+            "llm_breakdown": {},
+            "analysis_notes": [
+              "turns=1",
+              "low_gain_ratio=0.000",
+              "action_mix=continue:0.000,next_phase:1.000,end:0.000"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

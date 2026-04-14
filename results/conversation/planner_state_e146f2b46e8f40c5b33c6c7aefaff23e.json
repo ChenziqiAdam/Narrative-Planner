@@ -1,0 +1,1070 @@
+{
+  "session_id": "e146f2b46e8f40c5b33c6c7aefaff23e",
+  "mode": "planner",
+  "created_at": "2026-04-12T18:16:53.874613",
+  "updated_at": "2026-04-12T18:17:05.258299",
+  "elder_profile": {
+    "name": "王阿姨",
+    "birth_year": 1948,
+    "age": 78,
+    "hometown": "上海",
+    "background_summary": "年轻时在纺织厂工作，后来在社区做志愿者",
+    "stable_facts": {}
+  },
+  "transcript": [
+    {
+      "turn_id": "turn_d13c1f5e85",
+      "turn_index": 1,
+      "timestamp": "2026-04-12T18:16:58.958366",
+      "interviewer_question": "王阿姨，从您的人生经历里，年轻时工作那段日子一定很值得一提。您还记得自己刚参加工作时最难忘的一幕吗？",
+      "interviewee_answer": "哎哟，说起这个我就想起我们那会儿刚进纺织厂的时候。那时候我才二十出头，啥子都不懂，第一次走进车间，看到那些轰隆隆的机器，还有那些忙碌的工人，心里那个紧张又兴奋哦。最难忘的一幕嘛，就是我第一天上班，师傅手把手教我怎么操作机器，我手忙脚乱的，生怕出岔子。不过师傅耐心得很，一遍又一遍地教我，直到我能够独立操作。那时候的师傅啊，真是像家人一样。现在安逸咯，想起来都觉得暖和和的。",
+      "planner_plan": null,
+      "extraction_result": {
+        "turn_id": "turn_d13c1f5e85",
+        "metadata": {
+          "extractor_version": "event_extractor_v2",
+          "confidence": 1.0,
+          "source_spans": [
+            "哎哟，说起这个我就想起我们那会儿刚进纺织厂的时候。那时候我才二十出头，啥子都不懂，第一次走进车间，看到那些轰隆隆的机器，还有那些忙碌的工人，心里那个紧张又兴奋哦。最难忘的一幕嘛，就是我第一天上班，师傅手把手教我怎么操作机器，我手忙脚乱的，生"
+          ],
+          "is_incremental_update": false,
+          "matched_event_id": null
+        },
+        "memory_delta": {
+          "summary_updates": [
+            "第一天上班，师傅手把手教我操作机器"
+          ],
+          "new_open_loops": [],
+          "contradiction_notes": [],
+          "emotional_state_update": {
+            "emotional_energy": 1.0,
+            "cognitive_energy": 1.0,
+            "valence": 0.0,
+            "confidence": 0.6,
+            "evidence": [
+              "哎哟，说起这个我就想起我们那会儿刚进纺织厂的时候。那时候我才二十出头，啥子都不懂，第一次走进车间，看到那些轰隆隆的机器，还有那些忙碌的工人，心里那个紧张又兴奋哦"
+            ]
+          }
+        },
+        "graph_delta": {
+          "event_candidates": [
+            {
+              "event_id": "evt_new_001",
+              "title": "第一天上班，师傅手把手教我操作机器",
+              "summary": "第一天上班，师傅手把手教我操作机器",
+              "time": "二十出头",
+              "location": "纺织厂",
+              "people_ids": [],
+              "people_names": [
+                "师傅"
+              ],
+              "event": "第一天上班，师傅手把手教我操作机器",
+              "feeling": "紧张又兴奋",
+              "reflection": "现在想起来都觉得暖和和的",
+              "cause": null,
+              "result": null,
+              "unexpanded_clues": [
+                "师傅耐心地教我操作机器"
+              ],
+              "theme_id": "career",
+              "source_turn_ids": [
+                "turn_d13c1f5e85"
+              ],
+              "completeness_score": 0.75,
+              "confidence": 1.0,
+              "merge_status": "new"
+            }
+          ],
+          "people_candidates": [],
+          "theme_hints": [
+            "career"
+          ]
+        },
+        "debug_trace": {
+          "prompt_mode": "unified",
+          "llm_merge_hints_enabled": true,
+          "candidate_events": [],
+          "candidate_count": 0,
+          "extracted_event_count": 1,
+          "avg_confidence": 1.0,
+          "similarity_hint_count": 0,
+          "similarity_hints": []
+        }
+      },
+      "turn_evaluation": {
+        "turn_id": "turn_d13c1f5e85",
+        "question_quality_score": 0.7867,
+        "information_gain_score": 0.6641,
+        "non_redundancy_score": 1.0,
+        "slot_targeting_score": 0.7,
+        "emotional_alignment_score": 0.85,
+        "planner_alignment_score": 0.7,
+        "coverage_gain": 0.0348,
+        "targeted_slots": [],
+        "notes": [],
+        "created_at": "2026-04-12T18:17:05.257890"
+      },
+      "debug_trace": {
+        "schema_version": "planner_debug_v1",
+        "turn_id": "turn_d13c1f5e85",
+        "extraction": {
+          "prompt_mode": "unified",
+          "llm_merge_hints_enabled": true,
+          "candidate_events": [],
+          "candidate_count": 0,
+          "extracted_event_count": 1,
+          "avg_confidence": 1.0,
+          "similarity_hint_count": 0,
+          "similarity_hints": []
+        },
+        "merge": {
+          "decisions": [
+            {
+              "event_id": "evt_new_001",
+              "action": "CREATE_NEW",
+              "confidence": 0.0,
+              "reason": "no_llm_hints",
+              "target_event_id": null,
+              "similarity_hints": [],
+              "final_action": "created_new_legacy"
+            }
+          ],
+          "fallback_reasons": [
+            "no_llm_hints",
+            "legacy_no_match_create_new"
+          ],
+          "new_event_ids": [
+            "evt_new_001"
+          ],
+          "updated_event_ids": []
+        },
+        "coverage": {
+          "before": 0.0,
+          "after": 0.034782608695652174,
+          "delta": 0.034782608695652174
+        },
+        "planning": {
+          "low_info_streak": 0,
+          "prefer_breadth_switch": false,
+          "suggest_close": false,
+          "fallback_repeat_count": 0,
+          "preferred_action": "continue",
+          "preferred_focus": "stay_current_event",
+          "recommended_theme_id": "THEME_01_LIFE_CHAPTERS",
+          "recommended_theme_title": "人生篇章概览",
+          "decision_weights": {
+            "new_info_weight": 0.8,
+            "missing_slot_weight": 1.6,
+            "theme_coverage_weight": 0.9,
+            "emotion_energy_weight": 0.9,
+            "memory_stability_weight": 0.95,
+            "conflict_clarification_weight": 1.0,
+            "information_quality_weight": 1.0,
+            "low_gain_penalty": 1.0,
+            "reflection_slot_weight": 0.65,
+            "factual_slot_weight": 1.2
+          },
+          "decision_weight_vector": [
+            0.8,
+            1.6,
+            0.9,
+            0.9,
+            0.95,
+            1.0,
+            1.0,
+            1.0,
+            0.65,
+            1.2
+          ],
+          "decision_weight_vector_order": [
+            "new_info_weight",
+            "missing_slot_weight",
+            "theme_coverage_weight",
+            "emotion_energy_weight",
+            "memory_stability_weight",
+            "conflict_clarification_weight",
+            "information_quality_weight",
+            "low_gain_penalty",
+            "reflection_slot_weight",
+            "factual_slot_weight"
+          ],
+          "decision_signals": {
+            "new_info": 0.5625,
+            "missing_slot": 0.9,
+            "theme_undercoverage": 1.0,
+            "emotion_energy": 0.0,
+            "memory_stability": 0.9583,
+            "conflict_clarification": 0.0,
+            "information_quality": 1.0,
+            "low_gain_penalty": 0.0,
+            "overall_coverage": 0.0348,
+            "person_gap": 0.45
+          },
+          "decision_scores": {
+            "action": {
+              "continue": 3.5979,
+              "next_phase": 1.3738,
+              "end": 0.0
+            },
+            "focus": {
+              "stay_current_event": 2.8504,
+              "switch_new_event": 1.125,
+              "move_to_key_person": 1.1925
+            }
+          },
+          "slot_rankings": [
+            {
+              "slot": "cause",
+              "score": 1.818,
+              "is_reflection": false
+            },
+            {
+              "slot": "result",
+              "score": 1.818,
+              "is_reflection": false
+            }
+          ],
+          "theme_rankings": [
+            {
+              "theme_id": "THEME_01_LIFE_CHAPTERS",
+              "title": "人生篇章概览",
+              "score": 1.1,
+              "undercoverage": 1.0,
+              "completion_ratio": 0.0
+            },
+            {
+              "theme_id": "THEME_02_PEAK_EXPERIENCE",
+              "title": "高潮",
+              "score": 1.06,
+              "undercoverage": 1.0,
+              "completion_ratio": 0.0
+            },
+            {
+              "theme_id": "THEME_03_LOW_POINT",
+              "title": "低谷",
+              "score": 1.06,
+              "undercoverage": 1.0,
+              "completion_ratio": 0.0
+            },
+            {
+              "theme_id": "THEME_04_TURNING_POINT",
+              "title": "转折点",
+              "score": 1.06,
+              "undercoverage": 1.0,
+              "completion_ratio": 0.0
+            },
+            {
+              "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+              "title": "童年积极回忆",
+              "score": 1.02,
+              "undercoverage": 1.0,
+              "completion_ratio": 0.0
+            },
+            {
+              "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+              "title": "童年消极回忆",
+              "score": 1.02,
+              "undercoverage": 1.0,
+              "completion_ratio": 0.0
+            },
+            {
+              "theme_id": "THEME_08_RELIGIOUS_EXPERIENCE",
+              "title": "宗教、精神或神秘体验",
+              "score": 0.98,
+              "undercoverage": 1.0,
+              "completion_ratio": 0.0
+            },
+            {
+              "theme_id": "THEME_09_WISDOM_EVENT",
+              "title": "智慧事件",
+              "score": 0.98,
+              "undercoverage": 1.0,
+              "completion_ratio": 0.0
+            },
+            {
+              "theme_id": "THEME_13_LIFE_CHALLENGE",
+              "title": "人生挑战",
+              "score": 0.98,
+              "undercoverage": 1.0,
+              "completion_ratio": 0.0
+            },
+            {
+              "theme_id": "THEME_14_HEALTH",
+              "title": "健康",
+              "score": 0.98,
+              "undercoverage": 1.0,
+              "completion_ratio": 0.0
+            },
+            {
+              "theme_id": "THEME_15_LOSS",
+              "title": "失落",
+              "score": 0.98,
+              "undercoverage": 1.0,
+              "completion_ratio": 0.0
+            },
+            {
+              "theme_id": "THEME_16_FAILURE_REGRET",
+              "title": "失败的遗憾",
+              "score": 0.98,
+              "undercoverage": 1.0,
+              "completion_ratio": 0.0
+            },
+            {
+              "theme_id": "THEME_10_NEXT_CHAPTER",
+              "title": "下一章",
+              "score": 0.94,
+              "undercoverage": 1.0,
+              "completion_ratio": 0.0
+            },
+            {
+              "theme_id": "THEME_11_DREAMS_PLANS",
+              "title": "梦想、希望和未来计划",
+              "score": 0.94,
+              "undercoverage": 1.0,
+              "completion_ratio": 0.0
+            },
+            {
+              "theme_id": "THEME_12_LIFE_PROJECT",
+              "title": "人生项目",
+              "score": 0.94,
+              "undercoverage": 1.0,
+              "completion_ratio": 0.0
+            },
+            {
+              "theme_id": "THEME_17_RELIGIOUS_VALUES",
+              "title": "宗教/伦理价值观",
+              "score": 0.9,
+              "undercoverage": 1.0,
+              "completion_ratio": 0.0
+            },
+            {
+              "theme_id": "THEME_18_POLITICAL_VALUES",
+              "title": "政治/社会价值观",
+              "score": 0.9,
+              "undercoverage": 1.0,
+              "completion_ratio": 0.0
+            },
+            {
+              "theme_id": "THEME_19_VALUE_EVOLUTION",
+              "title": "宗教和政治观点转变和发展",
+              "score": 0.9,
+              "undercoverage": 1.0,
+              "completion_ratio": 0.0
+            },
+            {
+              "theme_id": "THEME_20_SINGLE_VALUE",
+              "title": "单一价值观",
+              "score": 0.9,
+              "undercoverage": 1.0,
+              "completion_ratio": 0.0
+            },
+            {
+              "theme_id": "THEME_21_SESSION_SUMMARY",
+              "title": "会话摘要",
+              "score": 0.9,
+              "undercoverage": 1.0,
+              "completion_ratio": 0.0
+            },
+            {
+              "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+              "title": "信息整合",
+              "score": 0.9,
+              "undercoverage": 1.0,
+              "completion_ratio": 0.0
+            },
+            {
+              "theme_id": "THEME_23_CONTEXT_MANAGEMENT",
+              "title": "上下文管理",
+              "score": 0.9,
+              "undercoverage": 1.0,
+              "completion_ratio": 0.0
+            },
+            {
+              "theme_id": "THEME_07_ADULT_MEMORY",
+              "title": "生动的成人记忆",
+              "score": 0.3,
+              "undercoverage": 0.2,
+              "completion_ratio": 0.8
+            }
+          ],
+          "next_action": "continue"
+        }
+      }
+    }
+  ],
+  "canonical_events": {
+    "evt_new_001": {
+      "event_id": "evt_new_001",
+      "title": "第一天上班，师傅手把手教我操作机器",
+      "summary": "第一天上班，师傅手把手教我操作机器",
+      "time": "二十出头",
+      "location": "纺织厂",
+      "people_ids": [
+        "person_ae0f5b1ac9"
+      ],
+      "people_names": [
+        "师傅"
+      ],
+      "event": "第一天上班，师傅手把手教我操作机器",
+      "feeling": "紧张又兴奋",
+      "reflection": "现在想起来都觉得暖和和的",
+      "cause": null,
+      "result": null,
+      "unexpanded_clues": [
+        "师傅耐心地教我操作机器"
+      ],
+      "theme_id": "THEME_07_ADULT_MEMORY",
+      "source_turn_ids": [
+        "turn_d13c1f5e85"
+      ],
+      "completeness_score": 0.75,
+      "confidence": 1.0,
+      "merge_status": "new"
+    }
+  },
+  "people_registry": {
+    "person_ae0f5b1ac9": {
+      "person_id": "person_ae0f5b1ac9",
+      "display_name": "师傅",
+      "aliases": [],
+      "relation_to_elder": "mentor",
+      "summary": "Mentioned in turn turn_d13c1f5e85.",
+      "related_event_ids": [
+        "evt_new_001"
+      ],
+      "stable_attributes": {}
+    }
+  },
+  "theme_state": {
+    "THEME_01_LIFE_CHAPTERS": {
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "title": "人生篇章概览",
+      "status": "pending",
+      "priority": 1,
+      "expected_slots": [
+        "childhood_chapter",
+        "education_chapter",
+        "career_chapter",
+        "family_chapter",
+        "retirement_chapter"
+      ],
+      "filled_slots": {
+        "childhood_chapter": false,
+        "education_chapter": false,
+        "career_chapter": false,
+        "family_chapter": false,
+        "retirement_chapter": false
+      },
+      "extracted_event_ids": [],
+      "open_question_count": 5,
+      "completion_ratio": 0.0,
+      "exploration_depth": 0
+    },
+    "THEME_02_PEAK_EXPERIENCE": {
+      "theme_id": "THEME_02_PEAK_EXPERIENCE",
+      "title": "高潮",
+      "status": "pending",
+      "priority": 2,
+      "expected_slots": [
+        "time",
+        "location",
+        "people_present",
+        "feelings",
+        "significance"
+      ],
+      "filled_slots": {
+        "time": false,
+        "location": false,
+        "people_present": false,
+        "feelings": false,
+        "significance": false
+      },
+      "extracted_event_ids": [],
+      "open_question_count": 4,
+      "completion_ratio": 0.0,
+      "exploration_depth": 0
+    },
+    "THEME_03_LOW_POINT": {
+      "theme_id": "THEME_03_LOW_POINT",
+      "title": "低谷",
+      "status": "pending",
+      "priority": 2,
+      "expected_slots": [
+        "time",
+        "location",
+        "people_involved",
+        "difficulty",
+        "coping",
+        "impact"
+      ],
+      "filled_slots": {
+        "time": false,
+        "location": false,
+        "people_involved": false,
+        "difficulty": false,
+        "coping": false,
+        "impact": false
+      },
+      "extracted_event_ids": [],
+      "open_question_count": 4,
+      "completion_ratio": 0.0,
+      "exploration_depth": 0
+    },
+    "THEME_04_TURNING_POINT": {
+      "theme_id": "THEME_04_TURNING_POINT",
+      "title": "转折点",
+      "status": "mentioned",
+      "priority": 2,
+      "expected_slots": [
+        "before_state",
+        "event",
+        "after_state",
+        "reason",
+        "impact"
+      ],
+      "filled_slots": {
+        "before_state": false,
+        "event": false,
+        "after_state": false,
+        "reason": false,
+        "impact": false
+      },
+      "extracted_event_ids": [],
+      "open_question_count": 4,
+      "completion_ratio": 0.0,
+      "exploration_depth": 0
+    },
+    "THEME_05_CHILDHOOD_POSITIVE": {
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "title": "童年积极回忆",
+      "status": "pending",
+      "priority": 3,
+      "expected_slots": [
+        "time",
+        "location",
+        "people",
+        "activity",
+        "feelings",
+        "meaning"
+      ],
+      "filled_slots": {
+        "time": false,
+        "location": false,
+        "people": false,
+        "activity": false,
+        "feelings": false,
+        "meaning": false
+      },
+      "extracted_event_ids": [],
+      "open_question_count": 4,
+      "completion_ratio": 0.0,
+      "exploration_depth": 0
+    },
+    "THEME_06_CHILDHOOD_NEGATIVE": {
+      "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+      "title": "童年消极回忆",
+      "status": "pending",
+      "priority": 3,
+      "expected_slots": [
+        "time",
+        "location",
+        "people",
+        "event",
+        "emotions",
+        "long_term_impact"
+      ],
+      "filled_slots": {
+        "time": false,
+        "location": false,
+        "people": false,
+        "event": false,
+        "emotions": false,
+        "long_term_impact": false
+      },
+      "extracted_event_ids": [],
+      "open_question_count": 4,
+      "completion_ratio": 0.0,
+      "exploration_depth": 0
+    },
+    "THEME_07_ADULT_MEMORY": {
+      "theme_id": "THEME_07_ADULT_MEMORY",
+      "title": "生动的成人记忆",
+      "status": "mentioned",
+      "priority": 3,
+      "expected_slots": [
+        "time",
+        "location",
+        "people",
+        "context",
+        "significance"
+      ],
+      "filled_slots": {
+        "time": true,
+        "location": true,
+        "people": true,
+        "context": false,
+        "significance": true
+      },
+      "extracted_event_ids": [
+        "evt_new_001"
+      ],
+      "open_question_count": 4,
+      "completion_ratio": 0.8,
+      "exploration_depth": 2
+    },
+    "THEME_08_RELIGIOUS_EXPERIENCE": {
+      "theme_id": "THEME_08_RELIGIOUS_EXPERIENCE",
+      "title": "宗教、精神或神秘体验",
+      "status": "pending",
+      "priority": 4,
+      "expected_slots": [
+        "experience",
+        "context",
+        "feelings",
+        "impact"
+      ],
+      "filled_slots": {
+        "experience": false,
+        "context": false,
+        "feelings": false,
+        "impact": false
+      },
+      "extracted_event_ids": [],
+      "open_question_count": 4,
+      "completion_ratio": 0.0,
+      "exploration_depth": 0
+    },
+    "THEME_09_WISDOM_EVENT": {
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "title": "智慧事件",
+      "status": "pending",
+      "priority": 4,
+      "expected_slots": [
+        "situation",
+        "action",
+        "reasoning",
+        "outcome",
+        "values"
+      ],
+      "filled_slots": {
+        "situation": false,
+        "action": false,
+        "reasoning": false,
+        "outcome": false,
+        "values": false
+      },
+      "extracted_event_ids": [],
+      "open_question_count": 4,
+      "completion_ratio": 0.0,
+      "exploration_depth": 0
+    },
+    "THEME_10_NEXT_CHAPTER": {
+      "theme_id": "THEME_10_NEXT_CHAPTER",
+      "title": "下一章",
+      "status": "pending",
+      "priority": 5,
+      "expected_slots": [
+        "plans",
+        "expectations",
+        "people",
+        "goals"
+      ],
+      "filled_slots": {
+        "plans": false,
+        "expectations": false,
+        "people": false,
+        "goals": false
+      },
+      "extracted_event_ids": [],
+      "open_question_count": 4,
+      "completion_ratio": 0.0,
+      "exploration_depth": 0
+    },
+    "THEME_11_DREAMS_PLANS": {
+      "theme_id": "THEME_11_DREAMS_PLANS",
+      "title": "梦想、希望和未来计划",
+      "status": "pending",
+      "priority": 5,
+      "expected_slots": [
+        "dreams",
+        "plans",
+        "challenges",
+        "strategies"
+      ],
+      "filled_slots": {
+        "dreams": false,
+        "plans": false,
+        "challenges": false,
+        "strategies": false
+      },
+      "extracted_event_ids": [],
+      "open_question_count": 4,
+      "completion_ratio": 0.0,
+      "exploration_depth": 0
+    },
+    "THEME_12_LIFE_PROJECT": {
+      "theme_id": "THEME_12_LIFE_PROJECT",
+      "title": "人生项目",
+      "status": "pending",
+      "priority": 5,
+      "expected_slots": [
+        "project",
+        "role",
+        "goals",
+        "impact",
+        "timeline"
+      ],
+      "filled_slots": {
+        "project": false,
+        "role": false,
+        "goals": false,
+        "impact": false,
+        "timeline": false
+      },
+      "extracted_event_ids": [],
+      "open_question_count": 4,
+      "completion_ratio": 0.0,
+      "exploration_depth": 0
+    },
+    "THEME_13_LIFE_CHALLENGE": {
+      "theme_id": "THEME_13_LIFE_CHALLENGE",
+      "title": "人生挑战",
+      "status": "pending",
+      "priority": 4,
+      "expected_slots": [
+        "challenge",
+        "context",
+        "response",
+        "outcome",
+        "meaning"
+      ],
+      "filled_slots": {
+        "challenge": false,
+        "context": false,
+        "response": false,
+        "outcome": false,
+        "meaning": false
+      },
+      "extracted_event_ids": [],
+      "open_question_count": 4,
+      "completion_ratio": 0.0,
+      "exploration_depth": 0
+    },
+    "THEME_14_HEALTH": {
+      "theme_id": "THEME_14_HEALTH",
+      "title": "健康",
+      "status": "pending",
+      "priority": 4,
+      "expected_slots": [
+        "condition",
+        "timeline",
+        "medical_interactions",
+        "coping",
+        "impact"
+      ],
+      "filled_slots": {
+        "condition": false,
+        "timeline": false,
+        "medical_interactions": false,
+        "coping": false,
+        "impact": false
+      },
+      "extracted_event_ids": [],
+      "open_question_count": 4,
+      "completion_ratio": 0.0,
+      "exploration_depth": 0
+    },
+    "THEME_15_LOSS": {
+      "theme_id": "THEME_15_LOSS",
+      "title": "失落",
+      "status": "pending",
+      "priority": 4,
+      "expected_slots": [
+        "loss",
+        "circumstances",
+        "immediate_response",
+        "long_term_processing",
+        "impact"
+      ],
+      "filled_slots": {
+        "loss": false,
+        "circumstances": false,
+        "immediate_response": false,
+        "long_term_processing": false,
+        "impact": false
+      },
+      "extracted_event_ids": [],
+      "open_question_count": 4,
+      "completion_ratio": 0.0,
+      "exploration_depth": 0
+    },
+    "THEME_16_FAILURE_REGRET": {
+      "theme_id": "THEME_16_FAILURE_REGRET",
+      "title": "失败的遗憾",
+      "status": "pending",
+      "priority": 4,
+      "expected_slots": [
+        "failure_regret",
+        "causes",
+        "context",
+        "response",
+        "lessons",
+        "impact"
+      ],
+      "filled_slots": {
+        "failure_regret": false,
+        "causes": false,
+        "context": false,
+        "response": false,
+        "lessons": false,
+        "impact": false
+      },
+      "extracted_event_ids": [],
+      "open_question_count": 4,
+      "completion_ratio": 0.0,
+      "exploration_depth": 0
+    },
+    "THEME_17_RELIGIOUS_VALUES": {
+      "theme_id": "THEME_17_RELIGIOUS_VALUES",
+      "title": "宗教/伦理价值观",
+      "status": "pending",
+      "priority": 6,
+      "expected_slots": [
+        "beliefs",
+        "practices",
+        "influence",
+        "challenges"
+      ],
+      "filled_slots": {
+        "beliefs": false,
+        "practices": false,
+        "influence": false,
+        "challenges": false
+      },
+      "extracted_event_ids": [],
+      "open_question_count": 3,
+      "completion_ratio": 0.0,
+      "exploration_depth": 0
+    },
+    "THEME_18_POLITICAL_VALUES": {
+      "theme_id": "THEME_18_POLITICAL_VALUES",
+      "title": "政治/社会价值观",
+      "status": "pending",
+      "priority": 6,
+      "expected_slots": [
+        "values",
+        "causes",
+        "actions",
+        "impact"
+      ],
+      "filled_slots": {
+        "values": false,
+        "causes": false,
+        "actions": false,
+        "impact": false
+      },
+      "extracted_event_ids": [],
+      "open_question_count": 3,
+      "completion_ratio": 0.0,
+      "exploration_depth": 0
+    },
+    "THEME_19_VALUE_EVOLUTION": {
+      "theme_id": "THEME_19_VALUE_EVOLUTION",
+      "title": "宗教和政治观点转变和发展",
+      "status": "pending",
+      "priority": 7,
+      "expected_slots": [
+        "past_views",
+        "change_event",
+        "current_views",
+        "impact"
+      ],
+      "filled_slots": {
+        "past_views": false,
+        "change_event": false,
+        "current_views": false,
+        "impact": false
+      },
+      "extracted_event_ids": [],
+      "open_question_count": 3,
+      "completion_ratio": 0.0,
+      "exploration_depth": 0
+    },
+    "THEME_20_SINGLE_VALUE": {
+      "theme_id": "THEME_20_SINGLE_VALUE",
+      "title": "单一价值观",
+      "status": "pending",
+      "priority": 7,
+      "expected_slots": [
+        "value",
+        "reason",
+        "application",
+        "testing_example"
+      ],
+      "filled_slots": {
+        "value": false,
+        "reason": false,
+        "application": false,
+        "testing_example": false
+      },
+      "extracted_event_ids": [],
+      "open_question_count": 3,
+      "completion_ratio": 0.0,
+      "exploration_depth": 0
+    },
+    "THEME_21_SESSION_SUMMARY": {
+      "theme_id": "THEME_21_SESSION_SUMMARY",
+      "title": "会话摘要",
+      "status": "pending",
+      "priority": 9,
+      "expected_slots": [
+        "key_points",
+        "topics_covered",
+        "next_steps"
+      ],
+      "filled_slots": {
+        "key_points": false,
+        "topics_covered": false,
+        "next_steps": false
+      },
+      "extracted_event_ids": [],
+      "open_question_count": 0,
+      "completion_ratio": 0.0,
+      "exploration_depth": 0
+    },
+    "THEME_22_INFORMATION_INTEGRATION": {
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "title": "信息整合",
+      "status": "pending",
+      "priority": 9,
+      "expected_slots": [
+        "previous_summary",
+        "connections",
+        "gaps"
+      ],
+      "filled_slots": {
+        "previous_summary": false,
+        "connections": false,
+        "gaps": false
+      },
+      "extracted_event_ids": [],
+      "open_question_count": 0,
+      "completion_ratio": 0.0,
+      "exploration_depth": 0
+    },
+    "THEME_23_CONTEXT_MANAGEMENT": {
+      "theme_id": "THEME_23_CONTEXT_MANAGEMENT",
+      "title": "上下文管理",
+      "status": "pending",
+      "priority": 9,
+      "expected_slots": [
+        "entities",
+        "timeline",
+        "relationships"
+      ],
+      "filled_slots": {
+        "entities": false,
+        "timeline": false,
+        "relationships": false
+      },
+      "extracted_event_ids": [],
+      "open_question_count": 0,
+      "completion_ratio": 0.0,
+      "exploration_depth": 0
+    }
+  },
+  "memory_capsule": {
+    "session_summary": "王阿姨. from 上海. 年轻时在纺织厂工作，后来在社区做志愿者. Recent events: 第一天上班，师傅手把手教我操作机器",
+    "current_storyline": "Currently exploring: 第一天上班，师傅手把手教我操作机器",
+    "active_event_ids": [
+      "evt_new_001"
+    ],
+    "active_people_ids": [
+      "person_ae0f5b1ac9"
+    ],
+    "open_loops": [
+      {
+        "loop_id": "evt_new_001:clue:0",
+        "source_event_id": "evt_new_001",
+        "loop_type": "unexpanded_clue",
+        "description": "老人提到“第一天上班，师傅手把手教我操作机器”时带出了线索：师傅耐心地教我操作机器，但这条线索还没有展开。",
+        "priority": 0.95
+      },
+      {
+        "loop_id": "evt_new_001:cause",
+        "source_event_id": "evt_new_001",
+        "loop_type": "missing_slot",
+        "description": "老人刚提到“第一天上班，师傅手把手教我操作机器”但事情是怎么开始的、背后原因是什么，还没有说清楚。",
+        "priority": 0.7
+      },
+      {
+        "loop_id": "evt_new_001:result",
+        "source_event_id": "evt_new_001",
+        "loop_type": "missing_slot",
+        "description": "老人刚提到“第一天上班，师傅手把手教我操作机器”但后来事情怎么发展、带来了什么变化，还没有补充完整。",
+        "priority": 0.7
+      }
+    ],
+    "contradictions": [],
+    "emotional_state": {
+      "emotional_energy": 1.0,
+      "cognitive_energy": 1.0,
+      "valence": 0.0,
+      "confidence": 0.65,
+      "evidence": [
+        "紧张又兴奋",
+        "现在想起来都觉得暖和和的"
+      ]
+    },
+    "recent_topics": [
+      "第一天上班，师傅手把手教我操作机器"
+    ],
+    "do_not_repeat": [
+      "王阿姨，从您的人生经历里，年轻时工作那段日子一定很值得一提。您还记得自己刚参加工作时最难忘的一幕吗？"
+    ],
+    "open_loop_history_total": 3,
+    "resolved_open_loop_count": 0,
+    "contradiction_history_total": 0,
+    "resolved_contradiction_count": 0
+  },
+  "evaluation_trace": [
+    {
+      "turn_id": "turn_d13c1f5e85",
+      "question_quality_score": 0.7867,
+      "information_gain_score": 0.6641,
+      "non_redundancy_score": 1.0,
+      "slot_targeting_score": 0.7,
+      "emotional_alignment_score": 0.85,
+      "planner_alignment_score": 0.7,
+      "coverage_gain": 0.0348,
+      "targeted_slots": [],
+      "notes": [],
+      "created_at": "2026-04-12T18:17:05.257890"
+    }
+  ],
+  "session_metrics": {
+    "overall_theme_coverage": 0.034782608695652174,
+    "overall_slot_coverage": {
+      "time": 1.0,
+      "location": 1.0,
+      "people": 1.0,
+      "event": 1.0,
+      "reflection": 1.0,
+      "cause": 0.0,
+      "result": 0.0
+    },
+    "people_coverage": 1.0,
+    "open_loop_closure_rate": 0.0,
+    "contradiction_resolution_rate": 1.0,
+    "average_turn_quality": 0.7867,
+    "average_information_gain": 0.6641
+  },
+  "current_focus_theme_id": "Currently exploring: 第一天上班，师傅手把手教我操作机器",
+  "pending_jobs": [],
+  "pending_plan": null,
+  "pending_question": "王阿姨，您刚才提到刚进纺织厂时的紧张和兴奋，我很好奇，是什么让您决定加入纺织厂工作的呢？",
+  "pending_action": "continue",
+  "metadata": {
+    "fallback_repeat_count": 0
+  }
+}

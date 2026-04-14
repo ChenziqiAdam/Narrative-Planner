@@ -1,0 +1,12 @@
+{
+  "baseline": {
+    "session_id": "98d95f0d6f01450ba67c0f1aa2afa1cf",
+    "first_question": "王阿姨，您好！很高兴今天能和您一起回顾您的一生。首先，想请您分享一下，您出生在上海的1948年，那个时代的童年生活是怎样的？",
+    "interviewer_turns": 1
+  },
+  "planner": {
+    "session_id": "b22ae90be5964baa9f82897cf63a8bef",
+    "first_question": "王阿姨，从您的人生经历里，年轻时工作那段日子一定很值得一提。您还记得自己刚参加工作时最难忘的一幕吗？",
+    "interviewer_turns": 1
+  }
+}

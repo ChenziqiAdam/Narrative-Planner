@@ -55,18 +55,24 @@ class ExtractionAgent:
             context,
             existing_events,
         )
+        debug_trace = self.extractor.consume_debug_trace(turn_record.turn_id)
         if not extracted_events:
             fallback_event = self._build_fallback_partial_event(turn_record)
             if fallback_event:
                 extracted_events = [fallback_event]
+                debug_trace = {
+                    **debug_trace,
+                    "fallback_reason": debug_trace.get("fallback_reason", "fallback_partial_event"),
+                }
 
-        extraction_result = self._build_extraction_result(turn_record, extracted_events)
+        extraction_result = self._build_extraction_result(turn_record, extracted_events, debug_trace)
         return extracted_events, extraction_result
 
     def _build_extraction_result(
         self,
         turn_record: TurnRecord,
         extracted_events: List[ExtractedEvent],
+        debug_trace: dict,
     ) -> ExtractionResult:
         candidate_events = [self._build_candidate_event(event, turn_record.turn_id) for event in extracted_events]
         metadata = ExtractionMetadata(
@@ -94,6 +100,7 @@ class ExtractionAgent:
             metadata=metadata,
             memory_delta=memory_delta,
             graph_delta=graph_delta,
+            debug_trace=debug_trace or {},
         )
 
     def _build_candidate_event(self, event: ExtractedEvent, turn_id: str) -> CanonicalEvent:
