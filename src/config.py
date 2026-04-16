@@ -63,6 +63,15 @@ class Config:
     )
     LLM_MERGE_MAX_CANDIDATES = int(os.getenv("LLM_MERGE_MAX_CANDIDATES", "3"))
 
+    # Neo4j graph database configuration
+    NEO4J_URI = os.getenv("NEO4J_URI", "bolt://localhost:7687")
+    NEO4J_USERNAME = os.getenv("NEO4J_USERNAME", "neo4j")
+    NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD", "password")
+    NEO4J_DATABASE = os.getenv("NEO4J_DATABASE", "neo4j")
+    NEO4J_ENABLED = os.getenv("NEO4J_ENABLED", "false").lower() in {
+        "1", "true", "yes", "on",
+    }
+
     # Optional prompt overrides
     INTERVIEWEE_PROMPT_TEMPLATE = os.getenv(
         "INTERVIEWEE_PROMPT_TEMPLATE",

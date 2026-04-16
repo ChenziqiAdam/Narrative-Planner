@@ -1,0 +1,5266 @@
+{
+  "session_id": "graph_routing_30turn_profile_scripted_v3",
+  "profile_path": "C:\\Users\\Jenny\\Desktop\\narrative planner\\src\\prompts\\roles\\elder_profile_example.json",
+  "simulator": "scripted",
+  "config": {
+    "ENABLE_TURN_ROUTING_POLICY": true,
+    "TURN_ROUTING_OBSERVE_ONLY": true,
+    "ENABLE_GRAPH_FAST_PATH": false,
+    "ENABLE_DEFERRED_GRAPH_UPDATE": false
+  },
+  "elder_info": {
+    "name": "陈秀英",
+    "age": 82,
+    "birth_year": null,
+    "hometown": "四川省成都市",
+    "background": "1942年出生，经历过抗日战争后期、解放、大跃进、文革、改革开放，在纺织厂工作到退休，养育了三个子女，现独居。",
+    "current_residence": "成都市锦江区某老小区",
+    "identity_experience": "退休纺织厂女工，曾在纺织厂工作35年，经历过工厂从兴盛到改制的全过程",
+    "speaking_style": "带成都口音，说话慢条斯理，喜欢用'嘛'、'啥子嘛'、'得行'等方言词，爱说'我们那会儿'开头"
+  },
+  "summary": {
+    "turns": 30,
+    "graph_routing_metrics": {
+      "enabled": true,
+      "observe_only": true,
+      "evaluated_turn_count": 30,
+      "route_distribution": {
+        "graph_update_required": 28,
+        "fast_reply_recent_context": 2
+      },
+      "route_match_rate": 0.9333,
+      "answer_local_route_match_rate": 1.0,
+      "predicted_low_information_precision": 1.0,
+      "predicted_update_precision": 1.0,
+      "high_value_update_recall": 0.9333,
+      "answer_local_high_value_update_recall": 1.0,
+      "predicted_skip_sync_count": 2,
+      "safe_skip_rate": 0.0,
+      "answer_local_safe_skip_rate": 1.0,
+      "route_regret_count": 2,
+      "answer_local_route_regret_count": 0,
+      "context_carryover_merge_count": 2,
+      "llm_used_count": 0
+    },
+    "dynamic_profile_metrics": {
+      "enabled": true,
+      "scheduled_update_count": 27,
+      "update_count": 27,
+      "last_updated_turn_id": "turn_fc354c8144",
+      "last_update_reason": "major_event_completed",
+      "profile_quality": {
+        "core_identity_and_personality": 0.8333,
+        "current_life_status": 0.0,
+        "family_situation": 0.8,
+        "life_views_and_attitudes": 1.0,
+        "overall": 0.6583
+      },
+      "reason_counts": {
+        "major_event_completed": 23,
+        "multiple_new_people": 3,
+        "below_update_threshold": 3,
+        "high_value_reflection": 1
+      },
+      "jobs_by_status": {
+        "completed": 27
+      }
+    },
+    "planner_decision_metrics": {
+      "action_counts": {
+        "continue": 27,
+        "next_phase": 3,
+        "end": 0
+      },
+      "phase_switch_count": 3,
+      "repeated_question_count": 0,
+      "low_gain_streak_max": 0,
+      "early_end_count": 0
+    },
+    "session_metrics": {
+      "overall_theme_coverage": 0.14347826086956525,
+      "overall_slot_coverage": {
+        "time": 0.42857142857142855,
+        "location": 0.42857142857142855,
+        "people": 0.9523809523809523,
+        "event": 1.0,
+        "reflection": 0.9523809523809523,
+        "cause": 0.8571428571428571,
+        "result": 0.9047619047619048
+      },
+      "people_coverage": 0.8809523809523809,
+      "open_loop_closure_rate": 0.5555555555555556,
+      "contradiction_resolution_rate": 1.0,
+      "average_turn_quality": 0.6472066666666667,
+      "average_information_gain": 0.54621
+    }
+  },
+  "turns": [
+    {
+      "turn_index": 1,
+      "turn_id": "turn_821f697aef",
+      "interviewer_question": "陈秀英，从您的人生经历里，年轻时工作那段日子一定很值得一提。您还记得自己刚参加工作时最难忘的一幕吗？",
+      "interviewee_answer": "说起这个，我就想到抗战时期的躲警报。那会儿我才五六岁，一听到警报响，妈就拉着我们往防空洞跑。有一次跑得急，把鞋都跑掉了一只。防空洞里又黑又潮，大家挤在一起，小孩子吓得直哭。 这事现在想起来，和抗战、童年、恐惧都有关系。",
+      "next_question": "陈阿姨，您刚才提到了抗战时期躲警报的情景，我很好奇，那是在成都的哪个地方发生的呢？",
+      "next_action": "continue",
+      "response_path": {
+        "predicted_route": "graph_update_required",
+        "confidence": 0.8889,
+        "reasons": [
+          "multiple_structural_markers"
+        ],
+        "llm_used": false,
+        "effective_route": "always_sync_extract_merge_project",
+        "observe_only": true
+      },
+      "routing_signals": {
+        "answer_length": 109,
+        "is_short": false,
+        "is_backchannel": false,
+        "pause_or_fatigue": false,
+        "uncertainty": false,
+        "marker_count": 3,
+        "targeted_slot": null,
+        "answered_targeted_slot": false,
+        "recent_low_info_streak": 0,
+        "current_event_completeness": 0.0,
+        "graph_staleness_turns": 0,
+        "overall_coverage": 0.0,
+        "theme_imbalance": 0.0,
+        "has_time_marker": false,
+        "has_location_marker": false,
+        "has_person_marker": true,
+        "has_cause_result_marker": false,
+        "has_feeling_marker": false,
+        "has_reflection_marker": true,
+        "has_event_marker": true
+      },
+      "routing_scores": {
+        "fast_reply_recent_context": 0.0,
+        "graph_guided_planning": 0.0,
+        "graph_update_required": 0.7553,
+        "defer_graph_update": 0.32
+      },
+      "routing_actual": {
+        "actual_update_value": true,
+        "high_value_update": true,
+        "answer_local_high_value_update": true,
+        "answer_local_low_information": false,
+        "context_carryover_merge_possible": false,
+        "low_information_actual": false,
+        "coverage_delta": 0.0362,
+        "extracted_event_count": 1,
+        "touched_event_count": 1,
+        "touched_person_count": 1,
+        "new_event_count": 1,
+        "updated_event_count": 0,
+        "new_person_count": 1,
+        "predicted_skip_sync": false,
+        "skip_would_be_safe": null,
+        "answer_local_skip_would_be_safe": null,
+        "route_match_binary": true,
+        "answer_local_route_match_binary": true
+      },
+      "merge_record": {
+        "decisions": [
+          {
+            "event_id": "evt_new_001",
+            "action": "CREATE_NEW",
+            "confidence": 0.0,
+            "reason": "no_llm_hints",
+            "target_event_id": null,
+            "similarity_hints": [],
+            "final_action": "created_new_legacy"
+          }
+        ],
+        "fallback_reasons": [
+          "no_llm_hints",
+          "legacy_no_match_create_new"
+        ],
+        "new_event_ids": [
+          "evt_new_001"
+        ],
+        "updated_event_ids": []
+      },
+      "profile_update_decision": {
+        "enabled": true,
+        "should_update": true,
+        "reason": "major_event_completed",
+        "turns_since_last_update": 1,
+        "min_turns_between_updates": 3,
+        "max_turns_between_updates": 5
+      },
+      "profile_after_turn": {
+        "update_count": 1,
+        "last_updated_turn_id": "turn_821f697aef",
+        "last_update_reason": "major_event_completed",
+        "planner_guidance": [
+          "Family profile is still thin; when the story naturally allows it, ask about spouse, children, siblings, or grandchildren.",
+          "Adapt question shape to speaking style: moderate detail; one focused follow-up works best."
+        ],
+        "profile_quality": {
+          "core_identity_and_personality": 0.6667,
+          "current_life_status": 0.0,
+          "family_situation": 0.2,
+          "life_views_and_attitudes": 0.3333,
+          "overall": 0.3
+        }
+      },
+      "extracted_events": [
+        {
+          "event_id": "evt_new_001",
+          "extracted_at": "2026-04-16T21:53:28.197126",
+          "slots": {
+            "time": "抗战时期",
+            "people": [
+              "母亲"
+            ],
+            "event": "听到警报响后往防空洞跑，跑掉了一只鞋",
+            "feeling": "恐惧",
+            "cause": "警报响起",
+            "result": "跑掉了一只鞋，大家挤在防空洞里",
+            "reflection": "现在想起来，和抗战、童年、恐惧都有关系"
+          },
+          "confidence": 1.0,
+          "theme_id": "wartime_experience",
+          "source_turns": [
+            "turn_821f697aef"
+          ],
+          "is_update": false,
+          "updated_event_id": null,
+          "similarity_hints": []
+        }
+      ],
+      "graph_changes": {
+        "new_events": 1,
+        "updated_events": 0,
+        "updated_themes": [
+          "THEME_06_CHILDHOOD_NEGATIVE"
+        ],
+        "coverage_change": 0.036231884057971016
+      },
+      "interviewee_memory_calls": [
+        {
+          "tool": "scripted_profile_memory",
+          "args": {
+            "turn_index": 1
+          },
+          "result": {
+            "event_id": "mem_001",
+            "event_name": "抗战时期的躲警报",
+            "description": "记得小时候经常要躲日本飞机的空袭警报",
+            "details": "那会儿我才五六岁，一听到警报响，妈就拉着我们往防空洞跑。有一次跑得急，把鞋都跑掉了一只。防空洞里又黑又潮，大家挤在一起，小孩子吓得直哭。",
+            "typical_dialogue": "“那会儿真是造孽哦，飞机一来就吓得要死，哪像现在这么太平。”",
+            "timestamp_added": "2024-01-10T09:30:00Z",
+            "tags": [
+              "抗战",
+              "童年",
+              "恐惧"
+            ],
+            "linked_memory_ids": [],
+            "emotional_weight": 9
+          }
+        }
+      ]
+    },
+    {
+      "turn_index": 2,
+      "turn_id": "turn_672bbc1ede",
+      "interviewer_question": "陈阿姨，您刚才提到了抗战时期躲警报的情景，我很好奇，那是在成都的哪个地方发生的呢？",
+      "interviewee_answer": "说起这个，我就想到第一次上学。家里穷，本来不打算让我上学。是隔壁王婆婆说女娃儿也要认字，凑了点钱让我去。书包是用旧衣服改的，本子是用废纸订的。老师是个老先生，教我们写'人之初'。 这事现在想起来，和上学、童年、贫困都有关系。",
+      "next_question": "陈阿姨，您刚才提到了第一次上学的情景，我很好奇，那是在您多大的时候发生的呢？当时您心里是怎么想的，对于能够上学，您感到兴奋还是紧张？",
+      "next_action": "continue",
+      "response_path": {
+        "predicted_route": "graph_update_required",
+        "confidence": 1.0,
+        "reasons": [
+          "multiple_structural_markers"
+        ],
+        "llm_used": false,
+        "effective_route": "always_sync_extract_merge_project",
+        "observe_only": true
+      },
+      "routing_signals": {
+        "answer_length": 112,
+        "is_short": false,
+        "is_backchannel": false,
+        "pause_or_fatigue": false,
+        "uncertainty": false,
+        "marker_count": 4,
+        "targeted_slot": "location",
+        "answered_targeted_slot": false,
+        "recent_low_info_streak": 0,
+        "current_event_completeness": 0.875,
+        "graph_staleness_turns": 1,
+        "overall_coverage": 0.0362,
+        "theme_imbalance": 0.8333,
+        "has_time_marker": true,
+        "has_location_marker": false,
+        "has_person_marker": true,
+        "has_cause_result_marker": false,
+        "has_feeling_marker": false,
+        "has_reflection_marker": true,
+        "has_event_marker": true
+      },
+      "routing_scores": {
+        "fast_reply_recent_context": 0.0,
+        "graph_guided_planning": 0.14,
+        "graph_update_required": 0.9393,
+        "defer_graph_update": 0.24
+      },
+      "routing_actual": {
+        "actual_update_value": true,
+        "high_value_update": true,
+        "answer_local_high_value_update": true,
+        "answer_local_low_information": false,
+        "context_carryover_merge_possible": false,
+        "low_information_actual": false,
+        "coverage_delta": 0.029,
+        "extracted_event_count": 1,
+        "touched_event_count": 1,
+        "touched_person_count": 2,
+        "new_event_count": 1,
+        "updated_event_count": 0,
+        "new_person_count": 2,
+        "predicted_skip_sync": false,
+        "skip_would_be_safe": null,
+        "answer_local_skip_would_be_safe": null,
+        "route_match_binary": true,
+        "answer_local_route_match_binary": true
+      },
+      "merge_record": {
+        "decisions": [
+          {
+            "event_id": "evt_new_001",
+            "action": "CREATE_NEW",
+            "confidence": 0.0,
+            "reason": "no_llm_hints",
+            "target_event_id": null,
+            "similarity_hints": [],
+            "final_action": "created_new_legacy"
+          }
+        ],
+        "fallback_reasons": [
+          "no_llm_hints",
+          "legacy_no_match_create_new"
+        ],
+        "new_event_ids": [
+          "evt_new_001_153eb1f6"
+        ],
+        "updated_event_ids": []
+      },
+      "profile_update_decision": {
+        "enabled": true,
+        "should_update": true,
+        "reason": "multiple_new_people",
+        "turns_since_last_update": 1,
+        "min_turns_between_updates": 3,
+        "max_turns_between_updates": 5
+      },
+      "profile_after_turn": {
+        "update_count": 2,
+        "last_updated_turn_id": "turn_672bbc1ede",
+        "last_update_reason": "multiple_new_people",
+        "planner_guidance": [
+          "Adapt question shape to speaking style: moderate detail; one focused follow-up works best."
+        ],
+        "profile_quality": {
+          "core_identity_and_personality": 0.6667,
+          "current_life_status": 0.0,
+          "family_situation": 0.4,
+          "life_views_and_attitudes": 0.6667,
+          "overall": 0.4333
+        }
+      },
+      "extracted_events": [
+        {
+          "event_id": "evt_new_001",
+          "extracted_at": "2026-04-16T21:53:36.217049",
+          "slots": {
+            "location": "成都",
+            "people": [
+              "王婆婆",
+              "老师"
+            ],
+            "event": "陈阿姨第一次上学，用旧衣服改的书包和废纸订的本子",
+            "unexpanded_clues": "老师是个老先生；教我们写'人之初'",
+            "cause": "家里穷，不打算让陈阿姨上学",
+            "result": "王婆婆凑钱让陈阿姨去上学",
+            "reflection": "现在想起来，和上学、童年、贫困都有关系"
+          },
+          "confidence": 1.0,
+          "theme_id": "education",
+          "source_turns": [
+            "turn_672bbc1ede"
+          ],
+          "is_update": false,
+          "updated_event_id": null,
+          "similarity_hints": []
+        }
+      ],
+      "graph_changes": {
+        "new_events": 1,
+        "updated_events": 0,
+        "updated_themes": [
+          "THEME_05_CHILDHOOD_POSITIVE"
+        ],
+        "coverage_change": 0.02898550724637681
+      },
+      "interviewee_memory_calls": [
+        {
+          "tool": "scripted_profile_memory",
+          "args": {
+            "turn_index": 2
+          },
+          "result": {
+            "event_id": "mem_002",
+            "event_name": "第一次上学",
+            "description": "8岁才第一次进学堂，还是邻居帮忙凑的学费",
+            "details": "家里穷，本来不打算让我上学。是隔壁王婆婆说女娃儿也要认字，凑了点钱让我去。书包是用旧衣服改的，本子是用废纸订的。老师是个老先生，教我们写'人之初'。",
+            "typical_dialogue": "“我八岁才第一次摸到书本，那会儿觉得学堂好大哦。”",
+            "timestamp_added": "2024-01-10T10:15:00Z",
+            "tags": [
+              "上学",
+              "童年",
+              "贫困"
+            ],
+            "linked_memory_ids": [],
+            "emotional_weight": 7
+          }
+        }
+      ]
+    },
+    {
+      "turn_index": 3,
+      "turn_id": "turn_a3f6e6aeca",
+      "interviewer_question": "陈阿姨，您刚才提到了第一次上学的情景，我很好奇，那是在您多大的时候发生的呢？当时您心里是怎么想的，对于能够上学，您感到兴奋还是紧张？",
+      "interviewee_answer": "说起这个，我就想到大跃进时期的公社食堂。那会儿说'吃饭不要钱'，大家都去公社食堂吃。开始还好，后来越吃越差，稀饭清得能照人。我那时候正长身体，总是吃不饱，放学就去挖野菜。 这事现在想起来，和大跃进、饥饿、集体都有关系。",
+      "next_question": "陈阿姨，您提到了大跃进时期公社食堂的变化，能告诉我那个食堂是在成都的哪个地方吗？还有，您当时对食物质量下降有什么感受？",
+      "next_action": "continue",
+      "response_path": {
+        "predicted_route": "graph_update_required",
+        "confidence": 1.0,
+        "reasons": [
+          "targeted_slot_answer"
+        ],
+        "llm_used": false,
+        "effective_route": "always_sync_extract_merge_project",
+        "observe_only": true
+      },
+      "routing_signals": {
+        "answer_length": 109,
+        "is_short": false,
+        "is_backchannel": false,
+        "pause_or_fatigue": false,
+        "uncertainty": false,
+        "marker_count": 5,
+        "targeted_slot": "time",
+        "answered_targeted_slot": true,
+        "recent_low_info_streak": 0,
+        "current_event_completeness": 0.75,
+        "graph_staleness_turns": 1,
+        "overall_coverage": 0.0652,
+        "theme_imbalance": 0.8333,
+        "has_time_marker": true,
+        "has_location_marker": true,
+        "has_person_marker": false,
+        "has_cause_result_marker": true,
+        "has_feeling_marker": false,
+        "has_reflection_marker": true,
+        "has_event_marker": true
+      },
+      "routing_scores": {
+        "fast_reply_recent_context": 0.0,
+        "graph_guided_planning": 0.14,
+        "graph_update_required": 1.0,
+        "defer_graph_update": 0.12
+      },
+      "routing_actual": {
+        "actual_update_value": true,
+        "high_value_update": true,
+        "answer_local_high_value_update": true,
+        "answer_local_low_information": false,
+        "context_carryover_merge_possible": false,
+        "low_information_actual": false,
+        "coverage_delta": 0.0,
+        "extracted_event_count": 1,
+        "touched_event_count": 1,
+        "touched_person_count": 1,
+        "new_event_count": 1,
+        "updated_event_count": 0,
+        "new_person_count": 1,
+        "predicted_skip_sync": false,
+        "skip_would_be_safe": null,
+        "answer_local_skip_would_be_safe": null,
+        "route_match_binary": true,
+        "answer_local_route_match_binary": true
+      },
+      "merge_record": {
+        "decisions": [
+          {
+            "event_id": "evt_new_001",
+            "action": "CREATE_NEW",
+            "confidence": 0.0,
+            "reason": "no_llm_hints",
+            "target_event_id": null,
+            "similarity_hints": [],
+            "final_action": "created_new_legacy"
+          }
+        ],
+        "fallback_reasons": [
+          "no_llm_hints",
+          "legacy_no_match_create_new"
+        ],
+        "new_event_ids": [
+          "evt_new_001_d4292cd1"
+        ],
+        "updated_event_ids": []
+      },
+      "profile_update_decision": {
+        "enabled": true,
+        "should_update": true,
+        "reason": "major_event_completed",
+        "turns_since_last_update": 1,
+        "min_turns_between_updates": 3,
+        "max_turns_between_updates": 5
+      },
+      "profile_after_turn": {
+        "update_count": 3,
+        "last_updated_turn_id": "turn_a3f6e6aeca",
+        "last_update_reason": "major_event_completed",
+        "planner_guidance": [
+          "Current-life profile is undercovered; consider a gentle bridge to daily routines, hobbies, social activity, or health concerns.",
+          "Adapt question shape to speaking style: moderate detail; one focused follow-up works best."
+        ],
+        "profile_quality": {
+          "core_identity_and_personality": 0.6667,
+          "current_life_status": 0.0,
+          "family_situation": 0.4,
+          "life_views_and_attitudes": 0.6667,
+          "overall": 0.4333
+        }
+      },
+      "extracted_events": [
+        {
+          "event_id": "evt_new_001",
+          "extracted_at": "2026-04-16T21:53:47.868558",
+          "slots": {
+            "time": "大跃进时期",
+            "people": [
+              "大家"
+            ],
+            "event": "在公社食堂吃饭，后来食物质量下降，导致吃不饱",
+            "unexpanded_clues": "公社食堂开始时食物还好；后来食物质量下降",
+            "cause": "大跃进时期的政策导致食物供应不足",
+            "result": "放学后去挖野菜以补充食物",
+            "reflection": "和大跃进、饥饿、集体都有关系"
+          },
+          "confidence": 0.85,
+          "theme_id": "survival",
+          "source_turns": [
+            "turn_a3f6e6aeca"
+          ],
+          "is_update": false,
+          "updated_event_id": null,
+          "similarity_hints": []
+        }
+      ],
+      "graph_changes": {
+        "new_events": 0,
+        "updated_events": 0,
+        "updated_themes": [],
+        "coverage_change": 0.0
+      },
+      "interviewee_memory_calls": [
+        {
+          "tool": "scripted_profile_memory",
+          "args": {
+            "turn_index": 3
+          },
+          "result": {
+            "event_id": "mem_003",
+            "event_name": "大跃进时期的公社食堂",
+            "description": "1958年吃公社食堂的经历",
+            "details": "那会儿说'吃饭不要钱'，大家都去公社食堂吃。开始还好，后来越吃越差，稀饭清得能照人。我那时候正长身体，总是吃不饱，放学就去挖野菜。",
+            "typical_dialogue": "“公社食堂开始还热闹，后来就不行了，还是各人家里做实在。”",
+            "timestamp_added": "2024-01-11T14:20:00Z",
+            "tags": [
+              "大跃进",
+              "饥饿",
+              "集体"
+            ],
+            "linked_memory_ids": [
+              "mem_001"
+            ],
+            "emotional_weight": 8
+          }
+        }
+      ]
+    },
+    {
+      "turn_index": 4,
+      "turn_id": "turn_f6856802b3",
+      "interviewer_question": "陈阿姨，您提到了大跃进时期公社食堂的变化，能告诉我那个食堂是在成都的哪个地方吗？还有，您当时对食物质量下降有什么感受？",
+      "interviewee_answer": "说起这个，我就想到进纺织厂当学徒。我妈身体不好退下来，我就顶了她的名额。开始是学徒，一个月18块钱。车间里吵得很，说话要靠喊。师傅是个东北人，凶得很，但手艺好。 这事现在想起来，和工作、纺织厂、学徒都有关系。",
+      "next_question": "陈阿姨，您刚才提到了顶替母亲名额进纺织厂当学徒的经历，我很好奇那是哪一年的事情？",
+      "next_action": "continue",
+      "response_path": {
+        "predicted_route": "graph_update_required",
+        "confidence": 1.0,
+        "reasons": [
+          "targeted_slot_answer"
+        ],
+        "llm_used": false,
+        "effective_route": "always_sync_extract_merge_project",
+        "observe_only": true
+      },
+      "routing_signals": {
+        "answer_length": 104,
+        "is_short": false,
+        "is_backchannel": false,
+        "pause_or_fatigue": false,
+        "uncertainty": false,
+        "marker_count": 4,
+        "targeted_slot": "location",
+        "answered_targeted_slot": true,
+        "recent_low_info_streak": 0,
+        "current_event_completeness": 0.75,
+        "graph_staleness_turns": 1,
+        "overall_coverage": 0.0652,
+        "theme_imbalance": 0.8333,
+        "has_time_marker": false,
+        "has_location_marker": true,
+        "has_person_marker": true,
+        "has_cause_result_marker": false,
+        "has_feeling_marker": false,
+        "has_reflection_marker": true,
+        "has_event_marker": true
+      },
+      "routing_scores": {
+        "fast_reply_recent_context": 0.0,
+        "graph_guided_planning": 0.14,
+        "graph_update_required": 1.0,
+        "defer_graph_update": 0.12
+      },
+      "routing_actual": {
+        "actual_update_value": true,
+        "high_value_update": true,
+        "answer_local_high_value_update": true,
+        "answer_local_low_information": false,
+        "context_carryover_merge_possible": false,
+        "low_information_actual": false,
+        "coverage_delta": 0.0261,
+        "extracted_event_count": 1,
+        "touched_event_count": 1,
+        "touched_person_count": 2,
+        "new_event_count": 1,
+        "updated_event_count": 0,
+        "new_person_count": 1,
+        "predicted_skip_sync": false,
+        "skip_would_be_safe": null,
+        "answer_local_skip_would_be_safe": null,
+        "route_match_binary": true,
+        "answer_local_route_match_binary": true
+      },
+      "merge_record": {
+        "decisions": [
+          {
+            "event_id": "evt_new_001",
+            "action": "CREATE_NEW",
+            "confidence": 0.0,
+            "reason": "no_llm_hints",
+            "target_event_id": null,
+            "similarity_hints": [],
+            "final_action": "created_new_legacy"
+          }
+        ],
+        "fallback_reasons": [
+          "no_llm_hints",
+          "legacy_no_match_create_new"
+        ],
+        "new_event_ids": [
+          "evt_new_001_c9165d81"
+        ],
+        "updated_event_ids": []
+      },
+      "profile_update_decision": {
+        "enabled": true,
+        "should_update": true,
+        "reason": "major_event_completed",
+        "turns_since_last_update": 1,
+        "min_turns_between_updates": 3,
+        "max_turns_between_updates": 5
+      },
+      "profile_after_turn": {
+        "update_count": 4,
+        "last_updated_turn_id": "turn_f6856802b3",
+        "last_update_reason": "major_event_completed",
+        "planner_guidance": [
+          "Current-life profile is undercovered; consider a gentle bridge to daily routines, hobbies, social activity, or health concerns.",
+          "Adapt question shape to speaking style: moderate detail; one focused follow-up works best."
+        ],
+        "profile_quality": {
+          "core_identity_and_personality": 0.6667,
+          "current_life_status": 0.0,
+          "family_situation": 0.4,
+          "life_views_and_attitudes": 0.6667,
+          "overall": 0.4333
+        }
+      },
+      "extracted_events": [
+        {
+          "event_id": "evt_new_001",
+          "extracted_at": "2026-04-16T21:53:55.301945",
+          "slots": {
+            "location": "成都纺织厂",
+            "people": [
+              "母亲",
+              "师傅"
+            ],
+            "event": "陈阿姨顶替母亲名额进纺织厂当学徒",
+            "feeling": "未提及",
+            "cause": "母亲身体不好退下来",
+            "result": "成为学徒，一个月18块钱",
+            "reflection": "和工作、纺织厂、学徒都有关系"
+          },
+          "confidence": 0.85,
+          "theme_id": "career",
+          "source_turns": [
+            "turn_f6856802b3"
+          ],
+          "is_update": false,
+          "updated_event_id": null,
+          "similarity_hints": []
+        }
+      ],
+      "graph_changes": {
+        "new_events": 1,
+        "updated_events": 0,
+        "updated_themes": [
+          "THEME_07_ADULT_MEMORY"
+        ],
+        "coverage_change": 0.026086956521739132
+      },
+      "interviewee_memory_calls": [
+        {
+          "tool": "scripted_profile_memory",
+          "args": {
+            "turn_index": 4
+          },
+          "result": {
+            "event_id": "mem_004",
+            "event_name": "进纺织厂当学徒",
+            "description": "1961年顶替母亲的名额进纺织厂",
+            "details": "我妈身体不好退下来，我就顶了她的名额。开始是学徒，一个月18块钱。车间里吵得很，说话要靠喊。师傅是个东北人，凶得很，但手艺好。",
+            "typical_dialogue": "“第一天进车间，耳朵都要震聋了，后来才慢慢习惯。”",
+            "timestamp_added": "2024-01-12T11:45:00Z",
+            "tags": [
+              "工作",
+              "纺织厂",
+              "学徒"
+            ],
+            "linked_memory_ids": [],
+            "emotional_weight": 6
+          }
+        }
+      ]
+    },
+    {
+      "turn_index": 5,
+      "turn_id": "turn_e855bbc5ae",
+      "interviewer_question": "陈阿姨，您刚才提到了顶替母亲名额进纺织厂当学徒的经历，我很好奇那是哪一年的事情？",
+      "interviewee_answer": "说起这个，我就想到文化大革命期间被贴大字报。那时候乱得很。我说了句'厂里生产不能停'，就被说成是'唯生产力论'，大字报贴了一墙。好在车间主任保我，说我是苦出身，才没被批斗。 这事现在想起来，和文革、政治、恐惧都有关系。 回头看，那段经历让我明白做人要踏实，也要顾着家里人。",
+      "next_question": "陈阿姨，您刚才提到了文化大革命期间被贴大字报的事情，能告诉我具体是在纺织厂的哪个地方发生的吗？当时您看到大字报贴满墙时，心里是怎么想的？",
+      "next_action": "continue",
+      "response_path": {
+        "predicted_route": "graph_update_required",
+        "confidence": 1.0,
+        "reasons": [
+          "multiple_structural_markers"
+        ],
+        "llm_used": false,
+        "effective_route": "always_sync_extract_merge_project",
+        "observe_only": true
+      },
+      "routing_signals": {
+        "answer_length": 136,
+        "is_short": false,
+        "is_backchannel": false,
+        "pause_or_fatigue": false,
+        "uncertainty": false,
+        "marker_count": 4,
+        "targeted_slot": null,
+        "answered_targeted_slot": false,
+        "recent_low_info_streak": 0,
+        "current_event_completeness": 0.875,
+        "graph_staleness_turns": 1,
+        "overall_coverage": 0.0913,
+        "theme_imbalance": 0.8333,
+        "has_time_marker": true,
+        "has_location_marker": false,
+        "has_person_marker": false,
+        "has_cause_result_marker": false,
+        "has_feeling_marker": true,
+        "has_reflection_marker": true,
+        "has_event_marker": true
+      },
+      "routing_scores": {
+        "fast_reply_recent_context": 0.0,
+        "graph_guided_planning": 0.22,
+        "graph_update_required": 0.9113,
+        "defer_graph_update": 0.24
+      },
+      "routing_actual": {
+        "actual_update_value": true,
+        "high_value_update": true,
+        "answer_local_high_value_update": true,
+        "answer_local_low_information": false,
+        "context_carryover_merge_possible": false,
+        "low_information_actual": false,
+        "coverage_delta": 0.0,
+        "extracted_event_count": 1,
+        "touched_event_count": 1,
+        "touched_person_count": 1,
+        "new_event_count": 1,
+        "updated_event_count": 0,
+        "new_person_count": 1,
+        "predicted_skip_sync": false,
+        "skip_would_be_safe": null,
+        "answer_local_skip_would_be_safe": null,
+        "route_match_binary": true,
+        "answer_local_route_match_binary": true
+      },
+      "merge_record": {
+        "decisions": [
+          {
+            "event_id": "evt_new_001",
+            "action": "CREATE_NEW",
+            "confidence": 0.0,
+            "reason": "no_llm_hints",
+            "target_event_id": null,
+            "similarity_hints": [],
+            "final_action": "created_new_legacy"
+          }
+        ],
+        "fallback_reasons": [
+          "no_llm_hints",
+          "legacy_no_match_create_new"
+        ],
+        "new_event_ids": [
+          "evt_new_001_c0a68e36"
+        ],
+        "updated_event_ids": []
+      },
+      "profile_update_decision": {
+        "enabled": true,
+        "should_update": true,
+        "reason": "major_event_completed",
+        "turns_since_last_update": 1,
+        "min_turns_between_updates": 3,
+        "max_turns_between_updates": 5
+      },
+      "profile_after_turn": {
+        "update_count": 5,
+        "last_updated_turn_id": "turn_e855bbc5ae",
+        "last_update_reason": "major_event_completed",
+        "planner_guidance": [
+          "Current-life profile is undercovered; consider a gentle bridge to daily routines, hobbies, social activity, or health concerns.",
+          "Known values to connect with: family.",
+          "Adapt question shape to speaking style: moderate detail; one focused follow-up works best."
+        ],
+        "profile_quality": {
+          "core_identity_and_personality": 0.6667,
+          "current_life_status": 0.0,
+          "family_situation": 0.4,
+          "life_views_and_attitudes": 1.0,
+          "overall": 0.5167
+        }
+      },
+      "extracted_events": [
+        {
+          "event_id": "evt_new_001",
+          "extracted_at": "2026-04-16T21:54:03.536454",
+          "slots": {
+            "time": "文化大革命期间",
+            "people": [
+              "车间主任"
+            ],
+            "event": "因说'厂里生产不能停'被贴大字报",
+            "unexpanded_clues": "被贴大字报的具体地点未提及；车间主任保护的具体细节未提及",
+            "cause": "说了句'厂里生产不能停'",
+            "result": "被说成'唯生产力论'，大字报贴了一墙，但未被批斗",
+            "reflection": "那段经历让我明白做人要踏实，也要顾着家里人"
+          },
+          "confidence": 0.85,
+          "theme_id": "political_struggle",
+          "source_turns": [
+            "turn_e855bbc5ae"
+          ],
+          "is_update": false,
+          "updated_event_id": null,
+          "similarity_hints": []
+        }
+      ],
+      "graph_changes": {
+        "new_events": 0,
+        "updated_events": 0,
+        "updated_themes": [],
+        "coverage_change": 0.0
+      },
+      "interviewee_memory_calls": [
+        {
+          "tool": "scripted_profile_memory",
+          "args": {
+            "turn_index": 5
+          },
+          "result": {
+            "event_id": "mem_005",
+            "event_name": "文化大革命期间被贴大字报",
+            "description": "因为说错一句话被贴了大字报",
+            "details": "那时候乱得很。我说了句'厂里生产不能停'，就被说成是'唯生产力论'，大字报贴了一墙。好在车间主任保我，说我是苦出身，才没被批斗。",
+            "typical_dialogue": "“那会儿说话要小心，一句话不对就要遭。”",
+            "timestamp_added": "2024-01-13T16:30:00Z",
+            "tags": [
+              "文革",
+              "政治",
+              "恐惧"
+            ],
+            "linked_memory_ids": [],
+            "emotional_weight": 9
+          }
+        }
+      ]
+    },
+    {
+      "turn_index": 6,
+      "turn_id": "turn_0afe6b3143",
+      "interviewer_question": "陈阿姨，您刚才提到了文化大革命期间被贴大字报的事情，能告诉我具体是在纺织厂的哪个地方发生的吗？当时您看到大字报贴满墙时，心里是怎么想的？",
+      "interviewee_answer": "说起这个，我就想到结婚时的'三转一响'。他是我师傅介绍的，也是厂里的。结婚时买了缝纫机，是我自己攒的钱。自行车是凤凰牌的，手表是上海牌，收音机是红灯牌。缝纫机现在还在用。 这事现在想起来，和结婚、嫁妆、幸福都有关系。",
+      "next_question": "陈阿姨，您提到结婚时买了'三转一响'，这在当时可是很时髦的嫁妆呢。能告诉我那是哪一年的事情吗？",
+      "next_action": "continue",
+      "response_path": {
+        "predicted_route": "graph_update_required",
+        "confidence": 1.0,
+        "reasons": [
+          "multiple_structural_markers"
+        ],
+        "llm_used": false,
+        "effective_route": "always_sync_extract_merge_project",
+        "observe_only": true
+      },
+      "routing_signals": {
+        "answer_length": 108,
+        "is_short": false,
+        "is_backchannel": false,
+        "pause_or_fatigue": false,
+        "uncertainty": false,
+        "marker_count": 4,
+        "targeted_slot": "location",
+        "answered_targeted_slot": false,
+        "recent_low_info_streak": 0,
+        "current_event_completeness": 0.75,
+        "graph_staleness_turns": 1,
+        "overall_coverage": 0.0913,
+        "theme_imbalance": 0.8333,
+        "has_time_marker": true,
+        "has_location_marker": false,
+        "has_person_marker": true,
+        "has_cause_result_marker": false,
+        "has_feeling_marker": false,
+        "has_reflection_marker": true,
+        "has_event_marker": true
+      },
+      "routing_scores": {
+        "fast_reply_recent_context": 0.0,
+        "graph_guided_planning": 0.22,
+        "graph_update_required": 0.934,
+        "defer_graph_update": 0.24
+      },
+      "routing_actual": {
+        "actual_update_value": true,
+        "high_value_update": true,
+        "answer_local_high_value_update": true,
+        "answer_local_low_information": false,
+        "context_carryover_merge_possible": false,
+        "low_information_actual": false,
+        "coverage_delta": 0.0,
+        "extracted_event_count": 1,
+        "touched_event_count": 1,
+        "touched_person_count": 1,
+        "new_event_count": 1,
+        "updated_event_count": 0,
+        "new_person_count": 0,
+        "predicted_skip_sync": false,
+        "skip_would_be_safe": null,
+        "answer_local_skip_would_be_safe": null,
+        "route_match_binary": true,
+        "answer_local_route_match_binary": true
+      },
+      "merge_record": {
+        "decisions": [
+          {
+            "event_id": "evt_new_001",
+            "action": "CREATE_NEW",
+            "confidence": 0.0,
+            "reason": "no_llm_hints",
+            "target_event_id": null,
+            "similarity_hints": [],
+            "final_action": "created_new_legacy"
+          }
+        ],
+        "fallback_reasons": [
+          "no_llm_hints",
+          "legacy_no_match_create_new"
+        ],
+        "new_event_ids": [
+          "evt_new_001_dffa0fdc"
+        ],
+        "updated_event_ids": []
+      },
+      "profile_update_decision": {
+        "enabled": true,
+        "should_update": true,
+        "reason": "major_event_completed",
+        "turns_since_last_update": 1,
+        "min_turns_between_updates": 3,
+        "max_turns_between_updates": 5
+      },
+      "profile_after_turn": {
+        "update_count": 6,
+        "last_updated_turn_id": "turn_0afe6b3143",
+        "last_update_reason": "major_event_completed",
+        "planner_guidance": [
+          "Current-life profile is undercovered; consider a gentle bridge to daily routines, hobbies, social activity, or health concerns.",
+          "Known values to connect with: family.",
+          "Adapt question shape to speaking style: moderate detail; one focused follow-up works best."
+        ],
+        "profile_quality": {
+          "core_identity_and_personality": 0.6667,
+          "current_life_status": 0.0,
+          "family_situation": 0.4,
+          "life_views_and_attitudes": 1.0,
+          "overall": 0.5167
+        }
+      },
+      "extracted_events": [
+        {
+          "event_id": "evt_new_001",
+          "extracted_at": "2026-04-16T21:54:10.264702",
+          "slots": {
+            "location": "纺织厂",
+            "people": [
+              "师傅"
+            ],
+            "event": "结婚时购买了'三转一响'",
+            "feeling": "幸福",
+            "cause": "结婚",
+            "result": "缝纫机现在还在用",
+            "reflection": "和结婚、嫁妆、幸福都有关系"
+          },
+          "confidence": 0.85,
+          "theme_id": "personal_life",
+          "source_turns": [
+            "turn_0afe6b3143"
+          ],
+          "is_update": false,
+          "updated_event_id": null,
+          "similarity_hints": []
+        }
+      ],
+      "graph_changes": {
+        "new_events": 1,
+        "updated_events": 0,
+        "updated_themes": [
+          "THEME_07_ADULT_MEMORY"
+        ],
+        "coverage_change": 0.0
+      },
+      "interviewee_memory_calls": [
+        {
+          "tool": "scripted_profile_memory",
+          "args": {
+            "turn_index": 6
+          },
+          "result": {
+            "event_id": "mem_006",
+            "event_name": "结婚时的'三转一响'",
+            "description": "1970年结婚，嫁妆是缝纫机、自行车、手表和收音机",
+            "details": "他是我师傅介绍的，也是厂里的。结婚时买了缝纫机，是我自己攒的钱。自行车是凤凰牌的，手表是上海牌，收音机是红灯牌。缝纫机现在还在用。",
+            "typical_dialogue": "“那会儿结婚，有'三转一响'就不得了了，现在年轻人要房要车。”",
+            "timestamp_added": "2024-01-14T09:10:00Z",
+            "tags": [
+              "结婚",
+              "嫁妆",
+              "幸福"
+            ],
+            "linked_memory_ids": [],
+            "emotional_weight": 8
+          }
+        }
+      ]
+    },
+    {
+      "turn_index": 7,
+      "turn_id": "turn_7f861102e4",
+      "interviewer_question": "陈阿姨，您提到结婚时买了'三转一响'，这在当时可是很时髦的嫁妆呢。能告诉我那是哪一年的事情吗？",
+      "interviewee_answer": "说起这个，我就想到生大儿子难产。生老大时折腾了两天一夜，那时候医疗条件差，就在厂卫生所生的。大出血，差点没救过来。后来他爸说再也不生了，结果后来又生了两个。 这事现在想起来，和生育、危险、母亲都有关系。",
+      "next_question": "陈阿姨，听您说起生大儿子时的艰难，我能感受到那是多么不容易。您能告诉我那是哪一年的事情吗？当时医疗条件那么差，您是怎么熬过来的？",
+      "next_action": "continue",
+      "response_path": {
+        "predicted_route": "graph_update_required",
+        "confidence": 1.0,
+        "reasons": [
+          "multiple_structural_markers"
+        ],
+        "llm_used": false,
+        "effective_route": "always_sync_extract_merge_project",
+        "observe_only": true
+      },
+      "routing_signals": {
+        "answer_length": 101,
+        "is_short": false,
+        "is_backchannel": false,
+        "pause_or_fatigue": false,
+        "uncertainty": false,
+        "marker_count": 5,
+        "targeted_slot": null,
+        "answered_targeted_slot": false,
+        "recent_low_info_streak": 0,
+        "current_event_completeness": 0.875,
+        "graph_staleness_turns": 1,
+        "overall_coverage": 0.0913,
+        "theme_imbalance": 0.8333,
+        "has_time_marker": true,
+        "has_location_marker": false,
+        "has_person_marker": true,
+        "has_cause_result_marker": true,
+        "has_feeling_marker": false,
+        "has_reflection_marker": true,
+        "has_event_marker": true
+      },
+      "routing_scores": {
+        "fast_reply_recent_context": 0.0,
+        "graph_guided_planning": 0.22,
+        "graph_update_required": 1.0,
+        "defer_graph_update": 0.24
+      },
+      "routing_actual": {
+        "actual_update_value": true,
+        "high_value_update": true,
+        "answer_local_high_value_update": true,
+        "answer_local_low_information": false,
+        "context_carryover_merge_possible": false,
+        "low_information_actual": false,
+        "coverage_delta": 0.0,
+        "extracted_event_count": 1,
+        "touched_event_count": 1,
+        "touched_person_count": 2,
+        "new_event_count": 1,
+        "updated_event_count": 0,
+        "new_person_count": 2,
+        "predicted_skip_sync": false,
+        "skip_would_be_safe": null,
+        "answer_local_skip_would_be_safe": null,
+        "route_match_binary": true,
+        "answer_local_route_match_binary": true
+      },
+      "merge_record": {
+        "decisions": [
+          {
+            "event_id": "evt_new_001",
+            "action": "CREATE_NEW",
+            "confidence": 0.0,
+            "reason": "no_llm_hints",
+            "target_event_id": null,
+            "similarity_hints": [],
+            "final_action": "created_new_legacy"
+          }
+        ],
+        "fallback_reasons": [
+          "no_llm_hints",
+          "legacy_no_match_create_new"
+        ],
+        "new_event_ids": [
+          "evt_new_001_3bd39a9c"
+        ],
+        "updated_event_ids": []
+      },
+      "profile_update_decision": {
+        "enabled": true,
+        "should_update": true,
+        "reason": "multiple_new_people",
+        "turns_since_last_update": 1,
+        "min_turns_between_updates": 3,
+        "max_turns_between_updates": 5
+      },
+      "profile_after_turn": {
+        "update_count": 7,
+        "last_updated_turn_id": "turn_7f861102e4",
+        "last_update_reason": "multiple_new_people",
+        "planner_guidance": [
+          "Current-life profile is undercovered; consider a gentle bridge to daily routines, hobbies, social activity, or health concerns.",
+          "Known values to connect with: family.",
+          "Adapt question shape to speaking style: moderate detail; one focused follow-up works best."
+        ],
+        "profile_quality": {
+          "core_identity_and_personality": 0.6667,
+          "current_life_status": 0.0,
+          "family_situation": 0.4,
+          "life_views_and_attitudes": 1.0,
+          "overall": 0.5167
+        }
+      },
+      "extracted_events": [
+        {
+          "event_id": "evt_new_001",
+          "extracted_at": "2026-04-16T21:54:21.086807",
+          "slots": {
+            "location": "厂卫生所",
+            "people": [
+              "大儿子",
+              "他爸"
+            ],
+            "event": "生大儿子难产",
+            "feeling": "危险",
+            "unexpanded_clues": "医疗条件差",
+            "result": "大出血，差点没救过来；后来决定不再生育，但后来又生了两个",
+            "reflection": "现在想起来，和生育、危险、母亲都有关系"
+          },
+          "confidence": 0.95,
+          "theme_id": "family",
+          "source_turns": [
+            "turn_7f861102e4"
+          ],
+          "is_update": false,
+          "updated_event_id": null,
+          "similarity_hints": []
+        }
+      ],
+      "graph_changes": {
+        "new_events": 0,
+        "updated_events": 0,
+        "updated_themes": [],
+        "coverage_change": 0.0
+      },
+      "interviewee_memory_calls": [
+        {
+          "tool": "scripted_profile_memory",
+          "args": {
+            "turn_index": 7
+          },
+          "result": {
+            "event_id": "mem_007",
+            "event_name": "生大儿子难产",
+            "description": "1972年生大儿子时难产，差点没命",
+            "details": "生老大时折腾了两天一夜，那时候医疗条件差，就在厂卫生所生的。大出血，差点没救过来。后来他爸说再也不生了，结果后来又生了两个。",
+            "typical_dialogue": "“生老大的时候，我以为我活不成了，现在想想都后怕。”",
+            "timestamp_added": "2024-01-15T13:25:00Z",
+            "tags": [
+              "生育",
+              "危险",
+              "母亲"
+            ],
+            "linked_memory_ids": [],
+            "emotional_weight": 9
+          }
+        }
+      ]
+    },
+    {
+      "turn_index": 8,
+      "turn_id": "turn_6e803a4f78",
+      "interviewer_question": "陈阿姨，听您说起生大儿子时的艰难，我能感受到那是多么不容易。您能告诉我那是哪一年的事情吗？当时医疗条件那么差，您是怎么熬过来的？",
+      "interviewee_answer": "说起这个，我就想到第一次涨工资。从每月42块涨到68块，涨了26块！那天高兴得买了两斤肉回家包饺子。孩子们吃得满嘴流油，说妈今天过年啦？ 这事现在想起来，和改革开放、涨工资、喜悦都有关系。",
+      "next_question": "陈阿姨，您提到涨工资那天高兴得买了两斤肉回家包饺子，那是一个怎样的场景呢？能描述一下当时家里的气氛吗？",
+      "next_action": "continue",
+      "response_path": {
+        "predicted_route": "graph_update_required",
+        "confidence": 1.0,
+        "reasons": [
+          "targeted_slot_answer"
+        ],
+        "llm_used": false,
+        "effective_route": "always_sync_extract_merge_project",
+        "observe_only": true
+      },
+      "routing_signals": {
+        "answer_length": 94,
+        "is_short": false,
+        "is_backchannel": false,
+        "pause_or_fatigue": false,
+        "uncertainty": false,
+        "marker_count": 4,
+        "targeted_slot": "feeling",
+        "answered_targeted_slot": true,
+        "recent_low_info_streak": 0,
+        "current_event_completeness": 0.75,
+        "graph_staleness_turns": 1,
+        "overall_coverage": 0.0913,
+        "theme_imbalance": 0.8333,
+        "has_time_marker": false,
+        "has_location_marker": false,
+        "has_person_marker": true,
+        "has_cause_result_marker": false,
+        "has_feeling_marker": true,
+        "has_reflection_marker": true,
+        "has_event_marker": true
+      },
+      "routing_scores": {
+        "fast_reply_recent_context": 0.0,
+        "graph_guided_planning": 0.22,
+        "graph_update_required": 1.0,
+        "defer_graph_update": 0.12
+      },
+      "routing_actual": {
+        "actual_update_value": true,
+        "high_value_update": true,
+        "answer_local_high_value_update": true,
+        "answer_local_low_information": false,
+        "context_carryover_merge_possible": false,
+        "low_information_actual": false,
+        "coverage_delta": 0.0348,
+        "extracted_event_count": 1,
+        "touched_event_count": 1,
+        "touched_person_count": 1,
+        "new_event_count": 1,
+        "updated_event_count": 0,
+        "new_person_count": 1,
+        "predicted_skip_sync": false,
+        "skip_would_be_safe": null,
+        "answer_local_skip_would_be_safe": null,
+        "route_match_binary": true,
+        "answer_local_route_match_binary": true
+      },
+      "merge_record": {
+        "decisions": [
+          {
+            "event_id": "evt_new_001",
+            "action": "CREATE_NEW",
+            "confidence": 0.0,
+            "reason": "no_llm_hints",
+            "target_event_id": null,
+            "similarity_hints": [],
+            "final_action": "created_new_legacy"
+          }
+        ],
+        "fallback_reasons": [
+          "no_llm_hints",
+          "legacy_no_match_create_new"
+        ],
+        "new_event_ids": [
+          "evt_new_001_fc3fd84a"
+        ],
+        "updated_event_ids": []
+      },
+      "profile_update_decision": {
+        "enabled": true,
+        "should_update": true,
+        "reason": "major_event_completed",
+        "turns_since_last_update": 1,
+        "min_turns_between_updates": 3,
+        "max_turns_between_updates": 5
+      },
+      "profile_after_turn": {
+        "update_count": 8,
+        "last_updated_turn_id": "turn_6e803a4f78",
+        "last_update_reason": "major_event_completed",
+        "planner_guidance": [
+          "Current-life profile is undercovered; consider a gentle bridge to daily routines, hobbies, social activity, or health concerns.",
+          "Known values to connect with: family.",
+          "Adapt question shape to speaking style: interactive replies; acknowledge uncertainty and clarify gently."
+        ],
+        "profile_quality": {
+          "core_identity_and_personality": 0.6667,
+          "current_life_status": 0.0,
+          "family_situation": 0.4,
+          "life_views_and_attitudes": 1.0,
+          "overall": 0.5167
+        }
+      },
+      "extracted_events": [
+        {
+          "event_id": "evt_new_001",
+          "extracted_at": "2026-04-16T21:54:29.157805",
+          "slots": {
+            "time": "未提及具体年份",
+            "people": [
+              "孩子们"
+            ],
+            "event": "受访者涨工资，从每月42块涨到68块",
+            "feeling": "高兴",
+            "unexpanded_clues": "未提及具体年份；未提及具体地点",
+            "cause": "改革开放",
+            "result": "买了两斤肉回家包饺子，孩子们吃得满嘴流油",
+            "reflection": "和改革开放、涨工资、喜悦都有关系"
+          },
+          "confidence": 0.85,
+          "theme_id": "career",
+          "source_turns": [
+            "turn_6e803a4f78"
+          ],
+          "is_update": false,
+          "updated_event_id": null,
+          "similarity_hints": []
+        }
+      ],
+      "graph_changes": {
+        "new_events": 1,
+        "updated_events": 0,
+        "updated_themes": [
+          "THEME_02_PEAK_EXPERIENCE"
+        ],
+        "coverage_change": 0.034782608695652195
+      },
+      "interviewee_memory_calls": [
+        {
+          "tool": "scripted_profile_memory",
+          "args": {
+            "turn_index": 8
+          },
+          "result": {
+            "event_id": "mem_008",
+            "event_name": "第一次涨工资",
+            "description": "1983年改革开放后第一次大幅涨工资",
+            "details": "从每月42块涨到68块，涨了26块！那天高兴得买了两斤肉回家包饺子。孩子们吃得满嘴流油，说妈今天过年啦？",
+            "typical_dialogue": "“那会儿涨20多块钱不得了哦，能买好多东西。”",
+            "timestamp_added": "2024-01-16T10:50:00Z",
+            "tags": [
+              "改革开放",
+              "涨工资",
+              "喜悦"
+            ],
+            "linked_memory_ids": [],
+            "emotional_weight": 7
+          }
+        }
+      ]
+    },
+    {
+      "turn_index": 9,
+      "turn_id": "turn_be0c746205",
+      "interviewer_question": "陈阿姨，您提到涨工资那天高兴得买了两斤肉回家包饺子，那是一个怎样的场景呢？能描述一下当时家里的气氛吗？",
+      "interviewee_answer": "嗯，是的，那时候差不多就是这样。",
+      "next_question": "陈阿姨，您提到涨工资后买肉包饺子的那天，听起来真是个特别的日子。您还记得那是哪一年吗？是在咱们成都的家里发生的吗？",
+      "next_action": "continue",
+      "response_path": {
+        "predicted_route": "graph_update_required",
+        "confidence": 0.5641,
+        "reasons": [
+          "conservative_default_update"
+        ],
+        "llm_used": false,
+        "effective_route": "always_sync_extract_merge_project",
+        "observe_only": true
+      },
+      "routing_signals": {
+        "answer_length": 16,
+        "is_short": true,
+        "is_backchannel": false,
+        "pause_or_fatigue": false,
+        "uncertainty": false,
+        "marker_count": 1,
+        "targeted_slot": "location",
+        "answered_targeted_slot": false,
+        "recent_low_info_streak": 0,
+        "current_event_completeness": 0.875,
+        "graph_staleness_turns": 1,
+        "overall_coverage": 0.1261,
+        "theme_imbalance": 0.8333,
+        "has_time_marker": false,
+        "has_location_marker": false,
+        "has_person_marker": false,
+        "has_cause_result_marker": false,
+        "has_feeling_marker": false,
+        "has_reflection_marker": false,
+        "has_event_marker": true
+      },
+      "routing_scores": {
+        "fast_reply_recent_context": 0.26,
+        "graph_guided_planning": 0.4,
+        "graph_update_required": 0.2213,
+        "defer_graph_update": 0.24
+      },
+      "routing_actual": {
+        "actual_update_value": true,
+        "high_value_update": true,
+        "answer_local_high_value_update": true,
+        "answer_local_low_information": false,
+        "context_carryover_merge_possible": false,
+        "low_information_actual": false,
+        "coverage_delta": 0.0,
+        "extracted_event_count": 1,
+        "touched_event_count": 1,
+        "touched_person_count": 1,
+        "new_event_count": 1,
+        "updated_event_count": 0,
+        "new_person_count": 0,
+        "predicted_skip_sync": false,
+        "skip_would_be_safe": null,
+        "answer_local_skip_would_be_safe": null,
+        "route_match_binary": true,
+        "answer_local_route_match_binary": true
+      },
+      "merge_record": {
+        "decisions": [
+          {
+            "event_id": "evt_new_001",
+            "action": "CREATE_NEW",
+            "confidence": 0.0,
+            "reason": "no_llm_hints",
+            "target_event_id": null,
+            "similarity_hints": [],
+            "final_action": "created_new_legacy"
+          }
+        ],
+        "fallback_reasons": [
+          "no_llm_hints",
+          "legacy_no_match_create_new"
+        ],
+        "new_event_ids": [
+          "evt_new_001_e0a7cbe9"
+        ],
+        "updated_event_ids": []
+      },
+      "profile_update_decision": {
+        "enabled": true,
+        "should_update": true,
+        "reason": "major_event_completed",
+        "turns_since_last_update": 1,
+        "min_turns_between_updates": 3,
+        "max_turns_between_updates": 5
+      },
+      "profile_after_turn": {
+        "update_count": 9,
+        "last_updated_turn_id": "turn_be0c746205",
+        "last_update_reason": "major_event_completed",
+        "planner_guidance": [
+          "Current-life profile is undercovered; consider a gentle bridge to daily routines, hobbies, social activity, or health concerns.",
+          "Known values to connect with: family.",
+          "Adapt question shape to speaking style: brief replies; use short, concrete prompts and avoid stacking multiple questions."
+        ],
+        "profile_quality": {
+          "core_identity_and_personality": 0.6667,
+          "current_life_status": 0.0,
+          "family_situation": 0.4,
+          "life_views_and_attitudes": 1.0,
+          "overall": 0.5167
+        }
+      },
+      "extracted_events": [
+        {
+          "event_id": "evt_new_001",
+          "extracted_at": "2026-04-16T21:54:36.106999",
+          "slots": {
+            "people": [
+              "孩子们"
+            ],
+            "event": "涨工资后买肉包饺子",
+            "feeling": "高兴",
+            "unexpanded_clues": "",
+            "cause": "涨工资",
+            "result": "孩子们吃得满嘴流油，说妈今天过年啦",
+            "reflection": "和改革开放、涨工资、喜悦都有关系"
+          },
+          "confidence": 1.0,
+          "theme_id": "career",
+          "source_turns": [
+            "turn_be0c746205"
+          ],
+          "is_update": false,
+          "updated_event_id": null,
+          "similarity_hints": []
+        }
+      ],
+      "graph_changes": {
+        "new_events": 1,
+        "updated_events": 0,
+        "updated_themes": [
+          "THEME_02_PEAK_EXPERIENCE"
+        ],
+        "coverage_change": 0.0
+      },
+      "interviewee_memory_calls": []
+    },
+    {
+      "turn_index": 10,
+      "turn_id": "turn_007d9de3be",
+      "interviewer_question": "陈阿姨，您提到涨工资后买肉包饺子的那天，听起来真是个特别的日子。您还记得那是哪一年吗？是在咱们成都的家里发生的吗？",
+      "interviewee_answer": "说起这个，我就想到儿子考上大学。三个娃，就老幺考上了大学。收到通知书那天，我哭了一下午。他爸在的时候总说'我们陈家要出个大学生'，可惜他没看到。 这事现在想起来，和子女、教育、骄傲都有关系。 回头看，那段经历让我明白做人要踏实，也要顾着家里人。",
+      "next_question": "陈阿姨，您提到儿子考上大学是家里的一大喜事，能告诉我那是哪一年的事情吗？",
+      "next_action": "continue",
+      "response_path": {
+        "predicted_route": "graph_update_required",
+        "confidence": 0.9228,
+        "reasons": [
+          "multiple_structural_markers"
+        ],
+        "llm_used": false,
+        "effective_route": "always_sync_extract_merge_project",
+        "observe_only": true
+      },
+      "routing_signals": {
+        "answer_length": 122,
+        "is_short": false,
+        "is_backchannel": false,
+        "pause_or_fatigue": false,
+        "uncertainty": false,
+        "marker_count": 3,
+        "targeted_slot": "location",
+        "answered_targeted_slot": false,
+        "recent_low_info_streak": 0,
+        "current_event_completeness": 0.75,
+        "graph_staleness_turns": 1,
+        "overall_coverage": 0.1261,
+        "theme_imbalance": 0.8333,
+        "has_time_marker": false,
+        "has_location_marker": false,
+        "has_person_marker": true,
+        "has_cause_result_marker": false,
+        "has_feeling_marker": false,
+        "has_reflection_marker": true,
+        "has_event_marker": true
+      },
+      "routing_scores": {
+        "fast_reply_recent_context": 0.0,
+        "graph_guided_planning": 0.22,
+        "graph_update_required": 0.7727,
+        "defer_graph_update": 0.24
+      },
+      "routing_actual": {
+        "actual_update_value": true,
+        "high_value_update": true,
+        "answer_local_high_value_update": true,
+        "answer_local_low_information": false,
+        "context_carryover_merge_possible": false,
+        "low_information_actual": false,
+        "coverage_delta": 0.0,
+        "extracted_event_count": 1,
+        "touched_event_count": 1,
+        "touched_person_count": 2,
+        "new_event_count": 1,
+        "updated_event_count": 0,
+        "new_person_count": 2,
+        "predicted_skip_sync": false,
+        "skip_would_be_safe": null,
+        "answer_local_skip_would_be_safe": null,
+        "route_match_binary": true,
+        "answer_local_route_match_binary": true
+      },
+      "merge_record": {
+        "decisions": [
+          {
+            "event_id": "evt_new_001",
+            "action": "CREATE_NEW",
+            "confidence": 0.0,
+            "reason": "no_llm_hints",
+            "target_event_id": null,
+            "similarity_hints": [],
+            "final_action": "created_new_legacy"
+          }
+        ],
+        "fallback_reasons": [
+          "no_llm_hints",
+          "legacy_no_match_create_new"
+        ],
+        "new_event_ids": [
+          "evt_new_001_5ecbca15"
+        ],
+        "updated_event_ids": []
+      },
+      "profile_update_decision": {
+        "enabled": true,
+        "should_update": true,
+        "reason": "multiple_new_people",
+        "turns_since_last_update": 1,
+        "min_turns_between_updates": 3,
+        "max_turns_between_updates": 5
+      },
+      "profile_after_turn": {
+        "update_count": 10,
+        "last_updated_turn_id": "turn_007d9de3be",
+        "last_update_reason": "multiple_new_people",
+        "planner_guidance": [
+          "Current-life profile is undercovered; consider a gentle bridge to daily routines, hobbies, social activity, or health concerns.",
+          "Known values to connect with: family.",
+          "Adapt question shape to speaking style: moderate detail; one focused follow-up works best."
+        ],
+        "profile_quality": {
+          "core_identity_and_personality": 0.6667,
+          "current_life_status": 0.0,
+          "family_situation": 0.4,
+          "life_views_and_attitudes": 1.0,
+          "overall": 0.5167
+        }
+      },
+      "extracted_events": [
+        {
+          "event_id": "evt_new_001",
+          "extracted_at": "2026-04-16T21:54:43.477553",
+          "slots": {
+            "location": "成都",
+            "people": [
+              "儿子",
+              "父亲"
+            ],
+            "event": "儿子考上大学",
+            "feeling": "哭了一下午",
+            "unexpanded_clues": "儿子考上的是哪所大学；父亲生前的愿望",
+            "cause": "收到大学通知书",
+            "result": "感到骄傲和教育子女的重要性",
+            "reflection": "做人要踏实，也要顾着家里人"
+          },
+          "confidence": 1.0,
+          "theme_id": "family",
+          "source_turns": [
+            "turn_007d9de3be"
+          ],
+          "is_update": false,
+          "updated_event_id": null,
+          "similarity_hints": []
+        }
+      ],
+      "graph_changes": {
+        "new_events": 0,
+        "updated_events": 0,
+        "updated_themes": [],
+        "coverage_change": 0.0
+      },
+      "interviewee_memory_calls": [
+        {
+          "tool": "scripted_profile_memory",
+          "args": {
+            "turn_index": 10
+          },
+          "result": {
+            "event_id": "mem_010",
+            "event_name": "儿子考上大学",
+            "description": "1998年小儿子考上四川大学",
+            "details": "三个娃，就老幺考上了大学。收到通知书那天，我哭了一下午。他爸在的时候总说'我们陈家要出个大学生'，可惜他没看到。",
+            "typical_dialogue": "“老幺考上大学那天，我把他爸的相片擦了又擦，告诉他你儿子争气。”",
+            "timestamp_added": "2024-01-18T11:20:00Z",
+            "tags": [
+              "子女",
+              "教育",
+              "骄傲"
+            ],
+            "linked_memory_ids": [],
+            "emotional_weight": 9
+          }
+        }
+      ]
+    },
+    {
+      "turn_index": 11,
+      "turn_id": "turn_1e3e35e1b0",
+      "interviewer_question": "陈阿姨，您提到儿子考上大学是家里的一大喜事，能告诉我那是哪一年的事情吗？",
+      "interviewee_answer": "说起这个，我就想到老伴去世。那天早上还好好的，说去公园打太极，突然就倒下了。送到医院没抢救过来。一起过了29年，说走就走了。那段时间觉得天都塌了。 这事现在想起来，和丧偶、悲痛、转折都有关系。",
+      "next_question": "陈阿姨，听您说起老伴突然离世，真是让人心痛。您能告诉我这件事是什么时候发生的吗？",
+      "next_action": "continue",
+      "response_path": {
+        "predicted_route": "graph_update_required",
+        "confidence": 1.0,
+        "reasons": [
+          "targeted_slot_answer"
+        ],
+        "llm_used": false,
+        "effective_route": "always_sync_extract_merge_project",
+        "observe_only": true
+      },
+      "routing_signals": {
+        "answer_length": 96,
+        "is_short": false,
+        "is_backchannel": false,
+        "pause_or_fatigue": false,
+        "uncertainty": false,
+        "marker_count": 4,
+        "targeted_slot": "location",
+        "answered_targeted_slot": true,
+        "recent_low_info_streak": 0,
+        "current_event_completeness": 0.875,
+        "graph_staleness_turns": 1,
+        "overall_coverage": 0.1261,
+        "theme_imbalance": 0.8333,
+        "has_time_marker": false,
+        "has_location_marker": true,
+        "has_person_marker": true,
+        "has_cause_result_marker": false,
+        "has_feeling_marker": true,
+        "has_reflection_marker": true,
+        "has_event_marker": false
+      },
+      "routing_scores": {
+        "fast_reply_recent_context": 0.0,
+        "graph_guided_planning": 0.22,
+        "graph_update_required": 1.0,
+        "defer_graph_update": 0.12
+      },
+      "routing_actual": {
+        "actual_update_value": true,
+        "high_value_update": true,
+        "answer_local_high_value_update": true,
+        "answer_local_low_information": false,
+        "context_carryover_merge_possible": false,
+        "low_information_actual": false,
+        "coverage_delta": 0.0087,
+        "extracted_event_count": 1,
+        "touched_event_count": 1,
+        "touched_person_count": 1,
+        "new_event_count": 1,
+        "updated_event_count": 0,
+        "new_person_count": 1,
+        "predicted_skip_sync": false,
+        "skip_would_be_safe": null,
+        "answer_local_skip_would_be_safe": null,
+        "route_match_binary": true,
+        "answer_local_route_match_binary": true
+      },
+      "merge_record": {
+        "decisions": [
+          {
+            "event_id": "evt_new_001",
+            "action": "CREATE_NEW",
+            "confidence": 0.0,
+            "reason": "no_llm_hints",
+            "target_event_id": null,
+            "similarity_hints": [],
+            "final_action": "created_new_legacy"
+          }
+        ],
+        "fallback_reasons": [
+          "no_llm_hints",
+          "legacy_no_match_create_new"
+        ],
+        "new_event_ids": [
+          "evt_new_001_75862a53"
+        ],
+        "updated_event_ids": []
+      },
+      "profile_update_decision": {
+        "enabled": true,
+        "should_update": true,
+        "reason": "major_event_completed",
+        "turns_since_last_update": 1,
+        "min_turns_between_updates": 3,
+        "max_turns_between_updates": 5
+      },
+      "profile_after_turn": {
+        "update_count": 11,
+        "last_updated_turn_id": "turn_1e3e35e1b0",
+        "last_update_reason": "major_event_completed",
+        "planner_guidance": [
+          "Current-life profile is undercovered; consider a gentle bridge to daily routines, hobbies, social activity, or health concerns.",
+          "Known values to connect with: family.",
+          "Adapt question shape to speaking style: moderate detail; one focused follow-up works best."
+        ],
+        "profile_quality": {
+          "core_identity_and_personality": 0.6667,
+          "current_life_status": 0.0,
+          "family_situation": 0.6,
+          "life_views_and_attitudes": 1.0,
+          "overall": 0.5667
+        }
+      },
+      "extracted_events": [
+        {
+          "event_id": "evt_new_001",
+          "extracted_at": "2026-04-16T21:54:50.854117",
+          "slots": {
+            "people": [
+              "老伴"
+            ],
+            "event": "老伴去世",
+            "feeling": "悲痛",
+            "unexpanded_clues": "老伴去世的具体时间；老伴去世后的具体影响",
+            "cause": "去公园打太极时突然倒下",
+            "result": "没有抢救过来",
+            "reflection": "那段时间觉得天都塌了"
+          },
+          "confidence": 0.85,
+          "theme_id": "family",
+          "source_turns": [
+            "turn_1e3e35e1b0"
+          ],
+          "is_update": false,
+          "updated_event_id": null,
+          "similarity_hints": []
+        }
+      ],
+      "graph_changes": {
+        "new_events": 1,
+        "updated_events": 0,
+        "updated_themes": [
+          "THEME_15_LOSS"
+        ],
+        "coverage_change": 0.008695652173913049
+      },
+      "interviewee_memory_calls": [
+        {
+          "tool": "scripted_profile_memory",
+          "args": {
+            "turn_index": 11
+          },
+          "result": {
+            "event_id": "mem_011",
+            "event_name": "老伴去世",
+            "description": "1999年老伴突发脑溢血去世",
+            "details": "那天早上还好好的，说去公园打太极，突然就倒下了。送到医院没抢救过来。一起过了29年，说走就走了。那段时间觉得天都塌了。",
+            "typical_dialogue": "“他走得太突然了，一句话都没留下...”",
+            "timestamp_added": "2024-01-19T14:15:00Z",
+            "tags": [
+              "丧偶",
+              "悲痛",
+              "转折"
+            ],
+            "linked_memory_ids": [
+              "mem_006"
+            ],
+            "emotional_weight": 10
+          }
+        }
+      ]
+    },
+    {
+      "turn_index": 12,
+      "turn_id": "turn_6c30456778",
+      "interviewer_question": "陈阿姨，听您说起老伴突然离世，真是让人心痛。您能告诉我这件事是什么时候发生的吗？",
+      "interviewee_answer": "说起这个，我就想到正式退休。最后一天上班，我把机床擦了又擦。车间主任和工友们给我开了欢送会，送了条红围巾。走出厂门时回头看了好久，半辈子都在这里了。 这事现在想起来，和退休、告别、感慨都有关系。",
+      "next_question": "陈阿姨，您刚才提到退休那天的情景，我特别想知道，您是在哪个车间工作的？能描述一下那个车间的样子吗？",
+      "next_action": "continue",
+      "response_path": {
+        "predicted_route": "graph_update_required",
+        "confidence": 1.0,
+        "reasons": [
+          "targeted_slot_answer"
+        ],
+        "llm_used": false,
+        "effective_route": "always_sync_extract_merge_project",
+        "observe_only": true
+      },
+      "routing_signals": {
+        "answer_length": 97,
+        "is_short": false,
+        "is_backchannel": false,
+        "pause_or_fatigue": false,
+        "uncertainty": false,
+        "marker_count": 3,
+        "targeted_slot": "time",
+        "answered_targeted_slot": true,
+        "recent_low_info_streak": 0,
+        "current_event_completeness": 0.75,
+        "graph_staleness_turns": 1,
+        "overall_coverage": 0.1348,
+        "theme_imbalance": 0.8333,
+        "has_time_marker": true,
+        "has_location_marker": false,
+        "has_person_marker": false,
+        "has_cause_result_marker": false,
+        "has_feeling_marker": false,
+        "has_reflection_marker": true,
+        "has_event_marker": true
+      },
+      "routing_scores": {
+        "fast_reply_recent_context": 0.0,
+        "graph_guided_planning": 0.22,
+        "graph_update_required": 0.9893,
+        "defer_graph_update": 0.12
+      },
+      "routing_actual": {
+        "actual_update_value": true,
+        "high_value_update": true,
+        "answer_local_high_value_update": true,
+        "answer_local_low_information": false,
+        "context_carryover_merge_possible": false,
+        "low_information_actual": false,
+        "coverage_delta": 0.0087,
+        "extracted_event_count": 1,
+        "touched_event_count": 1,
+        "touched_person_count": 2,
+        "new_event_count": 1,
+        "updated_event_count": 0,
+        "new_person_count": 1,
+        "predicted_skip_sync": false,
+        "skip_would_be_safe": null,
+        "answer_local_skip_would_be_safe": null,
+        "route_match_binary": true,
+        "answer_local_route_match_binary": true
+      },
+      "merge_record": {
+        "decisions": [
+          {
+            "event_id": "evt_new_001",
+            "action": "CREATE_NEW",
+            "confidence": 0.0,
+            "reason": "no_llm_hints",
+            "target_event_id": null,
+            "similarity_hints": [],
+            "final_action": "created_new_legacy"
+          }
+        ],
+        "fallback_reasons": [
+          "no_llm_hints",
+          "legacy_no_match_create_new"
+        ],
+        "new_event_ids": [
+          "evt_new_001_4c727f57"
+        ],
+        "updated_event_ids": []
+      },
+      "profile_update_decision": {
+        "enabled": true,
+        "should_update": false,
+        "reason": "below_update_threshold",
+        "turns_since_last_update": 1,
+        "min_turns_between_updates": 3,
+        "max_turns_between_updates": 5
+      },
+      "profile_after_turn": {
+        "update_count": 11,
+        "last_updated_turn_id": "turn_1e3e35e1b0",
+        "last_update_reason": "major_event_completed",
+        "planner_guidance": [
+          "Current-life profile is undercovered; consider a gentle bridge to daily routines, hobbies, social activity, or health concerns.",
+          "Known values to connect with: family.",
+          "Adapt question shape to speaking style: moderate detail; one focused follow-up works best."
+        ],
+        "profile_quality": {
+          "core_identity_and_personality": 0.6667,
+          "current_life_status": 0.0,
+          "family_situation": 0.6,
+          "life_views_and_attitudes": 1.0,
+          "overall": 0.5667
+        }
+      },
+      "extracted_events": [
+        {
+          "event_id": "evt_new_001",
+          "extracted_at": "2026-04-16T21:54:58.714827",
+          "slots": {
+            "time": "最后一天上班",
+            "people": [
+              "车间主任",
+              "工友"
+            ],
+            "event": "退休并被车间主任和工友们欢送",
+            "feeling": "感慨",
+            "unexpanded_clues": "机床擦了又擦；走出厂门时回头看了好久",
+            "reflection": "半辈子都在这里了"
+          },
+          "confidence": 0.85,
+          "theme_id": "career",
+          "source_turns": [
+            "turn_6c30456778"
+          ],
+          "is_update": false,
+          "updated_event_id": null,
+          "similarity_hints": []
+        }
+      ],
+      "graph_changes": {
+        "new_events": 1,
+        "updated_events": 0,
+        "updated_themes": [
+          "THEME_07_ADULT_MEMORY"
+        ],
+        "coverage_change": 0.008695652173913049
+      },
+      "interviewee_memory_calls": [
+        {
+          "tool": "scripted_profile_memory",
+          "args": {
+            "turn_index": 12
+          },
+          "result": {
+            "event_id": "mem_012",
+            "event_name": "正式退休",
+            "description": "2000年正式退休，离开工作35年的纺织厂",
+            "details": "最后一天上班，我把机床擦了又擦。车间主任和工友们给我开了欢送会，送了条红围巾。走出厂门时回头看了好久，半辈子都在这里了。",
+            "typical_dialogue": "“在厂里35年，出来的时候觉得心里空落落的。”",
+            "timestamp_added": "2024-01-20T10:05:00Z",
+            "tags": [
+              "退休",
+              "告别",
+              "感慨"
+            ],
+            "linked_memory_ids": [
+              "mem_004",
+              "mem_009"
+            ],
+            "emotional_weight": 8
+          }
+        }
+      ]
+    },
+    {
+      "turn_index": 13,
+      "turn_id": "turn_e2886cafa3",
+      "interviewer_question": "陈阿姨，您刚才提到退休那天的情景，我特别想知道，您是在哪个车间工作的？能描述一下那个车间的样子吗？",
+      "interviewee_answer": "这个我有点记不清了，年纪大了，有些细节想不起来。",
+      "next_question": "陈阿姨，您提到年纪大了有些细节记不清楚，这是很正常的。关于退休那天，您还记得是哪一年吗？那天您的心情是怎样的？",
+      "next_action": "continue",
+      "response_path": {
+        "predicted_route": "fast_reply_recent_context",
+        "confidence": 0.8728,
+        "reasons": [
+          "short_reply_without_structural_markers"
+        ],
+        "llm_used": false,
+        "effective_route": "always_sync_extract_merge_project",
+        "observe_only": true
+      },
+      "routing_signals": {
+        "answer_length": 24,
+        "is_short": true,
+        "is_backchannel": false,
+        "pause_or_fatigue": false,
+        "uncertainty": true,
+        "marker_count": 0,
+        "targeted_slot": "location",
+        "answered_targeted_slot": false,
+        "recent_low_info_streak": 0,
+        "current_event_completeness": 0.625,
+        "graph_staleness_turns": 1,
+        "overall_coverage": 0.1435,
+        "theme_imbalance": 0.8333,
+        "has_time_marker": false,
+        "has_location_marker": false,
+        "has_person_marker": false,
+        "has_cause_result_marker": false,
+        "has_feeling_marker": false,
+        "has_reflection_marker": false,
+        "has_event_marker": false
+      },
+      "routing_scores": {
+        "fast_reply_recent_context": 0.68,
+        "graph_guided_planning": 0.2,
+        "graph_update_required": 0.032,
+        "defer_graph_update": 0.12
+      },
+      "routing_actual": {
+        "actual_update_value": true,
+        "high_value_update": true,
+        "answer_local_high_value_update": false,
+        "answer_local_low_information": true,
+        "context_carryover_merge_possible": true,
+        "low_information_actual": false,
+        "coverage_delta": 0.0,
+        "extracted_event_count": 1,
+        "touched_event_count": 1,
+        "touched_person_count": 0,
+        "new_event_count": 1,
+        "updated_event_count": 0,
+        "new_person_count": 0,
+        "predicted_skip_sync": true,
+        "skip_would_be_safe": false,
+        "answer_local_skip_would_be_safe": true,
+        "route_match_binary": false,
+        "answer_local_route_match_binary": true
+      },
+      "merge_record": {
+        "decisions": [
+          {
+            "event_id": "evt_new_001",
+            "action": "CREATE_NEW",
+            "confidence": 0.0,
+            "reason": "no_llm_hints",
+            "target_event_id": null,
+            "similarity_hints": [],
+            "final_action": "created_new_legacy"
+          }
+        ],
+        "fallback_reasons": [
+          "no_llm_hints",
+          "legacy_no_match_create_new"
+        ],
+        "new_event_ids": [
+          "evt_new_001_54b36d19"
+        ],
+        "updated_event_ids": []
+      },
+      "profile_update_decision": {
+        "enabled": true,
+        "should_update": false,
+        "reason": "below_update_threshold",
+        "turns_since_last_update": 2,
+        "min_turns_between_updates": 3,
+        "max_turns_between_updates": 5
+      },
+      "profile_after_turn": {
+        "update_count": 11,
+        "last_updated_turn_id": "turn_1e3e35e1b0",
+        "last_update_reason": "major_event_completed",
+        "planner_guidance": [
+          "Current-life profile is undercovered; consider a gentle bridge to daily routines, hobbies, social activity, or health concerns.",
+          "Known values to connect with: family.",
+          "Adapt question shape to speaking style: moderate detail; one focused follow-up works best."
+        ],
+        "profile_quality": {
+          "core_identity_and_personality": 0.6667,
+          "current_life_status": 0.0,
+          "family_situation": 0.6,
+          "life_views_and_attitudes": 1.0,
+          "overall": 0.5667
+        }
+      },
+      "extracted_events": [
+        {
+          "event_id": "evt_new_001",
+          "extracted_at": "2026-04-16T21:55:07.470131",
+          "slots": {
+            "people": [],
+            "event": "受访者记不清在哪个车间工作",
+            "unexpanded_clues": "受访者提到年纪大了，有些细节想不起来"
+          },
+          "confidence": 0.5,
+          "theme_id": "memory",
+          "source_turns": [
+            "turn_e2886cafa3"
+          ],
+          "is_update": false,
+          "updated_event_id": null,
+          "similarity_hints": []
+        }
+      ],
+      "graph_changes": {
+        "new_events": 1,
+        "updated_events": 0,
+        "updated_themes": [
+          "THEME_07_ADULT_MEMORY"
+        ],
+        "coverage_change": 0.0
+      },
+      "interviewee_memory_calls": []
+    },
+    {
+      "turn_index": 14,
+      "turn_id": "turn_70b6d42ced",
+      "interviewer_question": "陈阿姨，您提到年纪大了有些细节记不清楚，这是很正常的。关于退休那天，您还记得是哪一年吗？那天您的心情是怎样的？",
+      "interviewee_answer": "说起这个，我就想到第一次上学。家里穷，本来不打算让我上学。是隔壁王婆婆说女娃儿也要认字，凑了点钱让我去。书包是用旧衣服改的，本子是用废纸订的。老师是个老先生，教我们写'人之初'。 这事现在想起来，和上学、童年、贫困都有关系。",
+      "next_question": "陈阿姨，您刚才提到了第一次上学的情景，我很好奇，那是哪一年的事情呢？您还记得学校是在哪个地方吗？",
+      "next_action": "continue",
+      "response_path": {
+        "predicted_route": "graph_update_required",
+        "confidence": 1.0,
+        "reasons": [
+          "targeted_slot_answer"
+        ],
+        "llm_used": false,
+        "effective_route": "always_sync_extract_merge_project",
+        "observe_only": true
+      },
+      "routing_signals": {
+        "answer_length": 112,
+        "is_short": false,
+        "is_backchannel": false,
+        "pause_or_fatigue": false,
+        "uncertainty": false,
+        "marker_count": 4,
+        "targeted_slot": "feeling",
+        "answered_targeted_slot": true,
+        "recent_low_info_streak": 0,
+        "current_event_completeness": 0.125,
+        "graph_staleness_turns": 1,
+        "overall_coverage": 0.1435,
+        "theme_imbalance": 0.8333,
+        "has_time_marker": true,
+        "has_location_marker": false,
+        "has_person_marker": true,
+        "has_cause_result_marker": false,
+        "has_feeling_marker": false,
+        "has_reflection_marker": true,
+        "has_event_marker": true
+      },
+      "routing_scores": {
+        "fast_reply_recent_context": 0.0,
+        "graph_guided_planning": 0.02,
+        "graph_update_required": 1.0,
+        "defer_graph_update": 0.12
+      },
+      "routing_actual": {
+        "actual_update_value": true,
+        "high_value_update": true,
+        "answer_local_high_value_update": true,
+        "answer_local_low_information": false,
+        "context_carryover_merge_possible": false,
+        "low_information_actual": false,
+        "coverage_delta": 0.0,
+        "extracted_event_count": 1,
+        "touched_event_count": 1,
+        "touched_person_count": 2,
+        "new_event_count": 1,
+        "updated_event_count": 0,
+        "new_person_count": 0,
+        "predicted_skip_sync": false,
+        "skip_would_be_safe": null,
+        "answer_local_skip_would_be_safe": null,
+        "route_match_binary": true,
+        "answer_local_route_match_binary": true
+      },
+      "merge_record": {
+        "decisions": [
+          {
+            "event_id": "evt_new_001",
+            "action": "CREATE_NEW",
+            "confidence": 0.0,
+            "reason": "no_llm_hints",
+            "target_event_id": null,
+            "similarity_hints": [],
+            "final_action": "created_new_legacy"
+          }
+        ],
+        "fallback_reasons": [
+          "no_llm_hints",
+          "legacy_no_match_create_new"
+        ],
+        "new_event_ids": [
+          "evt_new_001_efa27464"
+        ],
+        "updated_event_ids": []
+      },
+      "profile_update_decision": {
+        "enabled": true,
+        "should_update": true,
+        "reason": "high_value_reflection",
+        "turns_since_last_update": 3,
+        "min_turns_between_updates": 3,
+        "max_turns_between_updates": 5
+      },
+      "profile_after_turn": {
+        "update_count": 12,
+        "last_updated_turn_id": "turn_70b6d42ced",
+        "last_update_reason": "high_value_reflection",
+        "planner_guidance": [
+          "Current-life profile is undercovered; consider a gentle bridge to daily routines, hobbies, social activity, or health concerns.",
+          "Known values to connect with: family.",
+          "Adapt question shape to speaking style: moderate detail; one focused follow-up works best."
+        ],
+        "profile_quality": {
+          "core_identity_and_personality": 0.6667,
+          "current_life_status": 0.0,
+          "family_situation": 0.6,
+          "life_views_and_attitudes": 1.0,
+          "overall": 0.5667
+        }
+      },
+      "extracted_events": [
+        {
+          "event_id": "evt_new_001",
+          "extracted_at": "2026-04-16T21:55:18.216661",
+          "slots": {
+            "people": [
+              "王婆婆",
+              "老师"
+            ],
+            "event": "受访者第一次上学，家里穷，用旧衣服改的书包和废纸订的本子",
+            "unexpanded_clues": "老师是个老先生；教我们写'人之初'",
+            "cause": "家里穷，不打算让受访者上学",
+            "result": "王婆婆凑钱让受访者去上学",
+            "reflection": "现在想起来，和上学、童年、贫困都有关系"
+          },
+          "confidence": 0.85,
+          "theme_id": "education",
+          "source_turns": [
+            "turn_70b6d42ced"
+          ],
+          "is_update": false,
+          "updated_event_id": null,
+          "similarity_hints": []
+        }
+      ],
+      "graph_changes": {
+        "new_events": 1,
+        "updated_events": 0,
+        "updated_themes": [
+          "THEME_05_CHILDHOOD_POSITIVE"
+        ],
+        "coverage_change": 0.0
+      },
+      "interviewee_memory_calls": [
+        {
+          "tool": "scripted_profile_memory",
+          "args": {
+            "turn_index": 14
+          },
+          "result": {
+            "event_id": "mem_002",
+            "event_name": "第一次上学",
+            "description": "8岁才第一次进学堂，还是邻居帮忙凑的学费",
+            "details": "家里穷，本来不打算让我上学。是隔壁王婆婆说女娃儿也要认字，凑了点钱让我去。书包是用旧衣服改的，本子是用废纸订的。老师是个老先生，教我们写'人之初'。",
+            "typical_dialogue": "“我八岁才第一次摸到书本，那会儿觉得学堂好大哦。”",
+            "timestamp_added": "2024-01-10T10:15:00Z",
+            "tags": [
+              "上学",
+              "童年",
+              "贫困"
+            ],
+            "linked_memory_ids": [],
+            "emotional_weight": 7
+          }
+        }
+      ]
+    },
+    {
+      "turn_index": 15,
+      "turn_id": "turn_172380d20b",
+      "interviewer_question": "陈阿姨，您刚才提到了第一次上学的情景，我很好奇，那是哪一年的事情呢？您还记得学校是在哪个地方吗？",
+      "interviewee_answer": "说起这个，我就想到大跃进时期的公社食堂。那会儿说'吃饭不要钱'，大家都去公社食堂吃。开始还好，后来越吃越差，稀饭清得能照人。我那时候正长身体，总是吃不饱，放学就去挖野菜。 这事现在想起来，和大跃进、饥饿、集体都有关系。 回头看，那段经历让我明白做人要踏实，也要顾着家里人。",
+      "next_question": "陈阿姨，您提到了大跃进时期的公社食堂，能告诉我那个食堂是在哪个地方吗？还有，您当时去挖野菜的时候，是去了哪里呢？",
+      "next_action": "continue",
+      "response_path": {
+        "predicted_route": "graph_update_required",
+        "confidence": 1.0,
+        "reasons": [
+          "targeted_slot_answer"
+        ],
+        "llm_used": false,
+        "effective_route": "always_sync_extract_merge_project",
+        "observe_only": true
+      },
+      "routing_signals": {
+        "answer_length": 136,
+        "is_short": false,
+        "is_backchannel": false,
+        "pause_or_fatigue": false,
+        "uncertainty": false,
+        "marker_count": 5,
+        "targeted_slot": "location",
+        "answered_targeted_slot": true,
+        "recent_low_info_streak": 0,
+        "current_event_completeness": 0.625,
+        "graph_staleness_turns": 1,
+        "overall_coverage": 0.1435,
+        "theme_imbalance": 0.8333,
+        "has_time_marker": true,
+        "has_location_marker": true,
+        "has_person_marker": false,
+        "has_cause_result_marker": true,
+        "has_feeling_marker": false,
+        "has_reflection_marker": true,
+        "has_event_marker": true
+      },
+      "routing_scores": {
+        "fast_reply_recent_context": 0.0,
+        "graph_guided_planning": 0.02,
+        "graph_update_required": 1.0,
+        "defer_graph_update": 0.12
+      },
+      "routing_actual": {
+        "actual_update_value": true,
+        "high_value_update": true,
+        "answer_local_high_value_update": true,
+        "answer_local_low_information": false,
+        "context_carryover_merge_possible": false,
+        "low_information_actual": false,
+        "coverage_delta": 0.0,
+        "extracted_event_count": 1,
+        "touched_event_count": 1,
+        "touched_person_count": 1,
+        "new_event_count": 1,
+        "updated_event_count": 0,
+        "new_person_count": 0,
+        "predicted_skip_sync": false,
+        "skip_would_be_safe": null,
+        "answer_local_skip_would_be_safe": null,
+        "route_match_binary": true,
+        "answer_local_route_match_binary": true
+      },
+      "merge_record": {
+        "decisions": [
+          {
+            "event_id": "evt_new_001",
+            "action": "CREATE_NEW",
+            "confidence": 0.0,
+            "reason": "no_llm_hints",
+            "target_event_id": null,
+            "similarity_hints": [],
+            "final_action": "created_new_legacy"
+          }
+        ],
+        "fallback_reasons": [
+          "no_llm_hints",
+          "legacy_no_match_create_new"
+        ],
+        "new_event_ids": [
+          "evt_new_001_85077f86"
+        ],
+        "updated_event_ids": []
+      },
+      "profile_update_decision": {
+        "enabled": true,
+        "should_update": true,
+        "reason": "major_event_completed",
+        "turns_since_last_update": 1,
+        "min_turns_between_updates": 3,
+        "max_turns_between_updates": 5
+      },
+      "profile_after_turn": {
+        "update_count": 13,
+        "last_updated_turn_id": "turn_172380d20b",
+        "last_update_reason": "major_event_completed",
+        "planner_guidance": [
+          "Current-life profile is undercovered; consider a gentle bridge to daily routines, hobbies, social activity, or health concerns.",
+          "Known values to connect with: family.",
+          "Adapt question shape to speaking style: moderate detail; one focused follow-up works best."
+        ],
+        "profile_quality": {
+          "core_identity_and_personality": 0.6667,
+          "current_life_status": 0.0,
+          "family_situation": 0.6,
+          "life_views_and_attitudes": 1.0,
+          "overall": 0.5667
+        }
+      },
+      "extracted_events": [
+        {
+          "event_id": "evt_new_001",
+          "extracted_at": "2026-04-16T21:55:31.486387",
+          "slots": {
+            "time": "大跃进时期",
+            "people": [
+              "王婆婆"
+            ],
+            "event": "陈阿姨在公社食堂吃饭，后来去挖野菜",
+            "unexpanded_clues": "公社食堂的具体位置；挖野菜的具体地点",
+            "cause": "大跃进时期的公社食堂开始还好，后来越吃越差",
+            "result": "陈阿姨总是吃不饱，放学就去挖野菜",
+            "reflection": "那段经历让我明白做人要踏实，也要顾着家里人"
+          },
+          "confidence": 0.9,
+          "theme_id": "survival",
+          "source_turns": [
+            "turn_172380d20b"
+          ],
+          "is_update": false,
+          "updated_event_id": null,
+          "similarity_hints": []
+        }
+      ],
+      "graph_changes": {
+        "new_events": 0,
+        "updated_events": 0,
+        "updated_themes": [],
+        "coverage_change": 0.0
+      },
+      "interviewee_memory_calls": [
+        {
+          "tool": "scripted_profile_memory",
+          "args": {
+            "turn_index": 15
+          },
+          "result": {
+            "event_id": "mem_003",
+            "event_name": "大跃进时期的公社食堂",
+            "description": "1958年吃公社食堂的经历",
+            "details": "那会儿说'吃饭不要钱'，大家都去公社食堂吃。开始还好，后来越吃越差，稀饭清得能照人。我那时候正长身体，总是吃不饱，放学就去挖野菜。",
+            "typical_dialogue": "“公社食堂开始还热闹，后来就不行了，还是各人家里做实在。”",
+            "timestamp_added": "2024-01-11T14:20:00Z",
+            "tags": [
+              "大跃进",
+              "饥饿",
+              "集体"
+            ],
+            "linked_memory_ids": [
+              "mem_001"
+            ],
+            "emotional_weight": 8
+          }
+        }
+      ]
+    },
+    {
+      "turn_index": 16,
+      "turn_id": "turn_8c25816954",
+      "interviewer_question": "陈阿姨，您提到了大跃进时期的公社食堂，能告诉我那个食堂是在哪个地方吗？还有，您当时去挖野菜的时候，是去了哪里呢？",
+      "interviewee_answer": "说起这个，我就想到进纺织厂当学徒。我妈身体不好退下来，我就顶了她的名额。开始是学徒，一个月18块钱。车间里吵得很，说话要靠喊。师傅是个东北人，凶得很，但手艺好。 这事现在想起来，和工作、纺织厂、学徒都有关系。",
+      "next_question": "陈阿姨，听您说起大跃进时期的经历，我很好奇，那个公社食堂是在您家附近吗？您当时去挖野菜的地方又是哪里呢？能和我分享一下您当时的感受吗？",
+      "next_action": "continue",
+      "response_path": {
+        "predicted_route": "graph_update_required",
+        "confidence": 1.0,
+        "reasons": [
+          "targeted_slot_answer"
+        ],
+        "llm_used": false,
+        "effective_route": "always_sync_extract_merge_project",
+        "observe_only": true
+      },
+      "routing_signals": {
+        "answer_length": 104,
+        "is_short": false,
+        "is_backchannel": false,
+        "pause_or_fatigue": false,
+        "uncertainty": false,
+        "marker_count": 4,
+        "targeted_slot": "location",
+        "answered_targeted_slot": true,
+        "recent_low_info_streak": 0,
+        "current_event_completeness": 0.75,
+        "graph_staleness_turns": 1,
+        "overall_coverage": 0.1435,
+        "theme_imbalance": 0.8333,
+        "has_time_marker": false,
+        "has_location_marker": true,
+        "has_person_marker": true,
+        "has_cause_result_marker": false,
+        "has_feeling_marker": false,
+        "has_reflection_marker": true,
+        "has_event_marker": true
+      },
+      "routing_scores": {
+        "fast_reply_recent_context": 0.0,
+        "graph_guided_planning": 0.22,
+        "graph_update_required": 1.0,
+        "defer_graph_update": 0.12
+      },
+      "routing_actual": {
+        "actual_update_value": true,
+        "high_value_update": true,
+        "answer_local_high_value_update": true,
+        "answer_local_low_information": false,
+        "context_carryover_merge_possible": false,
+        "low_information_actual": false,
+        "coverage_delta": 0.0,
+        "extracted_event_count": 1,
+        "touched_event_count": 1,
+        "touched_person_count": 2,
+        "new_event_count": 0,
+        "updated_event_count": 1,
+        "new_person_count": 0,
+        "predicted_skip_sync": false,
+        "skip_would_be_safe": null,
+        "answer_local_skip_would_be_safe": null,
+        "route_match_binary": true,
+        "answer_local_route_match_binary": true
+      },
+      "merge_record": {
+        "decisions": [
+          {
+            "event_id": "evt_new_001",
+            "action": "CREATE_NEW",
+            "confidence": 0.0,
+            "reason": "no_llm_hints",
+            "target_event_id": null,
+            "similarity_hints": [],
+            "final_action": "updated_legacy"
+          }
+        ],
+        "fallback_reasons": [
+          "no_llm_hints"
+        ],
+        "new_event_ids": [],
+        "updated_event_ids": [
+          "evt_new_001_c9165d81"
+        ]
+      },
+      "profile_update_decision": {
+        "enabled": true,
+        "should_update": true,
+        "reason": "major_event_completed",
+        "turns_since_last_update": 1,
+        "min_turns_between_updates": 3,
+        "max_turns_between_updates": 5
+      },
+      "profile_after_turn": {
+        "update_count": 14,
+        "last_updated_turn_id": "turn_8c25816954",
+        "last_update_reason": "major_event_completed",
+        "planner_guidance": [
+          "Current-life profile is undercovered; consider a gentle bridge to daily routines, hobbies, social activity, or health concerns.",
+          "Known values to connect with: family.",
+          "Adapt question shape to speaking style: moderate detail; one focused follow-up works best."
+        ],
+        "profile_quality": {
+          "core_identity_and_personality": 0.6667,
+          "current_life_status": 0.0,
+          "family_situation": 0.6,
+          "life_views_and_attitudes": 1.0,
+          "overall": 0.5667
+        }
+      },
+      "extracted_events": [
+        {
+          "event_id": "evt_new_001",
+          "extracted_at": "2026-04-16T21:55:39.485412",
+          "slots": {
+            "location": "纺织厂",
+            "people": [
+              "母亲",
+              "师傅"
+            ],
+            "event": "顶替母亲名额进纺织厂当学徒",
+            "unexpanded_clues": "师傅是东北人；手艺好；车间里吵得很",
+            "cause": "母亲身体不好退下来",
+            "reflection": "和工作、纺织厂、学徒都有关系"
+          },
+          "confidence": 0.85,
+          "theme_id": "career",
+          "source_turns": [
+            "turn_8c25816954"
+          ],
+          "is_update": false,
+          "updated_event_id": null,
+          "similarity_hints": []
+        }
+      ],
+      "graph_changes": {
+        "new_events": 0,
+        "updated_events": 1,
+        "updated_themes": [
+          "THEME_07_ADULT_MEMORY"
+        ],
+        "coverage_change": 0.0
+      },
+      "interviewee_memory_calls": [
+        {
+          "tool": "scripted_profile_memory",
+          "args": {
+            "turn_index": 16
+          },
+          "result": {
+            "event_id": "mem_004",
+            "event_name": "进纺织厂当学徒",
+            "description": "1961年顶替母亲的名额进纺织厂",
+            "details": "我妈身体不好退下来，我就顶了她的名额。开始是学徒，一个月18块钱。车间里吵得很，说话要靠喊。师傅是个东北人，凶得很，但手艺好。",
+            "typical_dialogue": "“第一天进车间，耳朵都要震聋了，后来才慢慢习惯。”",
+            "timestamp_added": "2024-01-12T11:45:00Z",
+            "tags": [
+              "工作",
+              "纺织厂",
+              "学徒"
+            ],
+            "linked_memory_ids": [],
+            "emotional_weight": 6
+          }
+        }
+      ]
+    },
+    {
+      "turn_index": 17,
+      "turn_id": "turn_11f0743620",
+      "interviewer_question": "陈阿姨，听您说起大跃进时期的经历，我很好奇，那个公社食堂是在您家附近吗？您当时去挖野菜的地方又是哪里呢？能和我分享一下您当时的感受吗？",
+      "interviewee_answer": "说起这个，我就想到文化大革命期间被贴大字报。那时候乱得很。我说了句'厂里生产不能停'，就被说成是'唯生产力论'，大字报贴了一墙。好在车间主任保我，说我是苦出身，才没被批斗。 这事现在想起来，和文革、政治、恐惧都有关系。",
+      "next_question": "陈阿姨，您刚才提到了文化大革命期间被贴大字报的事情，我很好奇，这大字报是贴在了纺织厂的哪个地方呢？您能描述一下当时的场景吗？",
+      "next_action": "continue",
+      "response_path": {
+        "predicted_route": "graph_update_required",
+        "confidence": 0.9905,
+        "reasons": [
+          "multiple_structural_markers"
+        ],
+        "llm_used": false,
+        "effective_route": "always_sync_extract_merge_project",
+        "observe_only": true
+      },
+      "routing_signals": {
+        "answer_length": 109,
+        "is_short": false,
+        "is_backchannel": false,
+        "pause_or_fatigue": false,
+        "uncertainty": false,
+        "marker_count": 4,
+        "targeted_slot": "location",
+        "answered_targeted_slot": false,
+        "recent_low_info_streak": 0,
+        "current_event_completeness": 0.75,
+        "graph_staleness_turns": 1,
+        "overall_coverage": 0.1435,
+        "theme_imbalance": 0.8333,
+        "has_time_marker": true,
+        "has_location_marker": false,
+        "has_person_marker": false,
+        "has_cause_result_marker": false,
+        "has_feeling_marker": true,
+        "has_reflection_marker": true,
+        "has_event_marker": true
+      },
+      "routing_scores": {
+        "fast_reply_recent_context": 0.0,
+        "graph_guided_planning": 0.22,
+        "graph_update_required": 0.8753,
+        "defer_graph_update": 0.24
+      },
+      "routing_actual": {
+        "actual_update_value": true,
+        "high_value_update": true,
+        "answer_local_high_value_update": true,
+        "answer_local_low_information": false,
+        "context_carryover_merge_possible": false,
+        "low_information_actual": false,
+        "coverage_delta": 0.0,
+        "extracted_event_count": 1,
+        "touched_event_count": 1,
+        "touched_person_count": 1,
+        "new_event_count": 0,
+        "updated_event_count": 1,
+        "new_person_count": 0,
+        "predicted_skip_sync": false,
+        "skip_would_be_safe": null,
+        "answer_local_skip_would_be_safe": null,
+        "route_match_binary": true,
+        "answer_local_route_match_binary": true
+      },
+      "merge_record": {
+        "decisions": [
+          {
+            "event_id": "evt_new_001",
+            "action": "CREATE_NEW",
+            "confidence": 0.0,
+            "reason": "no_llm_hints",
+            "target_event_id": null,
+            "similarity_hints": [],
+            "final_action": "updated_legacy"
+          }
+        ],
+        "fallback_reasons": [
+          "no_llm_hints"
+        ],
+        "new_event_ids": [],
+        "updated_event_ids": [
+          "evt_new_001_c0a68e36"
+        ]
+      },
+      "profile_update_decision": {
+        "enabled": true,
+        "should_update": true,
+        "reason": "major_event_completed",
+        "turns_since_last_update": 1,
+        "min_turns_between_updates": 3,
+        "max_turns_between_updates": 5
+      },
+      "profile_after_turn": {
+        "update_count": 15,
+        "last_updated_turn_id": "turn_11f0743620",
+        "last_update_reason": "major_event_completed",
+        "planner_guidance": [
+          "Current-life profile is undercovered; consider a gentle bridge to daily routines, hobbies, social activity, or health concerns.",
+          "Known values to connect with: family.",
+          "Adapt question shape to speaking style: moderate detail; one focused follow-up works best."
+        ],
+        "profile_quality": {
+          "core_identity_and_personality": 0.6667,
+          "current_life_status": 0.0,
+          "family_situation": 0.6,
+          "life_views_and_attitudes": 1.0,
+          "overall": 0.5667
+        }
+      },
+      "extracted_events": [
+        {
+          "event_id": "evt_new_001",
+          "extracted_at": "2026-04-16T21:55:52.926773",
+          "slots": {
+            "time": "文化大革命期间",
+            "people": [
+              "车间主任"
+            ],
+            "event": "因说'厂里生产不能停'被贴大字报",
+            "feeling": "恐惧",
+            "cause": "说了句'厂里生产不能停'",
+            "result": "被说成是'唯生产力论'，大字报贴了一墙，但未被批斗",
+            "reflection": "和文革、政治、恐惧都有关系"
+          },
+          "confidence": 0.85,
+          "theme_id": "political_struggle",
+          "source_turns": [
+            "turn_11f0743620"
+          ],
+          "is_update": false,
+          "updated_event_id": null,
+          "similarity_hints": []
+        }
+      ],
+      "graph_changes": {
+        "new_events": 0,
+        "updated_events": 0,
+        "updated_themes": [],
+        "coverage_change": 0.0
+      },
+      "interviewee_memory_calls": [
+        {
+          "tool": "scripted_profile_memory",
+          "args": {
+            "turn_index": 17
+          },
+          "result": {
+            "event_id": "mem_005",
+            "event_name": "文化大革命期间被贴大字报",
+            "description": "因为说错一句话被贴了大字报",
+            "details": "那时候乱得很。我说了句'厂里生产不能停'，就被说成是'唯生产力论'，大字报贴了一墙。好在车间主任保我，说我是苦出身，才没被批斗。",
+            "typical_dialogue": "“那会儿说话要小心，一句话不对就要遭。”",
+            "timestamp_added": "2024-01-13T16:30:00Z",
+            "tags": [
+              "文革",
+              "政治",
+              "恐惧"
+            ],
+            "linked_memory_ids": [],
+            "emotional_weight": 9
+          }
+        }
+      ]
+    },
+    {
+      "turn_index": 18,
+      "turn_id": "turn_4c2190925a",
+      "interviewer_question": "陈阿姨，您刚才提到了文化大革命期间被贴大字报的事情，我很好奇，这大字报是贴在了纺织厂的哪个地方呢？您能描述一下当时的场景吗？",
+      "interviewee_answer": "嗯，是的，那时候差不多就是这样。",
+      "next_question": "陈阿姨，听您回忆起那段艰难的时期，我能感受到您的不易。您能告诉我，被贴大字报这件事大概发生在哪一年吗？当时您心里是怎么想的，有没有特别害怕或者担心的事情？",
+      "next_action": "continue",
+      "response_path": {
+        "predicted_route": "graph_update_required",
+        "confidence": 0.5641,
+        "reasons": [
+          "conservative_default_update"
+        ],
+        "llm_used": false,
+        "effective_route": "always_sync_extract_merge_project",
+        "observe_only": true
+      },
+      "routing_signals": {
+        "answer_length": 16,
+        "is_short": true,
+        "is_backchannel": false,
+        "pause_or_fatigue": false,
+        "uncertainty": false,
+        "marker_count": 1,
+        "targeted_slot": "location",
+        "answered_targeted_slot": false,
+        "recent_low_info_streak": 0,
+        "current_event_completeness": 0.875,
+        "graph_staleness_turns": 1,
+        "overall_coverage": 0.1435,
+        "theme_imbalance": 0.8333,
+        "has_time_marker": false,
+        "has_location_marker": false,
+        "has_person_marker": false,
+        "has_cause_result_marker": false,
+        "has_feeling_marker": false,
+        "has_reflection_marker": false,
+        "has_event_marker": true
+      },
+      "routing_scores": {
+        "fast_reply_recent_context": 0.26,
+        "graph_guided_planning": 0.4,
+        "graph_update_required": 0.2213,
+        "defer_graph_update": 0.24
+      },
+      "routing_actual": {
+        "actual_update_value": true,
+        "high_value_update": true,
+        "answer_local_high_value_update": true,
+        "answer_local_low_information": false,
+        "context_carryover_merge_possible": false,
+        "low_information_actual": false,
+        "coverage_delta": 0.0,
+        "extracted_event_count": 1,
+        "touched_event_count": 1,
+        "touched_person_count": 1,
+        "new_event_count": 1,
+        "updated_event_count": 0,
+        "new_person_count": 0,
+        "predicted_skip_sync": false,
+        "skip_would_be_safe": null,
+        "answer_local_skip_would_be_safe": null,
+        "route_match_binary": true,
+        "answer_local_route_match_binary": true
+      },
+      "merge_record": {
+        "decisions": [
+          {
+            "event_id": "evt_new_001",
+            "action": "CREATE_NEW",
+            "confidence": 0.0,
+            "reason": "no_llm_hints",
+            "target_event_id": null,
+            "similarity_hints": [],
+            "final_action": "created_new_legacy"
+          }
+        ],
+        "fallback_reasons": [
+          "no_llm_hints",
+          "legacy_no_match_create_new"
+        ],
+        "new_event_ids": [
+          "evt_new_001_0c31fde2"
+        ],
+        "updated_event_ids": []
+      },
+      "profile_update_decision": {
+        "enabled": true,
+        "should_update": true,
+        "reason": "major_event_completed",
+        "turns_since_last_update": 1,
+        "min_turns_between_updates": 3,
+        "max_turns_between_updates": 5
+      },
+      "profile_after_turn": {
+        "update_count": 16,
+        "last_updated_turn_id": "turn_4c2190925a",
+        "last_update_reason": "major_event_completed",
+        "planner_guidance": [
+          "Current-life profile is undercovered; consider a gentle bridge to daily routines, hobbies, social activity, or health concerns.",
+          "Known values to connect with: family.",
+          "Adapt question shape to speaking style: brief replies; use short, concrete prompts and avoid stacking multiple questions."
+        ],
+        "profile_quality": {
+          "core_identity_and_personality": 0.6667,
+          "current_life_status": 0.0,
+          "family_situation": 0.6,
+          "life_views_and_attitudes": 1.0,
+          "overall": 0.5667
+        }
+      },
+      "extracted_events": [
+        {
+          "event_id": "evt_new_001",
+          "extracted_at": "2026-04-16T21:56:02.779608",
+          "slots": {
+            "location": "纺织厂",
+            "people": [
+              "车间主任"
+            ],
+            "event": "被贴大字报",
+            "unexpanded_clues": "大字报具体位置未提及；车间主任保护细节未详述",
+            "cause": "说了句'厂里生产不能停'",
+            "result": "被说成是'唯生产力论'，大字报贴了一墙；车间主任保护，未被批斗",
+            "reflection": "和文革、政治、恐惧都有关系"
+          },
+          "confidence": 0.85,
+          "theme_id": "political_struggle",
+          "source_turns": [
+            "turn_4c2190925a"
+          ],
+          "is_update": false,
+          "updated_event_id": null,
+          "similarity_hints": []
+        }
+      ],
+      "graph_changes": {
+        "new_events": 0,
+        "updated_events": 0,
+        "updated_themes": [],
+        "coverage_change": 0.0
+      },
+      "interviewee_memory_calls": []
+    },
+    {
+      "turn_index": 19,
+      "turn_id": "turn_92a00867c9",
+      "interviewer_question": "陈阿姨，听您回忆起那段艰难的时期，我能感受到您的不易。您能告诉我，被贴大字报这件事大概发生在哪一年吗？当时您心里是怎么想的，有没有特别害怕或者担心的事情？",
+      "interviewee_answer": "说起这个，我就想到生大儿子难产。生老大时折腾了两天一夜，那时候医疗条件差，就在厂卫生所生的。大出血，差点没救过来。后来他爸说再也不生了，结果后来又生了两个。 这事现在想起来，和生育、危险、母亲都有关系。",
+      "next_question": "陈阿姨，听您提到了这么多重要的时刻，我很好奇，如果把您的一生比作一本书，您会怎么划分这本书的章节呢？",
+      "next_action": "next_phase",
+      "response_path": {
+        "predicted_route": "graph_update_required",
+        "confidence": 1.0,
+        "reasons": [
+          "multiple_structural_markers"
+        ],
+        "llm_used": false,
+        "effective_route": "always_sync_extract_merge_project",
+        "observe_only": true
+      },
+      "routing_signals": {
+        "answer_length": 101,
+        "is_short": false,
+        "is_backchannel": false,
+        "pause_or_fatigue": false,
+        "uncertainty": false,
+        "marker_count": 5,
+        "targeted_slot": "location",
+        "answered_targeted_slot": false,
+        "recent_low_info_streak": 0,
+        "current_event_completeness": 0.75,
+        "graph_staleness_turns": 1,
+        "overall_coverage": 0.1435,
+        "theme_imbalance": 0.8333,
+        "has_time_marker": true,
+        "has_location_marker": false,
+        "has_person_marker": true,
+        "has_cause_result_marker": true,
+        "has_feeling_marker": false,
+        "has_reflection_marker": true,
+        "has_event_marker": true
+      },
+      "routing_scores": {
+        "fast_reply_recent_context": 0.0,
+        "graph_guided_planning": 0.22,
+        "graph_update_required": 1.0,
+        "defer_graph_update": 0.24
+      },
+      "routing_actual": {
+        "actual_update_value": true,
+        "high_value_update": true,
+        "answer_local_high_value_update": true,
+        "answer_local_low_information": false,
+        "context_carryover_merge_possible": false,
+        "low_information_actual": false,
+        "coverage_delta": 0.0,
+        "extracted_event_count": 1,
+        "touched_event_count": 1,
+        "touched_person_count": 3,
+        "new_event_count": 1,
+        "updated_event_count": 0,
+        "new_person_count": 1,
+        "predicted_skip_sync": false,
+        "skip_would_be_safe": null,
+        "answer_local_skip_would_be_safe": null,
+        "route_match_binary": true,
+        "answer_local_route_match_binary": true
+      },
+      "merge_record": {
+        "decisions": [
+          {
+            "event_id": "evt_new_001",
+            "action": "CREATE_NEW",
+            "confidence": 0.0,
+            "reason": "no_llm_hints",
+            "target_event_id": null,
+            "similarity_hints": [],
+            "final_action": "created_new_legacy"
+          }
+        ],
+        "fallback_reasons": [
+          "no_llm_hints",
+          "legacy_no_match_create_new"
+        ],
+        "new_event_ids": [
+          "evt_new_001_037adcd9"
+        ],
+        "updated_event_ids": []
+      },
+      "profile_update_decision": {
+        "enabled": true,
+        "should_update": true,
+        "reason": "major_event_completed",
+        "turns_since_last_update": 1,
+        "min_turns_between_updates": 3,
+        "max_turns_between_updates": 5
+      },
+      "profile_after_turn": {
+        "update_count": 17,
+        "last_updated_turn_id": "turn_92a00867c9",
+        "last_update_reason": "major_event_completed",
+        "planner_guidance": [
+          "Current-life profile is undercovered; consider a gentle bridge to daily routines, hobbies, social activity, or health concerns.",
+          "Known values to connect with: family.",
+          "Adapt question shape to speaking style: moderate detail; one focused follow-up works best."
+        ],
+        "profile_quality": {
+          "core_identity_and_personality": 0.6667,
+          "current_life_status": 0.0,
+          "family_situation": 0.6,
+          "life_views_and_attitudes": 1.0,
+          "overall": 0.5667
+        }
+      },
+      "extracted_events": [
+        {
+          "event_id": "evt_new_001",
+          "extracted_at": "2026-04-16T21:56:11.230641",
+          "slots": {
+            "time": "未提及具体年份",
+            "location": "厂卫生所",
+            "people": [
+              "陈阿姨",
+              "大儿子",
+              "他爸"
+            ],
+            "event": "陈阿姨生大儿子难产",
+            "feeling": "未提及具体感受",
+            "cause": "医疗条件差",
+            "result": "大出血，差点没救过来",
+            "reflection": "现在想起来，和生育、危险、母亲都有关系"
+          },
+          "confidence": 1.0,
+          "theme_id": "health",
+          "source_turns": [
+            "turn_92a00867c9"
+          ],
+          "is_update": false,
+          "updated_event_id": null,
+          "similarity_hints": []
+        }
+      ],
+      "graph_changes": {
+        "new_events": 0,
+        "updated_events": 0,
+        "updated_themes": [],
+        "coverage_change": 0.0
+      },
+      "interviewee_memory_calls": [
+        {
+          "tool": "scripted_profile_memory",
+          "args": {
+            "turn_index": 19
+          },
+          "result": {
+            "event_id": "mem_007",
+            "event_name": "生大儿子难产",
+            "description": "1972年生大儿子时难产，差点没命",
+            "details": "生老大时折腾了两天一夜，那时候医疗条件差，就在厂卫生所生的。大出血，差点没救过来。后来他爸说再也不生了，结果后来又生了两个。",
+            "typical_dialogue": "“生老大的时候，我以为我活不成了，现在想想都后怕。”",
+            "timestamp_added": "2024-01-15T13:25:00Z",
+            "tags": [
+              "生育",
+              "危险",
+              "母亲"
+            ],
+            "linked_memory_ids": [],
+            "emotional_weight": 9
+          }
+        }
+      ]
+    },
+    {
+      "turn_index": 20,
+      "turn_id": "turn_101d619f6f",
+      "interviewer_question": "陈阿姨，听您提到了这么多重要的时刻，我很好奇，如果把您的一生比作一本书，您会怎么划分这本书的章节呢？",
+      "interviewee_answer": "说起这个，我就想到第一次涨工资。从每月42块涨到68块，涨了26块！那天高兴得买了两斤肉回家包饺子。孩子们吃得满嘴流油，说妈今天过年啦？ 这事现在想起来，和改革开放、涨工资、喜悦都有关系。 回头看，那段经历让我明白做人要踏实，也要顾着家里人。",
+      "next_question": "陈阿姨，听您回忆起生大儿子时的艰难，我能感受到您作为母亲的坚强。您能和我分享一下，您觉得自己的人生中，哪些时刻是您觉得特别重要的转折点吗？",
+      "next_action": "next_phase",
+      "response_path": {
+        "predicted_route": "graph_update_required",
+        "confidence": 0.9945,
+        "reasons": [
+          "multiple_structural_markers"
+        ],
+        "llm_used": false,
+        "effective_route": "always_sync_extract_merge_project",
+        "observe_only": true
+      },
+      "routing_signals": {
+        "answer_length": 121,
+        "is_short": false,
+        "is_backchannel": false,
+        "pause_or_fatigue": false,
+        "uncertainty": false,
+        "marker_count": 4,
+        "targeted_slot": null,
+        "answered_targeted_slot": false,
+        "recent_low_info_streak": 0,
+        "current_event_completeness": 1.0,
+        "graph_staleness_turns": 1,
+        "overall_coverage": 0.1435,
+        "theme_imbalance": 0.8333,
+        "has_time_marker": false,
+        "has_location_marker": false,
+        "has_person_marker": true,
+        "has_cause_result_marker": false,
+        "has_feeling_marker": true,
+        "has_reflection_marker": true,
+        "has_event_marker": true
+      },
+      "routing_scores": {
+        "fast_reply_recent_context": 0.0,
+        "graph_guided_planning": 0.22,
+        "graph_update_required": 0.8813,
+        "defer_graph_update": 0.24
+      },
+      "routing_actual": {
+        "actual_update_value": true,
+        "high_value_update": true,
+        "answer_local_high_value_update": true,
+        "answer_local_low_information": false,
+        "context_carryover_merge_possible": false,
+        "low_information_actual": false,
+        "coverage_delta": 0.0,
+        "extracted_event_count": 1,
+        "touched_event_count": 1,
+        "touched_person_count": 1,
+        "new_event_count": 0,
+        "updated_event_count": 1,
+        "new_person_count": 0,
+        "predicted_skip_sync": false,
+        "skip_would_be_safe": null,
+        "answer_local_skip_would_be_safe": null,
+        "route_match_binary": true,
+        "answer_local_route_match_binary": true
+      },
+      "merge_record": {
+        "decisions": [
+          {
+            "event_id": "evt_new_002",
+            "action": "UPDATE",
+            "confidence": 0.95,
+            "reason": "high_confidence_llm_hint: 时间、地点未提及，但核心事件描述完全一致，可以认为是同一事件",
+            "target_event_id": "evt_new_001_fc3fd84a",
+            "similarity_hints": [
+              {
+                "candidate_id": "evt_new_001_fc3fd84a",
+                "confidence": 0.95,
+                "reason": "时间、地点未提及，但核心事件描述完全一致，可以认为是同一事件",
+                "matched_slots": [
+                  "event"
+                ]
+              }
+            ],
+            "final_action": "updated_by_llm_hint"
+          }
+        ],
+        "fallback_reasons": [],
+        "new_event_ids": [],
+        "updated_event_ids": [
+          "evt_new_001_fc3fd84a"
+        ]
+      },
+      "profile_update_decision": {
+        "enabled": true,
+        "should_update": true,
+        "reason": "major_event_completed",
+        "turns_since_last_update": 1,
+        "min_turns_between_updates": 3,
+        "max_turns_between_updates": 5
+      },
+      "profile_after_turn": {
+        "update_count": 18,
+        "last_updated_turn_id": "turn_101d619f6f",
+        "last_update_reason": "major_event_completed",
+        "planner_guidance": [
+          "Current-life profile is undercovered; consider a gentle bridge to daily routines, hobbies, social activity, or health concerns.",
+          "Known values to connect with: family.",
+          "Adapt question shape to speaking style: interactive replies; acknowledge uncertainty and clarify gently."
+        ],
+        "profile_quality": {
+          "core_identity_and_personality": 0.6667,
+          "current_life_status": 0.0,
+          "family_situation": 0.6,
+          "life_views_and_attitudes": 1.0,
+          "overall": 0.5667
+        }
+      },
+      "extracted_events": [
+        {
+          "event_id": "evt_new_002",
+          "extracted_at": "2026-04-16T21:56:21.752798",
+          "slots": {
+            "people": [
+              "孩子们"
+            ],
+            "event": "受访者涨工资，从每月42块涨到68块",
+            "feeling": "高兴",
+            "unexpanded_clues": "孩子们的反应",
+            "cause": "改革开放",
+            "result": "买了两斤肉回家包饺子，孩子们吃得满嘴流油",
+            "reflection": "那段经历让我明白做人要踏实，也要顾着家里人"
+          },
+          "confidence": 0.85,
+          "theme_id": "career",
+          "source_turns": [
+            "turn_101d619f6f"
+          ],
+          "is_update": false,
+          "updated_event_id": null,
+          "similarity_hints": [
+            {
+              "candidate_id": "evt_new_001_fc3fd84a",
+              "confidence": 0.95,
+              "reason": "时间、地点未提及，但核心事件描述完全一致，可以认为是同一事件",
+              "matched_slots": [
+                "event"
+              ]
+            }
+          ]
+        }
+      ],
+      "graph_changes": {
+        "new_events": 0,
+        "updated_events": 1,
+        "updated_themes": [
+          "THEME_02_PEAK_EXPERIENCE"
+        ],
+        "coverage_change": 0.0
+      },
+      "interviewee_memory_calls": [
+        {
+          "tool": "scripted_profile_memory",
+          "args": {
+            "turn_index": 20
+          },
+          "result": {
+            "event_id": "mem_008",
+            "event_name": "第一次涨工资",
+            "description": "1983年改革开放后第一次大幅涨工资",
+            "details": "从每月42块涨到68块，涨了26块！那天高兴得买了两斤肉回家包饺子。孩子们吃得满嘴流油，说妈今天过年啦？",
+            "typical_dialogue": "“那会儿涨20多块钱不得了哦，能买好多东西。”",
+            "timestamp_added": "2024-01-16T10:50:00Z",
+            "tags": [
+              "改革开放",
+              "涨工资",
+              "喜悦"
+            ],
+            "linked_memory_ids": [],
+            "emotional_weight": 7
+          }
+        }
+      ]
+    },
+    {
+      "turn_index": 21,
+      "turn_id": "turn_1c137f9e01",
+      "interviewer_question": "陈阿姨，听您回忆起生大儿子时的艰难，我能感受到您作为母亲的坚强。您能和我分享一下，您觉得自己的人生中，哪些时刻是您觉得特别重要的转折点吗？",
+      "interviewee_answer": "说起这个，我就想到工厂改制下岗潮。好好的厂说不行就不行了。第一批下岗了三分之一，都是跟我差不多年纪的。我因为手艺好留下来了，但心里难受，都是多年的老姐妹。 这事现在想起来，和下岗、改制、伤感都有关系。",
+      "next_question": "陈阿姨，您提到工厂改制下岗潮的时候，心里特别难受。能告诉我那是哪一年发生的事情吗？",
+      "next_action": "continue",
+      "response_path": {
+        "predicted_route": "graph_update_required",
+        "confidence": 1.0,
+        "reasons": [
+          "targeted_slot_answer"
+        ],
+        "llm_used": false,
+        "effective_route": "always_sync_extract_merge_project",
+        "observe_only": true
+      },
+      "routing_signals": {
+        "answer_length": 100,
+        "is_short": false,
+        "is_backchannel": false,
+        "pause_or_fatigue": false,
+        "uncertainty": false,
+        "marker_count": 4,
+        "targeted_slot": "feeling",
+        "answered_targeted_slot": true,
+        "recent_low_info_streak": 0,
+        "current_event_completeness": 1.0,
+        "graph_staleness_turns": 1,
+        "overall_coverage": 0.1435,
+        "theme_imbalance": 0.8333,
+        "has_time_marker": false,
+        "has_location_marker": true,
+        "has_person_marker": false,
+        "has_cause_result_marker": true,
+        "has_feeling_marker": true,
+        "has_reflection_marker": true,
+        "has_event_marker": false
+      },
+      "routing_scores": {
+        "fast_reply_recent_context": 0.0,
+        "graph_guided_planning": 0.22,
+        "graph_update_required": 1.0,
+        "defer_graph_update": 0.12
+      },
+      "routing_actual": {
+        "actual_update_value": true,
+        "high_value_update": true,
+        "answer_local_high_value_update": true,
+        "answer_local_low_information": false,
+        "context_carryover_merge_possible": false,
+        "low_information_actual": false,
+        "coverage_delta": 0.0,
+        "extracted_event_count": 1,
+        "touched_event_count": 1,
+        "touched_person_count": 1,
+        "new_event_count": 1,
+        "updated_event_count": 0,
+        "new_person_count": 1,
+        "predicted_skip_sync": false,
+        "skip_would_be_safe": null,
+        "answer_local_skip_would_be_safe": null,
+        "route_match_binary": true,
+        "answer_local_route_match_binary": true
+      },
+      "merge_record": {
+        "decisions": [
+          {
+            "event_id": "evt_new_001",
+            "action": "CREATE_NEW",
+            "confidence": 0.0,
+            "reason": "no_llm_hints",
+            "target_event_id": null,
+            "similarity_hints": [],
+            "final_action": "created_new_legacy"
+          }
+        ],
+        "fallback_reasons": [
+          "no_llm_hints",
+          "legacy_no_match_create_new"
+        ],
+        "new_event_ids": [
+          "evt_new_001_63dbd1bc"
+        ],
+        "updated_event_ids": []
+      },
+      "profile_update_decision": {
+        "enabled": true,
+        "should_update": true,
+        "reason": "major_event_completed",
+        "turns_since_last_update": 1,
+        "min_turns_between_updates": 3,
+        "max_turns_between_updates": 5
+      },
+      "profile_after_turn": {
+        "update_count": 19,
+        "last_updated_turn_id": "turn_1c137f9e01",
+        "last_update_reason": "major_event_completed",
+        "planner_guidance": [
+          "Current-life profile is undercovered; consider a gentle bridge to daily routines, hobbies, social activity, or health concerns.",
+          "Known values to connect with: family.",
+          "Adapt question shape to speaking style: moderate detail; one focused follow-up works best."
+        ],
+        "profile_quality": {
+          "core_identity_and_personality": 0.6667,
+          "current_life_status": 0.0,
+          "family_situation": 0.8,
+          "life_views_and_attitudes": 1.0,
+          "overall": 0.6167
+        }
+      },
+      "extracted_events": [
+        {
+          "event_id": "evt_new_001",
+          "extracted_at": "2026-04-16T21:56:30.804144",
+          "slots": {
+            "location": "工厂",
+            "people": [
+              "老姐妹"
+            ],
+            "event": "工厂改制下岗潮，三分之一的工人下岗",
+            "feeling": "心里难受",
+            "unexpanded_clues": "下岗的老姐妹具体是谁；工厂改制的详细情况",
+            "cause": "工厂改制",
+            "result": "三分之一的工人下岗，受访者因手艺好留下",
+            "reflection": "和下岗、改制、伤感都有关系"
+          },
+          "confidence": 0.85,
+          "theme_id": "career",
+          "source_turns": [
+            "turn_1c137f9e01"
+          ],
+          "is_update": false,
+          "updated_event_id": null,
+          "similarity_hints": []
+        }
+      ],
+      "graph_changes": {
+        "new_events": 1,
+        "updated_events": 0,
+        "updated_themes": [
+          "THEME_07_ADULT_MEMORY"
+        ],
+        "coverage_change": 0.0
+      },
+      "interviewee_memory_calls": [
+        {
+          "tool": "scripted_profile_memory",
+          "args": {
+            "turn_index": 21
+          },
+          "result": {
+            "event_id": "mem_009",
+            "event_name": "工厂改制下岗潮",
+            "description": "1995年纺织厂改制，很多工友下岗",
+            "details": "好好的厂说不行就不行了。第一批下岗了三分之一，都是跟我差不多年纪的。我因为手艺好留下来了，但心里难受，都是多年的老姐妹。",
+            "typical_dialogue": "“看着她们哭，我心里也跟刀割一样，但是有啥子办法嘛。”",
+            "timestamp_added": "2024-01-17T15:40:00Z",
+            "tags": [
+              "下岗",
+              "改制",
+              "伤感"
+            ],
+            "linked_memory_ids": [
+              "mem_004"
+            ],
+            "emotional_weight": 8
+          }
+        }
+      ]
+    },
+    {
+      "turn_index": 22,
+      "turn_id": "turn_1edda6e439",
+      "interviewer_question": "陈阿姨，您提到工厂改制下岗潮的时候，心里特别难受。能告诉我那是哪一年发生的事情吗？",
+      "interviewee_answer": "说起这个，我就想到儿子考上大学。三个娃，就老幺考上了大学。收到通知书那天，我哭了一下午。他爸在的时候总说'我们陈家要出个大学生'，可惜他没看到。 这事现在想起来，和子女、教育、骄傲都有关系。",
+      "next_question": "陈阿姨，您提到儿子考上大学那天您哭了一下午，那是一个怎样的日子？能和我分享一下具体是哪一年，您当时在哪里收到这个好消息的吗？",
+      "next_action": "continue",
+      "response_path": {
+        "predicted_route": "graph_update_required",
+        "confidence": 0.9254,
+        "reasons": [
+          "targeted_slot_answer"
+        ],
+        "llm_used": false,
+        "effective_route": "always_sync_extract_merge_project",
+        "observe_only": true
+      },
+      "routing_signals": {
+        "answer_length": 95,
+        "is_short": false,
+        "is_backchannel": false,
+        "pause_or_fatigue": false,
+        "uncertainty": false,
+        "marker_count": 2,
+        "targeted_slot": "feeling",
+        "answered_targeted_slot": true,
+        "recent_low_info_streak": 0,
+        "current_event_completeness": 0.875,
+        "graph_staleness_turns": 1,
+        "overall_coverage": 0.1435,
+        "theme_imbalance": 0.8333,
+        "has_time_marker": false,
+        "has_location_marker": false,
+        "has_person_marker": true,
+        "has_cause_result_marker": false,
+        "has_feeling_marker": false,
+        "has_reflection_marker": true,
+        "has_event_marker": false
+      },
+      "routing_scores": {
+        "fast_reply_recent_context": 0.0,
+        "graph_guided_planning": 0.22,
+        "graph_update_required": 0.7767,
+        "defer_graph_update": 0.24
+      },
+      "routing_actual": {
+        "actual_update_value": true,
+        "high_value_update": true,
+        "answer_local_high_value_update": true,
+        "answer_local_low_information": false,
+        "context_carryover_merge_possible": false,
+        "low_information_actual": false,
+        "coverage_delta": 0.0,
+        "extracted_event_count": 1,
+        "touched_event_count": 1,
+        "touched_person_count": 2,
+        "new_event_count": 1,
+        "updated_event_count": 0,
+        "new_person_count": 0,
+        "predicted_skip_sync": false,
+        "skip_would_be_safe": null,
+        "answer_local_skip_would_be_safe": null,
+        "route_match_binary": true,
+        "answer_local_route_match_binary": true
+      },
+      "merge_record": {
+        "decisions": [
+          {
+            "event_id": "evt_new_001",
+            "action": "CREATE_NEW",
+            "confidence": 0.0,
+            "reason": "no_llm_hints",
+            "target_event_id": null,
+            "similarity_hints": [],
+            "final_action": "created_new_legacy"
+          }
+        ],
+        "fallback_reasons": [
+          "no_llm_hints",
+          "legacy_no_match_create_new"
+        ],
+        "new_event_ids": [
+          "evt_new_001_41a17a2c"
+        ],
+        "updated_event_ids": []
+      },
+      "profile_update_decision": {
+        "enabled": true,
+        "should_update": true,
+        "reason": "major_event_completed",
+        "turns_since_last_update": 1,
+        "min_turns_between_updates": 3,
+        "max_turns_between_updates": 5
+      },
+      "profile_after_turn": {
+        "update_count": 20,
+        "last_updated_turn_id": "turn_1edda6e439",
+        "last_update_reason": "major_event_completed",
+        "planner_guidance": [
+          "Current-life profile is undercovered; consider a gentle bridge to daily routines, hobbies, social activity, or health concerns.",
+          "Known values to connect with: family.",
+          "Adapt question shape to speaking style: moderate detail; one focused follow-up works best."
+        ],
+        "profile_quality": {
+          "core_identity_and_personality": 0.8333,
+          "current_life_status": 0.0,
+          "family_situation": 0.8,
+          "life_views_and_attitudes": 1.0,
+          "overall": 0.6583
+        }
+      },
+      "extracted_events": [
+        {
+          "event_id": "evt_new_001",
+          "extracted_at": "2026-04-16T21:56:38.826174",
+          "slots": {
+            "people": [
+              "儿子",
+              "他爸"
+            ],
+            "event": "儿子考上大学",
+            "feeling": "难受但骄傲",
+            "unexpanded_clues": "他爸在的时候总说'我们陈家要出个大学生'，可惜他没看到",
+            "cause": "工厂改制下岗潮",
+            "result": "收到通知书那天，我哭了一下午",
+            "reflection": "和子女、教育、骄傲都有关系"
+          },
+          "confidence": 0.85,
+          "theme_id": "family",
+          "source_turns": [
+            "turn_1edda6e439"
+          ],
+          "is_update": false,
+          "updated_event_id": null,
+          "similarity_hints": []
+        }
+      ],
+      "graph_changes": {
+        "new_events": 0,
+        "updated_events": 0,
+        "updated_themes": [],
+        "coverage_change": 0.0
+      },
+      "interviewee_memory_calls": [
+        {
+          "tool": "scripted_profile_memory",
+          "args": {
+            "turn_index": 22
+          },
+          "result": {
+            "event_id": "mem_010",
+            "event_name": "儿子考上大学",
+            "description": "1998年小儿子考上四川大学",
+            "details": "三个娃，就老幺考上了大学。收到通知书那天，我哭了一下午。他爸在的时候总说'我们陈家要出个大学生'，可惜他没看到。",
+            "typical_dialogue": "“老幺考上大学那天，我把他爸的相片擦了又擦，告诉他你儿子争气。”",
+            "timestamp_added": "2024-01-18T11:20:00Z",
+            "tags": [
+              "子女",
+              "教育",
+              "骄傲"
+            ],
+            "linked_memory_ids": [],
+            "emotional_weight": 9
+          }
+        }
+      ]
+    },
+    {
+      "turn_index": 23,
+      "turn_id": "turn_8861f8e177",
+      "interviewer_question": "陈阿姨，您提到儿子考上大学那天您哭了一下午，那是一个怎样的日子？能和我分享一下具体是哪一年，您当时在哪里收到这个好消息的吗？",
+      "interviewee_answer": "说起这个，我就想到老伴去世。那天早上还好好的，说去公园打太极，突然就倒下了。送到医院没抢救过来。一起过了29年，说走就走了。那段时间觉得天都塌了。 这事现在想起来，和丧偶、悲痛、转折都有关系。",
+      "next_question": "陈阿姨，听您说起儿子考上大学和老伴去世的事情，真是百感交集。您能告诉我，儿子考上大学那年是哪一年吗？您当时是在家里收到这个好消息的吗？",
+      "next_action": "continue",
+      "response_path": {
+        "predicted_route": "graph_update_required",
+        "confidence": 1.0,
+        "reasons": [
+          "targeted_slot_answer"
+        ],
+        "llm_used": false,
+        "effective_route": "always_sync_extract_merge_project",
+        "observe_only": true
+      },
+      "routing_signals": {
+        "answer_length": 96,
+        "is_short": false,
+        "is_backchannel": false,
+        "pause_or_fatigue": false,
+        "uncertainty": false,
+        "marker_count": 4,
+        "targeted_slot": "location",
+        "answered_targeted_slot": true,
+        "recent_low_info_streak": 0,
+        "current_event_completeness": 0.75,
+        "graph_staleness_turns": 1,
+        "overall_coverage": 0.1435,
+        "theme_imbalance": 0.8333,
+        "has_time_marker": false,
+        "has_location_marker": true,
+        "has_person_marker": true,
+        "has_cause_result_marker": false,
+        "has_feeling_marker": true,
+        "has_reflection_marker": true,
+        "has_event_marker": false
+      },
+      "routing_scores": {
+        "fast_reply_recent_context": 0.0,
+        "graph_guided_planning": 0.22,
+        "graph_update_required": 1.0,
+        "defer_graph_update": 0.12
+      },
+      "routing_actual": {
+        "actual_update_value": true,
+        "high_value_update": true,
+        "answer_local_high_value_update": true,
+        "answer_local_low_information": false,
+        "context_carryover_merge_possible": false,
+        "low_information_actual": false,
+        "coverage_delta": 0.0,
+        "extracted_event_count": 1,
+        "touched_event_count": 1,
+        "touched_person_count": 1,
+        "new_event_count": 0,
+        "updated_event_count": 1,
+        "new_person_count": 0,
+        "predicted_skip_sync": false,
+        "skip_would_be_safe": null,
+        "answer_local_skip_would_be_safe": null,
+        "route_match_binary": true,
+        "answer_local_route_match_binary": true
+      },
+      "merge_record": {
+        "decisions": [
+          {
+            "event_id": "evt_new_001",
+            "action": "CREATE_NEW",
+            "confidence": 0.0,
+            "reason": "no_llm_hints",
+            "target_event_id": null,
+            "similarity_hints": [],
+            "final_action": "updated_legacy"
+          }
+        ],
+        "fallback_reasons": [
+          "no_llm_hints"
+        ],
+        "new_event_ids": [],
+        "updated_event_ids": [
+          "evt_new_001_75862a53"
+        ]
+      },
+      "profile_update_decision": {
+        "enabled": true,
+        "should_update": true,
+        "reason": "major_event_completed",
+        "turns_since_last_update": 1,
+        "min_turns_between_updates": 3,
+        "max_turns_between_updates": 5
+      },
+      "profile_after_turn": {
+        "update_count": 21,
+        "last_updated_turn_id": "turn_8861f8e177",
+        "last_update_reason": "major_event_completed",
+        "planner_guidance": [
+          "Current-life profile is undercovered; consider a gentle bridge to daily routines, hobbies, social activity, or health concerns.",
+          "Known values to connect with: family.",
+          "Adapt question shape to speaking style: moderate detail; one focused follow-up works best."
+        ],
+        "profile_quality": {
+          "core_identity_and_personality": 0.8333,
+          "current_life_status": 0.0,
+          "family_situation": 0.8,
+          "life_views_and_attitudes": 1.0,
+          "overall": 0.6583
+        }
+      },
+      "extracted_events": [
+        {
+          "event_id": "evt_new_001",
+          "extracted_at": "2026-04-16T21:56:47.629416",
+          "slots": {
+            "location": "公园",
+            "people": [
+              "老伴"
+            ],
+            "event": "老伴去世",
+            "feeling": "悲痛",
+            "unexpanded_clues": "老伴去世的具体时间未提及；老伴去世后陈阿姨的生活变化未提及",
+            "cause": "去公园打太极时突然倒下",
+            "result": "没抢救过来",
+            "reflection": "那段时间觉得天都塌了"
+          },
+          "confidence": 0.85,
+          "theme_id": "family",
+          "source_turns": [
+            "turn_8861f8e177"
+          ],
+          "is_update": false,
+          "updated_event_id": null,
+          "similarity_hints": []
+        }
+      ],
+      "graph_changes": {
+        "new_events": 0,
+        "updated_events": 1,
+        "updated_themes": [
+          "THEME_15_LOSS"
+        ],
+        "coverage_change": 0.0
+      },
+      "interviewee_memory_calls": [
+        {
+          "tool": "scripted_profile_memory",
+          "args": {
+            "turn_index": 23
+          },
+          "result": {
+            "event_id": "mem_011",
+            "event_name": "老伴去世",
+            "description": "1999年老伴突发脑溢血去世",
+            "details": "那天早上还好好的，说去公园打太极，突然就倒下了。送到医院没抢救过来。一起过了29年，说走就走了。那段时间觉得天都塌了。",
+            "typical_dialogue": "“他走得太突然了，一句话都没留下...”",
+            "timestamp_added": "2024-01-19T14:15:00Z",
+            "tags": [
+              "丧偶",
+              "悲痛",
+              "转折"
+            ],
+            "linked_memory_ids": [
+              "mem_006"
+            ],
+            "emotional_weight": 10
+          }
+        }
+      ]
+    },
+    {
+      "turn_index": 24,
+      "turn_id": "turn_66736b766a",
+      "interviewer_question": "陈阿姨，听您说起儿子考上大学和老伴去世的事情，真是百感交集。您能告诉我，儿子考上大学那年是哪一年吗？您当时是在家里收到这个好消息的吗？",
+      "interviewee_answer": "说起这个，我就想到正式退休。最后一天上班，我把机床擦了又擦。车间主任和工友们给我开了欢送会，送了条红围巾。走出厂门时回头看了好久，半辈子都在这里了。 这事现在想起来，和退休、告别、感慨都有关系。",
+      "next_question": "陈阿姨，您提到最后一天上班时把机床擦了又擦，这个细节让我感受到了您对工作的热爱和不舍。您能告诉我，您是在哪个车间，具体哪个位置完成这个仪式感的动作的吗？",
+      "next_action": "continue",
+      "response_path": {
+        "predicted_route": "graph_update_required",
+        "confidence": 0.9074,
+        "reasons": [
+          "multiple_structural_markers"
+        ],
+        "llm_used": false,
+        "effective_route": "always_sync_extract_merge_project",
+        "observe_only": true
+      },
+      "routing_signals": {
+        "answer_length": 97,
+        "is_short": false,
+        "is_backchannel": false,
+        "pause_or_fatigue": false,
+        "uncertainty": false,
+        "marker_count": 3,
+        "targeted_slot": "location",
+        "answered_targeted_slot": false,
+        "recent_low_info_streak": 0,
+        "current_event_completeness": 0.75,
+        "graph_staleness_turns": 1,
+        "overall_coverage": 0.1435,
+        "theme_imbalance": 0.8333,
+        "has_time_marker": true,
+        "has_location_marker": false,
+        "has_person_marker": false,
+        "has_cause_result_marker": false,
+        "has_feeling_marker": false,
+        "has_reflection_marker": true,
+        "has_event_marker": true
+      },
+      "routing_scores": {
+        "fast_reply_recent_context": 0.0,
+        "graph_guided_planning": 0.22,
+        "graph_update_required": 0.7493,
+        "defer_graph_update": 0.24
+      },
+      "routing_actual": {
+        "actual_update_value": true,
+        "high_value_update": true,
+        "answer_local_high_value_update": true,
+        "answer_local_low_information": false,
+        "context_carryover_merge_possible": false,
+        "low_information_actual": false,
+        "coverage_delta": 0.0,
+        "extracted_event_count": 1,
+        "touched_event_count": 1,
+        "touched_person_count": 2,
+        "new_event_count": 0,
+        "updated_event_count": 1,
+        "new_person_count": 0,
+        "predicted_skip_sync": false,
+        "skip_would_be_safe": null,
+        "answer_local_skip_would_be_safe": null,
+        "route_match_binary": true,
+        "answer_local_route_match_binary": true
+      },
+      "merge_record": {
+        "decisions": [
+          {
+            "event_id": "evt_new_002",
+            "action": "UPDATE",
+            "confidence": 0.95,
+            "reason": "high_confidence_llm_hint: 时间、人物和核心事件匹配",
+            "target_event_id": "evt_new_001_4c727f57",
+            "similarity_hints": [
+              {
+                "candidate_id": "evt_new_001_4c727f57",
+                "confidence": 0.95,
+                "reason": "时间、人物和核心事件匹配",
+                "matched_slots": [
+                  "time",
+                  "people",
+                  "event"
+                ]
+              }
+            ],
+            "final_action": "updated_by_llm_hint"
+          }
+        ],
+        "fallback_reasons": [],
+        "new_event_ids": [],
+        "updated_event_ids": [
+          "evt_new_001_4c727f57"
+        ]
+      },
+      "profile_update_decision": {
+        "enabled": true,
+        "should_update": false,
+        "reason": "below_update_threshold",
+        "turns_since_last_update": 1,
+        "min_turns_between_updates": 3,
+        "max_turns_between_updates": 5
+      },
+      "profile_after_turn": {
+        "update_count": 21,
+        "last_updated_turn_id": "turn_8861f8e177",
+        "last_update_reason": "major_event_completed",
+        "planner_guidance": [
+          "Current-life profile is undercovered; consider a gentle bridge to daily routines, hobbies, social activity, or health concerns.",
+          "Known values to connect with: family.",
+          "Adapt question shape to speaking style: moderate detail; one focused follow-up works best."
+        ],
+        "profile_quality": {
+          "core_identity_and_personality": 0.8333,
+          "current_life_status": 0.0,
+          "family_situation": 0.8,
+          "life_views_and_attitudes": 1.0,
+          "overall": 0.6583
+        }
+      },
+      "extracted_events": [
+        {
+          "event_id": "evt_new_002",
+          "extracted_at": "2026-04-16T21:57:02.234097",
+          "slots": {
+            "time": "最后一天上班",
+            "people": [
+              "车间主任",
+              "工友"
+            ],
+            "event": "退休并被车间主任和工友们欢送",
+            "feeling": "感慨",
+            "unexpanded_clues": "收到红围巾",
+            "reflection": "半辈子都在这里了"
+          },
+          "confidence": 0.95,
+          "theme_id": "THEME_07_ADULT_MEMORY",
+          "source_turns": [
+            "turn_66736b766a"
+          ],
+          "is_update": false,
+          "updated_event_id": null,
+          "similarity_hints": [
+            {
+              "candidate_id": "evt_new_001_4c727f57",
+              "confidence": 0.95,
+              "reason": "时间、人物和核心事件匹配",
+              "matched_slots": [
+                "time",
+                "people",
+                "event"
+              ]
+            }
+          ]
+        }
+      ],
+      "graph_changes": {
+        "new_events": 0,
+        "updated_events": 1,
+        "updated_themes": [
+          "THEME_07_ADULT_MEMORY"
+        ],
+        "coverage_change": 0.0
+      },
+      "interviewee_memory_calls": [
+        {
+          "tool": "scripted_profile_memory",
+          "args": {
+            "turn_index": 24
+          },
+          "result": {
+            "event_id": "mem_012",
+            "event_name": "正式退休",
+            "description": "2000年正式退休，离开工作35年的纺织厂",
+            "details": "最后一天上班，我把机床擦了又擦。车间主任和工友们给我开了欢送会，送了条红围巾。走出厂门时回头看了好久，半辈子都在这里了。",
+            "typical_dialogue": "“在厂里35年，出来的时候觉得心里空落落的。”",
+            "timestamp_added": "2024-01-20T10:05:00Z",
+            "tags": [
+              "退休",
+              "告别",
+              "感慨"
+            ],
+            "linked_memory_ids": [
+              "mem_004",
+              "mem_009"
+            ],
+            "emotional_weight": 8
+          }
+        }
+      ]
+    },
+    {
+      "turn_index": 25,
+      "turn_id": "turn_374d8a25bd",
+      "interviewer_question": "陈阿姨，您提到最后一天上班时把机床擦了又擦，这个细节让我感受到了您对工作的热爱和不舍。您能告诉我，您是在哪个车间，具体哪个位置完成这个仪式感的动作的吗？",
+      "interviewee_answer": "说起这个，我就想到抗战时期的躲警报。那会儿我才五六岁，一听到警报响，妈就拉着我们往防空洞跑。有一次跑得急，把鞋都跑掉了一只。防空洞里又黑又潮，大家挤在一起，小孩子吓得直哭。 这事现在想起来，和抗战、童年、恐惧都有关系。 回头看，那段经历让我明白做人要踏实，也要顾着家里人。",
+      "next_question": "陈阿姨，您刚才提到了抗战时期躲警报的情景，让我感受到了那个时代的紧张和不安。防空洞里挤满了人，您还记得那个防空洞是在您家附近吗？",
+      "next_action": "continue",
+      "response_path": {
+        "predicted_route": "graph_update_required",
+        "confidence": 0.9351,
+        "reasons": [
+          "multiple_structural_markers"
+        ],
+        "llm_used": false,
+        "effective_route": "always_sync_extract_merge_project",
+        "observe_only": true
+      },
+      "routing_signals": {
+        "answer_length": 136,
+        "is_short": false,
+        "is_backchannel": false,
+        "pause_or_fatigue": false,
+        "uncertainty": false,
+        "marker_count": 3,
+        "targeted_slot": "location",
+        "answered_targeted_slot": false,
+        "recent_low_info_streak": 0,
+        "current_event_completeness": 0.625,
+        "graph_staleness_turns": 1,
+        "overall_coverage": 0.1435,
+        "theme_imbalance": 0.8333,
+        "has_time_marker": false,
+        "has_location_marker": false,
+        "has_person_marker": true,
+        "has_cause_result_marker": false,
+        "has_feeling_marker": false,
+        "has_reflection_marker": true,
+        "has_event_marker": true
+      },
+      "routing_scores": {
+        "fast_reply_recent_context": 0.0,
+        "graph_guided_planning": 0.02,
+        "graph_update_required": 0.7913,
+        "defer_graph_update": 0.24
+      },
+      "routing_actual": {
+        "actual_update_value": true,
+        "high_value_update": true,
+        "answer_local_high_value_update": true,
+        "answer_local_low_information": false,
+        "context_carryover_merge_possible": false,
+        "low_information_actual": false,
+        "coverage_delta": 0.0,
+        "extracted_event_count": 1,
+        "touched_event_count": 1,
+        "touched_person_count": 1,
+        "new_event_count": 0,
+        "updated_event_count": 1,
+        "new_person_count": 0,
+        "predicted_skip_sync": false,
+        "skip_would_be_safe": null,
+        "answer_local_skip_would_be_safe": null,
+        "route_match_binary": true,
+        "answer_local_route_match_binary": true
+      },
+      "merge_record": {
+        "decisions": [
+          {
+            "event_id": "evt_new_001",
+            "action": "CREATE_NEW",
+            "confidence": 0.0,
+            "reason": "no_llm_hints",
+            "target_event_id": null,
+            "similarity_hints": [],
+            "final_action": "updated_legacy"
+          }
+        ],
+        "fallback_reasons": [
+          "no_llm_hints"
+        ],
+        "new_event_ids": [],
+        "updated_event_ids": [
+          "evt_new_001"
+        ]
+      },
+      "profile_update_decision": {
+        "enabled": true,
+        "should_update": true,
+        "reason": "major_event_completed",
+        "turns_since_last_update": 2,
+        "min_turns_between_updates": 3,
+        "max_turns_between_updates": 5
+      },
+      "profile_after_turn": {
+        "update_count": 22,
+        "last_updated_turn_id": "turn_374d8a25bd",
+        "last_update_reason": "major_event_completed",
+        "planner_guidance": [
+          "Current-life profile is undercovered; consider a gentle bridge to daily routines, hobbies, social activity, or health concerns.",
+          "Known values to connect with: family.",
+          "Adapt question shape to speaking style: moderate detail; one focused follow-up works best."
+        ],
+        "profile_quality": {
+          "core_identity_and_personality": 0.8333,
+          "current_life_status": 0.0,
+          "family_situation": 0.8,
+          "life_views_and_attitudes": 1.0,
+          "overall": 0.6583
+        }
+      },
+      "extracted_events": [
+        {
+          "event_id": "evt_new_001",
+          "extracted_at": "2026-04-16T21:57:10.612598",
+          "slots": {
+            "time": "抗战时期",
+            "people": [
+              "母亲"
+            ],
+            "event": "听到警报响后，母亲拉着受访者往防空洞跑，跑掉了一只鞋",
+            "feeling": "恐惧",
+            "unexpanded_clues": "防空洞里的情况；跑掉鞋的细节",
+            "cause": "警报响起",
+            "result": "受访者对人生有了新的认识",
+            "reflection": "那段经历让我明白做人要踏实，也要顾着家里人"
+          },
+          "confidence": 0.85,
+          "theme_id": "life_experience",
+          "source_turns": [
+            "turn_374d8a25bd"
+          ],
+          "is_update": false,
+          "updated_event_id": null,
+          "similarity_hints": []
+        }
+      ],
+      "graph_changes": {
+        "new_events": 0,
+        "updated_events": 1,
+        "updated_themes": [
+          "THEME_06_CHILDHOOD_NEGATIVE"
+        ],
+        "coverage_change": 0.0
+      },
+      "interviewee_memory_calls": [
+        {
+          "tool": "scripted_profile_memory",
+          "args": {
+            "turn_index": 25
+          },
+          "result": {
+            "event_id": "mem_001",
+            "event_name": "抗战时期的躲警报",
+            "description": "记得小时候经常要躲日本飞机的空袭警报",
+            "details": "那会儿我才五六岁，一听到警报响，妈就拉着我们往防空洞跑。有一次跑得急，把鞋都跑掉了一只。防空洞里又黑又潮，大家挤在一起，小孩子吓得直哭。",
+            "typical_dialogue": "“那会儿真是造孽哦，飞机一来就吓得要死，哪像现在这么太平。”",
+            "timestamp_added": "2024-01-10T09:30:00Z",
+            "tags": [
+              "抗战",
+              "童年",
+              "恐惧"
+            ],
+            "linked_memory_ids": [],
+            "emotional_weight": 9
+          }
+        }
+      ]
+    },
+    {
+      "turn_index": 26,
+      "turn_id": "turn_a6d98cbc23",
+      "interviewer_question": "陈阿姨，您刚才提到了抗战时期躲警报的情景，让我感受到了那个时代的紧张和不安。防空洞里挤满了人，您还记得那个防空洞是在您家附近吗？",
+      "interviewee_answer": "这个我有点记不清了，年纪大了，有些细节想不起来。",
+      "next_question": "陈阿姨，您刚才提到了抗战时期躲警报的情景，我很好奇，那时候您大概是几岁呢？",
+      "next_action": "continue",
+      "response_path": {
+        "predicted_route": "fast_reply_recent_context",
+        "confidence": 0.8728,
+        "reasons": [
+          "short_reply_without_structural_markers"
+        ],
+        "llm_used": false,
+        "effective_route": "always_sync_extract_merge_project",
+        "observe_only": true
+      },
+      "routing_signals": {
+        "answer_length": 24,
+        "is_short": true,
+        "is_backchannel": false,
+        "pause_or_fatigue": false,
+        "uncertainty": true,
+        "marker_count": 0,
+        "targeted_slot": "feeling",
+        "answered_targeted_slot": false,
+        "recent_low_info_streak": 0,
+        "current_event_completeness": 0.625,
+        "graph_staleness_turns": 1,
+        "overall_coverage": 0.1435,
+        "theme_imbalance": 0.8333,
+        "has_time_marker": false,
+        "has_location_marker": false,
+        "has_person_marker": false,
+        "has_cause_result_marker": false,
+        "has_feeling_marker": false,
+        "has_reflection_marker": false,
+        "has_event_marker": false
+      },
+      "routing_scores": {
+        "fast_reply_recent_context": 0.68,
+        "graph_guided_planning": 0.2,
+        "graph_update_required": 0.032,
+        "defer_graph_update": 0.12
+      },
+      "routing_actual": {
+        "actual_update_value": true,
+        "high_value_update": true,
+        "answer_local_high_value_update": false,
+        "answer_local_low_information": true,
+        "context_carryover_merge_possible": true,
+        "low_information_actual": false,
+        "coverage_delta": 0.0,
+        "extracted_event_count": 1,
+        "touched_event_count": 1,
+        "touched_person_count": 1,
+        "new_event_count": 1,
+        "updated_event_count": 0,
+        "new_person_count": 0,
+        "predicted_skip_sync": true,
+        "skip_would_be_safe": false,
+        "answer_local_skip_would_be_safe": true,
+        "route_match_binary": false,
+        "answer_local_route_match_binary": true
+      },
+      "merge_record": {
+        "decisions": [
+          {
+            "event_id": "evt_new_001",
+            "action": "CREATE_NEW",
+            "confidence": 0.0,
+            "reason": "no_llm_hints",
+            "target_event_id": null,
+            "similarity_hints": [],
+            "final_action": "created_new_legacy"
+          }
+        ],
+        "fallback_reasons": [
+          "no_llm_hints",
+          "legacy_no_match_create_new"
+        ],
+        "new_event_ids": [
+          "evt_new_001_af004517"
+        ],
+        "updated_event_ids": []
+      },
+      "profile_update_decision": {
+        "enabled": true,
+        "should_update": true,
+        "reason": "major_event_completed",
+        "turns_since_last_update": 1,
+        "min_turns_between_updates": 3,
+        "max_turns_between_updates": 5
+      },
+      "profile_after_turn": {
+        "update_count": 23,
+        "last_updated_turn_id": "turn_a6d98cbc23",
+        "last_update_reason": "major_event_completed",
+        "planner_guidance": [
+          "Current-life profile is undercovered; consider a gentle bridge to daily routines, hobbies, social activity, or health concerns.",
+          "Known values to connect with: family.",
+          "Adapt question shape to speaking style: brief replies; use short, concrete prompts and avoid stacking multiple questions."
+        ],
+        "profile_quality": {
+          "core_identity_and_personality": 0.8333,
+          "current_life_status": 0.0,
+          "family_situation": 0.8,
+          "life_views_and_attitudes": 1.0,
+          "overall": 0.6583
+        }
+      },
+      "extracted_events": [
+        {
+          "event_id": "evt_new_001",
+          "extracted_at": "2026-04-16T21:57:17.986354",
+          "slots": {
+            "people": [
+              "母亲"
+            ],
+            "event": "抗战时期躲警报，跑往防空洞",
+            "feeling": "恐惧",
+            "cause": "警报响起",
+            "result": "挤在防空洞里，小孩子吓得直哭",
+            "reflection": "那段经历让我明白做人要踏实，也要顾着家里人"
+          },
+          "confidence": 0.85,
+          "theme_id": "wartime",
+          "source_turns": [
+            "turn_a6d98cbc23"
+          ],
+          "is_update": false,
+          "updated_event_id": null,
+          "similarity_hints": []
+        }
+      ],
+      "graph_changes": {
+        "new_events": 0,
+        "updated_events": 0,
+        "updated_themes": [],
+        "coverage_change": 0.0
+      },
+      "interviewee_memory_calls": []
+    },
+    {
+      "turn_index": 27,
+      "turn_id": "turn_ac09337c50",
+      "interviewer_question": "陈阿姨，您刚才提到了抗战时期躲警报的情景，我很好奇，那时候您大概是几岁呢？",
+      "interviewee_answer": "嗯，是的，那时候差不多就是这样。",
+      "next_question": "陈阿姨，您刚才提到了躲警报时的情景，虽然有些细节记不太清楚了，但我想那个防空洞对您来说一定很重要。您还记得防空洞大概在您家哪个方向吗？是在东边还是西边？",
+      "next_action": "continue",
+      "response_path": {
+        "predicted_route": "graph_update_required",
+        "confidence": 0.5641,
+        "reasons": [
+          "conservative_default_update"
+        ],
+        "llm_used": false,
+        "effective_route": "always_sync_extract_merge_project",
+        "observe_only": true
+      },
+      "routing_signals": {
+        "answer_length": 16,
+        "is_short": true,
+        "is_backchannel": false,
+        "pause_or_fatigue": false,
+        "uncertainty": false,
+        "marker_count": 1,
+        "targeted_slot": "time",
+        "answered_targeted_slot": false,
+        "recent_low_info_streak": 0,
+        "current_event_completeness": 0.75,
+        "graph_staleness_turns": 1,
+        "overall_coverage": 0.1435,
+        "theme_imbalance": 0.8333,
+        "has_time_marker": false,
+        "has_location_marker": false,
+        "has_person_marker": false,
+        "has_cause_result_marker": false,
+        "has_feeling_marker": false,
+        "has_reflection_marker": false,
+        "has_event_marker": true
+      },
+      "routing_scores": {
+        "fast_reply_recent_context": 0.26,
+        "graph_guided_planning": 0.4,
+        "graph_update_required": 0.2213,
+        "defer_graph_update": 0.24
+      },
+      "routing_actual": {
+        "actual_update_value": true,
+        "high_value_update": true,
+        "answer_local_high_value_update": true,
+        "answer_local_low_information": false,
+        "context_carryover_merge_possible": false,
+        "low_information_actual": false,
+        "coverage_delta": 0.0,
+        "extracted_event_count": 1,
+        "touched_event_count": 1,
+        "touched_person_count": 1,
+        "new_event_count": 1,
+        "updated_event_count": 0,
+        "new_person_count": 0,
+        "predicted_skip_sync": false,
+        "skip_would_be_safe": null,
+        "answer_local_skip_would_be_safe": null,
+        "route_match_binary": true,
+        "answer_local_route_match_binary": true
+      },
+      "merge_record": {
+        "decisions": [
+          {
+            "event_id": "evt_new_001",
+            "action": "CREATE_NEW",
+            "confidence": 0.0,
+            "reason": "no_llm_hints",
+            "target_event_id": null,
+            "similarity_hints": [],
+            "final_action": "created_new_legacy"
+          }
+        ],
+        "fallback_reasons": [
+          "no_llm_hints",
+          "legacy_no_match_create_new"
+        ],
+        "new_event_ids": [
+          "evt_new_001_00eabc30"
+        ],
+        "updated_event_ids": []
+      },
+      "profile_update_decision": {
+        "enabled": true,
+        "should_update": true,
+        "reason": "major_event_completed",
+        "turns_since_last_update": 1,
+        "min_turns_between_updates": 3,
+        "max_turns_between_updates": 5
+      },
+      "profile_after_turn": {
+        "update_count": 24,
+        "last_updated_turn_id": "turn_ac09337c50",
+        "last_update_reason": "major_event_completed",
+        "planner_guidance": [
+          "Current-life profile is undercovered; consider a gentle bridge to daily routines, hobbies, social activity, or health concerns.",
+          "Known values to connect with: family.",
+          "Adapt question shape to speaking style: brief replies; use short, concrete prompts and avoid stacking multiple questions."
+        ],
+        "profile_quality": {
+          "core_identity_and_personality": 0.8333,
+          "current_life_status": 0.0,
+          "family_situation": 0.8,
+          "life_views_and_attitudes": 1.0,
+          "overall": 0.6583
+        }
+      },
+      "extracted_events": [
+        {
+          "event_id": "evt_new_001",
+          "extracted_at": "2026-04-16T21:57:25.198346",
+          "slots": {
+            "time": "抗战时期",
+            "people": [
+              "母亲"
+            ],
+            "event": "躲警报，跑向防空洞",
+            "feeling": "恐惧",
+            "unexpanded_clues": "防空洞的位置记不清了",
+            "cause": "警报响起",
+            "result": "明白了做人要踏实，也要顾着家里人",
+            "reflection": "做人要踏实，也要顾着家里人"
+          },
+          "confidence": 0.85,
+          "theme_id": "wartime_experience",
+          "source_turns": [
+            "turn_ac09337c50"
+          ],
+          "is_update": false,
+          "updated_event_id": null,
+          "similarity_hints": []
+        }
+      ],
+      "graph_changes": {
+        "new_events": 0,
+        "updated_events": 0,
+        "updated_themes": [],
+        "coverage_change": 0.0
+      },
+      "interviewee_memory_calls": []
+    },
+    {
+      "turn_index": 28,
+      "turn_id": "turn_b0bb6cf8b0",
+      "interviewer_question": "陈阿姨，您刚才提到了躲警报时的情景，虽然有些细节记不太清楚了，但我想那个防空洞对您来说一定很重要。您还记得防空洞大概在您家哪个方向吗？是在东边还是西边？",
+      "interviewee_answer": "说起这个，我就想到进纺织厂当学徒。我妈身体不好退下来，我就顶了她的名额。开始是学徒，一个月18块钱。车间里吵得很，说话要靠喊。师傅是个东北人，凶得很，但手艺好。 这事现在想起来，和工作、纺织厂、学徒都有关系。",
+      "next_question": "陈阿姨，您刚才提到了防空洞，我很好奇，那个防空洞是在您家附近吗？您能描述一下它大概的位置吗？",
+      "next_action": "continue",
+      "response_path": {
+        "predicted_route": "graph_update_required",
+        "confidence": 1.0,
+        "reasons": [
+          "targeted_slot_answer"
+        ],
+        "llm_used": false,
+        "effective_route": "always_sync_extract_merge_project",
+        "observe_only": true
+      },
+      "routing_signals": {
+        "answer_length": 104,
+        "is_short": false,
+        "is_backchannel": false,
+        "pause_or_fatigue": false,
+        "uncertainty": false,
+        "marker_count": 4,
+        "targeted_slot": "event",
+        "answered_targeted_slot": true,
+        "recent_low_info_streak": 0,
+        "current_event_completeness": 0.875,
+        "graph_staleness_turns": 1,
+        "overall_coverage": 0.1435,
+        "theme_imbalance": 0.8333,
+        "has_time_marker": false,
+        "has_location_marker": true,
+        "has_person_marker": true,
+        "has_cause_result_marker": false,
+        "has_feeling_marker": false,
+        "has_reflection_marker": true,
+        "has_event_marker": true
+      },
+      "routing_scores": {
+        "fast_reply_recent_context": 0.0,
+        "graph_guided_planning": 0.22,
+        "graph_update_required": 1.0,
+        "defer_graph_update": 0.12
+      },
+      "routing_actual": {
+        "actual_update_value": true,
+        "high_value_update": true,
+        "answer_local_high_value_update": true,
+        "answer_local_low_information": false,
+        "context_carryover_merge_possible": false,
+        "low_information_actual": false,
+        "coverage_delta": 0.0,
+        "extracted_event_count": 1,
+        "touched_event_count": 1,
+        "touched_person_count": 2,
+        "new_event_count": 0,
+        "updated_event_count": 1,
+        "new_person_count": 0,
+        "predicted_skip_sync": false,
+        "skip_would_be_safe": null,
+        "answer_local_skip_would_be_safe": null,
+        "route_match_binary": true,
+        "answer_local_route_match_binary": true
+      },
+      "merge_record": {
+        "decisions": [
+          {
+            "event_id": "evt_new_001",
+            "action": "CREATE_NEW",
+            "confidence": 0.0,
+            "reason": "no_llm_hints",
+            "target_event_id": null,
+            "similarity_hints": [],
+            "final_action": "updated_legacy"
+          }
+        ],
+        "fallback_reasons": [
+          "no_llm_hints"
+        ],
+        "new_event_ids": [],
+        "updated_event_ids": [
+          "evt_new_001_c9165d81"
+        ]
+      },
+      "profile_update_decision": {
+        "enabled": true,
+        "should_update": true,
+        "reason": "major_event_completed",
+        "turns_since_last_update": 1,
+        "min_turns_between_updates": 3,
+        "max_turns_between_updates": 5
+      },
+      "profile_after_turn": {
+        "update_count": 25,
+        "last_updated_turn_id": "turn_b0bb6cf8b0",
+        "last_update_reason": "major_event_completed",
+        "planner_guidance": [
+          "Current-life profile is undercovered; consider a gentle bridge to daily routines, hobbies, social activity, or health concerns.",
+          "Known values to connect with: family.",
+          "Adapt question shape to speaking style: moderate detail; one focused follow-up works best."
+        ],
+        "profile_quality": {
+          "core_identity_and_personality": 0.8333,
+          "current_life_status": 0.0,
+          "family_situation": 0.8,
+          "life_views_and_attitudes": 1.0,
+          "overall": 0.6583
+        }
+      },
+      "extracted_events": [
+        {
+          "event_id": "evt_new_001",
+          "extracted_at": "2026-04-16T21:57:33.496196",
+          "slots": {
+            "people": [
+              "母亲",
+              "师傅"
+            ],
+            "event": "陈阿姨顶替母亲名额进纺织厂当学徒",
+            "unexpanded_clues": "师傅是东北人；师傅手艺好但很凶；车间里吵得很，说话要靠喊",
+            "cause": "母亲身体不好退下来",
+            "reflection": "这事现在想起来，和工作、纺织厂、学徒都有关系。"
+          },
+          "confidence": 0.85,
+          "theme_id": "career",
+          "source_turns": [
+            "turn_b0bb6cf8b0"
+          ],
+          "is_update": false,
+          "updated_event_id": null,
+          "similarity_hints": []
+        }
+      ],
+      "graph_changes": {
+        "new_events": 0,
+        "updated_events": 1,
+        "updated_themes": [
+          "THEME_07_ADULT_MEMORY"
+        ],
+        "coverage_change": 0.0
+      },
+      "interviewee_memory_calls": [
+        {
+          "tool": "scripted_profile_memory",
+          "args": {
+            "turn_index": 28
+          },
+          "result": {
+            "event_id": "mem_004",
+            "event_name": "进纺织厂当学徒",
+            "description": "1961年顶替母亲的名额进纺织厂",
+            "details": "我妈身体不好退下来，我就顶了她的名额。开始是学徒，一个月18块钱。车间里吵得很，说话要靠喊。师傅是个东北人，凶得很，但手艺好。",
+            "typical_dialogue": "“第一天进车间，耳朵都要震聋了，后来才慢慢习惯。”",
+            "timestamp_added": "2024-01-12T11:45:00Z",
+            "tags": [
+              "工作",
+              "纺织厂",
+              "学徒"
+            ],
+            "linked_memory_ids": [],
+            "emotional_weight": 6
+          }
+        }
+      ]
+    },
+    {
+      "turn_index": 29,
+      "turn_id": "turn_921f7d3341",
+      "interviewer_question": "陈阿姨，您刚才提到了防空洞，我很好奇，那个防空洞是在您家附近吗？您能描述一下它大概的位置吗？",
+      "interviewee_answer": "说起这个，我就想到文化大革命期间被贴大字报。那时候乱得很。我说了句'厂里生产不能停'，就被说成是'唯生产力论'，大字报贴了一墙。好在车间主任保我，说我是苦出身，才没被批斗。 这事现在想起来，和文革、政治、恐惧都有关系。",
+      "next_question": "陈阿姨，您刚才提到了文化大革命期间被贴大字报的事情，我很好奇，那些大字报是贴在了厂区的哪个地方呢？能描述一下当时的场景吗？",
+      "next_action": "continue",
+      "response_path": {
+        "predicted_route": "graph_update_required",
+        "confidence": 0.9905,
+        "reasons": [
+          "multiple_structural_markers"
+        ],
+        "llm_used": false,
+        "effective_route": "always_sync_extract_merge_project",
+        "observe_only": true
+      },
+      "routing_signals": {
+        "answer_length": 109,
+        "is_short": false,
+        "is_backchannel": false,
+        "pause_or_fatigue": false,
+        "uncertainty": false,
+        "marker_count": 4,
+        "targeted_slot": null,
+        "answered_targeted_slot": false,
+        "recent_low_info_streak": 0,
+        "current_event_completeness": 0.875,
+        "graph_staleness_turns": 1,
+        "overall_coverage": 0.1435,
+        "theme_imbalance": 0.8333,
+        "has_time_marker": true,
+        "has_location_marker": false,
+        "has_person_marker": false,
+        "has_cause_result_marker": false,
+        "has_feeling_marker": true,
+        "has_reflection_marker": true,
+        "has_event_marker": true
+      },
+      "routing_scores": {
+        "fast_reply_recent_context": 0.0,
+        "graph_guided_planning": 0.22,
+        "graph_update_required": 0.8753,
+        "defer_graph_update": 0.24
+      },
+      "routing_actual": {
+        "actual_update_value": true,
+        "high_value_update": true,
+        "answer_local_high_value_update": true,
+        "answer_local_low_information": false,
+        "context_carryover_merge_possible": false,
+        "low_information_actual": false,
+        "coverage_delta": 0.0,
+        "extracted_event_count": 1,
+        "touched_event_count": 1,
+        "touched_person_count": 1,
+        "new_event_count": 0,
+        "updated_event_count": 1,
+        "new_person_count": 0,
+        "predicted_skip_sync": false,
+        "skip_would_be_safe": null,
+        "answer_local_skip_would_be_safe": null,
+        "route_match_binary": true,
+        "answer_local_route_match_binary": true
+      },
+      "merge_record": {
+        "decisions": [
+          {
+            "event_id": "evt_new_001",
+            "action": "CREATE_NEW",
+            "confidence": 0.0,
+            "reason": "no_llm_hints",
+            "target_event_id": null,
+            "similarity_hints": [],
+            "final_action": "updated_legacy"
+          }
+        ],
+        "fallback_reasons": [
+          "no_llm_hints"
+        ],
+        "new_event_ids": [],
+        "updated_event_ids": [
+          "evt_new_001_c0a68e36"
+        ]
+      },
+      "profile_update_decision": {
+        "enabled": true,
+        "should_update": true,
+        "reason": "major_event_completed",
+        "turns_since_last_update": 1,
+        "min_turns_between_updates": 3,
+        "max_turns_between_updates": 5
+      },
+      "profile_after_turn": {
+        "update_count": 26,
+        "last_updated_turn_id": "turn_921f7d3341",
+        "last_update_reason": "major_event_completed",
+        "planner_guidance": [
+          "Current-life profile is undercovered; consider a gentle bridge to daily routines, hobbies, social activity, or health concerns.",
+          "Known values to connect with: family.",
+          "Adapt question shape to speaking style: moderate detail; one focused follow-up works best."
+        ],
+        "profile_quality": {
+          "core_identity_and_personality": 0.8333,
+          "current_life_status": 0.0,
+          "family_situation": 0.8,
+          "life_views_and_attitudes": 1.0,
+          "overall": 0.6583
+        }
+      },
+      "extracted_events": [
+        {
+          "event_id": "evt_new_001",
+          "extracted_at": "2026-04-16T21:57:43.049417",
+          "slots": {
+            "time": "文化大革命期间",
+            "people": [
+              "车间主任"
+            ],
+            "event": "因说'厂里生产不能停'被贴大字报",
+            "unexpanded_clues": "被贴大字报的具体位置未提及；车间主任的详细情况未提及",
+            "cause": "说了句'厂里生产不能停'",
+            "result": "被说成是'唯生产力论'，大字报贴了一墙；车间主任保护未被批斗",
+            "reflection": "这事现在想起来，和文革、政治、恐惧都有关系"
+          },
+          "confidence": 0.85,
+          "theme_id": "political_struggle",
+          "source_turns": [
+            "turn_921f7d3341"
+          ],
+          "is_update": false,
+          "updated_event_id": null,
+          "similarity_hints": []
+        }
+      ],
+      "graph_changes": {
+        "new_events": 0,
+        "updated_events": 0,
+        "updated_themes": [],
+        "coverage_change": 0.0
+      },
+      "interviewee_memory_calls": [
+        {
+          "tool": "scripted_profile_memory",
+          "args": {
+            "turn_index": 29
+          },
+          "result": {
+            "event_id": "mem_005",
+            "event_name": "文化大革命期间被贴大字报",
+            "description": "因为说错一句话被贴了大字报",
+            "details": "那时候乱得很。我说了句'厂里生产不能停'，就被说成是'唯生产力论'，大字报贴了一墙。好在车间主任保我，说我是苦出身，才没被批斗。",
+            "typical_dialogue": "“那会儿说话要小心，一句话不对就要遭。”",
+            "timestamp_added": "2024-01-13T16:30:00Z",
+            "tags": [
+              "文革",
+              "政治",
+              "恐惧"
+            ],
+            "linked_memory_ids": [],
+            "emotional_weight": 9
+          }
+        }
+      ]
+    },
+    {
+      "turn_index": 30,
+      "turn_id": "turn_fc354c8144",
+      "interviewer_question": "陈阿姨，您刚才提到了文化大革命期间被贴大字报的事情，我很好奇，那些大字报是贴在了厂区的哪个地方呢？能描述一下当时的场景吗？",
+      "interviewee_answer": "说起这个，我就想到结婚时的'三转一响'。他是我师傅介绍的，也是厂里的。结婚时买了缝纫机，是我自己攒的钱。自行车是凤凰牌的，手表是上海牌，收音机是红灯牌。缝纫机现在还在用。 这事现在想起来，和结婚、嫁妆、幸福都有关系。 回头看，那段经历让我明白做人要踏实，也要顾着家里人。",
+      "next_question": "陈阿姨，听您讲起这些往事，我感到您的生活真是丰富多彩。您能和我分享一下，如果把您的一生比作一本书，您会怎么划分这本书的章节呢？",
+      "next_action": "next_phase",
+      "response_path": {
+        "predicted_route": "graph_update_required",
+        "confidence": 1.0,
+        "reasons": [
+          "multiple_structural_markers"
+        ],
+        "llm_used": false,
+        "effective_route": "always_sync_extract_merge_project",
+        "observe_only": true
+      },
+      "routing_signals": {
+        "answer_length": 135,
+        "is_short": false,
+        "is_backchannel": false,
+        "pause_or_fatigue": false,
+        "uncertainty": false,
+        "marker_count": 4,
+        "targeted_slot": "location",
+        "answered_targeted_slot": false,
+        "recent_low_info_streak": 0,
+        "current_event_completeness": 0.875,
+        "graph_staleness_turns": 1,
+        "overall_coverage": 0.1435,
+        "theme_imbalance": 0.8333,
+        "has_time_marker": true,
+        "has_location_marker": false,
+        "has_person_marker": true,
+        "has_cause_result_marker": false,
+        "has_feeling_marker": false,
+        "has_reflection_marker": true,
+        "has_event_marker": true
+      },
+      "routing_scores": {
+        "fast_reply_recent_context": 0.0,
+        "graph_guided_planning": 0.22,
+        "graph_update_required": 0.97,
+        "defer_graph_update": 0.24
+      },
+      "routing_actual": {
+        "actual_update_value": true,
+        "high_value_update": true,
+        "answer_local_high_value_update": true,
+        "answer_local_low_information": false,
+        "context_carryover_merge_possible": false,
+        "low_information_actual": false,
+        "coverage_delta": 0.0,
+        "extracted_event_count": 1,
+        "touched_event_count": 1,
+        "touched_person_count": 1,
+        "new_event_count": 0,
+        "updated_event_count": 1,
+        "new_person_count": 0,
+        "predicted_skip_sync": false,
+        "skip_would_be_safe": null,
+        "answer_local_skip_would_be_safe": null,
+        "route_match_binary": true,
+        "answer_local_route_match_binary": true
+      },
+      "merge_record": {
+        "decisions": [
+          {
+            "event_id": "evt_new_001",
+            "action": "CREATE_NEW",
+            "confidence": 0.0,
+            "reason": "no_llm_hints",
+            "target_event_id": null,
+            "similarity_hints": [],
+            "final_action": "updated_legacy"
+          }
+        ],
+        "fallback_reasons": [
+          "no_llm_hints"
+        ],
+        "new_event_ids": [],
+        "updated_event_ids": [
+          "evt_new_001_dffa0fdc"
+        ]
+      },
+      "profile_update_decision": {
+        "enabled": true,
+        "should_update": true,
+        "reason": "major_event_completed",
+        "turns_since_last_update": 1,
+        "min_turns_between_updates": 3,
+        "max_turns_between_updates": 5
+      },
+      "profile_after_turn": {
+        "update_count": 27,
+        "last_updated_turn_id": "turn_fc354c8144",
+        "last_update_reason": "major_event_completed",
+        "planner_guidance": [
+          "Current-life profile is undercovered; consider a gentle bridge to daily routines, hobbies, social activity, or health concerns.",
+          "Known values to connect with: family.",
+          "Adapt question shape to speaking style: moderate detail; one focused follow-up works best."
+        ],
+        "profile_quality": {
+          "core_identity_and_personality": 0.8333,
+          "current_life_status": 0.0,
+          "family_situation": 0.8,
+          "life_views_and_attitudes": 1.0,
+          "overall": 0.6583
+        }
+      },
+      "extracted_events": [
+        {
+          "event_id": "evt_new_001",
+          "extracted_at": "2026-04-16T21:57:52.351592",
+          "slots": {
+            "time": "结婚时",
+            "people": [
+              "师傅"
+            ],
+            "event": "结婚时购买了'三转一响'",
+            "unexpanded_clues": "缝纫机是我自己攒的钱买的；自行车是凤凰牌的；手表是上海牌；收音机是红灯牌",
+            "cause": "结婚",
+            "result": "缝纫机现在还在用",
+            "reflection": "那段经历让我明白做人要踏实，也要顾着家里人"
+          },
+          "confidence": 0.85,
+          "theme_id": "personal_life",
+          "source_turns": [
+            "turn_fc354c8144"
+          ],
+          "is_update": false,
+          "updated_event_id": null,
+          "similarity_hints": []
+        }
+      ],
+      "graph_changes": {
+        "new_events": 0,
+        "updated_events": 1,
+        "updated_themes": [
+          "THEME_07_ADULT_MEMORY"
+        ],
+        "coverage_change": 0.0
+      },
+      "interviewee_memory_calls": [
+        {
+          "tool": "scripted_profile_memory",
+          "args": {
+            "turn_index": 30
+          },
+          "result": {
+            "event_id": "mem_006",
+            "event_name": "结婚时的'三转一响'",
+            "description": "1970年结婚，嫁妆是缝纫机、自行车、手表和收音机",
+            "details": "他是我师傅介绍的，也是厂里的。结婚时买了缝纫机，是我自己攒的钱。自行车是凤凰牌的，手表是上海牌，收音机是红灯牌。缝纫机现在还在用。",
+            "typical_dialogue": "“那会儿结婚，有'三转一响'就不得了了，现在年轻人要房要车。”",
+            "timestamp_added": "2024-01-14T09:10:00Z",
+            "tags": [
+              "结婚",
+              "嫁妆",
+              "幸福"
+            ],
+            "linked_memory_ids": [],
+            "emotional_weight": 8
+          }
+        }
+      ]
+    }
+  ],
+  "final_dynamic_profile": {
+    "schema_version": "dynamic_elder_profile_v1",
+    "update_count": 27,
+    "last_updated_turn_id": "turn_fc354c8144",
+    "last_update_reason": "major_event_completed",
+    "updated_at": "2026-04-16T21:57:55.205950",
+    "profile_quality": {
+      "core_identity_and_personality": 0.8333,
+      "current_life_status": 0.0,
+      "family_situation": 0.8,
+      "life_views_and_attitudes": 1.0,
+      "overall": 0.6583
+    },
+    "planner_guidance": [
+      "Current-life profile is undercovered; consider a gentle bridge to daily routines, hobbies, social activity, or health concerns.",
+      "Known values to connect with: family.",
+      "Adapt question shape to speaking style: moderate detail; one focused follow-up works best."
+    ],
+    "sections": {
+      "core_identity_and_personality": {
+        "identity_background": {
+          "value": "name=陈秀英; age=82; hometown=四川省成都市; background=1942年出生，经历过抗日战争后期、解放、大跃进、文革、改革开放，在纺织厂工作到退休，养育了三个子女，现独居。",
+          "confidence": 0.9,
+          "evidence_turn_ids": [],
+          "evidence_event_ids": []
+        },
+        "life_overview": {
+          "value": [
+            "老伴去世",
+            "听到警报响后往防空洞跑，跑掉了一只鞋",
+            "抗战时期躲警报，跑往防空洞",
+            "躲警报，跑向防空洞",
+            "1942年出生，经历过抗日战争后期、解放、大跃进、文革、改革开放，在纺织厂工作到退休，养育了三个子女，现独居。",
+            "陈阿姨顶替母亲名额进纺织厂当学徒",
+            "因说'厂里生产不能停'被贴大字报",
+            "结婚时购买了'三转一响'"
+          ],
+          "confidence": 0.75,
+          "evidence_turn_ids": [
+            "turn_b0bb6cf8b0",
+            "turn_921f7d3341",
+            "turn_fc354c8144"
+          ],
+          "evidence_event_ids": [
+            "evt_new_001_41a17a2c",
+            "evt_new_001_af004517",
+            "evt_new_001_00eabc30"
+          ]
+        },
+        "personality_traits": {
+          "value": [
+            "pride in contribution"
+          ],
+          "confidence": 0.5,
+          "evidence_turn_ids": [
+            "turn_1edda6e439"
+          ],
+          "evidence_event_ids": [
+            "evt_new_001_41a17a2c"
+          ]
+        },
+        "speaking_style": {
+          "value": "moderate detail; one focused follow-up works best",
+          "confidence": 0.45,
+          "evidence_turn_ids": [
+            "turn_b0bb6cf8b0",
+            "turn_921f7d3341",
+            "turn_fc354c8144"
+          ],
+          "evidence_event_ids": []
+        },
+        "common_expressions": {
+          "value": [
+            "师傅是个东北人，凶得很，但手艺好",
+            "这事现在想起来，和工作、纺织厂、学徒都有关系",
+            "那时候乱得很",
+            "好在车间主任保我，说我是苦出身，才没被批斗",
+            "这事现在想起来，和文革、政治、恐惧都有关系",
+            "结婚时买了缝纫机，是我自己攒的钱",
+            "缝纫机现在还在用",
+            "这事现在想起来，和结婚、嫁妆、幸福都有关系"
+          ],
+          "confidence": 0.35,
+          "evidence_turn_ids": [
+            "turn_b0bb6cf8b0",
+            "turn_921f7d3341",
+            "turn_fc354c8144"
+          ],
+          "evidence_event_ids": []
+        }
+      },
+      "family_situation": {
+        "marital_status": {
+          "value": [
+            "老伴 (spouse, linked_events=1)"
+          ],
+          "confidence": 0.65,
+          "evidence_turn_ids": [
+            "turn_b0bb6cf8b0",
+            "turn_921f7d3341",
+            "turn_fc354c8144"
+          ],
+          "evidence_event_ids": []
+        },
+        "parents_children": {
+          "value": [
+            "孩子们 (child, linked_events=1)",
+            "孩子们 (child, linked_events=2)",
+            "儿子 (child, linked_events=1)",
+            "父亲 (father, linked_events=1)",
+            "大儿子 (child, linked_events=2)",
+            "儿子 (child, linked_events=2)",
+            "母亲 (mother, linked_events=3)",
+            "母亲 (mother, linked_events=4)"
+          ],
+          "confidence": 0.65,
+          "evidence_turn_ids": [
+            "turn_b0bb6cf8b0",
+            "turn_921f7d3341",
+            "turn_fc354c8144"
+          ],
+          "evidence_event_ids": []
+        },
+        "siblings": {
+          "value": [
+            "老姐妹 (sibling, linked_events=1)"
+          ],
+          "confidence": 0.65,
+          "evidence_turn_ids": [
+            "turn_b0bb6cf8b0",
+            "turn_921f7d3341",
+            "turn_fc354c8144"
+          ],
+          "evidence_event_ids": []
+        },
+        "other_relatives": {
+          "value": [
+            "王婆婆 (in_law, linked_events=1)",
+            "王婆婆 (in_law, linked_events=2)",
+            "王婆婆 (in_law, linked_events=3)",
+            "陈阿姨 (uncle_aunt, linked_events=1)"
+          ],
+          "confidence": 0.55,
+          "evidence_turn_ids": [
+            "turn_b0bb6cf8b0",
+            "turn_921f7d3341",
+            "turn_fc354c8144"
+          ],
+          "evidence_event_ids": []
+        }
+      },
+      "life_views_and_attitudes": {
+        "life_attitude_philosophy": {
+          "value": [
+            "现在想起来，和上学、童年、贫困都有关系",
+            "和文革、政治、恐惧都有关系",
+            "和下岗、改制、伤感都有关系",
+            "和子女、教育、骄傲都有关系",
+            "现在想起来，和抗战、童年、恐惧都有关系",
+            "那段经历让我明白做人要踏实，也要顾着家里人",
+            "和工作、纺织厂、学徒都有关系",
+            "和结婚、嫁妆、幸福都有关系"
+          ],
+          "confidence": 0.7,
+          "evidence_turn_ids": [
+            "turn_b0bb6cf8b0",
+            "turn_921f7d3341",
+            "turn_fc354c8144"
+          ],
+          "evidence_event_ids": [
+            "evt_new_001_41a17a2c",
+            "evt_new_001_af004517",
+            "evt_new_001_00eabc30"
+          ]
+        },
+        "society_interpersonal_relationships": {
+          "value": [
+            "老师 (teacher, linked_events=1)",
+            "师傅 (mentor, linked_events=1)",
+            "车间主任 (leader, linked_events=1)",
+            "师傅 (mentor, linked_events=2)",
+            "老师 (teacher, linked_events=2)",
+            "车间主任 (leader, linked_events=2)",
+            "工友 (coworker, linked_events=1)",
+            "车间主任 (leader, linked_events=3)"
+          ],
+          "confidence": 0.45,
+          "evidence_turn_ids": [
+            "turn_b0bb6cf8b0",
+            "turn_921f7d3341",
+            "turn_fc354c8144"
+          ],
+          "evidence_event_ids": []
+        },
+        "core_values": {
+          "value": [
+            "family"
+          ],
+          "confidence": 0.55,
+          "evidence_turn_ids": [
+            "turn_a6d98cbc23",
+            "turn_ac09337c50",
+            "turn_921f7d3341"
+          ],
+          "evidence_event_ids": [
+            "evt_new_001_85077f86",
+            "evt_new_001_af004517",
+            "evt_new_001_00eabc30"
+          ]
+        }
+      }
+    }
+  },
+  "output_files": {
+    "json": "C:\\Users\\Jenny\\Desktop\\narrative planner\\results\\graph-routing-observation\\graph_routing_30turn_profile_scripted_v3.json",
+    "markdown": "C:\\Users\\Jenny\\Desktop\\narrative planner\\results\\graph-routing-observation\\graph_routing_30turn_profile_scripted_v3.md"
+  }
+}

@@ -31,6 +31,11 @@ from src.services import (
 )
 from src.state import BackgroundJobStatus, ElderProfile, SessionState, TurnRecord
 
+# Neo4j-backed components (loaded only when NEO4J_ENABLED=true)
+if Config.NEO4J_ENABLED:
+    from src.services.neo4j_graph_adapter import Neo4jGraphAdapter
+    from src.services.neo4j_graph_projector import Neo4jGraphProjector
+
 
 class SessionOrchestrator:
     def __init__(
@@ -52,13 +57,22 @@ class SessionOrchestrator:
         self.session_id = session_id
         self.mode = mode
         self.store = store or InMemorySessionStateStore()
-        self.graph_manager = GraphManager()
+        # Select graph backend based on NEO4J_ENABLED flag.
+        if Config.NEO4J_ENABLED:
+            self.graph_manager = Neo4jGraphAdapter()
+        else:
+            self.graph_manager = GraphManager()
         self.interviewer_agent = interviewer_agent or InterviewerAgent()
         self.event_vector_store = event_vector_store or EventVectorStore()
         self.extraction_agent = extraction_agent or ExtractionAgent(vector_store=self.event_vector_store)
         self.evaluator_agent = evaluator_agent or EvaluatorAgent()
         self.merge_engine = merge_engine or MergeEngine()
-        self.graph_projector = graph_projector or GraphProjector()
+        if graph_projector:
+            self.graph_projector = graph_projector
+        elif Config.NEO4J_ENABLED:
+            self.graph_projector = Neo4jGraphProjector()
+        else:
+            self.graph_projector = GraphProjector()
         self.memory_projector = memory_projector or MemoryProjector()
         self.profile_projector = profile_projector or ProfileProjector()
         self.coverage_calculator = coverage_calculator or CoverageCalculator()
@@ -95,6 +109,12 @@ class SessionOrchestrator:
         if Config.ENABLE_DYNAMIC_PROFILE_UPDATE:
             state.dynamic_profile = self.profile_projector.build_initial_profile(state)
         self.graph_projector.initialize_from_elder_profile(self.graph_manager, elder_info)
+        # Persist initial theme state to Neo4j if available.
+        if Config.NEO4J_ENABLED:
+            try:
+                self.graph_manager.sync_themes_to_neo4j()
+            except Exception:
+                logger.debug("Neo4j theme sync skipped", exc_info=True)
         state.theme_state = self.graph_projector.build_theme_state(self.graph_manager)
         graph_summary = self.coverage_calculator.build_graph_summary(state, self.graph_manager)
         # 统一架构：不再调用 PlannerAgent，规划逻辑整合到 InterviewerAgent 中
@@ -428,11 +448,26 @@ class SessionOrchestrator:
         last_fallback_question = str(state.metadata.get("last_fallback_question", "") or "")
         if last_fallback_question and last_question and last_fallback_question == last_question:
             fallback_repeat_count += 1
+
+        # Build optional Neo4j relation service for Chain B.
+        relation_service = None
+        if Config.NEO4J_ENABLED:
+            try:
+                from src.services.neo4j_graph_adapter import Neo4jGraphAdapter
+                if isinstance(self.graph_manager, Neo4jGraphAdapter):
+                    neo4j_mgr = self.graph_manager.get_neo4j_manager()
+                    if neo4j_mgr:
+                        from src.services.neo4j_relation_service import Neo4jRelationService
+                        relation_service = Neo4jRelationService(neo4j_mgr)
+            except Exception:
+                pass
+
         policy_result = self.decision_policy.evaluate(
             state=state,
             post_overall_coverage=post_overall_coverage,
             focus_event_payload=focus_event_payload,
             fallback_repeat_count=fallback_repeat_count,
+            relation_service=relation_service,
         )
         low_info_streak = int(policy_result.get("low_info_streak", 0) or 0)
         preferred_action = str(policy_result.get("preferred_action", "continue"))
@@ -474,6 +509,7 @@ class SessionOrchestrator:
             "recommended_theme_id": recommended_theme_id,
             "recommended_theme_title": recommended_theme_title,
             "theme_rankings": policy_result.get("theme_rankings", []),
+            "suggested_angle": policy_result.get("suggested_angle", ""),
             "dynamic_profile": dynamic_profile_hint,
             "profile_guidance": profile_guidance,
         }

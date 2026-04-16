@@ -23,6 +23,10 @@ from src.core.graph_manager import GraphManager
 from src.core.event_node import EventNode
 from src.config import Config
 
+# Neo4j 条件导入
+if Config.NEO4J_ENABLED:
+    from src.services.neo4j_graph_adapter import Neo4jGraphAdapter
+
 logger = logging.getLogger(__name__)
 
 # ==================== 数据模型 ====================
@@ -77,8 +81,8 @@ class SessionEndResponse(BaseModel):
 
 # ==================== 全局状态管理 ====================
 
-# 会话存储: session_id -> GraphManager
-active_graphs: Dict[str, GraphManager] = {}
+# 会话存储: session_id -> GraphManager (或 Neo4jGraphAdapter)
+active_graphs: Dict[str, Any] = {}
 
 
 # ==================== 生命周期管理 ====================
@@ -94,6 +98,7 @@ async def lifespan(app: FastAPI):
     logger.info("=" * 50)
     logger.info("动态事件图谱 API 服务启动")
     logger.info(f"日志级别: {Config.LOG_LEVEL}")
+    logger.info(f"Neo4j: {'启用' if Config.NEO4J_ENABLED else '未启用'}")
     logger.info("=" * 50)
 
     yield
@@ -256,7 +261,7 @@ async def interview_websocket(websocket: WebSocket, session_id: str):
 async def _process_user_message_stream(
     session_id: str,
     user_content: str,
-    graph_manager: GraphManager
+    graph_manager: Any
 ):
     """
     处理用户消息并流式返回响应
@@ -330,7 +335,12 @@ async def create_session(request: CreateSessionRequest):
         session_id = f"session_{uuid.uuid4().hex[:16]}"
 
         # 创建图谱管理器
-        graph_manager = GraphManager()
+        if Config.NEO4J_ENABLED:
+            graph_manager = Neo4jGraphAdapter()
+            logger.info("使用 Neo4jGraphAdapter 创建会话")
+        else:
+            graph_manager = GraphManager()
+            logger.info("使用 GraphManager (NetworkX) 创建会话")
         active_graphs[session_id] = graph_manager
 
         logger.info(f"创建新会话: {session_id}")

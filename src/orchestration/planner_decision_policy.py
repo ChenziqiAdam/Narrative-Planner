@@ -108,6 +108,7 @@ class PlannerDecisionPolicy:
         post_overall_coverage: float,
         focus_event_payload: Optional[Dict[str, Any]],
         fallback_repeat_count: int = 0,
+        relation_service: Optional[Any] = None,
     ) -> Dict[str, Any]:
         low_info_streak = self._recent_low_information_streak(state)
         signals = self._compute_signals(
@@ -129,6 +130,28 @@ class PlannerDecisionPolicy:
 
         recommended_theme_id = theme_rankings[0]["theme_id"] if theme_rankings else None
         recommended_theme_title = theme_rankings[0]["title"] if theme_rankings else None
+        suggested_angle = ""
+
+        # Chain B: when switching topics, consult the graph relationship service.
+        if preferred_action == "next_phase" and relation_service is not None and recommended_theme_id:
+            try:
+                current_theme = state.current_focus_theme_id
+                if current_theme:
+                    candidate_ids = [t["theme_id"] for t in theme_rankings[:5]]
+                    suggestion = relation_service.suggest_next_theme(
+                        current_theme, candidate_ids
+                    )
+                    if suggestion:
+                        # Override with graph-connected theme if it's in the top candidates.
+                        if suggestion["theme_id"] in candidate_ids[:3]:
+                            recommended_theme_id = suggestion["theme_id"]
+                            recommended_theme_title = next(
+                                (t["title"] for t in theme_rankings if t["theme_id"] == recommended_theme_id),
+                                recommended_theme_title,
+                            )
+                        suggested_angle = suggestion.get("angle", "")
+            except Exception:
+                pass  # Graph query failure should not break the decision chain.
 
         return {
             "weights": self.weights.to_dict(),
@@ -145,6 +168,7 @@ class PlannerDecisionPolicy:
             "theme_rankings": theme_rankings,
             "recommended_theme_id": recommended_theme_id,
             "recommended_theme_title": recommended_theme_title,
+            "suggested_angle": suggested_angle,
             "low_info_streak": low_info_streak,
         }
 
