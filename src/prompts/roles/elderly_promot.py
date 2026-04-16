@@ -186,7 +186,7 @@ class ElderPromptGenerator:
         
 if __name__ == "__main__":
     generator = ElderPromptGenerator()
-    profile_data = generator.load_elder_profile("prompts/roles/elder_profile_example.json")
+    profile_data = generator.load_elder_profile("elder_profile_1.json")
     prompt = generator.generate_prompt(profile_data)
     print(prompt)
-    generator.save_prompt_to_file(prompt, "prompts/roles/elderly_system_prompt.txt")
+    generator.save_prompt_to_file(prompt, "elderly_system_prompt_1.txt")
