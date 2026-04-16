@@ -11,16 +11,18 @@ import logging
 import threading
 from typing import Any, Dict, Optional
 
-from src.core.graph_manager import GraphManager
-
 logger = logging.getLogger(__name__)
 
 
 class CoverageCache:
-    """Thread-safe coverage cache backed by a GraphManager-compatible source."""
+    """Thread-safe coverage cache.
+
+    Two refresh modes:
+    - ``refresh(source)`` — calls source.calculate_coverage() (legacy fallback)
+    - ``refresh_from_metrics(metrics)`` — accepts pre-computed dict (Neo4j path)
+    """
 
     def __init__(self, source: Any = None):
-        # ``source`` is expected to be a GraphManager or Neo4jGraphAdapter.
         self._source = source
         self._lock = threading.Lock()
         self._metrics: Dict[str, Any] = {
@@ -32,7 +34,7 @@ class CoverageCache:
     # ── Refresh ──
 
     def refresh(self, source: Optional[Any] = None) -> None:
-        """Re-compute coverage from the graph source."""
+        """Re-compute coverage from the graph source (legacy fallback)."""
         src = source or self._source
         if src is None:
             return
@@ -47,6 +49,19 @@ class CoverageCache:
                 }
         except Exception:
             logger.debug("CoverageCache refresh failed", exc_info=True)
+
+    def refresh_from_metrics(self, metrics: Dict[str, Any]) -> None:
+        """Refresh cache from pre-computed metrics (Neo4j Cypher aggregation).
+
+        Args:
+            metrics: Dict with keys "overall", "by_domain", "slot_coverage".
+        """
+        with self._lock:
+            self._metrics = {
+                "overall": metrics.get("overall", 0.0),
+                "by_domain": metrics.get("by_domain", {}),
+                "slot_coverage": metrics.get("slot_coverage", {}),
+            }
 
     # ── Fast reads ──
 

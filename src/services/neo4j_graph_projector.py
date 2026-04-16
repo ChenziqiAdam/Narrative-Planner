@@ -2,30 +2,26 @@
 
 Maintains the exact same public interface as ``GraphProjector`` so that
 ``SessionOrchestrator`` can swap it in without any code changes.  The key
-difference is that it also persists extracted entities (Person, Location,
-Emotion) to Neo4j via ``Neo4jGraphAdapter``.
+difference is that it also:
+
+1. Persists extracted entities (Person, Location, Emotion) to Neo4j.
+2. Syncs updated theme slots_filled to Neo4j Topic nodes.
+3. Refreshes the CoverageCache from Neo4j Cypher aggregation.
 """
 
 from __future__ import annotations
 
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
-from src.core.event_node import EventNode
-from src.core.theme_node import NodeStatus
-from src.state import CanonicalEvent, SessionState, ThemeState
+from src.state import SessionState
 from src.services.graph_projector import GraphProjector
 
 logger = logging.getLogger(__name__)
 
 
 class Neo4jGraphProjector(GraphProjector):
-    """Extends GraphProjector with Neo4j persistence.
-
-    Inherits all projection logic from the original GraphProjector.
-    Overrides only the methods that need to persist extra entities
-    to Neo4j.
-    """
+    """Extends GraphProjector with Neo4j persistence and cache refresh."""
 
     def __init__(self):
         super().__init__()
@@ -36,15 +32,26 @@ class Neo4jGraphProjector(GraphProjector):
         graph_manager: Any,  # Neo4jGraphAdapter or GraphManager
         event_ids: List[str],
     ) -> Dict[str, Any]:
-        """Apply projection using the base class, then persist extras to Neo4j."""
+        """Apply projection, persist extras to Neo4j, then refresh cache."""
         result = super().apply_projection(state, graph_manager, event_ids)
 
-        # Persist extra entities to Neo4j if the adapter supports it.
+        # Only run Neo4j-specific logic if the adapter supports it.
         from src.services.neo4j_graph_adapter import Neo4jGraphAdapter
         if isinstance(graph_manager, Neo4jGraphAdapter):
             neo4j_mgr = graph_manager.get_neo4j_manager()
             if neo4j_mgr:
+                # 1. Persist Person, Location, Emotion nodes.
                 self._persist_extra_entities(state, event_ids, neo4j_mgr)
+
+                # 2. Sync updated theme slots to Neo4j.
+                updated_themes = result.get("updated_themes", [])
+                for theme_id in updated_themes:
+                    theme = graph_manager.theme_nodes.get(theme_id)
+                    if theme:
+                        graph_manager._persist_theme_update(theme_id, theme)
+
+                # 3. Refresh CoverageCache from Neo4j Cypher aggregation.
+                graph_manager._refresh_coverage_cache()
 
         return result
 

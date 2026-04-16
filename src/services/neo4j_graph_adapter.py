@@ -21,6 +21,7 @@ from src.core.event_node import EventNode
 from src.core.node_status import NodeStatus
 from src.core.theme_loader import ThemeLoader
 from src.core.theme_node import ThemeNode
+from src.services.coverage_cache import CoverageCache
 from src.storage.neo4j.driver import Neo4jGraphDriver
 from src.storage.neo4j.manager import Neo4jGraphManager
 from src.storage.neo4j.models import TopicNode, EventNodeNeo4j
@@ -46,6 +47,9 @@ class Neo4jGraphAdapter:
         self._neo4j_mgr: Optional[Neo4jGraphManager] = None
         self._neo4j_driver = neo4j_driver
         self._neo4j_ready = False
+
+        # CoverageCache — populated from Neo4j Cypher aggregation.
+        self.coverage_cache = CoverageCache()
 
         # Initialise themes in memory (same as GraphManager).
         self._initialize_themes()
@@ -92,7 +96,8 @@ class Neo4jGraphAdapter:
         self.event_nodes[event.event_id] = event
         theme = self.theme_nodes[theme_id]
         theme.add_extracted_event(event.event_id)
-        theme.increment_depth()
+        # NOTE: depth increment is done in GraphProjector._update_theme_slots()
+        # to avoid double-increment (it also calls theme.increment_depth()).
         if theme.status == NodeStatus.PENDING:
             theme.mark_mentioned()
             self._update_theme_status(theme_id, NodeStatus.MENTIONED)
@@ -136,6 +141,18 @@ class Neo4jGraphAdapter:
             self._ensure_neo4j().update_topic_status(theme_id, status.value)
 
     def calculate_coverage(self) -> Dict[str, float]:
+        if self._neo4j_ready:
+            cached = self.coverage_cache.get_all()
+            return {"overall": cached["overall"], "by_domain": cached["by_domain"]}
+        return self._calculate_coverage_from_memory()
+
+    def calculate_slot_coverage(self) -> Dict[str, float]:
+        if self._neo4j_ready:
+            cached = self.coverage_cache.get_all()
+            return cached["slot_coverage"]
+        return self._calculate_slot_coverage_from_memory()
+
+    def _calculate_coverage_from_memory(self) -> Dict[str, float]:
         total_themes = len(self.theme_nodes)
         if total_themes == 0:
             return {"overall": 0.0, "by_domain": {}}
@@ -154,7 +171,7 @@ class Neo4jGraphAdapter:
 
         return {"overall": overall, "by_domain": by_domain}
 
-    def calculate_slot_coverage(self) -> Dict[str, float]:
+    def _calculate_slot_coverage_from_memory(self) -> Dict[str, float]:
         events = list(self.event_nodes.values())
         if not events:
             return {s: 0.0 for s in ("time", "location", "people", "event", "reflection")}
@@ -296,8 +313,36 @@ class Neo4jGraphAdapter:
                 depth_level=event.depth_level,
             )
             mgr.upsert_event(neo4j_event, theme_id)
+            # Also update the Topic's extracted_events list.
+            mgr.add_event_to_topic(theme_id, event.event_id)
         except Exception:
             logger.debug("Neo4j persist failed for event %s", event.event_id, exc_info=True)
+
+    def _persist_theme_update(self, theme_id: str, theme: ThemeNode) -> None:
+        """Sync theme slots_filled and depth to Neo4j Topic node."""
+        try:
+            mgr = self._ensure_neo4j()
+            if not self._neo4j_ready:
+                return
+            mgr.update_topic_slots(theme_id, theme.slots_filled)
+            # Sync exploration_depth.
+            mgr.driver.execute_query(
+                "MATCH (t:Topic {id: $id}) SET t.exploration_depth = $depth RETURN t",
+                {"id": theme_id, "depth": theme.exploration_depth},
+            )
+        except Exception:
+            logger.debug("Neo4j theme update failed for %s", theme_id, exc_info=True)
+
+    def _refresh_coverage_cache(self) -> None:
+        """Refresh CoverageCache from Neo4j Cypher aggregation."""
+        if not self._neo4j_ready:
+            return
+        try:
+            mgr = self._ensure_neo4j()
+            metrics = mgr.get_coverage_metrics()
+            self.coverage_cache.refresh_from_metrics(metrics)
+        except Exception:
+            logger.debug("Coverage cache refresh from Neo4j failed", exc_info=True)
 
     def sync_themes_to_neo4j(self) -> int:
         """Bulk-push all in-memory themes to Neo4j.  Returns count synced."""

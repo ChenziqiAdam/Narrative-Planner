@@ -113,6 +113,7 @@ class SessionOrchestrator:
         if Config.NEO4J_ENABLED:
             try:
                 self.graph_manager.sync_themes_to_neo4j()
+                self.graph_manager._refresh_coverage_cache()
             except Exception:
                 logger.debug("Neo4j theme sync skipped", exc_info=True)
         state.theme_state = self.graph_projector.build_theme_state(self.graph_manager)

@@ -246,10 +246,10 @@ class GraphProjector:
             return pending[0].theme_id
         return None
 
-    def _update_theme_slots(self, theme, event: CanonicalEvent) -> None:
+    def _update_theme_slots(self, theme, event: CanonicalEvent) -> bool:
         if not theme.slots_filled:
             theme.increment_depth()
-            return
+            return False
 
         slot_sources = {
             "time": event.time,
@@ -271,6 +271,7 @@ class GraphProjector:
             "coping": event.reflection or event.result,
         }
 
+        any_updated = False
         for slot_name in list(theme.slots_filled.keys()):
             lowered = slot_name.lower()
             matched_value = None
@@ -279,8 +280,12 @@ class GraphProjector:
                     matched_value = value
                     break
             if matched_value is not None:
+                was_unfilled = not theme.slots_filled.get(slot_name, False)
                 theme.update_slot(slot_name, True)
+                if was_unfilled:
+                    any_updated = True
         theme.increment_depth()
+        return any_updated
 
     def _estimate_emotion(self, event: CanonicalEvent) -> float:
         text = " ".join(value for value in [event.feeling, event.reflection] if value)
