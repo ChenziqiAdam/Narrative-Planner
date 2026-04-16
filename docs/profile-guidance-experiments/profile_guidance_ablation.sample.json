@@ -1,0 +1,65 @@
+{
+  "experiment_name": "dynamic_profile_guidance_ablation",
+  "description": "Compare planner behavior with dynamic elder profile guidance disabled, conservative, default, and fast update windows.",
+  "fixed_controls": {
+    "agent_mode": "planner",
+    "same_elder_profile": true,
+    "same_interviewee_simulator": true,
+    "same_max_turns": true,
+    "same_decision_weight_vector": true
+  },
+  "variants": [
+    {
+      "name": "profile_disabled",
+      "env": {
+        "ENABLE_DYNAMIC_PROFILE_UPDATE": "false"
+      }
+    },
+    {
+      "name": "profile_conservative_4_6",
+      "env": {
+        "ENABLE_DYNAMIC_PROFILE_UPDATE": "true",
+        "DYNAMIC_PROFILE_MIN_TURNS_BETWEEN_UPDATES": "4",
+        "DYNAMIC_PROFILE_MAX_TURNS_BETWEEN_UPDATES": "6",
+        "PROFILE_GUIDANCE_MAX_NOTES": "3"
+      }
+    },
+    {
+      "name": "profile_default_3_5",
+      "env": {
+        "ENABLE_DYNAMIC_PROFILE_UPDATE": "true",
+        "DYNAMIC_PROFILE_MIN_TURNS_BETWEEN_UPDATES": "3",
+        "DYNAMIC_PROFILE_MAX_TURNS_BETWEEN_UPDATES": "5",
+        "PROFILE_GUIDANCE_MAX_NOTES": "4"
+      }
+    },
+    {
+      "name": "profile_fast_2_3",
+      "env": {
+        "ENABLE_DYNAMIC_PROFILE_UPDATE": "true",
+        "DYNAMIC_PROFILE_MIN_TURNS_BETWEEN_UPDATES": "2",
+        "DYNAMIC_PROFILE_MAX_TURNS_BETWEEN_UPDATES": "3",
+        "PROFILE_GUIDANCE_MAX_NOTES": "4"
+      }
+    }
+  ],
+  "metrics": [
+    "dynamic_profile.profile_quality.overall",
+    "dynamic_profile.update_count",
+    "profile_update.reason_distribution",
+    "planner_decision_metrics.action_counts",
+    "planner_decision_metrics.phase_switch_count",
+    "planner_decision_metrics.repeated_question_count",
+    "session_metrics.average_information_gain",
+    "session_metrics.average_turn_quality",
+    "coverage_metrics.overall",
+    "turn.debug_trace.planning.preferred_focus",
+    "turn.debug_trace.planning.slot_rankings",
+    "turn.debug_trace.planning.theme_rankings"
+  ],
+  "hypotheses": [
+    "Default 3/5 update windows improve family/current-life/value coverage compared with disabled profile guidance.",
+    "Fast 2/3 updates may increase topic switching or overfit transient details.",
+    "Conservative 4/6 updates may be more stable but slower to adapt speaking-style guidance."
+  ]
+}

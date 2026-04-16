@@ -325,6 +325,11 @@ class InterviewerAgent:
             parts.append(f"\n## 情绪观察")
             parts.append(emotional_note)
 
+        dynamic_profile_note = self._build_dynamic_profile_text(generation_hints)
+        if dynamic_profile_note:
+            parts.append("\n## Dynamic elder profile")
+            parts.append(dynamic_profile_note)
+
         # 7. 生成提示（用于降低重复追问）
         if generation_hints:
             parts.append("\n## 策略提示")
@@ -562,6 +567,47 @@ class InterviewerAgent:
             notes.append("老人情绪积极，保持轻松氛围")
 
         return "；".join(notes) if notes else ""
+
+    def _build_dynamic_profile_text(self, generation_hints: Optional[Dict[str, Any]]) -> str:
+        if not generation_hints:
+            return ""
+
+        profile = generation_hints.get("dynamic_profile") or {}
+        if not isinstance(profile, dict):
+            return ""
+
+        sections = profile.get("sections") or {}
+        guidance = generation_hints.get("profile_guidance") or profile.get("planner_guidance") or []
+        if not sections and not guidance:
+            return ""
+
+        lines: List[str] = []
+        if guidance:
+            lines.append("Planning guidance:")
+            for item in guidance[:4]:
+                lines.append(f"- {item}")
+
+        for section_name, fields in sections.items():
+            if not isinstance(fields, dict):
+                continue
+            section_lines = []
+            for field_name, payload in fields.items():
+                if not isinstance(payload, dict):
+                    continue
+                value = payload.get("value")
+                if value in (None, "", []):
+                    continue
+                if isinstance(value, list):
+                    rendered_value = "; ".join(str(item) for item in value[:3])
+                else:
+                    rendered_value = str(value)
+                confidence = payload.get("confidence", 0.0)
+                section_lines.append(f"{field_name}: {rendered_value} (confidence={confidence})")
+            if section_lines:
+                lines.append(f"{section_name}:")
+                lines.extend(f"- {line}" for line in section_lines[:4])
+
+        return "\n".join(lines[:16])
 
     def _prompt_stage(self, recent_transcript: List[TurnRecord]) -> str:
         """判断提示阶段"""

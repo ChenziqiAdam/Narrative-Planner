@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 from src.agents.evaluator_agent import EvaluatorAgent
 from src.agents.extraction_agent import ExtractionAgent
 from src.agents.interviewer_agent import InterviewerAgent
+from src.config import Config
 from src.core.graph_manager import GraphManager
 from src.orchestration.planner_decision_policy import (
     PlannerDecisionPolicy,
@@ -20,8 +21,15 @@ from src.orchestration.planner_decision_policy import (
     pick_undercovered_theme,
 )
 from src.orchestration.state_store import InMemorySessionStateStore
-from src.services import CoverageCalculator, EventVectorStore, GraphProjector, MemoryProjector, MergeEngine
-from src.state import ElderProfile, SessionState, TurnRecord
+from src.services import (
+    CoverageCalculator,
+    EventVectorStore,
+    GraphProjector,
+    MemoryProjector,
+    MergeEngine,
+    ProfileProjector,
+)
+from src.state import BackgroundJobStatus, ElderProfile, SessionState, TurnRecord
 
 
 class SessionOrchestrator:
@@ -36,6 +44,7 @@ class SessionOrchestrator:
         merge_engine: Optional[MergeEngine] = None,
         graph_projector: Optional[GraphProjector] = None,
         memory_projector: Optional[MemoryProjector] = None,
+        profile_projector: Optional[ProfileProjector] = None,
         coverage_calculator: Optional[CoverageCalculator] = None,
         decision_weights: Optional[Any] = None,
         event_vector_store: Optional[EventVectorStore] = None,
@@ -51,11 +60,13 @@ class SessionOrchestrator:
         self.merge_engine = merge_engine or MergeEngine()
         self.graph_projector = graph_projector or GraphProjector()
         self.memory_projector = memory_projector or MemoryProjector()
+        self.profile_projector = profile_projector or ProfileProjector()
         self.coverage_calculator = coverage_calculator or CoverageCalculator()
         self.decision_policy = PlannerDecisionPolicy(
             PlannerDecisionWeights.from_external(decision_weights)
         )
         self._evaluation_threads: Dict[str, threading.Thread] = {}
+        self._profile_threads: Dict[str, threading.Thread] = {}
 
     def set_decision_weight_vector(self, vector: Sequence[float]) -> None:
         self.decision_policy = PlannerDecisionPolicy(PlannerDecisionWeights.from_vector(vector))
@@ -81,6 +92,8 @@ class SessionOrchestrator:
             elder_profile=elder_profile,
         )
         state.memory_capsule = self.memory_projector.build_initial_capsule(state)
+        if Config.ENABLE_DYNAMIC_PROFILE_UPDATE:
+            state.dynamic_profile = self.profile_projector.build_initial_profile(state)
         self.graph_projector.initialize_from_elder_profile(self.graph_manager, elder_info)
         state.theme_state = self.graph_projector.build_theme_state(self.graph_manager)
         graph_summary = self.coverage_calculator.build_graph_summary(state, self.graph_manager)
@@ -130,6 +143,7 @@ class SessionOrchestrator:
         state.memory_capsule = self.memory_projector.refresh(state)
         post_graph_summary = self.coverage_calculator.build_graph_summary(state, self.graph_manager)
         state.session_metrics = self.coverage_calculator.calculate_session_metrics(state, self.graph_manager)
+        profile_update_decision = self._decide_dynamic_profile_update(state, merge_result, turn_record)
 
         focus_event_payload = self._build_focus_event_payload(state)
         generation_hints = self._build_generation_hints(
@@ -164,6 +178,7 @@ class SessionOrchestrator:
             post_graph_summary.overall_coverage,
             generation_hints,
             generated.get("action", ""),
+            profile_update_decision,
         )
         turn_record.debug_trace = turn_debug_trace
         state.pending_plan = None  # 统一架构不再使用 Plan 对象
@@ -171,6 +186,12 @@ class SessionOrchestrator:
         state.pending_action = generated["action"]
         state.current_focus_theme_id = state.memory_capsule.current_storyline or state.current_focus_theme_id
         self.store.save(state)
+        if profile_update_decision.get("should_update"):
+            self._schedule_dynamic_profile_update(
+                turn_record.turn_id,
+                merge_result,
+                str(profile_update_decision.get("reason", "scheduled")),
+            )
         self._schedule_turn_evaluation(
             turn_record.turn_id,
             pre_graph_summary.overall_coverage,
@@ -246,7 +267,9 @@ class SessionOrchestrator:
             "coverage_metrics": graph_state.get("coverage_metrics", {}),
             "latest_turn_evaluation": graph_state.get("latest_turn_evaluation", {}),
             "planner_decision_metrics": self._build_planner_decision_metrics(state),
+            "dynamic_profile_metrics": self._build_dynamic_profile_metrics(state),
             "decision_weight_payload": self.get_decision_weight_payload(),
+            "dynamic_profile": self._build_dynamic_profile_hint(state),
         }
 
     def _build_turn_debug_trace(
@@ -258,6 +281,7 @@ class SessionOrchestrator:
         post_coverage: float,
         generation_hints: Optional[Dict[str, Any]] = None,
         next_action: str = "",
+        profile_update_decision: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         return {
             "schema_version": "planner_debug_v1",
@@ -290,8 +314,11 @@ class SessionOrchestrator:
                 "decision_scores": (generation_hints or {}).get("decision_scores", {}),
                 "slot_rankings": (generation_hints or {}).get("slot_rankings", []),
                 "theme_rankings": (generation_hints or {}).get("theme_rankings", []),
+                "dynamic_profile_quality": (generation_hints or {}).get("dynamic_profile", {}).get("profile_quality", {}),
+                "profile_guidance": (generation_hints or {}).get("profile_guidance", []),
                 "next_action": next_action or "",
             },
+            "profile_update": profile_update_decision or {},
         }
 
     def _index_confirmed_events(self, state: "SessionState", touched_event_ids: List[str]) -> None:
@@ -426,6 +453,10 @@ class SessionOrchestrator:
             (preferred_action == "end" and low_info_streak >= 2 and post_overall_coverage >= 0.60)
             or (low_info_streak >= 3 and post_overall_coverage >= 0.78)
         )
+        dynamic_profile_hint = self._build_dynamic_profile_hint(state)
+        profile_guidance = list(dynamic_profile_hint.get("planner_guidance", []))[
+            : max(0, Config.PROFILE_GUIDANCE_MAX_NOTES)
+        ]
         return {
             "low_info_streak": low_info_streak,
             "prefer_breadth_switch": preferred_action == "next_phase",
@@ -443,6 +474,8 @@ class SessionOrchestrator:
             "recommended_theme_id": recommended_theme_id,
             "recommended_theme_title": recommended_theme_title,
             "theme_rankings": policy_result.get("theme_rankings", []),
+            "dynamic_profile": dynamic_profile_hint,
+            "profile_guidance": profile_guidance,
         }
 
     def _recent_low_information_streak(self, state: SessionState, max_window: int = 3) -> int:
@@ -471,6 +504,69 @@ class SessionOrchestrator:
 
     def _pick_breadth_switch_theme_from_state(self, state: SessionState) -> tuple[Optional[str], Optional[str]]:
         return pick_undercovered_theme(state.theme_state)
+
+    def _build_dynamic_profile_hint(self, state: SessionState) -> Dict[str, Any]:
+        profile = state.dynamic_profile
+        if not profile:
+            return {}
+
+        sections: Dict[str, Dict[str, Dict[str, Any]]] = {}
+        for section_name in (
+            "core_identity_and_personality",
+            "current_life_status",
+            "family_situation",
+            "life_views_and_attitudes",
+        ):
+            section = getattr(profile, section_name, {})
+            compact_fields: Dict[str, Dict[str, Any]] = {}
+            for field_name, field in section.items():
+                if not field or field.value in (None, "", []):
+                    continue
+                compact_fields[field_name] = {
+                    "value": field.value,
+                    "confidence": field.confidence,
+                    "evidence_turn_ids": list(field.evidence_turn_ids[-3:]),
+                    "evidence_event_ids": list(field.evidence_event_ids[-3:]),
+                }
+            if compact_fields:
+                sections[section_name] = compact_fields
+
+        return {
+            "schema_version": profile.schema_version,
+            "update_count": profile.update_count,
+            "last_updated_turn_id": profile.last_updated_turn_id,
+            "last_update_reason": profile.last_update_reason,
+            "updated_at": profile.updated_at.isoformat() if profile.updated_at else None,
+            "profile_quality": dict(profile.profile_quality or {}),
+            "planner_guidance": list(profile.planner_guidance or []),
+            "sections": sections,
+        }
+
+    def _decide_dynamic_profile_update(
+        self,
+        state: SessionState,
+        merge_result: Any,
+        turn_record: TurnRecord,
+    ) -> Dict[str, Any]:
+        if not Config.ENABLE_DYNAMIC_PROFILE_UPDATE:
+            return {"enabled": False, "should_update": False, "reason": "disabled"}
+
+        should_update, reason = self.profile_projector.should_update(
+            state,
+            merge_result,
+            turn_record,
+            min_turns_between_updates=Config.DYNAMIC_PROFILE_MIN_TURNS_BETWEEN_UPDATES,
+            max_turns_between_updates=Config.DYNAMIC_PROFILE_MAX_TURNS_BETWEEN_UPDATES,
+        )
+        last_turn_index = int(state.metadata.get("dynamic_profile_last_turn_index", 0) or 0)
+        return {
+            "enabled": True,
+            "should_update": should_update,
+            "reason": reason,
+            "turns_since_last_update": max(0, turn_record.turn_index - last_turn_index),
+            "min_turns_between_updates": Config.DYNAMIC_PROFILE_MIN_TURNS_BETWEEN_UPDATES,
+            "max_turns_between_updates": Config.DYNAMIC_PROFILE_MAX_TURNS_BETWEEN_UPDATES,
+        }
 
     def _build_planner_decision_metrics(self, state: SessionState) -> Dict[str, Any]:
         action_counts = {"continue": 0, "next_phase": 0, "end": 0}
@@ -511,6 +607,36 @@ class SessionOrchestrator:
             "early_end_count": early_end_count,
         }
 
+    def _build_dynamic_profile_metrics(self, state: SessionState) -> Dict[str, Any]:
+        reason_counts: Dict[str, int] = {}
+        scheduled_count = 0
+        for turn in state.transcript:
+            profile_update = (turn.debug_trace.get("profile_update", {}) or {})
+            if not profile_update:
+                continue
+            reason = str(profile_update.get("reason", "") or "unknown")
+            reason_counts[reason] = reason_counts.get(reason, 0) + 1
+            if profile_update.get("should_update"):
+                scheduled_count += 1
+
+        jobs_by_status: Dict[str, int] = {}
+        for job in state.pending_jobs:
+            if job.job_type != "dynamic_profile_update":
+                continue
+            jobs_by_status[job.status] = jobs_by_status.get(job.status, 0) + 1
+
+        profile = state.dynamic_profile
+        return {
+            "enabled": Config.ENABLE_DYNAMIC_PROFILE_UPDATE,
+            "scheduled_update_count": scheduled_count,
+            "update_count": profile.update_count if profile else 0,
+            "last_updated_turn_id": profile.last_updated_turn_id if profile else None,
+            "last_update_reason": profile.last_update_reason if profile else None,
+            "profile_quality": dict(profile.profile_quality or {}) if profile else {},
+            "reason_counts": reason_counts,
+            "jobs_by_status": jobs_by_status,
+        }
+
     def _update_generation_metadata(
         self,
         state: SessionState,
@@ -533,6 +659,77 @@ class SessionOrchestrator:
         if not state:
             raise RuntimeError(f"Session {self.session_id} has not been initialized.")
         return state
+
+    def _schedule_dynamic_profile_update(
+        self,
+        turn_id: str,
+        merge_result: Any,
+        reason: str,
+    ) -> None:
+        state = self._require_state()
+        job_id = f"profile_update_{turn_id}"
+        if not any(job.job_id == job_id for job in state.pending_jobs):
+            state.pending_jobs.append(
+                BackgroundJobStatus(
+                    job_id=job_id,
+                    job_type="dynamic_profile_update",
+                    status="pending",
+                )
+            )
+            self.store.save(state)
+
+        worker = threading.Thread(
+            target=self._update_dynamic_profile_background,
+            args=(turn_id, merge_result, reason, job_id),
+            daemon=True,
+        )
+        self._profile_threads[turn_id] = worker
+        worker.start()
+
+    def _update_dynamic_profile_background(
+        self,
+        turn_id: str,
+        merge_result: Any,
+        reason: str,
+        job_id: str,
+    ) -> None:
+        try:
+            state = self._require_state()
+            job = next((item for item in state.pending_jobs if item.job_id == job_id), None)
+            if job:
+                job.status = "running"
+                job.updated_at = datetime.now()
+                self.store.save(state)
+
+            turn_record = next((turn for turn in state.transcript if turn.turn_id == turn_id), None)
+            if not turn_record:
+                raise RuntimeError(f"Turn {turn_id} not found for dynamic profile update.")
+
+            state.dynamic_profile = self.profile_projector.update_profile(
+                state,
+                turn_record,
+                merge_result,
+                reason,
+            )
+            state.metadata["dynamic_profile_last_turn_index"] = turn_record.turn_index
+            state.metadata["dynamic_profile_last_update_reason"] = reason
+            if job:
+                job.status = "completed"
+                job.updated_at = datetime.now()
+            self.store.save(state)
+        except Exception:
+            logger.exception("Dynamic profile update failed for turn %s", turn_id)
+            try:
+                state = self._require_state()
+                job = next((item for item in state.pending_jobs if item.job_id == job_id), None)
+                if job:
+                    job.status = "failed"
+                    job.updated_at = datetime.now()
+                    self.store.save(state)
+            except Exception:
+                logger.exception("Failed to mark dynamic profile job as failed for turn %s", turn_id)
+        finally:
+            self._profile_threads.pop(turn_id, None)
 
     def _schedule_turn_evaluation(
         self,

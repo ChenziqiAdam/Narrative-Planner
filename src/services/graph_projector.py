@@ -117,6 +117,7 @@ class GraphProjector:
         }
         state_snapshot["people_count"] = len(state.people_registry)
         state_snapshot["elder_info"] = state.elder_profile.to_dict()
+        state_snapshot["dynamic_profile"] = state.dynamic_profile.to_dict() if state.dynamic_profile else {}
         state_snapshot["session_id"] = state.session_id
         state_snapshot["memory_capsule"] = state.memory_capsule.to_dict() if state.memory_capsule else {}
         state_snapshot["session_metrics"] = state.session_metrics.to_dict() if state.session_metrics else {}

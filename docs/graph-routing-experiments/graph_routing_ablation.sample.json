@@ -1,0 +1,94 @@
+{
+  "experiment_name": "graph_routing_update_policy_ablation",
+  "description": "Compare current always-synchronous graph update behavior with observe-only routing, conservative fast path, and deferred graph update policies.",
+  "fixed_controls": {
+    "agent_mode": "planner",
+    "same_elder_profile": true,
+    "same_interviewee_simulator": true,
+    "same_max_turns": true,
+    "same_decision_weight_vector": true,
+    "same_profile_guidance_policy": true
+  },
+  "variants": [
+    {
+      "name": "always_sync_current",
+      "description": "Baseline: extract, merge, project graph, refresh memory, then generate every turn.",
+      "env": {
+        "ENABLE_TURN_ROUTING_POLICY": "false",
+        "ENABLE_GRAPH_FAST_PATH": "false",
+        "ENABLE_DEFERRED_GRAPH_UPDATE": "false"
+      }
+    },
+    {
+      "name": "observe_only_routing",
+      "description": "Compute and log routing decisions, but keep the same synchronous update behavior.",
+      "env": {
+        "ENABLE_TURN_ROUTING_POLICY": "true",
+        "TURN_ROUTING_OBSERVE_ONLY": "true",
+        "ENABLE_GRAPH_FAST_PATH": "false",
+        "ENABLE_DEFERRED_GRAPH_UPDATE": "false"
+      }
+    },
+    {
+      "name": "fast_path_low_information_only",
+      "description": "Skip synchronous extraction only for high-confidence low-information turns; update graph in background.",
+      "env": {
+        "ENABLE_TURN_ROUTING_POLICY": "true",
+        "TURN_ROUTING_OBSERVE_ONLY": "false",
+        "ENABLE_GRAPH_FAST_PATH": "true",
+        "GRAPH_FAST_PATH_MIN_CONFIDENCE": "0.85",
+        "ENABLE_DEFERRED_GRAPH_UPDATE": "false"
+      }
+    },
+    {
+      "name": "fast_path_plus_deferred_update",
+      "description": "Use fast path for low-information turns and defer graph updates for medium-information turns not needed for the immediate next question.",
+      "env": {
+        "ENABLE_TURN_ROUTING_POLICY": "true",
+        "TURN_ROUTING_OBSERVE_ONLY": "false",
+        "ENABLE_GRAPH_FAST_PATH": "true",
+        "GRAPH_FAST_PATH_MIN_CONFIDENCE": "0.85",
+        "ENABLE_DEFERRED_GRAPH_UPDATE": "true",
+        "DEFERRED_GRAPH_UPDATE_MIN_CONFIDENCE": "0.70",
+        "MAX_GRAPH_UPDATE_LAG_TURNS": "1"
+      }
+    }
+  ],
+  "routing_routes": [
+    "fast_reply_recent_context",
+    "graph_guided_planning",
+    "graph_update_required",
+    "defer_graph_update"
+  ],
+  "metrics": [
+    "turn_latency.p50_ms",
+    "turn_latency.p95_ms",
+    "session_metrics.average_information_gain",
+    "session_metrics.average_turn_quality",
+    "planner_decision_metrics.repeated_question_count",
+    "planner_decision_metrics.action_counts",
+    "coverage_metrics.overall",
+    "coverage_metrics.slot_coverage",
+    "coverage_metrics.theme_coverage",
+    "graph_routing.route_distribution",
+    "graph_routing.route_confidence_average",
+    "graph_routing.predicted_low_information_precision",
+    "graph_routing.graph_update_lag_turns_average",
+    "graph_routing.graph_stale_read_count",
+    "graph_routing.route_regret_count",
+    "turn.debug_trace.routing",
+    "turn.debug_trace.graph_update"
+  ],
+  "route_regret_definition": {
+    "repeated_question_after_skipped_update": true,
+    "missed_slot_fill_after_skipped_update": true,
+    "theme_switch_reversed_next_turn": true,
+    "deferred_turn_required_conflict_clarification": true
+  },
+  "hypotheses": [
+    "Observe-only routing should reveal whether low-information turns can be identified with high precision before changing runtime behavior.",
+    "Fast path should reduce p50/p95 latency without increasing repeated questions when restricted to high-confidence low-information turns.",
+    "Deferred update should improve latency for narrative continuations, but may increase graph stale-read count if confidence thresholds are too low.",
+    "Always-sync baseline should have the lowest graph lag but the highest average turn latency."
+  ]
+}

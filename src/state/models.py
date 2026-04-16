@@ -323,6 +323,36 @@ class BackgroundJobStatus:
 
 
 @dataclass
+class DynamicProfileField:
+    value: Any = None
+    confidence: float = 0.0
+    evidence_turn_ids: List[str] = field(default_factory=list)
+    evidence_event_ids: List[str] = field(default_factory=list)
+    updated_at: Optional[datetime] = None
+
+    def to_dict(self) -> Dict[str, Any]:
+        return serialize_value(self)
+
+
+@dataclass
+class DynamicElderProfile:
+    schema_version: str = "dynamic_elder_profile_v1"
+    core_identity_and_personality: Dict[str, DynamicProfileField] = field(default_factory=dict)
+    current_life_status: Dict[str, DynamicProfileField] = field(default_factory=dict)
+    family_situation: Dict[str, DynamicProfileField] = field(default_factory=dict)
+    life_views_and_attitudes: Dict[str, DynamicProfileField] = field(default_factory=dict)
+    planner_guidance: List[str] = field(default_factory=list)
+    profile_quality: Dict[str, float] = field(default_factory=dict)
+    update_count: int = 0
+    last_updated_turn_id: Optional[str] = None
+    last_update_reason: Optional[str] = None
+    updated_at: Optional[datetime] = None
+
+    def to_dict(self) -> Dict[str, Any]:
+        return serialize_value(self)
+
+
+@dataclass
 class SessionState:
     session_id: str
     mode: Literal["baseline", "planner"]
@@ -334,6 +364,7 @@ class SessionState:
     people_registry: Dict[str, PersonProfile] = field(default_factory=dict)
     theme_state: Dict[str, ThemeState] = field(default_factory=dict)
     memory_capsule: Optional[MemoryCapsule] = None
+    dynamic_profile: Optional[DynamicElderProfile] = None
     evaluation_trace: List["TurnEvaluation"] = field(default_factory=list)
     session_metrics: Optional[SessionMetrics] = None
     current_focus_theme_id: Optional[str] = None

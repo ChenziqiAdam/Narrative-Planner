@@ -89,6 +89,19 @@ class Config:
     PLANNER_REFLECTION_SLOT_WEIGHT = float(os.getenv("PLANNER_REFLECTION_SLOT_WEIGHT", "0.75"))
     PLANNER_FACTUAL_SLOT_WEIGHT = float(os.getenv("PLANNER_FACTUAL_SLOT_WEIGHT", "1.0"))
 
+    # Dynamic elder profile projection. The projector runs after merge only
+    # when a significant event is found or after a small turn window.
+    ENABLE_DYNAMIC_PROFILE_UPDATE = os.getenv("ENABLE_DYNAMIC_PROFILE_UPDATE", "true").lower() in {
+        "1", "true", "yes", "on"
+    }
+    DYNAMIC_PROFILE_MIN_TURNS_BETWEEN_UPDATES = int(
+        os.getenv("DYNAMIC_PROFILE_MIN_TURNS_BETWEEN_UPDATES", "3")
+    )
+    DYNAMIC_PROFILE_MAX_TURNS_BETWEEN_UPDATES = int(
+        os.getenv("DYNAMIC_PROFILE_MAX_TURNS_BETWEEN_UPDATES", "5")
+    )
+    PROFILE_GUIDANCE_MAX_NOTES = int(os.getenv("PROFILE_GUIDANCE_MAX_NOTES", "4"))
+
     @classmethod
     def get_api_key(cls):
         return getattr(cls, "OPENAI_API_KEY", None) or getattr(cls, "MOONSHOT_API_KEY", None)
