@@ -19,7 +19,22 @@ class ElderMemorySystem:
         
         # 构建记忆索引
         self._build_memory_index()
-    
+
+        from src.services.event_vector_store import EventVectorStore
+        self._vector_store = EventVectorStore()
+        self._build_vector_index()
+
+    def _build_vector_index(self) -> None:
+        for memory_id, memory_info in self.memory_index.items():
+            memory = memory_info["memory"]
+            text = " ".join(filter(None, [
+                memory.get("event_name", ""),
+                memory.get("description", ""),
+                memory.get("details", ""),
+            ]))
+            if text.strip():
+                self._vector_store.add(memory_id, text)
+
     def _build_memory_index(self):
         """构建内存索引，加速搜索"""
         self.memory_index = {}
@@ -217,6 +232,25 @@ class ElderMemorySystem:
         
         return related_memories
 
+    def search_memories_by_semantic(
+        self,
+        query: str,
+        top_k: int = 3,
+    ) -> List[Dict[str, Any]]:
+        """语义搜索记忆，适合模糊或概念性查询。返回格式与 search_memories_by_keywords 一致。"""
+        hits = self._vector_store.search(query, top_k)
+        results = []
+        for memory_id, score in hits:
+            memory_info = self.memory_index.get(memory_id)
+            if memory_info:
+                results.append({
+                    "memory_id": memory_id,
+                    "memory": memory_info["memory"],
+                    "period": memory_info["period"],
+                    "similarity_score": score,
+                })
+        return results
+
 
 def get_tool_schemas() -> List[Dict[str, Any]]:
     """返回 OpenAI function call 格式的工具 schema 列表"""
@@ -299,6 +333,21 @@ def get_tool_schemas() -> List[Dict[str, Any]]:
                 },
             },
         },
+        {
+            "type": "function",
+            "function": {
+                "name": "search_memories_by_semantic",
+                "description": "用自然语言语义搜索老人记忆，适合模糊或概念性查询（如'艰难时期'、'最自豪的事'）",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "query": {"type": "string", "description": "自然语言查询"},
+                        "top_k": {"type": "integer", "description": "返回结果数量限制", "default": 3},
+                    },
+                    "required": ["query"],
+                },
+            },
+        },
     ]
 
 
@@ -310,6 +359,7 @@ def get_tool_callables(ms: ElderMemorySystem) -> Dict[str, Any]:
         "search_memories_by_tags": ms.search_memories_by_tags,
         "get_memories_by_period": ms.get_memories_by_period,
         "get_related_memories": ms.get_related_memories,
+        "search_memories_by_semantic": ms.search_memories_by_semantic,
     }
 
 
