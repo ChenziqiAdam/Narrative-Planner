@@ -158,6 +158,7 @@ class EventExtractor(IEventExtractor):
         turn: DialogueTurn,
         conversation_context: List[DialogueTurn],
         existing_events: Optional[List[dict]] = None,
+        vector_store=None,
     ) -> str:
         """
         构建完整的提示词
@@ -174,7 +175,7 @@ class EventExtractor(IEventExtractor):
             return self._build_legacy_prompt(turn, conversation_context, existing_events)
 
         # 预选候选事件
-        candidate_events = self._select_candidate_events(turn, existing_events or [])
+        candidate_events = self._select_candidate_events(turn, existing_events or [], vector_store=vector_store)
         self._debug_trace_by_turn[turn.turn_id] = {
             "prompt_mode": "unified",
             "llm_merge_hints_enabled": True,
@@ -390,6 +391,7 @@ class EventExtractor(IEventExtractor):
         turn: DialogueTurn,
         conversation_context: List[DialogueTurn],
         existing_events: Optional[List[dict]] = None,
+        vector_store=None,
     ) -> List[ExtractedEvent]:
         """
         执行实际的事件提取
@@ -404,7 +406,7 @@ class EventExtractor(IEventExtractor):
         """
         try:
             # 构建提示词
-            prompt = self._build_prompt(turn, conversation_context, existing_events)
+            prompt = self._build_prompt(turn, conversation_context, existing_events, vector_store=vector_store)
 
             # 调用LLM
             response_text = await self._call_llm(prompt)
@@ -516,11 +518,12 @@ class EventExtractor(IEventExtractor):
         turn: DialogueTurn,
         conversation_context: List[DialogueTurn],
         existing_events: Optional[List[dict]] = None,
+        vector_store=None,
     ) -> List[ExtractedEvent]:
         """
         Extract events while providing summaries of known events for merge-aware prompts.
         """
-        return await self._do_extraction(turn, conversation_context, existing_events or [])
+        return await self._do_extraction(turn, conversation_context, existing_events or [], vector_store=vector_store)
 
     async def extract_incremental(
         self,

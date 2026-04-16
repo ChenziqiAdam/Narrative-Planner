@@ -20,8 +20,9 @@ from src.state import (
 
 
 class ExtractionAgent:
-    def __init__(self, extractor: EventExtractor | None = None):
+    def __init__(self, extractor: EventExtractor | None = None, vector_store=None):
         self.extractor = extractor or EventExtractor()
+        self.vector_store = vector_store
 
     async def extract(
         self,
@@ -54,6 +55,7 @@ class ExtractionAgent:
             current_turn,
             context,
             existing_events,
+            vector_store=self.vector_store,
         )
         debug_trace = self.extractor.consume_debug_trace(turn_record.turn_id)
         if not extracted_events:
