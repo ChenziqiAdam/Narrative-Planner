@@ -1,11 +1,14 @@
 from __future__ import annotations
 
 import json
+import logging
 import os
 import threading
 import uuid
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Sequence
+
+logger = logging.getLogger(__name__)
 
 from src.agents.evaluator_agent import EvaluatorAgent
 from src.agents.extraction_agent import ExtractionAgent
@@ -17,7 +20,7 @@ from src.orchestration.planner_decision_policy import (
     pick_undercovered_theme,
 )
 from src.orchestration.state_store import InMemorySessionStateStore
-from src.services import CoverageCalculator, GraphProjector, MemoryProjector, MergeEngine
+from src.services import CoverageCalculator, EventVectorStore, GraphProjector, MemoryProjector, MergeEngine
 from src.state import ElderProfile, SessionState, TurnRecord
 
 
@@ -35,13 +38,15 @@ class SessionOrchestrator:
         memory_projector: Optional[MemoryProjector] = None,
         coverage_calculator: Optional[CoverageCalculator] = None,
         decision_weights: Optional[Any] = None,
+        event_vector_store: Optional[EventVectorStore] = None,
     ):
         self.session_id = session_id
         self.mode = mode
         self.store = store or InMemorySessionStateStore()
         self.graph_manager = GraphManager()
         self.interviewer_agent = interviewer_agent or InterviewerAgent()
-        self.extraction_agent = extraction_agent or ExtractionAgent()
+        self.event_vector_store = event_vector_store or EventVectorStore()
+        self.extraction_agent = extraction_agent or ExtractionAgent(vector_store=self.event_vector_store)
         self.evaluator_agent = evaluator_agent or EvaluatorAgent()
         self.merge_engine = merge_engine or MergeEngine()
         self.graph_projector = graph_projector or GraphProjector()
@@ -112,6 +117,7 @@ class SessionOrchestrator:
         turn_record.extraction_result = extraction_result
 
         merge_result = self.merge_engine.merge(state, extracted_events, turn_record.turn_id)
+        self._index_confirmed_events(state, merge_result.touched_event_ids)
         graph_changes = self.graph_projector.apply_projection(
             state,
             self.graph_manager,
@@ -287,6 +293,18 @@ class SessionOrchestrator:
                 "next_action": next_action or "",
             },
         }
+
+    def _index_confirmed_events(self, state: "SessionState", touched_event_ids: List[str]) -> None:
+        for event_id in touched_event_ids:
+            event = state.canonical_events.get(event_id)
+            if event is None:
+                continue
+            summary = event.summary or event.title or ""
+            if summary:
+                try:
+                    self.event_vector_store.add(event_id, summary)
+                except Exception:
+                    logger.warning(f"Failed to index event {event_id}")
 
     def build_conversation_history(self) -> List[Dict[str, str]]:
         state = self._require_state()
