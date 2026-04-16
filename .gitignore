@@ -6,3 +6,6 @@ __pycache__/
 .env
 .env.local
 .env.*.local
+docs/
+results/
+logs/

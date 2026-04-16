@@ -56,7 +56,8 @@ class PlannerInterviewSimulation:
                  planner_instruction_path: Optional[str] = None,
                  model_type: str = None,
                  model_base_url: str = None,
-                 api_key: str = None):
+                 api_key: str = None,
+                 enable_graph_memory: bool = True):
         """
         初始化 Planner 模式的访谈仿真
 
@@ -67,6 +68,7 @@ class PlannerInterviewSimulation:
             model_type: 使用的模型类型
             model_base_url: 模型服务 URL
             api_key: API 密钥
+            enable_graph_memory: 是否启用 Graph RAG 记忆系统 (默认: True)
         """
         self.interviewee_profile_path = interviewee_profile_path
         self.max_turns = max_turns
@@ -74,15 +76,50 @@ class PlannerInterviewSimulation:
         self.model_type = model_type or os.getenv("MODEL_TYPE")
         self.model_base_url = model_base_url or os.getenv("MODEL_BASE_URL")
         self.api_key = api_key or os.getenv("API_KEY")
+        self.enable_graph_memory = enable_graph_memory
         
         self.conversation_log = []
         self.planner_decisions = []  # 记录 Planner 的每次决策
         self.session_id = datetime.now().strftime("%Y%m%d_%H%M%S")
+        self.memory_manager = None  # 将在 initialize_agents 中初始化
+        self.extraction_agent = None  # 记忆提取Agent，将在 initialize_agents 中初始化
         
         logger.info(f"初始化 Planner 模式访谈仿真 (Session: {self.session_id})")
+        logger.info(f"Graph Memory 系统已{'启用' if enable_graph_memory else '禁用'}")
 
     def initialize_agents(self, basic_info: str = ""):
-        """初始化三个 Agent"""
+        """初始化三个 Agent + 记忆提取 Agent，可选地集成 Graph RAG 记忆系统（同步版本）"""
+        
+        # 如果启用记忆系统，初始化 EnhancedGraphMemoryManager (SYNCHRONOUS)
+        if self.enable_graph_memory:
+            try:
+                from src.memory.manager_sync import EnhancedGraphMemoryManager
+                from src.agents.memory_extraction_agent import MemoryExtractionAgent
+                
+                logger.info("初始化 Graph RAG 记忆管理器（同步版本）...")
+                self.memory_manager = EnhancedGraphMemoryManager()
+                
+                # 同步初始化 Neo4j 连接
+                logger.info("建立 Neo4j 连接...")
+                if self.memory_manager.initialize_sync():
+                    logger.info("✓ Graph RAG 记忆管理器已初始化，Neo4j 连接成功")
+                else:
+                    logger.warning("Neo4j 连接失败，将使用本地缓存模式")
+                
+                # 初始化 MemoryExtractionAgent
+                logger.info("初始化 MemoryExtractionAgent（增量式记忆提取）...")
+                self.extraction_agent = MemoryExtractionAgent(
+                    memory_manager=self.memory_manager,
+                    interview_id=f"planner_interview_{self.session_id}",
+                    dedup_threshold=0.80
+                )
+                    
+            except (ImportError, Exception) as e:
+                logger.warning(f"无法初始化 Graph Memory 管理器或 MemoryExtractionAgent: {e}，将禁用记忆系统")
+                self.enable_graph_memory = False
+                self.memory_manager = None
+                self.extraction_agent = None
+        
         logger.info("初始化 Baseline Agent（启用 Planner 模式）...")
         self.interviewer = BaselineAgent(
             session_id=self.session_id,
@@ -95,7 +132,10 @@ class PlannerInterviewSimulation:
         logger.info("初始化 Planner Agent（规划器）...")
         self.planner = PlannerAgent(
             instruction_path=self.planner_instruction_path,
-            test=False
+            test=False,
+            use_graph_memory_tools=self.enable_graph_memory,  # 根据开关启用记忆工具
+            memory_manager=self.memory_manager,  # 传递共享的记忆管理器
+            interview_id=f"planner_interview_{self.session_id}"  # 用会话ID作为采访ID
         )
         
         logger.info("初始化 Interviewee Agent（被访谈者）...")
@@ -314,6 +354,41 @@ class PlannerInterviewSimulation:
                     logger.error(f"Planner 处理失败: {e}", exc_info=True)
                     planner_decision = {}  # 降级处理
                 
+                # ===== 【增量式记忆更新】每轮对话后立即更新记忆 =====
+                if self.extraction_agent and self.enable_graph_memory:
+                    logger.info(f"第 {turn_count} 轮：触发增量式记忆更新...")
+                    try:
+                        # 构建上下文信息（来自Planner的决策）
+                        context = ""
+                        if planner_decision:
+                            action = planner_decision.get('action', {})
+                            primary_action = action.get('primary_action', 'UNKNOWN') if isinstance(action, dict) else 'UNKNOWN'
+                            context = f"Planner决策: {primary_action}"
+                        
+                        # 调用增量提取
+                        memory_result = self.extraction_agent.incremental_extract(
+                            turn_number=turn_count,
+                            interviewee_response=answer_text,
+                            context=context
+                        )
+                        
+                        # 记录到对话日志
+                        self.conversation_log.append({
+                            "turn": turn_count,
+                            "role": "system",
+                            "action": "memory_update",
+                            "memory_result": memory_result
+                        })
+                        
+                        if memory_result.get('status') == 'success' and memory_result.get('extracted_count', 0) > 0:
+                            print(f"  ✓ 第{turn_count}轮记忆更新: 提取{memory_result.get('extracted_count', 0)}, "
+                                  f"存储{memory_result.get('stored_count', 0)}, "
+                                  f"合并{memory_result.get('merged_count', 0)}")
+                            logger.info(f"增量记忆更新完成: {memory_result}")
+                    
+                    except Exception as e:
+                        logger.warning(f"第{turn_count}轮增量记忆更新失败: {e}")
+                
                 # 访谈者根据 Planner 指令和回答生成下一个问题
                 logger.info(f"第 {turn_count} 轮：访谈者生成下一个问题...")
                 try:
@@ -363,6 +438,34 @@ class PlannerInterviewSimulation:
             
             logger.info(f"访谈完成，共进行 {turn_count} 轮对话")
             print(f"\n【信息】访谈已完成，共进行 {turn_count} 轮对话")
+            
+            # ===== 访谈后最终处理（可选的批量提取） =====
+            if self.extraction_agent and self.enable_graph_memory:
+                logger.info("完成访谈后的最终批量提取和整合...")
+                print("\n【处理中】正在进行访谈后的最终记忆整合...")
+                
+                try:
+                    # 构建完整的访谈文本用于最终批量提取
+                    interview_text = ""
+                    for log in self.conversation_log:
+                        if log.get('role') != 'system':  # 跳过系统日志
+                            role = "访谈者" if log["role"] == "interviewer" else "被访谈者"
+                            interview_text += f"【{role}】: {log['content']}\n"
+                    
+                    # 触发最终批量提取（用于补充任何遗漏的信息）
+                    batch_result = self.extraction_agent.extract_and_store(interview_text)
+                    
+                    print("\n【最终批量提取结果】:")
+                    print(f"  - 提取的实体: {batch_result.get('extracted_count', 0)}")
+                    print(f"  - 新增节点: {batch_result.get('stored_count', 0)}")
+                    print(f"  - 已合并: {batch_result.get('merged_count', 0)}")
+                    print(f"  - 已跳过: {batch_result.get('skipped_count', 0)}")
+                    
+                    logger.info(f"✓ 最终批量提取完成: {batch_result}")
+                
+                except Exception as e:
+                    logger.error(f"最终批量提取失败: {e}", exc_info=True)
+                    print(f"【警告】最终批量提取失败: {e}")
             
         except KeyboardInterrupt:
             print("\n\n【信息】访谈已被用户中断")
@@ -490,7 +593,8 @@ def main():
         planner_instruction_path=args.planner_instruction,
         model_type=args.model,
         model_base_url=args.url,
-        api_key=args.api_key
+        api_key=args.api_key,
+        enable_graph_memory=True,
     )
     
     simulation.initialize_agents()

@@ -162,25 +162,25 @@ class BaselineAgent(BaseAgent):
         """
         判断是否应该继续访谈（在 Planner 模式下使用）
         """
-        if not self.planner or len(self.conversation_history_raw) == 0:
-            return True
+        # if not self.planner or len(self.conversation_history_raw) == 0:
+        #     return True
         
-        # 从最后一个被访谈者的回答评估
-        last_response = None
-        for i in range(len(self.conversation_history_raw) - 1, -1, -1):
-            if self.conversation_history_raw[i]["role"] == "user":
-                last_response = self.conversation_history_raw[i]["content"]
-                break
+        # # 从最后一个被访谈者的回答评估
+        # last_response = None
+        # for i in range(len(self.conversation_history_raw) - 1, -1, -1):
+        #     if self.conversation_history_raw[i]["role"] == "user":
+        #         last_response = self.conversation_history_raw[i]["content"]
+        #         break
         
-        if not last_response:
-            return True
+        # if not last_response:
+        #     return True
         
-        state = self.evaluate_interviewee_state(last_response)
+        # state = self.evaluate_interviewee_state(last_response)
         
-        # 如果精神状态过低或情绪过度负面，建议休息
-        if state and (state["energy_level"] < 0.2 or state["emotional_energy"] < -0.6):
-            logger.warning(f"被访谈者状态不佳，建议休息: {state['analysis']}")
-            return False
+        # # 如果精神状态过低或情绪过度负面，建议休息
+        # if state and (state["energy_level"] < 0.2 or state["emotional_energy"] < -0.6):
+        #     logger.warning(f"被访谈者状态不佳，建议休息: {state['analysis']}")
+        #     return False
         
         return True
 

@@ -8,3 +8,11 @@ openai
 # scikit-learn
 tencentcloud-sdk-python
 # torch
+neo4j
+async-timeout          
+pydantic==2.4          
+pytest-asyncio
+black
+pylintly
+lightrag
+nest_asyncio  # ✅ 用于 Jupyter notebook 中处理嵌套事件循环

@@ -6,8 +6,6 @@ instructions:
       - BREADTH_SWITCH: "切换到新的人生阶段、人物或主题，以扩展覆盖面。"
       - CLARIFY: "检测并解决叙事矛盾、时间冲突或逻辑不一致。"
       - SUMMARIZE: "阶段性总结，承上启下。"
-      - PAUSE_SESSION: "当天结束，保存断点并优雅结束会话。"
-      - CLOSE_INTERVIEW: "完整结束访谈并确认最终状态。"
   - name: tactical_goal
     description: "用于 action.tactical_goal 字段：战术目标类型与简述（目标性指令）。"
     values:
@@ -23,9 +21,6 @@ instructions:
       - RESOLVE_CONFLICT: "解决叙事中的矛盾或冲突。"
       - CONFIRM_UNDERSTANDING: "确认理解是否准确。"
       - REVIEW_PERIOD: "回顾并总结已完成的人生阶段。"
-      - SYNTHESIZE_THEME: "综合提炼阶段主题。"
-      - SESSION_FAREWELL: "会话告别并记录断点信息。"
-      - FINAL_CLOSURE: "最终结束并确认完整性。"
 
   - name: tone_constraint
     description: "用于 action.tone_constraint 字段：语气约束与辅助语气/限制。"
