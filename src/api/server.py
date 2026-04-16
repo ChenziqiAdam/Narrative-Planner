@@ -340,7 +340,7 @@ async def create_session(request: CreateSessionRequest):
             logger.info("使用 Neo4jGraphAdapter 创建会话")
         else:
             graph_manager = GraphManager()
-            logger.info("使用 GraphManager (NetworkX) 创建会话")
+            logger.info("使用 GraphManager (内存) 创建会话")
         active_graphs[session_id] = graph_manager
 
         logger.info(f"创建新会话: {session_id}")
