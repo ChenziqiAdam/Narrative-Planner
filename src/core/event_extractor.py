@@ -712,19 +712,21 @@ class EventExtractor(IEventExtractor):
     def _select_candidate_events(
         self,
         current_turn: DialogueTurn,
-        existing_events: List[dict]
+        existing_events: List[dict],
+        vector_store=None,
     ) -> List[dict]:
         """
-        用轻量级规则预选TOP-N候选事件供大模型参考
+        用轻量级规则 + 向量相似度混合预选候选事件供大模型参考
 
-        策略：标题相似度 + 主题匹配 + 时间关键词匹配
+        策略：规则打分 top-2 + 向量检索 top-2，去重合并，最多返回4条
 
         Args:
             current_turn: 当前对话轮次
             existing_events: 已有事件列表
+            vector_store: 可选的 EventVectorStore，为 None 时退化为纯规则
 
         Returns:
-            TOP-N候选事件列表（按相似度排序）
+            最多4条候选事件列表
         """
         if not existing_events:
             return []
@@ -768,10 +770,32 @@ class EventExtractor(IEventExtractor):
             if score > 0.15:  # 阈值过滤
                 candidates.append({"event": event, "score": score})
 
-        # 按分数排序取TOP-N
+        # 规则 top-2
         candidates.sort(key=lambda x: x["score"], reverse=True)
-        max_candidates = getattr(Config, 'LLM_MERGE_MAX_CANDIDATES', 3)
-        return [c["event"] for c in candidates[:max_candidates]]
+        rule_top2 = [c["event"] for c in candidates[:2]]
+
+        # 向量 top-2
+        vector_top2: List[dict] = []
+        if vector_store is not None and vector_store.size > 0:
+            try:
+                id_to_event = {e.get("event_id"): e for e in existing_events if e.get("event_id")}
+                for event_id, _score in vector_store.search(answer, top_k=2):
+                    if event_id in id_to_event:
+                        vector_top2.append(id_to_event[event_id])
+            except Exception as e:
+                logger.warning(f"Vector store search failed: {e}")
+
+        # 按 event_id 去重合并（规则优先）
+        seen_ids: set = set()
+        merged: List[dict] = []
+        for event in rule_top2 + vector_top2:
+            eid = event.get("event_id")
+            if eid not in seen_ids:
+                seen_ids.add(eid)
+                merged.append(event)
+
+        max_candidates = getattr(Config, 'LLM_MERGE_MAX_CANDIDATES', 4)
+        return merged[:max_candidates]
 
     def _format_candidate_events(self, candidates: List[dict]) -> str:
         """

@@ -107,8 +107,85 @@ class TestSelectCandidateEvents:
 
         result = extractor._select_candidate_events(current_turn, existing_events)
 
-        # 应该只返回最多3个
-        assert len(result) <= 3
+        # 应该只返回最多4个（新的混合策略上限）
+        assert len(result) <= 4
+
+
+class TestSelectCandidateEventsWithVectorStore:
+    """测试 _select_candidate_events 混合规则+向量模式"""
+
+    @pytest.fixture
+    def extractor(self):
+        return EventExtractor()
+
+    @pytest.fixture
+    def current_turn(self):
+        return DialogueTurn(
+            turn_id="turn_001",
+            session_id="test_session",
+            timestamp=datetime.now(),
+            interviewer_question="能说说您的工作经历吗？",
+            interviewer_action="continue",
+            interviewee_raw_reply="我1968年进了上海纺织厂做挡车工"
+        )
+
+    def test_no_vector_store_falls_back_to_rule(self, extractor: EventExtractor, current_turn: DialogueTurn):
+        """vector_store=None 应退化为纯规则，行为与原来一致"""
+        existing_events = [
+            {"event_id": "evt_001", "title": "纺织厂工作", "theme_id": "career"},
+        ]
+        result = extractor._select_candidate_events(current_turn, existing_events, vector_store=None)
+        assert len(result) >= 1
+        assert result[0]["event_id"] == "evt_001"
+
+    def test_empty_vector_store_equals_no_store(self, extractor: EventExtractor, current_turn: DialogueTurn):
+        """空 vector_store（size=0）应与 None 行为相同"""
+        from src.services.event_vector_store import EventVectorStore
+        store = EventVectorStore()  # empty
+        existing_events = [
+            {"event_id": "evt_001", "title": "纺织厂工作", "theme_id": "career"},
+        ]
+        result_no_store = extractor._select_candidate_events(current_turn, existing_events, vector_store=None)
+        result_empty_store = extractor._select_candidate_events(current_turn, existing_events, vector_store=store)
+        assert result_no_store == result_empty_store
+
+    def test_vector_store_adds_semantic_candidates(self, extractor: EventExtractor, current_turn: DialogueTurn):
+        """向量检索应能补充规则未选到的语义相关候选"""
+        from src.services.event_vector_store import EventVectorStore
+        store = EventVectorStore()
+        # 加入一个规则不会命中（标题差异大）但语义相关的事件
+        store.add("evt_semantic", "在国营工厂当工人")
+        existing_events = [
+            {"event_id": "evt_semantic", "title": "在国营工厂当工人", "theme_id": "career"},
+            {"event_id": "evt_unrelated", "title": "结婚典礼", "theme_id": "marriage"},
+        ]
+        result = extractor._select_candidate_events(current_turn, existing_events, vector_store=store)
+        event_ids = [e["event_id"] for e in result]
+        assert "evt_semantic" in event_ids
+
+    def test_deduplication_rule_priority(self, extractor: EventExtractor, current_turn: DialogueTurn):
+        """规则和向量同时选中同一事件时，去重后不重复"""
+        from src.services.event_vector_store import EventVectorStore
+        store = EventVectorStore()
+        store.add("evt_001", "纺织厂工作")
+        existing_events = [
+            {"event_id": "evt_001", "title": "纺织厂工作", "theme_id": "career"},
+        ]
+        result = extractor._select_candidate_events(current_turn, existing_events, vector_store=store)
+        ids = [e["event_id"] for e in result]
+        assert ids.count("evt_001") == 1  # 不重复
+
+    def test_max_4_candidates(self, extractor: EventExtractor, current_turn: DialogueTurn):
+        """混合候选最多返回4条"""
+        from src.services.event_vector_store import EventVectorStore
+        store = EventVectorStore()
+        existing_events = []
+        for i in range(8):
+            eid = f"evt_{i:03d}"
+            store.add(eid, f"纺织厂工作经历 {i}")
+            existing_events.append({"event_id": eid, "title": f"纺织厂工作经历 {i}", "theme_id": "career"})
+        result = extractor._select_candidate_events(current_turn, existing_events, vector_store=store)
+        assert len(result) <= 4
 
 
 class TestFormatCandidateEvents:
