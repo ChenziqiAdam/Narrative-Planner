@@ -2,8 +2,13 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass, field
-from typing import Any, Dict, Iterable, Optional
+from typing import Any, Dict, Iterable, List, Optional
 
+from src.orchestration.routing_calibration import (
+    CalibrationRecord,
+    PersonalizedRoutingConfig,
+    RoutingCalibrationBuffer,
+)
 from src.state import GraphSummary, SessionState, TurnRecord
 from src.state.models import serialize_value
 
@@ -42,7 +47,19 @@ class TurnRoutingPolicy:
     The policy intentionally does not call an LLM. It predicts whether the
     latest reply is safe to answer from recent context, needs macro graph
     guidance, must synchronously update structured memory, or can update later.
+
+    Supports three-phase adaptive calibration:
+    - Warm-up: returns UPDATE_ROUTE unconditionally, collects calibration data.
+    - Calibrated: uses PersonalizedRoutingConfig for personalized scoring.
     """
+
+    def __init__(
+        self,
+        config: Optional[PersonalizedRoutingConfig] = None,
+        buffer: Optional[RoutingCalibrationBuffer] = None,
+    ):
+        self.config = config or PersonalizedRoutingConfig()
+        self.buffer = buffer or RoutingCalibrationBuffer()
 
     BACKCHANNELS = {
         "嗯",
@@ -199,15 +216,23 @@ class TurnRoutingPolicy:
         answer = (turn_record.interviewee_answer or "").strip()
         question = (turn_record.interviewer_question or "").strip()
         normalized = self._normalize_answer(answer)
-        marker_count = 0
 
-        has_time_marker = bool(self.TIME_PATTERN.search(answer))
-        has_location_marker = bool(self.LOCATION_PATTERN.search(answer))
-        has_person_marker = self._contains_any(answer, self.PERSON_MARKERS)
-        has_cause_result_marker = self._contains_any(answer, self.CAUSE_RESULT_MARKERS)
-        has_feeling_marker = self._contains_any(answer, self.FEELING_MARKERS)
-        has_reflection_marker = self._contains_any(answer, self.REFLECTION_MARKERS)
-        has_event_marker = self._contains_any(answer, self.EVENT_MARKERS)
+        # ── Build marker sets (personalized + defaults) ──
+        time_kw = self.config.personal_time_keywords
+        location_kw = self.config.personal_location_keywords
+        person_kw = self.config.personal_person_keywords
+        feeling_kw = self.config.personal_feeling_keywords
+        reflection_kw = self.config.personal_reflection_keywords
+        event_kw = self.config.personal_event_keywords
+        cause_result_kw = self.config.personal_cause_result_keywords
+
+        has_time_marker = bool(self.TIME_PATTERN.search(answer)) or self._contains_any(answer, time_kw)
+        has_location_marker = bool(self.LOCATION_PATTERN.search(answer)) or self._contains_any(answer, location_kw)
+        has_person_marker = self._contains_any(answer, self.PERSON_MARKERS) or self._contains_any(answer, person_kw)
+        has_cause_result_marker = self._contains_any(answer, self.CAUSE_RESULT_MARKERS) or self._contains_any(answer, cause_result_kw)
+        has_feeling_marker = self._contains_any(answer, self.FEELING_MARKERS) or self._contains_any(answer, feeling_kw)
+        has_reflection_marker = self._contains_any(answer, self.REFLECTION_MARKERS) or self._contains_any(answer, reflection_kw)
+        has_event_marker = self._contains_any(answer, self.EVENT_MARKERS) or self._contains_any(answer, event_kw)
         markers = {
             "has_time_marker": has_time_marker,
             "has_location_marker": has_location_marker,
@@ -222,10 +247,32 @@ class TurnRoutingPolicy:
         targeted_slot = self._infer_targeted_slot(question)
         answered_targeted_slot = self._answers_targeted_slot(targeted_slot, answer, markers)
         answer_len = len(answer)
-        is_short = answer_len <= 24
+        is_short = answer_len <= self.config.short_answer_threshold
         is_backchannel = normalized in self.BACKCHANNELS
         pause_or_fatigue = self._contains_any(answer, self.PAUSE_MARKERS)
         uncertainty = self._contains_any(answer, self.UNCERTAIN_MARKERS)
+
+        # ── Warm-up phase: always return UPDATE, collect data for calibration ──
+        if self.is_warmup(state):
+            return TurnRoutingDecision(
+                route=GRAPH_UPDATE_ROUTE,
+                confidence=1.0,
+                reasons=["warmup_phase"],
+                signals={
+                    "answer_length": answer_len,
+                    "is_short": is_short,
+                    "is_backchannel": is_backchannel,
+                    "marker_count": marker_count,
+                    "targeted_slot": targeted_slot,
+                    "answered_targeted_slot": answered_targeted_slot,
+                    "warmup_remaining": max(0, self.config.warmup_turns - state.turn_count),
+                    **markers,
+                },
+                scores={},
+                llm_used=False,
+                classifier_version="warmup",
+            )
+
         recent_low_info_streak = self._recent_low_information_streak(state)
         current_event_completeness = self._current_event_completeness(state)
         graph_staleness_turns = self._graph_staleness_turns(state, turn_record)
@@ -238,21 +285,21 @@ class TurnRoutingPolicy:
             + (0.24 if pause_or_fatigue else 0.0)
             + (0.20 if marker_count == 0 else 0.0)
             + (0.10 if not targeted_slot else 0.0)
-            + (0.10 if uncertainty and answer_len <= 36 else 0.0)
+            + (0.10 if uncertainty and answer_len <= self.config.short_answer_threshold * 1.5 else 0.0)
             - min(marker_count * 0.12, 0.42)
             - (0.30 if answered_targeted_slot else 0.0)
         )
         update_score = (
-            (0.18 if has_time_marker else 0.0)
-            + (0.16 if has_location_marker else 0.0)
-            + (0.17 if has_person_marker else 0.0)
-            + (0.20 if has_event_marker else 0.0)
-            + (0.14 if has_cause_result_marker else 0.0)
-            + (0.11 if has_feeling_marker else 0.0)
-            + (0.14 if has_reflection_marker else 0.0)
-            + min(answer_len / 180.0, 1.0) * 0.24
-            + (0.24 if answered_targeted_slot else 0.0)
-            + (0.10 if marker_count >= 2 else 0.0)
+            (self.config.weight_time if has_time_marker else 0.0)
+            + (self.config.weight_location if has_location_marker else 0.0)
+            + (self.config.weight_person if has_person_marker else 0.0)
+            + (self.config.weight_event if has_event_marker else 0.0)
+            + (self.config.weight_cause_result if has_cause_result_marker else 0.0)
+            + (self.config.weight_feeling if has_feeling_marker else 0.0)
+            + (self.config.weight_reflection if has_reflection_marker else 0.0)
+            + min(answer_len / self.config.length_bonus_base, 1.0) * self.config.weight_length
+            + (self.config.weight_answered_slot if answered_targeted_slot else 0.0)
+            + (self.config.weight_multi_marker if marker_count >= 2 else 0.0)
             - (0.30 if is_backchannel else 0.0)
             - (0.16 if pause_or_fatigue and marker_count == 0 else 0.0)
         )
@@ -550,3 +597,57 @@ class TurnRoutingPolicy:
 
     def _clamp01(self, value: float) -> float:
         return max(0.0, min(1.0, value))
+
+    # ── Calibration helpers ──
+
+    def is_warmup(self, state: SessionState) -> bool:
+        """Whether the session is still in the warm-up phase."""
+        return state.turn_count < self.config.warmup_turns or not self.config.calibrated
+
+    def record_markers_for_calibration(
+        self,
+        state: SessionState,
+        turn_record: TurnRecord,
+        markers_hit: Dict[str, bool],
+        marker_count: int,
+        targeted_slot: Optional[str],
+        answered_targeted_slot: bool,
+    ) -> CalibrationRecord:
+        """Record marker signals during warm-up for later calibration."""
+        return self.buffer.record_markers(
+            turn_id=turn_record.turn_id,
+            turn_index=turn_record.turn_index,
+            answer=turn_record.interviewee_answer or "",
+            markers_hit=markers_hit,
+            marker_count=marker_count,
+            targeted_slot=targeted_slot,
+            answered_targeted_slot=answered_targeted_slot,
+        )
+
+    def record_outcomes_for_calibration(
+        self,
+        turn_id: str,
+        coverage_delta: float,
+        extracted_count: int,
+        touched_events: int,
+        new_events: int,
+        new_people: int,
+        extracted_events: List[Any],
+    ) -> None:
+        """Record actual extraction outcomes for calibration."""
+        self.buffer.record_outcomes(
+            turn_id=turn_id,
+            coverage_delta=coverage_delta,
+            extracted_count=extracted_count,
+            touched_events=touched_events,
+            new_events=new_events,
+            new_people=new_people,
+            extracted_events=extracted_events,
+        )
+
+    def should_calibrate(self, state: SessionState) -> bool:
+        """Check if calibration should be triggered now."""
+        if self.config.calibrated:
+            turns_since = state.turn_count - self.config.last_recalibration_turn
+            return turns_since >= self.config.recalibration_interval
+        return self.buffer.has_enough_data(self.config.warmup_turns)

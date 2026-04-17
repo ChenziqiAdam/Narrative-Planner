@@ -20,7 +20,17 @@ from src.orchestration.planner_decision_policy import (
     PlannerDecisionWeights,
     pick_undercovered_theme,
 )
+from src.orchestration.routing_calibration import (
+    PersonalizedRoutingConfig,
+    RoutingCalibrator,
+    seed_config_from_elder_info,
+)
 from src.orchestration.state_store import InMemorySessionStateStore
+from src.orchestration.turn_routing_policy import (
+    GRAPH_FAST_ROUTE,
+    GRAPH_UPDATE_ROUTE,
+    TurnRoutingPolicy,
+)
 from src.services import (
     CoverageCalculator,
     EventVectorStore,
@@ -81,6 +91,15 @@ class SessionOrchestrator:
         )
         self._evaluation_threads: Dict[str, threading.Thread] = {}
         self._profile_threads: Dict[str, threading.Thread] = {}
+        # Adaptive routing: three-phase calibration.
+        self._routing_config = PersonalizedRoutingConfig(
+            warmup_turns=int(os.getenv("ROUTING_WARMUP_TURNS", "8")),
+            recalibration_interval=int(os.getenv("ROUTING_RECALIBRATION_INTERVAL", "15")),
+        )
+        self.routing_policy = TurnRoutingPolicy(
+            config=self._routing_config,
+        )
+        self._routing_calibrator = RoutingCalibrator()
 
     def set_decision_weight_vector(self, vector: Sequence[float]) -> None:
         self.decision_policy = PlannerDecisionPolicy(PlannerDecisionWeights.from_vector(vector))
@@ -109,6 +128,8 @@ class SessionOrchestrator:
         if Config.ENABLE_DYNAMIC_PROFILE_UPDATE:
             state.dynamic_profile = self.profile_projector.build_initial_profile(state)
         self.graph_projector.initialize_from_elder_profile(self.graph_manager, elder_info)
+        # Seed routing config from elder profile (pre-warm-up personalization).
+        seed_config_from_elder_info(self._routing_config, elder_info)
         # Persist initial theme state to Neo4j if available.
         if Config.NEO4J_ENABLED:
             try:
@@ -147,16 +168,40 @@ class SessionOrchestrator:
         )
         current_interviewer_action = state.pending_action or "continue"
 
-        extracted_events, extraction_result = await self.extraction_agent.extract(state, turn_record)
-        turn_record.extraction_result = extraction_result
-
-        merge_result = self.merge_engine.merge(state, extracted_events, turn_record.turn_id)
-        self._index_confirmed_events(state, merge_result.touched_event_ids)
-        graph_changes = self.graph_projector.apply_projection(
-            state,
-            self.graph_manager,
-            merge_result.touched_event_ids,
+        # ── Adaptive routing: compute routing decision ──
+        routing_decision = self.routing_policy.evaluate(state, turn_record, pre_graph_summary)
+        routing_skip_extract = (
+            routing_decision.route == GRAPH_FAST_ROUTE
+            and not self.routing_policy.is_warmup(state)
         )
+
+        if routing_skip_extract:
+            # Fast route: skip extract/merge/project, use previous state
+            extracted_events = []
+            extraction_result = None
+            merge_result = self._empty_merge_result()
+            graph_changes = {}
+        else:
+            extracted_events, extraction_result = await self.extraction_agent.extract(state, turn_record)
+            turn_record.extraction_result = extraction_result
+
+            merge_result = self.merge_engine.merge(state, extracted_events, turn_record.turn_id)
+            self._index_confirmed_events(state, merge_result.touched_event_ids)
+            graph_changes = self.graph_projector.apply_projection(
+                state,
+                self.graph_manager,
+                merge_result.touched_event_ids,
+            )
+
+        # ── Record calibration data (warm-up + adaptive) ──
+        self._record_routing_calibration(
+            state, turn_record, routing_decision, extracted_events,
+            merge_result, pre_graph_summary.overall_coverage,
+        )
+
+        # ── Trigger calibration if needed ──
+        if self.routing_policy.should_calibrate(state):
+            self._try_routing_calibration(state)
 
         state.transcript.append(turn_record)
         state.theme_state = self.graph_projector.build_theme_state(self.graph_manager)
@@ -193,7 +238,7 @@ class SessionOrchestrator:
         self._update_generation_metadata(state, generated, turn_record.interviewer_question)
         turn_debug_trace = self._build_turn_debug_trace(
             turn_record,
-            extraction_result.debug_trace,
+            extraction_result.debug_trace if extraction_result else {},
             merge_result,
             pre_graph_summary.overall_coverage,
             post_graph_summary.overall_coverage,
@@ -201,6 +246,7 @@ class SessionOrchestrator:
             generated.get("action", ""),
             profile_update_decision,
         )
+        turn_debug_trace["routing"] = routing_decision.to_dict()
         turn_record.debug_trace = turn_debug_trace
         state.pending_plan = None  # 统一架构不再使用 Plan 对象
         state.pending_question = generated["question"]
@@ -523,6 +569,71 @@ class SessionOrchestrator:
             else:
                 break
         return streak
+
+    # ── Routing calibration helpers ──
+
+    @staticmethod
+    def _empty_merge_result():
+        """Create an empty MergeResult for fast-route skips."""
+        from src.services.merge_engine import MergeResult
+        return MergeResult()
+
+    def _record_routing_calibration(
+        self,
+        state: SessionState,
+        turn_record: TurnRecord,
+        routing_decision: Any,
+        extracted_events: list,
+        merge_result: Any,
+        pre_coverage: float,
+    ) -> None:
+        """Record calibration data from this turn."""
+        from src.services.merge_engine import MergeResult
+
+        # Record marker signals
+        signals = routing_decision.signals
+        self.routing_policy.record_markers_for_calibration(
+            state=state,
+            turn_record=turn_record,
+            markers_hit={
+                k: bool(v) for k, v in signals.items()
+                if k.startswith("has_") and k.endswith("_marker")
+            },
+            marker_count=signals.get("marker_count", 0),
+            targeted_slot=signals.get("targeted_slot"),
+            answered_targeted_slot=signals.get("answered_targeted_slot", False),
+        )
+
+        # Record actual outcomes
+        post_coverage = self.coverage_calculator.build_graph_summary(
+            state, self.graph_manager
+        ).overall_coverage if state.transcript else pre_coverage
+
+        self.routing_policy.record_outcomes_for_calibration(
+            turn_id=turn_record.turn_id,
+            coverage_delta=post_coverage - pre_coverage,
+            extracted_count=len(extracted_events),
+            touched_events=len(getattr(merge_result, "touched_event_ids", []) or []),
+            new_events=len(getattr(merge_result, "new_event_ids", []) or []),
+            new_people=len(getattr(merge_result, "new_person_ids", []) or []),
+            extracted_events=extracted_events,
+        )
+
+    def _try_routing_calibration(self, state: SessionState) -> None:
+        """Attempt LLM-based calibration (sync, runs in request path)."""
+        try:
+            self._routing_calibrator.calibrate(
+                buffer=self.routing_policy.buffer,
+                config=self._routing_config,
+            )
+            if self._routing_config.calibrated:
+                logger.info(
+                    "Routing calibrated at turn %d: %s",
+                    state.turn_count,
+                    self._routing_config.calibration_reasoning[:60],
+                )
+        except Exception:
+            logger.warning("Routing calibration failed", exc_info=True)
 
     def _is_low_information_turn(self, turn: TurnRecord) -> bool:
         if turn.turn_evaluation and turn.turn_evaluation.information_gain_score <= 0.08:

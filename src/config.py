@@ -111,6 +111,13 @@ class Config:
     )
     PROFILE_GUIDANCE_MAX_NOTES = int(os.getenv("PROFILE_GUIDANCE_MAX_NOTES", "4"))
 
+    # Adaptive turn routing calibration
+    ROUTING_WARMUP_TURNS = int(os.getenv("ROUTING_WARMUP_TURNS", "8"))
+    ROUTING_RECALIBRATION_INTERVAL = int(os.getenv("ROUTING_RECALIBRATION_INTERVAL", "15"))
+    ROUTING_ENABLED = os.getenv("ROUTING_ENABLED", "true").lower() in {
+        "1", "true", "yes", "on",
+    }
+
     @classmethod
     def get_api_key(cls):
         return getattr(cls, "OPENAI_API_KEY", None) or getattr(cls, "MOONSHOT_API_KEY", None)
