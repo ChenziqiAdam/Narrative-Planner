@@ -1,3 +1,4 @@
+PyYAML
 camel-ai[all]
 faiss-cpu
 sentence-transformers
