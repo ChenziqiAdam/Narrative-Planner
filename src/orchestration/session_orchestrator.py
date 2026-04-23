@@ -4,6 +4,7 @@ import json
 import logging
 import os
 import threading
+import time
 import uuid
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Sequence
@@ -181,17 +182,26 @@ class SessionOrchestrator:
             extraction_result = None
             merge_result = self._empty_merge_result()
             graph_changes = {}
+            _extraction_ms = 0.0
+            _merge_ms = 0.0
+            _graph_ms = 0.0
         else:
+            _t = time.perf_counter()
             extracted_events, extraction_result = await self.extraction_agent.extract(state, turn_record)
+            _extraction_ms = (time.perf_counter() - _t) * 1000
             turn_record.extraction_result = extraction_result
 
+            _t = time.perf_counter()
             merge_result = self.merge_engine.merge(state, extracted_events, turn_record.turn_id)
+            _merge_ms = (time.perf_counter() - _t) * 1000
             self._index_confirmed_events(state, merge_result.touched_event_ids)
+            _t = time.perf_counter()
             graph_changes = self.graph_projector.apply_projection(
                 state,
                 self.graph_manager,
                 merge_result.touched_event_ids,
             )
+            _graph_ms = (time.perf_counter() - _t) * 1000
 
         # ── Record calibration data (warm-up + adaptive) ──
         self._record_routing_calibration(
@@ -206,8 +216,12 @@ class SessionOrchestrator:
         state.transcript.append(turn_record)
         state.theme_state = self.graph_projector.build_theme_state(self.graph_manager)
         # 统一架构：current_focus_theme_id 已在 transcript 更新时维护
+        _t = time.perf_counter()
         state.memory_capsule = self.memory_projector.refresh(state)
+        _memory_ms = (time.perf_counter() - _t) * 1000
+        _t = time.perf_counter()
         post_graph_summary = self.coverage_calculator.build_graph_summary(state, self.graph_manager)
+        _coverage_ms = (time.perf_counter() - _t) * 1000
         state.session_metrics = self.coverage_calculator.calculate_session_metrics(state, self.graph_manager)
         profile_update_decision = self._decide_dynamic_profile_update(state, merge_result, turn_record)
 
@@ -247,6 +261,11 @@ class SessionOrchestrator:
             profile_update_decision,
         )
         turn_debug_trace["routing"] = routing_decision.to_dict()
+        turn_debug_trace["extraction_ms"] = _extraction_ms
+        turn_debug_trace["merge_ms"] = _merge_ms
+        turn_debug_trace["graph_ms"] = _graph_ms
+        turn_debug_trace["memory_ms"] = _memory_ms
+        turn_debug_trace["coverage_ms"] = _coverage_ms
         turn_record.debug_trace = turn_debug_trace
         state.pending_plan = None  # 统一架构不再使用 Plan 对象
         state.pending_question = generated["question"]
