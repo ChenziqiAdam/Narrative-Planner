@@ -646,6 +646,53 @@ src/adapters/
 - dashboard 展示 graph summary 与核心 coverage
 - 可生成 baseline vs planner 的实验报告
 
+## 10.5 批量测试流水线 (已落地)
+
+`src/pipeline/` 包已实现独立于 Flask 的批量访谈执行能力，用于 M5 大规模实验。
+
+### 模块结构
+
+| 文件 | 职责 |
+|------|------|
+| `src/pipeline/timing.py` | `Timer` 上下文管理器 + `TurnTiming` dataclass，记录每模块耗时 (ms) |
+| `src/pipeline/batch_interview.py` | CLI 入口，多轮×多跑批量执行，输出 JSONL + 汇总 JSON |
+| `configs/batch_interview.yaml` | 参考配置 (可覆盖受访者 prompt、轮数、跑数) |
+
+### 计时方案
+
+通过实例级 monkey-patch 注入计时，`finally` 保证还原：
+
+- `interviewee_llm_ms` — LLM 调用累加
+- `interviewee_tool_ms` — 工具调用累加
+- `interviewee_total_ms` — `step_with_metadata` 总墙时
+- `interviewer_llm_ms` — `get_next_question` 总墙时
+- planner 专属（来自 `session_orchestrator` 的 `debug_trace`）：`extraction_ms` / `merge_ms` / `graph_ms` / `memory_ms` / `coverage_ms`
+
+### 输出格式
+
+- 每跑一个 `run_NNNN_<batch_id>.jsonl`，每行一轮 turn 记录
+- `summary_<batch_id>.json` 含 mean / p50 / p95 / p99 / min / max / count
+
+### 测试覆盖
+
+- `tests/test_pipeline_timing.py` — 4 个单元测试（Timer、TurnTiming）
+- `tests/test_pipeline_batch.py` — 7 个集成测试（BatchConfig、InterviewRunner、run_batch、聚合统计）
+
+### 使用示例
+
+```bash
+# baseline 模式，3 轮 1 跑冒烟
+conda run -n planner python -m src.pipeline.batch_interview \
+    --profile src/prompts/roles/elder_profile_1.json \
+    --mode baseline --turns 3 --runs 1 --output results/batch_test
+
+# 用 YAML 配置跑 planner 模式
+conda run -n planner python -m src.pipeline.batch_interview \
+    --config configs/batch_interview.yaml
+```
+
+---
+
 ## 11. 推荐近期执行顺序
 
 如果只做最近两周的高价值推进，建议按以下顺序:
