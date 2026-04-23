@@ -1,0 +1,14 @@
+# configs/batch_interview.yaml
+profile_path: src/prompts/roles/elder_profile_1.json
+interviewer_mode: baseline   # "baseline" or "planner"
+max_turns: 20
+num_runs: 5
+output_dir: results/batch
+
+basic_info:
+  name: 王大爷
+  age: 82
+  hometown: 四川成都
+  background: 曾是纺织厂工人，经历过文革和改革开放，育有三个子女，现独居。
+
+# custom_system_prompt: "你是一位思路清晰的八旬老人..."
