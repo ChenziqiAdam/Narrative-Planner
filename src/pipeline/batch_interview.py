@@ -25,6 +25,10 @@ project_root = os.path.join(os.path.dirname(__file__), "..", "..")
 if project_root not in sys.path:
     sys.path.insert(0, project_root)
 
+# Must be set before any HuggingFace/transformers imports to avoid network calls
+os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
+os.environ.setdefault("HF_DATASETS_OFFLINE", "1")
+
 import yaml
 
 from src.agents.baseline_agent import BaselineAgent

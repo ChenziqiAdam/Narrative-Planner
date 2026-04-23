@@ -19,7 +19,7 @@ from src.orchestration.baseline_evaluation_runtime import BaselineEvaluationRunt
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 
-PROFILE_PATH = os.path.join(os.path.dirname(__file__), "prompts/roles/elder_profile_example.json")
+PROFILE_PATH = os.path.join(os.path.dirname(__file__), "prompts/roles/elder_profile_1.json")
 
 # Per-session agent pairs
 _sessions: dict[str, dict] = {}
