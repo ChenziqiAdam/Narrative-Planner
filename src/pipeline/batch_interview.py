@@ -143,6 +143,7 @@ class InterviewRunner:
         transcript.append(f"访谈者: {last_question}")
 
         for turn_idx in range(self.cfg.max_turns):
+            print(f"  [turn {turn_idx + 1}/{self.cfg.max_turns}] interviewing ...", flush=True)
             timing = TurnTiming()
             prompt = interviewee._load_step_prompt(interviewee.history, last_question)
 
@@ -222,6 +223,13 @@ class InterviewRunner:
 
             turns.append(turn_record)
             transcript.append(f"访谈者: {next_question}")
+            print(
+                f"  [turn {turn_idx + 1}/{self.cfg.max_turns}] done "
+                f"(interviewee {timing.interviewee_total_ms:.0f}ms, "
+                f"interviewer {timing.interviewer_llm_ms:.0f}ms)"
+                + (f" action={action}" if action != "continue" else ""),
+                flush=True,
+            )
 
             if action == "end":
                 break
@@ -247,8 +255,10 @@ def run_batch(cfg: BatchConfig) -> None:
     run_summaries: List[Dict[str, Any]] = []
 
     for i in range(cfg.num_runs):
-        print(f"[batch] run {i + 1}/{cfg.num_runs} ...", flush=True)
+        print(f"\n[batch] run {i + 1}/{cfg.num_runs} starting ...", flush=True)
+        t0 = datetime.now()
         result = runner.run_one(run_index=i)
+        elapsed_s = (datetime.now() - t0).total_seconds()
         jsonl_path = out / f"run_{i:04d}_{batch_id}.jsonl"
         with open(jsonl_path, "w", encoding="utf-8") as f:
             for turn in result["turns"]:
@@ -256,7 +266,7 @@ def run_batch(cfg: BatchConfig) -> None:
         for turn in result["turns"]:
             all_timing_rows.append(turn.get("timing", {}))
         run_summaries.append({"run_index": i, "turn_count": result["turn_count"], "file": str(jsonl_path)})
-        print(f"  {len(result['turns'])} turns -> {jsonl_path.name}", flush=True)
+        print(f"[batch] run {i + 1}/{cfg.num_runs} done — {len(result['turns'])} turns in {elapsed_s:.1f}s -> {jsonl_path.name}", flush=True)
 
     keys = _timing_keys(cfg.interviewer_mode)
     aggregate = {k: compute_aggregate_stats(all_timing_rows, k) for k in keys}
