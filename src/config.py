@@ -6,8 +6,6 @@ from dotenv import load_dotenv
 _SRC_DIR = os.path.dirname(os.path.abspath(__file__))
 _PROJECT_ROOT = os.path.dirname(_SRC_DIR)
 
-# Always load the project-local .env so the config is stable no matter
-# which working directory or launcher is used to start the app.
 load_dotenv(os.path.join(_PROJECT_ROOT, ".env"))
 
 
@@ -18,26 +16,20 @@ class Config:
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
     OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1")
 
-    # Keep Moonshot-compatible settings working even when the project only
-    # configures the generic OpenAI-compatible variables.
     MOONSHOT_API_KEY = os.getenv("MOONSHOT_API_KEY") or OPENAI_API_KEY
     MOONSHOT_BASE_URL = os.getenv("MOONSHOT_BASE_URL") or OPENAI_BASE_URL
     MODEL_NAME = os.getenv("MODEL_NAME", "moonshot-v1-8k")
     STRUCTURED_MODEL_NAME = os.getenv("STRUCTURED_MODEL_NAME", "moonshot-v1-8k")
     CHAT_MODEL_NAME = os.getenv("CHAT_MODEL_NAME", "kimi-latest")
-    PLANNER_MODEL_NAME = os.getenv("PLANNER_MODEL_NAME") or STRUCTURED_MODEL_NAME
     INTERVIEWER_MODEL_NAME = os.getenv("INTERVIEWER_MODEL_NAME") or CHAT_MODEL_NAME
     BASELINE_MODEL_NAME = os.getenv("BASELINE_MODEL_NAME") or INTERVIEWER_MODEL_NAME
-    EXTRACTOR_MODEL_NAME = os.getenv("EXTRACTOR_MODEL_NAME") or STRUCTURED_MODEL_NAME
     INTERVIEWEE_MODEL_NAME = os.getenv("INTERVIEWEE_MODEL_NAME") or CHAT_MODEL_NAME
+    EXTRACTOR_MODEL_NAME = os.getenv("EXTRACTOR_MODEL_NAME") or STRUCTURED_MODEL_NAME
     STREAMING_MODEL_NAME = os.getenv("STREAMING_MODEL_NAME") or INTERVIEWER_MODEL_NAME
     CAMEL_MODEL_NAME = os.getenv("CAMEL_MODEL_NAME") or STRUCTURED_MODEL_NAME
     RELATION_LLM_MODEL_NAME = os.getenv("RELATION_LLM_MODEL_NAME") or STRUCTURED_MODEL_NAME
     ENABLE_RELATION_LLM_FALLBACK = os.getenv("ENABLE_RELATION_LLM_FALLBACK", "false").lower() in {
-        "1",
-        "true",
-        "yes",
-        "on",
+        "1", "true", "yes", "on",
     }
 
     # App settings
@@ -48,68 +40,33 @@ class Config:
     # Paths
     PROJECT_ROOT = _PROJECT_ROOT
     PROMPTS_DIR = os.path.join(_SRC_DIR, "prompts")
+    INTERVIEWEE_PROMPT_TEMPLATE = os.getenv(
+        "INTERVIEWEE_PROMPT_TEMPLATE",
+        os.path.join(PROMPTS_DIR, "roles", "elderly_system_prompt.md"),
+    )
     DATA_DIR = "data"
     LOGS_DIR = "logs"
 
-    # ⭐ Extraction-Merge 统一化功能开关（Phase 1新增）
-    ENABLE_LLM_MERGE_HINTS = os.getenv("ENABLE_LLM_MERGE_HINTS", "true").lower() in {
+    # Neo4j graph database configuration
+    NEO4J_ENABLED = os.getenv("NEO4J_ENABLED", "false").lower() in {
         "1", "true", "yes", "on"
     }
-    LLM_MERGE_HIGH_CONFIDENCE_THRESHOLD = float(
-        os.getenv("LLM_MERGE_HIGH_CONFIDENCE_THRESHOLD", "0.80")
-    )
-    LLM_MERGE_MEDIUM_CONFIDENCE_THRESHOLD = float(
-        os.getenv("LLM_MERGE_MEDIUM_CONFIDENCE_THRESHOLD", "0.50")
-    )
-    LLM_MERGE_MAX_CANDIDATES = int(os.getenv("LLM_MERGE_MAX_CANDIDATES", "3"))
-
-    # Neo4j graph database configuration
     NEO4J_URI = os.getenv("NEO4J_URI", "bolt://localhost:7687")
     NEO4J_USERNAME = os.getenv("NEO4J_USERNAME", "neo4j")
     NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD", "password")
     NEO4J_DATABASE = os.getenv("NEO4J_DATABASE", "neo4j")
-    NEO4J_ENABLED = os.getenv("NEO4J_ENABLED", "false").lower() in {
-        "1", "true", "yes", "on",
-    }
 
-    # GraphRAG feature flag — switches extraction/merge pipeline
-    GRAPH_RAG_ENABLED = os.getenv("GRAPH_RAG_ENABLED", "false").lower() in {
-        "1", "true", "yes", "on",
-    }
+    # Embedding configuration
     EMBEDDING_PROVIDER = os.getenv("EMBEDDING_PROVIDER", "local")  # "local" | "openai"
     EMBEDDING_MODEL_LOCAL = os.getenv(
         "EMBEDDING_MODEL_LOCAL",
         "paraphrase-multilingual-MiniLM-L12-v2",
     )
+    EMBEDDING_OPENAI_API_KEY = os.getenv("EMBEDDING_OPENAI_API_KEY") or OPENAI_API_KEY
+    EMBEDDING_OPENAI_BASE_URL = os.getenv("EMBEDDING_OPENAI_BASE_URL") or OPENAI_BASE_URL
+    EMBEDDING_OPENAI_MODEL = os.getenv("EMBEDDING_OPENAI_MODEL", "text-embedding-3-small")
 
-    # Optional prompt overrides
-    INTERVIEWEE_PROMPT_TEMPLATE = os.getenv(
-        "INTERVIEWEE_PROMPT_TEMPLATE",
-        None,
-    )
-    LIFE_GENERATOR_SYSTEM_PROMPT = os.getenv(
-        "LIFE_GENERATOR_SYSTEM_PROMPT",
-        None,
-    )
-    INTERVIEWER_SYSTEM_PROMPT = os.getenv(
-        "INTERVIEWER_SYSTEM_PROMPT",
-        "prompts/interviewer_system_prompt.md",
-    )
-
-    # Planner 信息权重配置（可用于实验与A/B）
-    PLANNER_NEW_INFO_WEIGHT = float(os.getenv("PLANNER_NEW_INFO_WEIGHT", "1.0"))
-    PLANNER_MISSING_SLOT_WEIGHT = float(os.getenv("PLANNER_MISSING_SLOT_WEIGHT", "1.15"))
-    PLANNER_THEME_COVERAGE_WEIGHT = float(os.getenv("PLANNER_THEME_COVERAGE_WEIGHT", "1.0"))
-    PLANNER_EMOTION_ENERGY_WEIGHT = float(os.getenv("PLANNER_EMOTION_ENERGY_WEIGHT", "0.9"))
-    PLANNER_MEMORY_STABILITY_WEIGHT = float(os.getenv("PLANNER_MEMORY_STABILITY_WEIGHT", "0.85"))
-    PLANNER_CONFLICT_CLARIFICATION_WEIGHT = float(os.getenv("PLANNER_CONFLICT_CLARIFICATION_WEIGHT", "1.0"))
-    PLANNER_INFORMATION_QUALITY_WEIGHT = float(os.getenv("PLANNER_INFORMATION_QUALITY_WEIGHT", "0.95"))
-    PLANNER_LOW_GAIN_PENALTY = float(os.getenv("PLANNER_LOW_GAIN_PENALTY", "1.1"))
-    PLANNER_REFLECTION_SLOT_WEIGHT = float(os.getenv("PLANNER_REFLECTION_SLOT_WEIGHT", "0.75"))
-    PLANNER_FACTUAL_SLOT_WEIGHT = float(os.getenv("PLANNER_FACTUAL_SLOT_WEIGHT", "1.0"))
-
-    # Dynamic elder profile projection. The projector runs after merge only
-    # when a significant event is found or after a small turn window.
+    # Dynamic elder profile projection
     ENABLE_DYNAMIC_PROFILE_UPDATE = os.getenv("ENABLE_DYNAMIC_PROFILE_UPDATE", "true").lower() in {
         "1", "true", "yes", "on"
     }
@@ -120,13 +77,6 @@ class Config:
         os.getenv("DYNAMIC_PROFILE_MAX_TURNS_BETWEEN_UPDATES", "5")
     )
     PROFILE_GUIDANCE_MAX_NOTES = int(os.getenv("PROFILE_GUIDANCE_MAX_NOTES", "4"))
-
-    # Adaptive turn routing calibration
-    ROUTING_WARMUP_TURNS = int(os.getenv("ROUTING_WARMUP_TURNS", "8"))
-    ROUTING_RECALIBRATION_INTERVAL = int(os.getenv("ROUTING_RECALIBRATION_INTERVAL", "15"))
-    ROUTING_ENABLED = os.getenv("ROUTING_ENABLED", "true").lower() in {
-        "1", "true", "yes", "on",
-    }
 
     @classmethod
     def get_api_key(cls):
@@ -154,11 +104,10 @@ class Config:
     def get_model_name(cls, role=None):
         role_key = (role or "").strip().lower()
         model_map = {
-            "planner": cls.PLANNER_MODEL_NAME,
             "interviewer": cls.INTERVIEWER_MODEL_NAME,
             "baseline": cls.BASELINE_MODEL_NAME,
-            "extractor": cls.EXTRACTOR_MODEL_NAME,
             "interviewee": cls.INTERVIEWEE_MODEL_NAME,
+            "extractor": cls.EXTRACTOR_MODEL_NAME,
             "streaming": cls.STREAMING_MODEL_NAME,
             "camel": cls.CAMEL_MODEL_NAME,
             "structured": cls.STRUCTURED_MODEL_NAME,
@@ -169,13 +118,13 @@ class Config:
     @classmethod
     def get_model_candidates(cls, role=None):
         role_key = (role or "").strip().lower()
-        if role_key in {"planner", "extractor", "camel"}:
+        if role_key in {"extractor", "camel"}:
             candidates = [
                 cls.get_model_name(role_key),
                 cls.STRUCTURED_MODEL_NAME,
                 cls.MODEL_NAME,
             ]
-        elif role_key in {"interviewer", "baseline", "interviewee", "streaming"}:
+        elif role_key in {"interviewer", "streaming", "baseline", "interviewee"}:
             candidates = [
                 cls.get_model_name(role_key),
                 cls.CHAT_MODEL_NAME,

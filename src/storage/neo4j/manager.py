@@ -123,6 +123,14 @@ class Neo4jGraphManager:
                 )
         return count
 
+    def sync_themes_to_neo4j(self) -> int:
+        """Load McAdams theme definitions and upsert them as ``:Topic`` nodes."""
+        from src.core.theme_loader import ThemeLoader
+
+        themes = ThemeLoader().load()
+        topics = [TopicNode.from_theme_node(theme) for theme in themes.values()]
+        return self.batch_upsert_topics(topics)
+
     def get_topic(self, theme_id: str) -> Optional[Dict[str, Any]]:
         """Read a single Topic node by its ``theme_id``."""
         result = self.driver.execute_query(

@@ -1,91 +1,62 @@
 /**
- * App - 主应用组件
+ * App - 主应用组件 (GraphRAG)
  *
  * 叙事导航者 - 动态事件图谱可视化界面
- * 适配对比调试系统，支持从URL参数接收sessionId并通过WebSocket接收实时更新
  */
 
 import React, { useState, useEffect, useCallback } from 'react'
-import PersonView from './components/PersonView'
 import ThemeView from './components/ThemeView'
 import TimelineCanvas from './components/TimelineCanvas'
 import CoverageDashboard from './components/CoverageDashboard'
 import NodeDetailPanel from './components/NodeDetailPanel'
+import GraphCanvas from './components/GraphCanvas'
 import { useGraphWebSocket } from './hooks/useGraphWebSocket'
-import { GraphState, ThemeNode, EventNode, PeopleNode, NodeStatus } from './types'
-import { getMockGraphState } from './data/mockData'
+import { GraphState, NodeStatus } from './types'
 import './styles/App.css'
 
-type ViewMode = 'person' | 'theme' | 'timeline'
+type ViewMode = 'graph' | 'theme' | 'timeline'
 
 const App: React.FC = () => {
   const initialSessionId = new URLSearchParams(window.location.search).get('session')
   const [sessionId] = useState<string | null>(initialSessionId)
 
-  // 使用WebSocket hook接收实时图谱更新
   const { connectionStatus, graphState: wsGraphState, isConnected } = useGraphWebSocket({
     sessionId,
-    onGraphInit: (data) => {
-      console.log('Graph initialized:', data)
-    },
-    onGraphUpdate: (data) => {
-      console.log('Graph updated:', data)
-    },
-    onNewEvent: (event) => {
-      console.log('New event:', event)
-    },
-    onConnected: () => {
-      console.log('WebSocket connected')
-    },
-    onDisconnected: () => {
-      console.log('WebSocket disconnected')
-    },
+    onGraphInit: (data) => console.log('Graph initialized:', data),
+    onGraphUpdate: (data) => console.log('Graph updated:', data),
+    onConnected: () => console.log('WebSocket connected'),
+    onDisconnected: () => console.log('WebSocket disconnected'),
   })
 
-  // 本地状态
   const [graphState, setGraphState] = useState<GraphState | null>(null)
   const [loading, setLoading] = useState(true)
   const [selectedNode, setSelectedNode] = useState<{
-    node: ThemeNode | EventNode | PeopleNode
-    type: 'theme' | 'event' | 'person'
+    type: 'theme' | 'fragment'
+    id: string
   } | null>(null)
-  const [viewMode, setViewMode] = useState<ViewMode>(initialSessionId ? 'theme' : 'person')
-  const [filterStatus, setFilterStatus] = useState<NodeStatus | 'all'>('all')
+  const [viewMode, setViewMode] = useState<ViewMode>('theme')
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
 
-  // 加载初始数据（如果有sessionId则等待WebSocket数据，否则使用mock数据）
   useEffect(() => {
     if (sessionId) {
-      // 有sessionId时，等待WebSocket数据
       if (wsGraphState) {
         setGraphState(wsGraphState)
         setLoading(false)
       }
     } else {
-      // 无sessionId时，使用mock数据
-      const loadData = async () => {
-        try {
-          const data = await getMockGraphState()
-          setGraphState(data)
-        } catch (error) {
-          console.error('Failed to load graph data:', error)
-        } finally {
-          setLoading(false)
-        }
-      }
-      loadData()
+      setLoading(false)
     }
   }, [sessionId, wsGraphState])
 
-  // 节点点击处理
-  const handleNodeClick = useCallback(
-    (node: ThemeNode | EventNode | PeopleNode, type: 'theme' | 'event' | 'person') => {
-      setSelectedNode({ node, type })
+  const handleNodeSelect = useCallback(
+    (nodeInfo: { type: string; id: string }) => {
+      if (nodeInfo.type === 'theme' || nodeInfo.type === 'fragment') {
+        setSelectedNode({ type: nodeInfo.type, id: nodeInfo.id })
+      }
     },
     []
   )
 
-  // 加载中状态
   if (loading) {
     return (
       <div className="app-loading">
@@ -97,7 +68,6 @@ const App: React.FC = () => {
     )
   }
 
-  // 无数据状态
   if (!graphState) {
     return (
       <div className="app-error">
@@ -110,21 +80,18 @@ const App: React.FC = () => {
     )
   }
 
-  // 获取选中节点ID
-  const getSelectedNodeId = () => {
-    if (!selectedNode) return undefined
-    if (selectedNode.type === 'theme') {
-      return (selectedNode.node as ThemeNode).theme_id
-    }
-    if (selectedNode.type === 'person') {
-      return (selectedNode.node as PeopleNode).people_id
-    }
-    return (selectedNode.node as EventNode).event_id
-  }
+  const themeCount = graphState.theme_nodes?.length ?? 0
+  const fragmentCount = Object.keys(graphState.narrative_fragments ?? {}).length
+  const statusCounts = (graphState.theme_nodes ?? []).reduce(
+    (acc, t) => {
+      acc[t.status] = (acc[t.status] || 0) + 1
+      return acc
+    },
+    {} as Record<string, number>
+  )
 
   return (
     <div className="app-container">
-      {/* 顶部导航栏 */}
       <header className="app-header">
         <div className="header-left">
           <h1 className="app-title">
@@ -141,11 +108,11 @@ const App: React.FC = () => {
         <div className="header-center">
           <div className="view-mode-tabs">
             <button
-              className={`tab-btn ${viewMode === 'person' ? 'active' : ''}`}
-              onClick={() => setViewMode('person')}
+              className={`tab-btn ${viewMode === 'graph' ? 'active' : ''}`}
+              onClick={() => setViewMode('graph')}
             >
-              <span className="tab-icon">👤</span>
-              人物视图
+              <span className="tab-icon">🔗</span>
+              图谱视图
             </button>
             <button
               className={`tab-btn ${viewMode === 'theme' ? 'active' : ''}`}
@@ -170,58 +137,35 @@ const App: React.FC = () => {
               <span className="session-id">会话: {sessionId.slice(0, 8)}...</span>
             </div>
           )}
-          <div className="filter-group">
-            <label>状态：</label>
-            <select
-              value={filterStatus}
-              onChange={(e) =>
-                setFilterStatus(e.target.value as NodeStatus | 'all')
-              }
-            >
-              <option value="all">全部</option>
-              <option value={NodeStatus.PENDING}>待触达</option>
-              <option value={NodeStatus.MENTIONED}>已提及</option>
-              <option value={NodeStatus.EXHAUSTED}>已挖透</option>
-            </select>
-          </div>
           <div className="session-info">
             <span className="session-label">叙事进度</span>
             <span className="session-turns">
-              {graphState.event_count} 个事件
+              {fragmentCount} 个叙事片段
             </span>
           </div>
         </div>
       </header>
 
-      {/* 主内容区 */}
       <main className="app-main">
-        {/* 视图画布 */}
         <section className="graph-section">
-          {viewMode === 'person' ? (
-            <PersonView
+          {viewMode === 'graph' ? (
+            <GraphCanvas
               graphState={graphState}
-              onNodeClick={handleNodeClick}
-              selectedNodeId={getSelectedNodeId()}
-              filterStatus={filterStatus}
+              onNodeSelect={handleNodeSelect}
             />
           ) : viewMode === 'theme' ? (
             <ThemeView
               graphState={graphState}
-              onNodeClick={handleNodeClick}
-              selectedNodeId={getSelectedNodeId()}
-              filterStatus={filterStatus}
+              onNodeSelect={handleNodeSelect}
             />
           ) : (
             <TimelineCanvas
               graphState={graphState}
-              onNodeClick={handleNodeClick}
-              selectedNodeId={getSelectedNodeId()}
-              filterStatus={filterStatus}
+              onNodeSelect={handleNodeSelect}
             />
           )}
         </section>
 
-        {/* 右侧边栏 */}
         <aside className={`sidebar ${sidebarCollapsed ? 'collapsed' : ''}`}>
           <button
             className="sidebar-toggle"
@@ -231,17 +175,14 @@ const App: React.FC = () => {
           </button>
           {!sidebarCollapsed && (
             <>
-              {/* 覆盖率仪表盘 */}
               <div className="sidebar-section">
                 <CoverageDashboard graphState={graphState} />
               </div>
-
-              {/* 节点详情面板 */}
               <div className="sidebar-section detail-section">
                 <NodeDetailPanel
-                  node={selectedNode?.node || null}
-                  type={selectedNode?.type || null}
+                  selectedNode={selectedNode}
                   graphState={graphState}
+                  onClose={() => setSelectedNode(null)}
                 />
               </div>
             </>
@@ -249,7 +190,6 @@ const App: React.FC = () => {
         </aside>
       </main>
 
-      {/* 底部状态栏 */}
       <footer className="app-footer">
         <div className="footer-left">
           <span className="update-time">
@@ -259,25 +199,25 @@ const App: React.FC = () => {
         <div className="footer-center">
           <div className="quick-stats">
             <div className="stat-item">
-              <span className="stat-value">{graphState.theme_count}</span>
+              <span className="stat-value">{themeCount}</span>
               <span className="stat-label">主题</span>
             </div>
             <div className="stat-divider" />
             <div className="stat-item">
-              <span className="stat-value">{graphState.event_count}</span>
-              <span className="stat-label">事件</span>
+              <span className="stat-value">{fragmentCount}</span>
+              <span className="stat-label">叙事片段</span>
             </div>
             <div className="stat-divider" />
             <div className="stat-item pending">
-              <span className="stat-value">{graphState.pending_themes}</span>
+              <span className="stat-value">{statusCounts[NodeStatus.PENDING] ?? 0}</span>
               <span className="stat-label">待触达</span>
             </div>
             <div className="stat-item mentioned">
-              <span className="stat-value">{graphState.mentioned_themes}</span>
+              <span className="stat-value">{statusCounts[NodeStatus.MENTIONED] ?? 0}</span>
               <span className="stat-label">已提及</span>
             </div>
             <div className="stat-item exhausted">
-              <span className="stat-value">{graphState.exhausted_themes}</span>
+              <span className="stat-value">{statusCounts[NodeStatus.EXHAUSTED] ?? 0}</span>
               <span className="stat-label">已挖透</span>
             </div>
           </div>

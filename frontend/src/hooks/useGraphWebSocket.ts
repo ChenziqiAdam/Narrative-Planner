@@ -142,45 +142,23 @@ export function useGraphWebSocket(options: UseGraphWebSocketOptions): UseGraphWe
         break
 
       case 'node_status_change':
-        // 节点状态变更
         if (data.node_id && data.status) {
           setGraphState((prev) => {
             if (!prev) return prev
-            // 更新主题节点状态
-            if (prev.theme_nodes && prev.theme_nodes[data.node_id]) {
-              return {
-                ...prev,
-                theme_nodes: {
-                  ...prev.theme_nodes,
-                  [data.node_id]: {
-                    ...prev.theme_nodes[data.node_id],
-                    status: data.status,
-                  },
-                },
-              }
-            }
-            return prev
+            const theme_nodes = (prev.theme_nodes ?? []).map(t =>
+              t.theme_id === data.node_id ? { ...t, status: data.status } : t
+            )
+            return { ...prev, theme_nodes }
           })
           handlersRef.current.onNodeStatusChange?.(data.node_id, data.status)
         }
         break
 
       case 'new_event':
-        // 新增事件
-        if (data.event) {
-          setGraphState((prev) => {
-            if (!prev) return prev
-            // 添加事件到图谱
-            return {
-              ...prev,
-              event_nodes: {
-                ...prev.event_nodes,
-                [data.event.event_id]: data.event,
-              },
-              event_count: (prev.event_count || 0) + 1,
-            }
-          })
-          handlersRef.current.onNewEvent?.(data.event)
+      case 'fragment_added':
+        // Graph update (full state refresh)
+        if (data.graph_state) {
+          setGraphState(data.graph_state)
         }
         break
 

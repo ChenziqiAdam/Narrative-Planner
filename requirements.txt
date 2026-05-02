@@ -8,6 +8,10 @@ openai
 flask
 flask-sock
 json-repair
+neo4j
+fastapi
+uvicorn
+websockets
 # scikit-learn
 tencentcloud-sdk-python
 # torch

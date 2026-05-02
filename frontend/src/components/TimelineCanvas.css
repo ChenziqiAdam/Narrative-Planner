@@ -1,6 +1,6 @@
 /**
  * TimelineCanvas 样式
- * 时间轴视图 - 事件卡片 + 5槽位 + 情绪能量 + 挖掘深度
+ * 时间轴视图 - 叙事片段卡片 + 置信度指标 + 属性标签
  */
 
 .timeline-canvas-container {
@@ -181,6 +181,21 @@
 .reflection-text {
   color: #6B7280;
   font-style: italic;
+}
+
+/* 叙事片段文本 */
+.fragment-rich-text {
+  font-size: 13px;
+  color: #374151;
+  line-height: 1.5;
+  margin-bottom: 10px;
+  padding: 10px;
+  background: #FAFAFA;
+  border-radius: 8px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 /* 分析指标 */

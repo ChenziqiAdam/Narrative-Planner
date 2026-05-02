@@ -5,6 +5,11 @@ import uuid
 import re
 from datetime import datetime
 
+# 离线模式：防止 sentence-transformers 尝试从 HuggingFace 下载模型
+os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
+os.environ.setdefault("HF_DATASETS_OFFLINE", "1")
+os.environ.setdefault("HF_HUB_OFFLINE", "1")
+
 # 添加项目根目录到路径
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
@@ -1026,70 +1031,75 @@ def planner_auto():
     session = _compare_sessions[session_id]
 
     def generate():
-        agent = session["agent"]
-        interviewee = _build_compare_interviewee(session)
+        try:
+            agent = session["agent"]
+            interviewee = _build_compare_interviewee(session)
 
-        # 从已有会话恢复访谈历史，避免多轮自动/单轮调试时丢上下文
-        for index in range(len(session["history"]) - 1):
-            current = session["history"][index]
-            following = session["history"][index + 1]
-            if current.get("role") == "interviewer" and following.get("role") == "interviewee":
-                interviewee.record_turn(current.get("text", ""), following.get("text", ""))
+            # 从已有会话恢复访谈历史，避免多轮自动/单轮调试时丢上下文
+            for index in range(len(session["history"]) - 1):
+                current = session["history"][index]
+                following = session["history"][index + 1]
+                if current.get("role") == "interviewer" and following.get("role") == "interviewee":
+                    interviewee.record_turn(current.get("text", ""), following.get("text", ""))
 
-        # single_turn模式下只运行一轮
-        max_turns = 1 if single_turn else 20
-        for turn in range(max_turns):
-            # 获取上一个问题
-            last_question = session["history"][-1]["text"] if session["history"] else ""
+            # single_turn模式下只运行一轮
+            max_turns = 1 if single_turn else 20
+            for turn in range(max_turns):
+                # 获取上一个问题
+                last_question = session["history"][-1]["text"] if session["history"] else ""
 
-            # AI受访者回答
-            answer, memory_calls = _run_compare_interviewee_turn(interviewee, last_question)
+                # AI受访者回答
+                answer, memory_calls = _run_compare_interviewee_turn(interviewee, last_question)
 
-            session["history"].append({"role": "interviewee", "text": answer})
-            yield f"data: {json.dumps({'role': 'interviewee', 'text': answer, 'extracted_events': [], 'graph_delta': {}, 'memory_calls': memory_calls}, ensure_ascii=False)}\n\n"
+                session["history"].append({"role": "interviewee", "text": answer})
+                yield f"data: {json.dumps({'role': 'interviewee', 'text': answer, 'extracted_events': [], 'graph_delta': {}, 'memory_calls': memory_calls}, ensure_ascii=False)}\n\n"
 
-            # 获取下一个问题（包含事件提取）
-            result = agent.get_next_question(answer)
+                # 获取下一个问题（包含事件提取）
+                result = agent.get_next_question(answer)
 
-            # 累计提取的事件
-            session["extracted_events"].extend(result.get("extracted_events", []))
-            _broadcast_planner_graph_update(session_id, result)
+                # 累计提取的事件
+                session["extracted_events"].extend(result.get("extracted_events", []))
+                _broadcast_planner_graph_update(session_id, result)
 
-            # 发送事件
-            session["history"].append({"role": "interviewer", "text": result["question"]})
+                # 发送事件
+                session["history"].append({"role": "interviewer", "text": result["question"]})
 
-            aligned = _build_aligned_turn_payload(
-                question=result.get("question", ""),
-                action=result.get("action", "continue"),
-                done=False,
-                extracted_events=result.get("extracted_events", []),
-                graph_update=result.get("graph_changes", {}),
-                current_graph_state=result.get("current_graph_state", {}),
-                turn_evaluation=result.get("turn_evaluation", {}),
-                session_metrics=result.get("session_metrics", {}),
-                planner_plan=result.get("planner_plan", {}),
-                debug_trace=result.get("debug_trace", {}),
-            )
-            interviewer_data = {
-                'role': 'interviewer',
-                'action': aligned['action'],
-                'text': aligned['question'],
-                'extracted_events': aligned['extracted_events'],
-                'graph_delta': aligned['graph_update'],
-                'turn_evaluation': aligned['turn_evaluation'],
-                'session_metrics': aligned['session_metrics'],
-                'planner_plan': aligned['planner_plan'],
-                'debug_trace': aligned['debug_trace'],
-            }
-            yield f"data: {json.dumps(interviewer_data, ensure_ascii=False)}\n\n"
+                aligned = _build_aligned_turn_payload(
+                    question=result.get("question", ""),
+                    action=result.get("action", "continue"),
+                    done=False,
+                    extracted_events=result.get("extracted_events", []),
+                    graph_update=result.get("graph_changes", {}),
+                    current_graph_state=result.get("current_graph_state", {}),
+                    turn_evaluation=result.get("turn_evaluation", {}),
+                    session_metrics=result.get("session_metrics", {}),
+                    planner_plan=result.get("planner_plan", {}),
+                    debug_trace=result.get("debug_trace", {}),
+                )
+                interviewer_data = {
+                    'role': 'interviewer',
+                    'action': aligned['action'],
+                    'text': aligned['question'],
+                    'extracted_events': aligned['extracted_events'],
+                    'graph_delta': aligned['graph_update'],
+                    'turn_evaluation': aligned['turn_evaluation'],
+                    'session_metrics': aligned['session_metrics'],
+                    'planner_plan': aligned['planner_plan'],
+                    'debug_trace': aligned['debug_trace'],
+                }
+                yield f"data: {json.dumps(interviewer_data, ensure_ascii=False)}\n\n"
 
-            if result["action"] == "end":
-                break
+                if result["action"] == "end":
+                    break
 
-        # 只有非单轮模式或结束时才保存对话
-        if not single_turn or (session["history"] and len(session["history"]) >= 100):
-            _save_conversation(session_id, session)
-        yield f"data: {json.dumps({'role': 'done'}, ensure_ascii=False)}\n\n"
+            # 只有非单轮模式或结束时才保存对话
+            if not single_turn or (session["history"] and len(session["history"]) >= 100):
+                _save_conversation(session_id, session)
+            yield f"data: {json.dumps({'role': 'done'}, ensure_ascii=False)}\n\n"
+        except Exception as exc:
+            app.logger.exception("planner_auto error")
+            yield f"data: {json.dumps({'role': 'error', 'text': f'自动对话出错: {exc}'}, ensure_ascii=False)}\n\n"
+            yield f"data: {json.dumps({'role': 'done'}, ensure_ascii=False)}\n\n"
 
     return Response(generate(), mimetype="text/event-stream",
                     headers={"X-Accel-Buffering": "no", "Cache-Control": "no-cache"})

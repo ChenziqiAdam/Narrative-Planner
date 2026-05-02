@@ -68,7 +68,11 @@ class HybridRetriever:
         t0 = time.monotonic()
 
         # 1. Vector search (always available — in-memory FAISS)
-        vector_results = self._vector_search(query)
+        try:
+            vector_results = self._vector_search(query)
+        except Exception:
+            logger.warning("Vector search failed, continuing without it", exc_info=True)
+            vector_results = []
 
         # 2. Graph expansion from top vector hits
         graph_results: List[ConnectedEntity] = []

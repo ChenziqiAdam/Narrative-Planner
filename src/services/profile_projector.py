@@ -9,7 +9,6 @@ from src.state import (
     DynamicElderProfile,
     DynamicProfileField,
     ElderProfile,
-    PersonProfile,
     SessionState,
     TurnRecord,
 )
@@ -149,13 +148,15 @@ class ProfileProjector:
         self._seed_from_elder_profile(profile, state.elder_profile)
 
         touched_event_ids = list(getattr(merge_result, "touched_event_ids", []) or [])
+        canonical_events = getattr(state, "canonical_events", {}) or {}
         touched_events = [
             event for event_id in touched_event_ids
-            if (event := state.canonical_events.get(event_id)) is not None
+            if (event := canonical_events.get(event_id)) is not None
         ]
 
         self._project_events(profile, turn_record, touched_events)
-        self._project_people(profile, turn_record, state.people_registry.values())
+        people_registry = getattr(state, "people_registry", {}) or {}
+        self._project_people(profile, turn_record, people_registry.values())
         self._project_latest_answer(profile, turn_record)
 
         profile.update_count += 1
@@ -171,8 +172,9 @@ class ProfileProjector:
         if len(new_person_ids) >= 2:
             return "multiple_new_people"
 
+        canonical_events = getattr(state, "canonical_events", {}) or {}
         for event_id in list(getattr(merge_result, "touched_event_ids", []) or []):
-            event = state.canonical_events.get(event_id)
+            event = canonical_events.get(event_id)
             if not event:
                 continue
             if event.completeness_score >= 0.65 and event.confidence >= 0.65:

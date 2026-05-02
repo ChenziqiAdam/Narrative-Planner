@@ -1,41 +1,30 @@
 import React from 'react'
 import {
   ThemeNode,
-  EventNode,
-  PeopleNode,
-  PeopleRelationship,
   NodeStatus,
-  Domain,
-  DomainLabels,
-  SLOT_NAMES,
+  NarrativeFragmentNode,
   GraphState,
 } from '../types'
 import './NodeDetailPanel.css'
 
 interface NodeDetailPanelProps {
-  node: ThemeNode | EventNode | PeopleNode | null
-  type: 'theme' | 'event' | 'person' | null
-  graphState?: GraphState
-  onClose?: () => void
+  selectedNode: { type: 'theme' | 'fragment'; id: string } | null
+  graphState: GraphState | null
+  onClose: () => void
   className?: string
 }
 
-type CompatPeopleNode = PeopleNode & {
-  person_id?: string
-  display_name?: string
-  relation_to_elder?: string | null
-  summary?: string | null
-  related_event_ids?: string[]
-}
-
-const DomainColors: Record<string, string> = {
-  [Domain.LIFE_CHAPTERS]: '#3B82F6',
-  [Domain.KEY_SCENES]: '#8B5CF6',
-  [Domain.FUTURE_SCRIPTS]: '#06B6D4',
-  [Domain.CHALLENGES]: '#EF4444',
-  [Domain.PERSONAL_THOUGHTS]: '#EC4899',
-  [Domain.PERSONAL_IDEOLOGY]: '#EC4899',
-  [Domain.CONTEXT_MANAGEMENT]: '#6B7280',
+/** Human-readable labels for known fragment property keys */
+const PROPERTY_LABELS: Record<string, string> = {
+  time_anchor: '时间锚点',
+  location: '地点',
+  people_names: '相关人物',
+  emotional_tone: '情感基调',
+  event_type: '事件类型',
+  duration: '持续时间',
+  significance: '重要性',
+  trigger: '触发因素',
+  outcome: '结果',
 }
 
 const statusConfig: Record<NodeStatus, { label: string; color: string }> = {
@@ -44,48 +33,32 @@ const statusConfig: Record<NodeStatus, { label: string; color: string }> = {
   [NodeStatus.EXHAUSTED]: { label: '已挖透', color: '#10B981' },
 }
 
-function getPersonDisplayName(person: PeopleNode): string {
-  const compatPerson = person as CompatPeopleNode
-  return compatPerson.name || compatPerson.display_name || compatPerson.person_id || compatPerson.people_id || '未命名人物'
-}
-
-function getPersonRelation(person: PeopleNode): string {
-  const compatPerson = person as CompatPeopleNode
-  return compatPerson.relation || compatPerson.relation_to_elder || '关系待补充'
-}
-
-function getPersonDescription(person: PeopleNode): string {
-  const compatPerson = person as CompatPeopleNode
-  return compatPerson.description || compatPerson.summary || ''
-}
-
-function getPersonEventIds(person: PeopleNode): string[] {
-  const compatPerson = person as CompatPeopleNode
-  return compatPerson.related_events || compatPerson.related_event_ids || []
-}
-
-function getPersonRelationships(person: PeopleNode): PeopleRelationship[] {
-  return person.relationships || []
-}
-
-function getEmotionInfo(score: number): { icon: string; label: string; className: string } {
-  if (score > 0.3) {
-    return { icon: '积极', label: '积极正向', className: 'positive' }
-  }
-  if (score < -0.3) {
-    return { icon: '低落', label: '消极负面', className: 'negative' }
-  }
-  return { icon: '平稳', label: '中性平和', className: 'neutral' }
+/** Format a properties value for display */
+function formatPropertyValue(value: unknown): string {
+  if (value === null || value === undefined) return '-'
+  if (Array.isArray(value)) return value.join(', ')
+  if (typeof value === 'object') return JSON.stringify(value, null, 2)
+  return String(value)
 }
 
 const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({
-  node,
-  type,
+  selectedNode,
   graphState,
   onClose,
   className = '',
 }) => {
-  if (!node || !type) {
+  // Resolve the actual node data from graphState
+  const themeNode: ThemeNode | null =
+    selectedNode?.type === 'theme'
+      ? graphState?.theme_nodes.find((t) => t.theme_id === selectedNode.id) ?? null
+      : null
+
+  const fragmentNode: NarrativeFragmentNode | null =
+    selectedNode?.type === 'fragment'
+      ? graphState?.narrative_fragments[selectedNode.id] ?? null
+      : null
+
+  if (!selectedNode) {
     return (
       <div className={`node-detail-panel empty ${className}`}>
         <div className="empty-state">
@@ -96,14 +69,19 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({
     )
   }
 
-  const isTheme = type === 'theme'
-  const isPerson = type === 'person'
-  const themeNode = isTheme ? (node as ThemeNode) : null
-  const eventNode = !isTheme && !isPerson ? (node as EventNode) : null
-  const personNode = isPerson ? (node as PeopleNode) : null
-  const emotionInfo = eventNode ? getEmotionInfo(eventNode.emotional_score || 0) : null
-  const eventIds = personNode ? getPersonEventIds(personNode) : []
-  const relationships = personNode ? getPersonRelationships(personNode) : []
+  if (!themeNode && !fragmentNode) {
+    return (
+      <div className={`node-detail-panel empty ${className}`}>
+        <div className="empty-state">
+          <span className="empty-icon">○</span>
+          <p>未找到节点数据</p>
+        </div>
+        <button className="close-btn" onClick={onClose}>
+          ×
+        </button>
+      </div>
+    )
+  }
 
   return (
     <div className={`node-detail-panel ${className}`}>
@@ -112,89 +90,27 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({
           <span
             className="node-type-badge"
             style={{
-              backgroundColor: isTheme
-                ? DomainColors[themeNode?.domain || Domain.CONTEXT_MANAGEMENT]
-                : isPerson
-                ? '#EC4899'
-                : '#F59E0B',
+              backgroundColor: selectedNode.type === 'theme' ? '#3B82F6' : '#F59E0B',
             }}
           >
-            {isTheme ? '主题' : isPerson ? '人物' : '事件'}
+            {selectedNode.type === 'theme' ? '主题' : '叙事片段'}
           </span>
-          {isTheme && themeNode && (
-            <span className="domain-badge">{DomainLabels[themeNode.domain] || themeNode.domain}</span>
-          )}
-          {isPerson && personNode && (
-            <span className="domain-badge">{getPersonRelation(personNode)}</span>
-          )}
         </div>
 
         <h2 className="node-title">
-          {isTheme && themeNode && themeNode.title}
-          {isPerson && personNode && getPersonDisplayName(personNode)}
-          {eventNode && eventNode.title}
+          {themeNode?.title ?? fragmentNode?.fragment_id ?? selectedNode.id}
         </h2>
 
-        {onClose && (
-          <button className="close-btn" onClick={onClose}>
-            ×
-          </button>
-        )}
+        <button className="close-btn" onClick={onClose}>
+          ×
+        </button>
       </div>
 
       <div className="panel-content">
-        {isPerson && personNode && (
+        {/* ===== Theme Detail ===== */}
+        {themeNode && (
           <>
-            {getPersonDescription(personNode) && (
-              <div className="info-section">
-                <h3 className="section-label">人物描述</h3>
-                <p className="description">{getPersonDescription(personNode)}</p>
-              </div>
-            )}
-
-            <div className="info-section">
-              <h3 className="section-label">关联事件</h3>
-              {eventIds.length > 0 ? (
-                <div className="events-list">
-                  {eventIds.map((eventId) => {
-                    const event = graphState?.event_nodes?.[eventId]
-                    return (
-                      <div key={eventId} className="event-tag">
-                        {event?.title || eventId}
-                      </div>
-                    )
-                  })}
-                </div>
-              ) : (
-                <p className="description">暂无关联事件</p>
-              )}
-            </div>
-
-            {relationships.length > 0 && (
-              <div className="info-section">
-                <h3 className="section-label">人物关系</h3>
-                <div className="questions-list">
-                  {relationships.map((rel, index) => {
-                    const targetPerson = graphState?.people_nodes?.[rel.target_id]
-                    return (
-                      <div key={`${rel.target_id}-${index}`} className="question-item">
-                        <span className="question-number">{index + 1}</span>
-                        <p className="question-text">
-                          {getPersonDisplayName(
-                            targetPerson || ({ person_id: rel.target_id } as unknown as PeopleNode)
-                          )} ({rel.relation_type})
-                        </p>
-                      </div>
-                    )
-                  })}
-                </div>
-              </div>
-            )}
-          </>
-        )}
-
-        {isTheme && themeNode && (
-          <>
+            {/* Status */}
             <div className="info-section">
               <h3 className="section-label">状态</h3>
               <div className="status-display">
@@ -211,116 +127,110 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({
               </div>
             </div>
 
+            {/* Narrative Richness Progress Bar */}
             <div className="info-section">
-              <h3 className="section-label">槽位填充</h3>
-              <div className="slots-grid">
-                {Object.entries(themeNode.slots_filled || {}).map(([slot, filled]) => (
-                  <div key={slot} className={`slot-item ${filled ? 'filled' : ''}`}>
-                    <span className="slot-icon">{filled ? '✓' : '○'}</span>
-                    <span className="slot-name">{SLOT_NAMES[slot] || slot}</span>
-                  </div>
-                ))}
+              <h3 className="section-label">叙事丰富度</h3>
+              <div className="progress-info">
+                <div className="progress-header">
+                  <span>丰富度评分</span>
+                  <span className="depth-value">
+                    {Math.round(themeNode.narrative_richness * 100)}%
+                  </span>
+                </div>
+                <div className="completion-bar">
+                  <div
+                    className="completion-fill"
+                    style={{ width: `${themeNode.narrative_richness * 100}%` }}
+                  />
+                </div>
               </div>
             </div>
 
-            {(themeNode.extracted_events || []).length > 0 && (
-              <div className="info-section">
-                <h3 className="section-label">已提取事件</h3>
-                <div className="events-list">
-                  {(themeNode.extracted_events || []).map((eventId) => {
-                    const event = graphState?.event_nodes?.[eventId]
-                    return (
-                      <div key={eventId} className="event-tag">
-                        {event?.title || eventId}
-                      </div>
-                    )
-                  })}
+            {/* Entity Count & Exploration Depth */}
+            <div className="info-section">
+              <h3 className="section-label">探索指标</h3>
+              <div className="metrics-grid">
+                <div className="metric-item">
+                  <span className="metric-label">关联实体</span>
+                  <span className="metric-value">{themeNode.entity_count}</span>
+                </div>
+                <div className="metric-item">
+                  <span className="metric-label">探索深度</span>
+                  <div className="depth-pips">
+                    {[1, 2, 3, 4, 5].map((level) => (
+                      <div
+                        key={level}
+                        className={`depth-pip ${level <= themeNode.exploration_depth ? 'active' : ''}`}
+                      />
+                    ))}
+                  </div>
+                  <span className="metric-value">{themeNode.exploration_depth}/5</span>
                 </div>
               </div>
-            )}
+            </div>
+          </>
+        )}
 
-            {(themeNode.seed_questions || []).length > 0 && (
+        {/* ===== Fragment Detail ===== */}
+        {fragmentNode && (
+          <>
+            {/* Rich Text */}
+            <div className="info-section">
+              <h3 className="section-label">叙事文本</h3>
+              <p className="description">{fragmentNode.rich_text}</p>
+            </div>
+
+            {/* Confidence & Narrative Richness */}
+            <div className="info-section">
+              <h3 className="section-label">分析指标</h3>
+              <div className="metrics-grid">
+                <div className="metric-item">
+                  <span className="metric-label">置信度</span>
+                  <div className="metric-bar">
+                    <div
+                      className="metric-fill"
+                      style={{ width: `${fragmentNode.confidence * 100}%` }}
+                    />
+                  </div>
+                  <span className="metric-value">
+                    {Math.round(fragmentNode.confidence * 100)}%
+                  </span>
+                </div>
+                <div className="metric-item">
+                  <span className="metric-label">叙事丰富度</span>
+                  <div className="metric-bar">
+                    <div
+                      className="metric-fill"
+                      style={{
+                        width: `${fragmentNode.narrative_richness * 100}%`,
+                      }}
+                    />
+                  </div>
+                  <span className="metric-value">
+                    {Math.round(fragmentNode.narrative_richness * 100)}%
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Properties as Key-Value Pairs */}
+            {Object.keys(fragmentNode.properties).length > 0 && (
               <div className="info-section">
-                <h3 className="section-label">种子问题</h3>
-                <div className="questions-list">
-                  {(themeNode.seed_questions || []).slice(0, 3).map((question, index) => (
-                    <div key={`${index}-${question}`} className="question-item">
-                      <span className="question-number">{index + 1}</span>
-                      <p className="question-text">{question}</p>
+                <h3 className="section-label">结构化信息</h3>
+                <div className="slots-detail">
+                  {Object.entries(fragmentNode.properties).map(([key, value]) => (
+                    <div key={key} className="slot-row filled">
+                      <span className="slot-key">
+                        {PROPERTY_LABELS[key] || key}
+                      </span>
+                      <span className="slot-value">
+                        {formatPropertyValue(value)}
+                      </span>
                     </div>
                   ))}
                 </div>
               </div>
             )}
-          </>
-        )}
-
-        {eventNode && (
-          <>
-            <div className="info-section">
-              <h3 className="section-label">事件概述</h3>
-              <p className="description">{eventNode.slots?.event || eventNode.title}</p>
-            </div>
-
-            <div className="info-section">
-              <h3 className="section-label">时间与地点</h3>
-              <div className="time-location">
-                <div className="info-row">
-                  <span className="info-key">时间</span>
-                  <span className="info-value">{eventNode.slots?.time || '未补充'}</span>
-                </div>
-                <div className="info-row">
-                  <span className="info-key">地点</span>
-                  <span className="info-value">{eventNode.location || eventNode.slots?.location || '未补充'}</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="info-section">
-              <h3 className="section-label">槽位信息</h3>
-              <div className="slots-grid">
-                {Object.entries(eventNode.slots || {}).map(([slot, value]) => (
-                  <div key={slot} className={`slot-item ${value ? 'filled' : ''}`}>
-                    <span className="slot-icon">{value ? '✓' : '○'}</span>
-                    <span className="slot-name">{SLOT_NAMES[slot] || slot}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {eventNode.people_involved?.length > 0 && (
-              <div className="info-section">
-                <h3 className="section-label">涉及人物</h3>
-                <div className="events-list">
-                  {eventNode.people_involved.map((personId) => {
-                    const person = graphState?.people_nodes?.[personId]
-                    return (
-                      <div key={personId} className="event-tag">
-                        {person ? getPersonDisplayName(person) : personId}
-                      </div>
-                    )
-                  })}
-                </div>
-              </div>
-            )}
-
-            <div className="info-section">
-              <h3 className="section-label">情绪与深度</h3>
-              <div className="progress-info">
-                <div className="progress-header">
-                  <span>{emotionInfo?.icon} {emotionInfo?.label}</span>
-                  <span className="depth-value">{eventNode.depth_level || 0}/5</span>
-                </div>
-                <div className="depth-indicator">
-                  {[1, 2, 3, 4, 5].map((level) => (
-                    <div
-                      key={level}
-                      className={`depth-level ${level <= (eventNode.depth_level || 0) ? 'active' : ''}`}
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
           </>
         )}
       </div>

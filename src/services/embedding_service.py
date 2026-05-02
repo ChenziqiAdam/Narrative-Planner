@@ -1,7 +1,13 @@
 """Unified embedding service supporting local (sentence-transformers) and OpenAI providers."""
 
 import logging
+import os
 from typing import List
+
+# Prevent HuggingFace from attempting network downloads — fail fast if model not cached.
+os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
+os.environ.setdefault("HF_DATASETS_OFFLINE", "1")
+os.environ.setdefault("HF_HUB_OFFLINE", "1")
 
 from src.config import Config
 
@@ -12,6 +18,7 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 _MODEL_DIMENSIONS: dict[str, int] = {
     "paraphrase-multilingual-MiniLM-L12-v2": 384,
+    "embedding-3": 2048,
 }
 
 
@@ -124,10 +131,13 @@ class EmbeddingService:
         self._ensure_openai()
         from openai import OpenAI
 
-        client = OpenAI(api_key=Config.OPENAI_API_KEY, base_url=Config.OPENAI_BASE_URL)
+        client = OpenAI(
+            api_key=Config.EMBEDDING_OPENAI_API_KEY,
+            base_url=Config.EMBEDDING_OPENAI_BASE_URL,
+        )
         response = client.embeddings.create(
             input=texts,
-            model="text-embedding-3-small",
+            model=Config.EMBEDDING_OPENAI_MODEL,
         )
         # Update dimension from actual response
         if response.data:

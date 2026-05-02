@@ -13,11 +13,8 @@ class TurnEvaluation:
     question_quality_score: float
     information_gain_score: float
     non_redundancy_score: float
-    slot_targeting_score: float
     emotional_alignment_score: float
-    planner_alignment_score: float
     coverage_gain: float = 0.0
-    targeted_slots: List[str] = field(default_factory=list)
     notes: List[str] = field(default_factory=list)
     created_at: datetime = field(default_factory=datetime.now)
 

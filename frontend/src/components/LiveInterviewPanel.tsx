@@ -7,13 +7,14 @@
  * 3. 输入框和发送按钮
  * 4. 打字中指示器
  * 5. 自动滚动到底部
+ * 6. 显示提取的叙事片段标签
  */
 
 import React, { useRef, useEffect, useCallback, useState } from 'react'
 import {
   ChatMessage,
   WSConnectionStatus,
-  ExtractedEvent,
+  NarrativeFragmentData,
 } from '../types/websocket'
 import { GraphState } from '../types'
 import './LiveInterviewPanel.css'
@@ -97,53 +98,81 @@ function getConnectionStatusClass(status: WSConnectionStatus): string {
   }
 }
 
+/** 截断文本的最大长度 */
+const FRAGMENT_TEXT_MAX_LENGTH = 60
+
 /**
- * 渲染提取的事件标签
+ * 截断文本
+ * @param text 原始文本
+ * @param maxLength 最大长度
+ * @returns 截断后的文本
  */
-const ExtractedEventTag: React.FC<{ event: ExtractedEvent }> = ({ event }) => {
+function truncateText(text: string, maxLength: number = FRAGMENT_TEXT_MAX_LENGTH): string {
+  if (text.length <= maxLength) return text
+  return text.slice(0, maxLength) + '...'
+}
+
+/**
+ * 获取置信度对应的样式类名
+ * @param confidence 置信度 (0-1)
+ * @returns CSS类名
+ */
+function getConfidenceClass(confidence: number): string {
+  if (confidence >= 0.8) return 'confidence-high'
+  if (confidence >= 0.5) return 'confidence-medium'
+  return 'confidence-low'
+}
+
+/**
+ * 渲染叙事片段标签
+ */
+const FragmentTag: React.FC<{ fragment: NarrativeFragmentData }> = ({ fragment }) => {
   const [expanded, setExpanded] = useState(false)
 
   return (
-    <div className="extracted-event-tag">
+    <div className="fragment-tag">
       <div
-        className="event-tag-header"
+        className="fragment-tag-header"
         onClick={() => setExpanded(!expanded)}
       >
-        <span className="event-tag-icon">📌</span>
-        <span className="event-tag-title">{event.slots.event}</span>
-        <span className="event-tag-confidence">
-          置信度: {Math.round(event.confidence * 100)}%
+        <span className="fragment-tag-icon">✦</span>
+        <span className="fragment-tag-text">
+          {truncateText(fragment.rich_text)}
         </span>
-        <span className={`event-tag-expand ${expanded ? 'expanded' : ''}`}>
+        {fragment.theme_id && (
+          <span className="fragment-tag-theme">{fragment.theme_id}</span>
+        )}
+        <span className={`fragment-tag-confidence ${getConfidenceClass(fragment.confidence)}`}>
+          {Math.round(fragment.confidence * 100)}%
+        </span>
+        <span className={`fragment-tag-expand ${expanded ? 'expanded' : ''}`}>
           ▼
         </span>
       </div>
       {expanded && (
-        <div className="event-tag-details">
-          {event.slots.time && (
-            <div className="event-detail-item">
-              <span className="detail-label">时间:</span>
-              <span className="detail-value">{event.slots.time}</span>
+        <div className="fragment-tag-details">
+          <div className="fragment-detail-item">
+            <span className="detail-label">片段ID:</span>
+            <span className="detail-value">{fragment.fragment_id}</span>
+          </div>
+          <div className="fragment-detail-item">
+            <span className="detail-label">完整文本:</span>
+            <span className="detail-value">{fragment.rich_text}</span>
+          </div>
+          {fragment.theme_id && (
+            <div className="fragment-detail-item">
+              <span className="detail-label">主题:</span>
+              <span className="detail-value">{fragment.theme_id}</span>
             </div>
           )}
-          {event.slots.location && (
-            <div className="event-detail-item">
-              <span className="detail-label">地点:</span>
-              <span className="detail-value">{event.slots.location}</span>
-            </div>
-          )}
-          {event.slots.people && event.slots.people.length > 0 && (
-            <div className="event-detail-item">
-              <span className="detail-label">人物:</span>
+          {Object.keys(fragment.properties).length > 0 && (
+            <div className="fragment-detail-item">
+              <span className="detail-label">属性:</span>
               <span className="detail-value">
-                {event.slots.people.join(', ')}
+                {Object.entries(fragment.properties)
+                  .map(([key, value]) => `${key}: ${String(value)}`)
+                  .join(', ')}
               </span>
-            </div>
-          )}
-          {event.slots.feeling && (
-            <div className="event-detail-item">
-              <span className="detail-label">感受:</span>
-              <span className="detail-value">{event.slots.feeling}</span>
             </div>
           )}
         </div>
@@ -180,12 +209,15 @@ const MessageItem: React.FC<{ message: ChatMessage }> = ({ message }) => {
             <p key={index}>{line || ' '}</p>
           ))}
         </div>
-        {/* 显示提取的事件 */}
-        {message.extractedEvents && message.extractedEvents.length > 0 && (
-          <div className="message-extracted-events">
-            <div className="extracted-events-title">提取的事件:</div>
-            {message.extractedEvents.map((event, index) => (
-              <ExtractedEventTag key={`${event.event_id}-${index}`} event={event} />
+        {/* 显示提取的叙事片段 */}
+        {message.extractedFragments && message.extractedFragments.length > 0 && (
+          <div className="message-extracted-fragments">
+            <div className="extracted-fragments-title">提取的叙事片段:</div>
+            {message.extractedFragments.map((fragment, index) => (
+              <FragmentTag
+                key={`${fragment.fragment_id}-${index}`}
+                fragment={fragment}
+              />
             ))}
           </div>
         )}

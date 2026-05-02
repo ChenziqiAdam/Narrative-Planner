@@ -1,35 +1,23 @@
 #!/usr/bin/env python3
-"""
-Baseline Agent - a clean interview agent without planner integrations.
-"""
+"""Baseline interview agent without Planner or GraphRAG integrations."""
+
+from __future__ import annotations
 
 import logging
 import os
 import sys
 from datetime import datetime
 
-project_root = os.path.join(os.path.dirname(__file__), "..", "..")
-if project_root not in sys.path:
-    sys.path.insert(0, project_root)
-
 from openai import OpenAI
 
 from src.config import Config
 
 
-logging.basicConfig(
-    level=Config.LOG_LEVEL,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    handlers=[
-        logging.FileHandler("logs/baseline_agent.log"),
-        logging.StreamHandler(),
-    ],
-)
 logger = logging.getLogger(__name__)
 
 
 class BaselineAgent:
-    """A standalone baseline interview agent with no planner-side backends."""
+    """Standalone interview agent for the no-planner control group."""
 
     _PROMPT_PLACEHOLDERS = (
         "[用户的基本生平信息]",
@@ -47,9 +35,9 @@ class BaselineAgent:
         with open(prompt_path, "r", encoding="utf-8") as file:
             self.system_prompt = file.read()
 
-        logger.info("Baseline Agent initialized (session=%s)", self.session_id)
+        logger.info("BaselineAgent initialized (session=%s)", self.session_id)
 
-    def initialize_conversation(self, basic_info: str):
+    def initialize_conversation(self, basic_info: str) -> None:
         system_message = self.system_prompt
         for placeholder in self._PROMPT_PLACEHOLDERS:
             system_message = system_message.replace(placeholder, basic_info)
@@ -60,7 +48,7 @@ class BaselineAgent:
         ]
         logger.info("Baseline conversation initialized")
 
-    def get_next_question(self, user_response: str | None = None):
+    def get_next_question(self, user_response: str | None = None) -> str:
         if user_response:
             self.conversation_history.append({"role": "user", "content": user_response})
 
@@ -75,9 +63,11 @@ class BaselineAgent:
                 question = (response.choices[0].message.content or "").strip()
                 if question:
                     self.model = model_name
-                    self.conversation_history.append({"role": "assistant", "content": question})
-                logger.info("Baseline generated next turn with model=%s", model_name)
-                return question
+                    self.conversation_history.append(
+                        {"role": "assistant", "content": question}
+                    )
+                    logger.info("Baseline generated next turn with model=%s", model_name)
+                    return question
             except Exception as exc:
                 last_error = exc
                 logger.warning("Baseline API call failed with model=%s: %s", model_name, exc)
@@ -87,7 +77,7 @@ class BaselineAgent:
         logger.error("Baseline API call failed: %s", last_error)
         return "抱歉，我这边刚才没有顺利组织出下一个问题，请稍后再试一次。"
 
-    def save_conversation(self):
+    def save_conversation(self) -> str:
         results_dir = "results/conversations"
         os.makedirs(results_dir, exist_ok=True)
 
@@ -97,8 +87,10 @@ class BaselineAgent:
                 file.write(f"[{message['role']}]: {message['content']}\n\n")
 
         logger.info("Baseline conversation saved to %s", output_file)
+        return output_file
 
-    def _should_fallback_model(self, error: Exception) -> bool:
+    @staticmethod
+    def _should_fallback_model(error: Exception) -> bool:
         message = str(error).lower()
         return (
             "not found the model" in message

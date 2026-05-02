@@ -19,13 +19,8 @@ from pydantic import BaseModel, Field
 
 # 导入项目模块
 from src.api.websocket_manager import websocket_manager
-from src.core.graph_manager import GraphManager
-from src.core.event_node import EventNode
+from src.orchestration.session_orchestrator import SessionOrchestrator
 from src.config import Config
-
-# Neo4j 条件导入
-if Config.NEO4J_ENABLED:
-    from src.services.neo4j_graph_adapter import Neo4jGraphAdapter
 
 logger = logging.getLogger(__name__)
 
@@ -43,17 +38,23 @@ class CreateSessionResponse(BaseModel):
     status: str
     created_at: str
     message: str
+    first_question: str = ""
+    graph_state: Dict[str, Any] = Field(default_factory=dict)
 
 
 class GraphStateResponse(BaseModel):
     """图谱状态响应"""
     session_id: str
     coverage_metrics: Dict[str, Any]
-    theme_count: int
-    event_count: int
-    pending_themes: int
-    mentioned_themes: int
-    exhausted_themes: int
+    theme_nodes: list[Dict[str, Any]] = Field(default_factory=list)
+    narrative_fragments: Dict[str, Any] = Field(default_factory=dict)
+    dynamic_profile: Dict[str, Any] = Field(default_factory=dict)
+    theme_count: int = 0
+    event_count: int = 0
+    pending_themes: int = 0
+    mentioned_themes: int = 0
+    exhausted_themes: int = 0
+    turn_count: int = 0
     timestamp: str
 
 
@@ -79,9 +80,32 @@ class SessionEndResponse(BaseModel):
     message: str
 
 
+def _parse_elder_info(basic_info: str, metadata: Dict[str, Any]) -> Dict[str, Any]:
+    """Build an ElderProfile payload from API input without requiring old parsers."""
+    elder_info = dict(metadata or {})
+    text = (basic_info or "").strip()
+    if text and "background" not in elder_info:
+        elder_info["background"] = text
+    return elder_info
+
+
+def _graph_state_response_payload(session_id: str, state: Dict[str, Any]) -> Dict[str, Any]:
+    themes = state.get("theme_nodes", []) or []
+    fragments = state.get("narrative_fragments", {}) or {}
+    return {
+        **state,
+        "session_id": session_id,
+        "theme_count": len(themes),
+        "event_count": len(fragments),
+        "pending_themes": sum(1 for item in themes if item.get("status") == "pending"),
+        "mentioned_themes": sum(1 for item in themes if item.get("status") == "mentioned"),
+        "exhausted_themes": sum(1 for item in themes if item.get("status") == "exhausted"),
+    }
+
+
 # ==================== 全局状态管理 ====================
 
-# 会话存储: session_id -> GraphManager (或 Neo4jGraphAdapter)
+# 会话存储: session_id -> SessionOrchestrator
 active_graphs: Dict[str, Any] = {}
 
 
@@ -98,7 +122,7 @@ async def lifespan(app: FastAPI):
     logger.info("=" * 50)
     logger.info("动态事件图谱 API 服务启动")
     logger.info(f"日志级别: {Config.LOG_LEVEL}")
-    logger.info(f"Neo4j: {'启用' if Config.NEO4J_ENABLED else '未启用'}")
+    logger.info(f"Neo4j: 启用")
     logger.info("=" * 50)
 
     yield
@@ -142,6 +166,7 @@ app.add_middleware(
 
 # ==================== WebSocket 端点 ====================
 
+@app.websocket("/ws/planner/{session_id}")
 @app.websocket("/ws/interview/{session_id}")
 async def interview_websocket(websocket: WebSocket, session_id: str):
     """
@@ -176,7 +201,8 @@ async def interview_websocket(websocket: WebSocket, session_id: str):
             await websocket.close(code=4004, reason="Session not found")
             return
 
-        graph_manager = active_graphs[session_id]
+        orchestrator = active_graphs[session_id]
+        graph_state = orchestrator.get_graph_state()
 
         # 发送连接成功消息
         await websocket_manager.broadcast_to_session(
@@ -187,8 +213,16 @@ async def interview_websocket(websocket: WebSocket, session_id: str):
                 "content": {
                     "session_id": session_id,
                     "client_id": client_id,
-                    "graph_state": graph_manager.get_graph_state()
+                    "graph_state": graph_state
                 }
+            }
+        )
+        await websocket_manager.broadcast_to_session(
+            session_id,
+            {
+                "type": "graph_init",
+                "data": graph_state,
+                "timestamp": datetime.now().isoformat(),
             }
         )
 
@@ -213,9 +247,7 @@ async def interview_websocket(websocket: WebSocket, session_id: str):
                         )
                         continue
 
-                    # TODO: 集成StreamingInterviewEngine处理消息
-                    # 目前返回模拟的流式响应
-                    await _process_user_message_stream(session_id, user_content, graph_manager)
+                    await _process_user_message_stream(session_id, user_content, orchestrator)
 
                 elif msg_type == "ping":
                     # 心跳响应
@@ -223,7 +255,7 @@ async def interview_websocket(websocket: WebSocket, session_id: str):
 
                 elif msg_type == "get_graph_state":
                     # 请求图谱状态
-                    state = graph_manager.get_graph_state()
+                    state = orchestrator.get_graph_state()
                     await websocket_manager.broadcast_to_session(
                         session_id,
                         {
@@ -261,61 +293,35 @@ async def interview_websocket(websocket: WebSocket, session_id: str):
 async def _process_user_message_stream(
     session_id: str,
     user_content: str,
-    graph_manager: Any
+    orchestrator: SessionOrchestrator,
 ):
-    """
-    处理用户消息并流式返回响应
-
-    TODO: 集成实际的StreamingInterviewEngine
-    目前使用模拟数据演示流程。
-    """
-    # 模拟流式响应
+    """处理用户消息，运行 GraphRAG 管线并返回下一问。"""
     import asyncio
 
-    response_text = f"感谢您的分享。关于\"{user_content[:20]}...\", 能详细说说当时的情况吗？"
-
-    # 流式发送token
+    result = await orchestrator.process_user_response(user_content)
+    response_text = result.get("question", "")
     for char in response_text:
         await websocket_manager.broadcast_to_session(
             session_id,
             {"type": "token", "token": char, "is_final": False}
         )
-        await asyncio.sleep(0.02)  # 模拟延迟
+        await asyncio.sleep(0.005)
 
-    # 发送结束标记
     await websocket_manager.broadcast_to_session(
         session_id,
         {"type": "token", "token": "", "is_final": True}
     )
 
-    # 模拟事件提取和图谱更新
-    # TODO: 实际应调用EventExtractor
-    if len(user_content) > 10:
-        # 模拟添加一个事件
-        event = EventNode(
-            event_id=f"evt_{uuid.uuid4().hex[:12]}",
-            theme_id="THEME_01_LIFE_CHAPTERS",  # 示例主题
-            title=f"事件: {user_content[:15]}...",
-            description=user_content,
-        )
-
-        # 添加到图谱
-        graph_manager.add_event_node(event, event.theme_id)
-
-        # 广播图谱更新
-        await websocket_manager.broadcast_to_session(
-            session_id,
-            {
-                "type": "graph_update",
-                "update_type": "event_added",
-                "data": {
-                    "event_id": event.event_id,
-                    "theme_id": event.theme_id,
-                    "title": event.title,
-                    "graph_state": graph_manager.get_graph_state()
-                }
-            }
-        )
+    await websocket_manager.broadcast_to_session(
+        session_id,
+        {
+            "type": "graph_update",
+            "update_type": "graph_rag_turn_processed",
+            "data": result.get("current_graph_state", {}),
+            "debug_trace": result.get("debug_trace", {}),
+            "timestamp": datetime.now().isoformat(),
+        }
+    )
 
 
 # ==================== REST API 端点 ====================
@@ -334,14 +340,11 @@ async def create_session(request: CreateSessionRequest):
         # 生成会话ID
         session_id = f"session_{uuid.uuid4().hex[:16]}"
 
-        # 创建图谱管理器
-        if Config.NEO4J_ENABLED:
-            graph_manager = Neo4jGraphAdapter()
-            logger.info("使用 Neo4jGraphAdapter 创建会话")
-        else:
-            graph_manager = GraphManager()
-            logger.info("使用 GraphManager (内存) 创建会话")
-        active_graphs[session_id] = graph_manager
+        elder_info = _parse_elder_info(request.basic_info, request.metadata)
+        orchestrator = SessionOrchestrator(session_id)
+        state = orchestrator.initialize_session(elder_info)
+        active_graphs[session_id] = orchestrator
+        logger.info("使用 SessionOrchestrator(GraphRAG) 创建会话")
 
         logger.info(f"创建新会话: {session_id}")
 
@@ -349,7 +352,9 @@ async def create_session(request: CreateSessionRequest):
             session_id=session_id,
             status="created",
             created_at=datetime.now().isoformat(),
-            message="会话创建成功，请通过WebSocket连接 /ws/interview/{session_id} 开始对话"
+            message="会话创建成功，请通过WebSocket连接 /ws/interview/{session_id} 或 /ws/planner/{session_id} 开始对话",
+            first_question=state.pending_question or "",
+            graph_state=orchestrator.get_graph_state(),
         )
 
     except Exception as e:
@@ -371,19 +376,9 @@ async def get_graph_state(session_id: str):
         raise HTTPException(status_code=404, detail=f"会话 {session_id} 不存在")
 
     try:
-        graph_manager = active_graphs[session_id]
-        state = graph_manager.get_graph_state()
-
-        return GraphStateResponse(
-            session_id=session_id,
-            coverage_metrics=state["coverage_metrics"],
-            theme_count=state["theme_count"],
-            event_count=state["event_count"],
-            pending_themes=state["pending_themes"],
-            mentioned_themes=state["mentioned_themes"],
-            exhausted_themes=state["exhausted_themes"],
-            timestamp=state["timestamp"]
-        )
+        orchestrator = active_graphs[session_id]
+        state = _graph_state_response_payload(session_id, orchestrator.get_graph_state())
+        return GraphStateResponse(**state)
 
     except Exception as e:
         logger.error(f"获取图谱状态失败 - 会话 {session_id}: {e}", exc_info=True)
@@ -401,28 +396,15 @@ async def save_checkpoint(session_id: str, background_tasks: BackgroundTasks):
         raise HTTPException(status_code=404, detail=f"会话 {session_id} 不存在")
 
     try:
-        graph_manager = active_graphs[session_id]
-
-        # 在后台执行保存操作
-        def do_save():
-            from pathlib import Path
-            output_dir = Path(Config.DATA_DIR) / "interviews" / session_id
-            return graph_manager.save_checkpoint(session_id, output_dir)
-
-        # 同步执行保存（因为需要返回结果）
-        success = do_save()
-
-        if success:
-            output_path = f"{Config.DATA_DIR}/interviews/{session_id}"
-            return CheckpointResponse(
-                session_id=session_id,
-                saved=True,
-                path=output_path,
-                timestamp=datetime.now().isoformat(),
-                message="断点保存成功"
-            )
-        else:
-            raise HTTPException(status_code=500, detail="保存断点失败")
+        orchestrator = active_graphs[session_id]
+        output_path = orchestrator.save_session()
+        return CheckpointResponse(
+            session_id=session_id,
+            saved=True,
+            path=output_path,
+            timestamp=datetime.now().isoformat(),
+            message="断点保存成功"
+        )
 
     except HTTPException:
         raise
@@ -446,8 +428,10 @@ async def end_session(session_id: str):
         stats = websocket_manager.get_session_stats(session_id)
         connection_count = stats.get("client_count", 0)
 
-        # 清理图谱数据
-        del active_graphs[session_id]
+        orchestrator = active_graphs.pop(session_id)
+        close = getattr(orchestrator, "close", None)
+        if close:
+            await close()
 
         logger.info(f"会话已结束: {session_id} (清理了 {connection_count} 个WebSocket连接)")
 
@@ -478,20 +462,14 @@ async def get_session_themes(session_id: str, status: Optional[str] = None):
         raise HTTPException(status_code=404, detail=f"会话 {session_id} 不存在")
 
     try:
-        graph_manager = active_graphs[session_id]
-
-        if status == "pending":
-            themes = graph_manager.get_pending_theme_nodes()
-        elif status == "mentioned":
-            themes = graph_manager.get_mentioned_theme_nodes()
-        elif status == "exhausted":
-            themes = graph_manager.get_exhausted_theme_nodes()
-        else:
-            themes = list(graph_manager.theme_nodes.values())
+        graph_state = active_graphs[session_id].get_graph_state()
+        themes = graph_state.get("theme_nodes", [])
+        if status:
+            themes = [theme for theme in themes if theme.get("status") == status]
 
         return {
             "session_id": session_id,
-            "themes": [theme.to_dict() for theme in themes],
+            "themes": themes,
             "count": len(themes)
         }
 
@@ -513,17 +491,16 @@ async def get_session_events(session_id: str, theme_id: Optional[str] = None):
         raise HTTPException(status_code=404, detail=f"会话 {session_id} 不存在")
 
     try:
-        graph_manager = active_graphs[session_id]
-
-        events = list(graph_manager.event_nodes.values())
+        graph_state = active_graphs[session_id].get_graph_state()
+        events = list((graph_state.get("narrative_fragments") or {}).values())
 
         # 按主题过滤
         if theme_id:
-            events = [e for e in events if e.theme_id == theme_id]
+            events = [event for event in events if event.get("theme_id") == theme_id]
 
         return {
             "session_id": session_id,
-            "events": [event.to_dict() for event in events],
+            "events": events,
             "count": len(events)
         }
 
@@ -550,7 +527,7 @@ async def root():
         "name": "动态事件图谱 API",
         "version": "1.0.0",
         "endpoints": {
-            "websocket": "/ws/interview/{session_id}",
+            "websocket": "/ws/interview/{session_id} 或 /ws/planner/{session_id}",
             "rest": [
                 "POST /api/session - 创建会话",
                 "GET /api/graph/{session_id} - 获取图谱状态",

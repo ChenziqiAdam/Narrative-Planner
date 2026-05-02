@@ -12,9 +12,48 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 
 from src.services.graph_coverage import GraphCoverageCalculator
-from src.services.memory_projector import infer_emotional_state_from_transcript
 from src.services.narrative_richness import NarrativeRichnessScorer
 from src.state.models import EmotionalState
+
+
+def estimate_valence(text: str) -> float:
+    positive_keywords = ["开心", "高兴", "幸福", "自豪", "喜欢", "温暖", "快乐"]
+    negative_keywords = ["难过", "伤心", "遗憾", "辛苦", "困难", "痛苦", "压抑"]
+    pos_hits = sum(1 for word in positive_keywords if word in text)
+    neg_hits = sum(1 for word in negative_keywords if word in text)
+    if pos_hits == neg_hits == 0:
+        return 0.0
+    return max(min((pos_hits - neg_hits) / 3.0, 1.0), -1.0)
+
+
+def infer_emotional_state_from_transcript(
+    transcript: list,
+    answer: str = "",
+) -> EmotionalState:
+    if not transcript and not answer:
+        return EmotionalState(confidence=0.4, evidence=["No completed turns yet."])
+    text = answer
+    if transcript:
+        text = text or transcript[-1].interviewee_answer or ""
+    valence = estimate_valence(text)
+    emotional_energy = min(max(len(text) / 180.0, 0.2), 1.0)
+    cognitive_energy = min(max(len(text) / 140.0, 0.25), 1.0)
+    evidence: List[str] = []
+    if transcript:
+        latest_turn = transcript[-1]
+        if getattr(latest_turn, "extraction_result", None):
+            for candidate in latest_turn.extraction_result.graph_delta.fragment_candidates:
+                if hasattr(candidate, "rich_text") and candidate.rich_text:
+                    evidence.append(candidate.rich_text[:80])
+    if not evidence:
+        evidence.append(text[:80] if text else "Short reply.")
+    return EmotionalState(
+        emotional_energy=round(emotional_energy, 3),
+        cognitive_energy=round(cognitive_energy, 3),
+        valence=round(valence, 3),
+        confidence=0.65,
+        evidence=evidence[:4],
+    )
 
 logger = logging.getLogger(__name__)
 
@@ -75,6 +114,9 @@ class GraphRAGDecisionContextBuilder:
 
         # 1. Theme coverage from Cypher
         ctx.coverage_by_theme = self._compute_coverage()
+        if not ctx.coverage_by_theme:
+            theme_state = getattr(state, "theme_state", {}) or {}
+            ctx.coverage_by_theme = {theme_id: 0.0 for theme_id in theme_state}
         if ctx.coverage_by_theme:
             ctx.overall_coverage = round(
                 sum(ctx.coverage_by_theme.values()) / len(ctx.coverage_by_theme), 4

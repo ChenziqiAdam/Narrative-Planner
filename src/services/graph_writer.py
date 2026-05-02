@@ -9,7 +9,9 @@ from __future__ import annotations
 import hashlib
 import logging
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
+
+import numpy as np
 
 from src.services.embedding_service import EmbeddingService
 from src.services.entity_vector_store import EntityVectorStore
@@ -49,6 +51,7 @@ class GraphWriter:
         self._neo4j = neo4j_manager
         self._vector_store = entity_vector_store
         self._embedding = embedding_service or EmbeddingService()
+        self._topic_index: Optional[List[Tuple[str, List[float]]]] = None
 
     # ------------------------------------------------------------------
     # Public API
@@ -126,6 +129,11 @@ class GraphWriter:
         Returns the Neo4j node ID, or ``None`` on failure.
         """
         node_id = self._generate_entity_id(entity.entity_type, entity.name)
+        theme_id = ""
+        if entity.entity_type == "Event":
+            theme_id = self._resolve_event_theme(entity, embedding)
+            if theme_id:
+                entity.properties["theme_id"] = theme_id
 
         node_dict: Dict[str, dict] = {
             "id": node_id,
@@ -140,6 +148,8 @@ class GraphWriter:
         # Events carry a rich_text field with the full narrative.
         if entity.entity_type == "Event":
             node_dict.setdefault("rich_text", entity.description)
+            if theme_id:
+                node_dict["theme_id"] = theme_id
 
         # Store the embedding so Neo4j vector index can also be used.
         node_dict["embedding"] = embedding
@@ -156,6 +166,8 @@ class GraphWriter:
             text=f"{entity.name}. {entity.description}",
             embedding=embedding,
         )
+        if entity.entity_type == "Event" and theme_id:
+            self._link_event_to_theme(theme_id, node_id)
         return node_id
 
     def _create_relationships(
@@ -232,6 +244,99 @@ class GraphWriter:
                 )
                 return existing_id
         return None
+
+    def _resolve_event_theme(
+        self,
+        entity: ExtractedEntity,
+        event_embedding: List[float],
+    ) -> str:
+        """Pick the most relevant McAdams topic for an extracted event."""
+        explicit = (
+            entity.properties.get("theme_id")
+            or entity.properties.get("topic_id")
+            or entity.properties.get("matched_theme_id")
+        )
+        if explicit and self._topic_exists(str(explicit)):
+            return str(explicit)
+
+        topic_index = self._get_topic_index()
+        if not topic_index:
+            return ""
+
+        event_vec = self._normalise(event_embedding)
+        best_theme = ""
+        best_score = -1.0
+        for theme_id, topic_embedding in topic_index:
+            score = float(np.dot(event_vec, self._normalise(topic_embedding)))
+            if score > best_score:
+                best_theme = theme_id
+                best_score = score
+        return best_theme
+
+    def _get_topic_index(self) -> List[Tuple[str, List[float]]]:
+        if self._topic_index is not None:
+            return self._topic_index
+
+        try:
+            topics = self._neo4j.get_all_topics()
+        except Exception:
+            logger.debug("Cannot load topics for event-theme assignment", exc_info=True)
+            topics = {}
+
+        if not topics:
+            self._topic_index = []
+            return self._topic_index
+
+        topic_rows: List[Tuple[str, str]] = []
+        for theme_id, topic in topics.items():
+            text = " ".join(
+                str(topic.get(key, "") or "")
+                for key in ("name", "description", "domain")
+            )
+            if text.strip():
+                topic_rows.append((theme_id, text))
+
+        if not topic_rows:
+            self._topic_index = []
+            return self._topic_index
+
+        try:
+            embeddings = self._embedding.encode([text for _, text in topic_rows])
+            self._topic_index = [
+                (theme_id, embedding)
+                for (theme_id, _), embedding in zip(topic_rows, embeddings)
+            ]
+        except Exception:
+            logger.warning("Topic embedding failed, skipping theme assignment", exc_info=True)
+            self._topic_index = []
+        return self._topic_index
+
+    def _topic_exists(self, theme_id: str) -> bool:
+        try:
+            return self._neo4j.get_topic(theme_id) is not None
+        except Exception:
+            return False
+
+    def _link_event_to_theme(self, theme_id: str, event_id: str) -> None:
+        try:
+            self._neo4j.add_event_to_topic(theme_id, event_id)
+            self._neo4j.update_topic_status(theme_id, "mentioned")
+            self._neo4j.increment_topic_depth(theme_id)
+        except Exception:
+            logger.debug(
+                "Failed to link event %s to theme %s",
+                event_id,
+                theme_id,
+                exc_info=True,
+            )
+
+    @staticmethod
+    def _normalise(vector: List[float]) -> np.ndarray:
+        arr = np.array(vector, dtype="float32")
+        norm = float(np.linalg.norm(arr))
+        if norm == 0.0:
+            return arr
+        return arr / norm
 
     @staticmethod
     def _generate_entity_id(entity_type: str, name: str) -> str:

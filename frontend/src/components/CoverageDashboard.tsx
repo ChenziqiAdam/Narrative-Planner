@@ -1,15 +1,15 @@
 /**
- * CoverageDashboard - 覆盖率仪表盘组件
+ * CoverageDashboard - 叙事丰富度仪表盘组件
  *
- * 展示访谈进度和各维度覆盖率
+ * 展示访谈进度和主题叙事丰富度
  */
 
-import React from 'react'
-import { GraphState, Domain, DomainLabels, NodeStatus } from '../types'
+import React, { useMemo } from 'react'
+import { GraphState, ThemeNode, NodeStatus } from '../types'
 import './CoverageDashboard.css'
 
 interface CoverageDashboardProps {
-  graphState: GraphState
+  graphState: GraphState | null
   className?: string
 }
 
@@ -17,32 +17,60 @@ const CoverageDashboard: React.FC<CoverageDashboardProps> = ({
   graphState,
   className = '',
 }) => {
-  const { coverage_metrics, theme_count, event_count, pending_themes, mentioned_themes, exhausted_themes } = graphState
+  // 计算派生数据
+  const { overallPercentage, statusStats, topThemes, themeCount, fragmentCount } = useMemo(() => {
+    if (!graphState) {
+      return {
+        overallPercentage: 0,
+        statusStats: [],
+        topThemes: [] as ThemeNode[],
+        themeCount: 0,
+        fragmentCount: 0,
+      }
+    }
 
-  // 计算总体覆盖率百分比
-  const overallPercentage = Math.round(coverage_metrics.overall_coverage * 100)
+    const { coverage_metrics, theme_nodes, narrative_fragments } = graphState
 
-  // 状态统计
-  const statusStats = [
-    { label: '待触达', count: pending_themes, color: '#9CA3AF', status: NodeStatus.PENDING },
-    { label: '已提及', count: mentioned_themes, color: '#F59E0B', status: NodeStatus.MENTIONED },
-    { label: '已挖透', count: exhausted_themes, color: '#10B981', status: NodeStatus.EXHAUSTED },
-  ]
+    // 总体叙事丰富度百分比
+    const overallPercentage = Math.round(coverage_metrics.overall_richness * 100)
 
-  // 维度覆盖率（5个维度：时间、地点、人物、事件、感受）
-  const dimensionLabels: Record<string, string> = {
-    time: '时间维度',
-    location: '空间维度',
-    people: '人物维度',
-    event: '事件维度',
-    reflection: '感受维度',
+    // 按状态统计主题数量
+    const pendingCount = theme_nodes.filter(t => t.status === NodeStatus.PENDING).length
+    const mentionedCount = theme_nodes.filter(t => t.status === NodeStatus.MENTIONED).length
+    const exhaustedCount = theme_nodes.filter(t => t.status === NodeStatus.EXHAUSTED).length
+
+    const statusStats = [
+      { label: '待触达', count: pendingCount, color: '#9CA3AF', status: NodeStatus.PENDING },
+      { label: '已提及', count: mentionedCount, color: '#F59E0B', status: NodeStatus.MENTIONED },
+      { label: '已挖透', count: exhaustedCount, color: '#10B981', status: NodeStatus.EXHAUSTED },
+    ]
+
+    // 按叙事丰富度排序，取前5
+    const topThemes = [...theme_nodes]
+      .sort((a, b) => b.narrative_richness - a.narrative_richness)
+      .slice(0, 5)
+
+    // 叙事片段总数
+    const fragmentCount = Object.keys(narrative_fragments).length
+
+    return {
+      overallPercentage,
+      statusStats,
+      topThemes,
+      themeCount: theme_nodes.length,
+      fragmentCount,
+    }
+  }, [graphState])
+
+  if (!graphState) {
+    return null
   }
 
   return (
     <div className={`coverage-dashboard ${className}`}>
-      {/* 总体覆盖率 */}
+      {/* 总体叙事丰富度 */}
       <div className="coverage-section overall-coverage">
-        <h3 className="section-title">总体覆盖率</h3>
+        <h3 className="section-title">叙事丰富度</h3>
         <div className="progress-ring-container">
           <svg className="progress-ring" width="120" height="120">
             <circle
@@ -72,9 +100,9 @@ const CoverageDashboard: React.FC<CoverageDashboardProps> = ({
         </div>
       </div>
 
-      {/* 主题节点统计 */}
+      {/* 主题状态统计 */}
       <div className="coverage-section theme-stats">
-        <h3 className="section-title">主题节点统计</h3>
+        <h3 className="section-title">主题状态统计</h3>
         <div className="status-bars">
           {statusStats.map((stat) => (
             <div key={stat.status} className="status-bar-item">
@@ -86,7 +114,7 @@ const CoverageDashboard: React.FC<CoverageDashboardProps> = ({
                 <div
                   className="bar-fill"
                   style={{
-                    width: `${(stat.count / theme_count) * 100}%`,
+                    width: themeCount > 0 ? `${(stat.count / themeCount) * 100}%` : '0%',
                     backgroundColor: stat.color,
                   }}
                 />
@@ -96,54 +124,36 @@ const CoverageDashboard: React.FC<CoverageDashboardProps> = ({
           ))}
         </div>
         <div className="total-events">
-          <span className="label">已提取事件</span>
-          <span className="value">{event_count}</span>
+          <span className="label">叙事片段</span>
+          <span className="value">{fragmentCount}</span>
         </div>
       </div>
 
-      {/* 槽位覆盖率 */}
+      {/* 叙事丰富度 Top 5 */}
       <div className="coverage-section dimension-coverage">
-        <h3 className="section-title">槽位覆盖</h3>
+        <h3 className="section-title">丰富度 Top 5</h3>
         <div className="dimension-bars">
-          {Object.entries(coverage_metrics.slot_coverage || {}).map(([key, value]) => (
-            <div key={key} className="dimension-item">
-              <div className="dimension-header">
-                <span className="dimension-label">{dimensionLabels[key] || key}</span>
-                <span className="dimension-value">{Math.round((value as number) * 100)}%</span>
+          {topThemes.map((theme) => {
+            const richnessPercent = Math.round(theme.narrative_richness * 100)
+            return (
+              <div key={theme.theme_id} className="dimension-item">
+                <div className="dimension-header">
+                  <span className="dimension-label">{theme.title}</span>
+                  <span className="dimension-value">{richnessPercent}%</span>
+                </div>
+                <div className="dimension-bar-container">
+                  <div
+                    className="dimension-bar-fill"
+                    style={{
+                      width: `${richnessPercent}%`,
+                      backgroundColor: theme.narrative_richness >= 0.8 ? '#10B981' :
+                                       theme.narrative_richness >= 0.5 ? '#F59E0B' : '#EF4444',
+                    }}
+                  />
+                </div>
               </div>
-              <div className="dimension-bar-container">
-                <div
-                  className="dimension-bar-fill"
-                  style={{
-                    width: `${(value as number) * 100}%`,
-                    backgroundColor: (value as number) >= 0.8 ? '#10B981' :
-                                     (value as number) >= 0.5 ? '#F59E0B' : '#EF4444',
-                  }}
-                />
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* 领域覆盖 */}
-      <div className="coverage-section domain-coverage">
-        <h3 className="section-title">领域覆盖</h3>
-        <div className="domain-grid">
-          {Object.entries(coverage_metrics.domain_coverage || {}).map(([domain, value]) => (
-            <div key={domain} className="domain-item">
-              <div
-                className="domain-indicator"
-                style={{
-                  backgroundColor: value >= 0.8 ? '#10B981' :
-                                   value >= 0.5 ? '#F59E0B' : '#EF4444',
-                  opacity: 0.2 + value * 0.8,
-                }}
-              />
-              <span className="domain-name">{DomainLabels[domain as Domain] || domain}</span>
-              <span className="domain-value">{Math.round(value * 100)}%</span>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </div>
     </div>

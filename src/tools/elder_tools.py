@@ -1,5 +1,8 @@
 import json
+import logging
 from typing import List, Optional, Dict, Any
+
+logger = logging.getLogger(__name__)
 
 class ElderMemorySystem:
     """老人记忆系统"""
@@ -20,9 +23,12 @@ class ElderMemorySystem:
         # 构建记忆索引
         self._build_memory_index()
 
-        from src.services.event_vector_store import EventVectorStore
-        self._vector_store = EventVectorStore()
-        self._build_vector_index()
+        from src.services.entity_vector_store import EntityVectorStore
+        self._vector_store = EntityVectorStore()
+        try:
+            self._build_vector_index()
+        except Exception as exc:
+            logger.warning("向量索引构建失败（语义搜索不可用）: %s", exc)
 
     def _build_vector_index(self) -> None:
         for memory_id, memory_info in self.memory_index.items():
@@ -33,7 +39,11 @@ class ElderMemorySystem:
                 memory.get("details", ""),
             ]))
             if text.strip():
-                self._vector_store.add(memory_id, text)
+                self._vector_store.add(
+                    entity_id=memory_id,
+                    entity_type="Memory",
+                    text=text,
+                )
 
     def _build_memory_index(self):
         """构建内存索引，加速搜索"""
@@ -238,9 +248,9 @@ class ElderMemorySystem:
         top_k: int = 3,
     ) -> List[Dict[str, Any]]:
         """语义搜索记忆，适合模糊或概念性查询。返回格式与 search_memories_by_keywords 一致。"""
-        hits = self._vector_store.search(query, top_k)
+        hits = self._vector_store.search_by_text(query, top_k=top_k, entity_type="Memory")
         results = []
-        for memory_id, score in hits:
+        for memory_id, _entity_type, score in hits:
             memory_info = self.memory_index.get(memory_id)
             if memory_info:
                 results.append({
