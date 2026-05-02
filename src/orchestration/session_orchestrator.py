@@ -116,6 +116,7 @@ class SessionOrchestrator:
     # ── Session lifecycle ──
 
     def initialize_session(self, elder_info: Dict[str, Any]) -> SessionState:
+        _t0 = time.perf_counter()
         elder_profile = self._build_elder_profile(elder_info)
         now = datetime.now()
         state = SessionState(
@@ -126,34 +127,48 @@ class SessionOrchestrator:
         )
         if Config.ENABLE_DYNAMIC_PROFILE_UPDATE:
             state.dynamic_profile = self.profile_projector.build_initial_profile(state)
+        logger.info("[init] profile built: %.1fms", (time.perf_counter() - _t0) * 1000)
 
         # Sync initial theme state to Neo4j
+        _t1 = time.perf_counter()
         try:
             neo4j = self._get_neo4j_manager()
             neo4j.sync_themes_to_neo4j()
         except Exception:
             logger.debug("Neo4j theme sync skipped", exc_info=True)
+        logger.info("[init] neo4j connect + theme sync: %.1fms", (time.perf_counter() - _t1) * 1000)
 
         # Load cross-session history
+        _t2 = time.perf_counter()
         bridge_context = self._load_cross_session_history(state)
+        logger.info("[init] cross-session history: %.1fms", (time.perf_counter() - _t2) * 1000)
 
         # Build theme state from Neo4j
+        _t3 = time.perf_counter()
         state.theme_state = self._build_theme_state_from_neo4j()
+        logger.info("[init] theme state build: %.1fms", (time.perf_counter() - _t3) * 1000)
 
         # Build decision context and generate first question
+        _t4 = time.perf_counter()
         decision_ctx = self._get_decision_context_builder().build(
             state, None, None, bridge_result=bridge_context,
         )
+        logger.info("[init] decision context: %.1fms", (time.perf_counter() - _t4) * 1000)
+
+        _t5 = time.perf_counter()
         generated = self.interviewer_agent.generate_question(
             state.elder_profile,
             [],
             decision_ctx,
         )
+        logger.info("[init] LLM question generation: %.1fms", (time.perf_counter() - _t5) * 1000)
+
         state.current_focus_theme_id = decision_ctx.current_focus_theme_id
         state.pending_question = generated["question"]
         state.pending_action = generated["action"]
         state.session_metrics = self._compute_session_metrics()
         self.store.save(state)
+        logger.info("[init] TOTAL: %.1fms", (time.perf_counter() - _t0) * 1000)
         return state
 
     async def process_user_response(self, user_response: str) -> Dict[str, Any]:

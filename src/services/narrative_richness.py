@@ -111,9 +111,14 @@ class NarrativeRichnessScorer:
     ) -> float:
         """How many relationships exist in the graph.
 
-        If Neo4j is available, count actual edges.  Otherwise estimate from
-        properties: people mentioned +0.3, location +0.3, linked events +0.4.
+        Prefers pre-fetched ``__rel_count`` from batch queries.
+        Falls back to Neo4j lookup, then to property estimation.
         """
+        # Use pre-fetched rel_count if available (avoids extra query).
+        rel_count = props.get("__rel_count")
+        if rel_count is not None:
+            return min(rel_count / 3.0, 1.0)
+
         # Try graph-based scoring.
         if neo4j_manager is not None:
             try:

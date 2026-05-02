@@ -124,7 +124,21 @@ class Neo4jGraphManager:
         return count
 
     def sync_themes_to_neo4j(self) -> int:
-        """Load McAdams theme definitions and upsert them as ``:Topic`` nodes."""
+        """Load McAdams theme definitions and upsert them as ``:Topic`` nodes.
+
+        Skips the upsert if topics already exist in Neo4j (avoids redundant
+        writes on every session initialization).
+        """
+        try:
+            rows = self.driver.execute_query(
+                "MATCH (t:Topic) RETURN count(t) AS cnt"
+            )
+            if rows and rows[0].get("cnt", 0) > 0:
+                logger.debug("Topics already synced (%d), skipping", rows[0]["cnt"])
+                return rows[0]["cnt"]
+        except Exception:
+            logger.debug("Topic count check failed, proceeding with sync", exc_info=True)
+
         from src.core.theme_loader import ThemeLoader
 
         themes = ThemeLoader().load()

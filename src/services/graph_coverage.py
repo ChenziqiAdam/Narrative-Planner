@@ -32,6 +32,7 @@ class GraphCoverageCalculator:
     def compute_theme_coverage(self, neo4j_manager) -> Dict[str, float]:
         """Per-theme coverage weighted by narrative richness.
 
+        Uses a single Cypher aggregation query to avoid N+1 round-trips.
         Returns:
             ``{theme_id: coverage_float}`` where coverage is the average
             richness of events under that theme (0.0 if no events).
@@ -43,8 +44,15 @@ class GraphCoverageCalculator:
                 """
                 MATCH (t:Topic)
                 OPTIONAL MATCH (t)-[:INCLUDES]->(e:Event)
-                RETURN t.id AS theme_id, count(e) AS event_count,
-                       collect(e) AS events
+                WITH t, e
+                OPTIONAL MATCH (e)-[r]-()
+                WITH t.id AS theme_id, e, count(r) AS rel_count
+                WITH theme_id,
+                     collect({
+                         rel_count: rel_count,
+                         props: properties(e)
+                     }) AS events
+                RETURN theme_id, size(events) AS event_count, events
                 """
             )
         except Exception:
@@ -58,13 +66,14 @@ class GraphCoverageCalculator:
             if not event_count:
                 result[theme_id] = 0.0
                 continue
-            # Score each event via richness scorer.
             events = row.get("events", [])
             scores = []
-            for event_node in events:
-                props = dict(event_node)
+            for event_data in events:
+                props = event_data.get("props", {}) if isinstance(event_data, dict) else {}
+                if isinstance(event_data, dict) and "rel_count" in event_data:
+                    props["__rel_count"] = event_data["rel_count"]
                 scores.append(
-                    self._scorer.compute_fragment_richness(props, neo4j_manager)
+                    self._scorer.compute_fragment_richness(props, neo4j_manager=None)
                 )
             result[theme_id] = round(sum(scores) / len(scores), 4) if scores else 0.0
         return result
