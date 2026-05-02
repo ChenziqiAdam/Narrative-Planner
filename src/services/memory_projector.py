@@ -12,6 +12,60 @@ from src.state import (
 )
 
 
+def estimate_valence(text: str) -> float:
+    """Estimate emotional valence from Chinese text (-1 to +1)."""
+    positive_keywords = ["开心", "高兴", "幸福", "自豪", "喜欢", "温暖", "快乐"]
+    negative_keywords = ["难过", "伤心", "遗憾", "辛苦", "困难", "痛苦", "压抑"]
+    pos_hits = sum(1 for word in positive_keywords if word in text)
+    neg_hits = sum(1 for word in negative_keywords if word in text)
+    if pos_hits == neg_hits == 0:
+        return 0.0
+    return max(min((pos_hits - neg_hits) / 3.0, 1.0), -1.0)
+
+
+def infer_emotional_state_from_transcript(
+    transcript: list,
+    answer: str = "",
+) -> EmotionalState:
+    """Infer emotional state from recent transcript entries.
+
+    Can be used independently of MemoryProjector (e.g. by
+    GraphRAGDecisionContextBuilder).
+    """
+    if not transcript and not answer:
+        return EmotionalState(confidence=0.4, evidence=["No completed turns yet."])
+
+    text = answer
+    if transcript:
+        text = text or transcript[-1].interviewee_answer or ""
+
+    valence = estimate_valence(text)
+    emotional_energy = min(max(len(text) / 180.0, 0.2), 1.0)
+    cognitive_energy = min(max(len(text) / 140.0, 0.25), 1.0)
+
+    evidence: List[str] = []
+    # Try to extract feeling/reflection from extraction_result
+    if transcript:
+        latest_turn = transcript[-1]
+        if getattr(latest_turn, "extraction_result", None):
+            for candidate in latest_turn.extraction_result.graph_delta.event_candidates:
+                if candidate.feeling:
+                    evidence.append(candidate.feeling)
+                if candidate.reflection:
+                    evidence.append(candidate.reflection)
+
+    if not evidence:
+        evidence.append(text[:80] if text else "Short reply.")
+
+    return EmotionalState(
+        emotional_energy=round(emotional_energy, 3),
+        cognitive_energy=round(cognitive_energy, 3),
+        valence=round(valence, 3),
+        confidence=0.65,
+        evidence=evidence[:4],
+    )
+
+
 class MemoryProjector:
     def build_initial_capsule(self, state: SessionState) -> MemoryCapsule:
         summary_parts = []
@@ -200,33 +254,7 @@ class MemoryProjector:
         return topics[:5]
 
     def _infer_emotional_state(self, state: SessionState) -> EmotionalState:
-        if not state.transcript:
-            return EmotionalState(confidence=0.4, evidence=["No completed turns yet."])
-
-        latest_turn = state.transcript[-1]
-        answer = latest_turn.interviewee_answer or ""
-        evidence = []
-        valence = self._estimate_valence(answer)
-        emotional_energy = min(max(len(answer) / 180.0, 0.2), 1.0)
-        cognitive_energy = min(max(len(answer) / 140.0, 0.25), 1.0)
-
-        if latest_turn.extraction_result:
-            for candidate in latest_turn.extraction_result.graph_delta.event_candidates:
-                if candidate.feeling:
-                    evidence.append(candidate.feeling)
-                if candidate.reflection:
-                    evidence.append(candidate.reflection)
-
-        if not evidence:
-            evidence.append(answer[:80] if answer else "Short reply.")
-
-        return EmotionalState(
-            emotional_energy=round(emotional_energy, 3),
-            cognitive_energy=round(cognitive_energy, 3),
-            valence=round(valence, 3),
-            confidence=0.65,
-            evidence=evidence[:4],
-        )
+        return infer_emotional_state_from_transcript(state.transcript)
 
     def _build_missing_slot_description(self, event, slot_name: str) -> str:
         anchor = event.title or event.summary or "刚才那段经历"
@@ -248,10 +276,4 @@ class MemoryProjector:
         return f"老人提到“{anchor}”时带出了线索：{clue_text}，但这条线索还没有展开。"
 
     def _estimate_valence(self, text: str) -> float:
-        positive_keywords = ["开心", "高兴", "幸福", "自豪", "喜欢", "温暖", "快乐"]
-        negative_keywords = ["难过", "伤心", "遗憾", "辛苦", "困难", "痛苦", "压抑"]
-        pos_hits = sum(1 for word in positive_keywords if word in text)
-        neg_hits = sum(1 for word in negative_keywords if word in text)
-        if pos_hits == neg_hits == 0:
-            return 0.0
-        return max(min((pos_hits - neg_hits) / 3.0, 1.0), -1.0)
+        return estimate_valence(text)

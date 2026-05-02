@@ -337,6 +337,56 @@ class Neo4jGraphDriver:
         result = self.execute_query(query, params)
         return result or []
 
+    def fulltext_search(
+        self,
+        query_text: str,
+        top_k: int = 10,
+        label_filter: Optional[str] = None,
+    ) -> List[Dict[str, Any]]:
+        """Search using the full-text index."""
+        label_clause = ""
+        if label_filter:
+            label_clause = f" AND labels(n) CONTAINS '{label_filter}'"
+        query = f"""
+        CALL db.index.fulltext.queryNodes('entity_text_index', $query)
+        YIELD node AS n, score
+        WHERE 1=1 {label_clause}
+        RETURN n.id AS id, labels(n)[0] AS entity_type, n.name AS name,
+               n.description AS description, score
+        ORDER BY score DESC
+        LIMIT $top_k
+        """
+        result = self.execute_query(
+            query, {"query": query_text, "top_k": top_k}
+        )
+        if result is None:
+            # Fallback to basic text search if fulltext index not available
+            return self.query_by_text_similarity(query_text, label_filter, top_k)
+        return result
+
+    def vector_search(
+        self,
+        query_embedding: List[float],
+        top_k: int = 10,
+        label_filter: Optional[str] = None,
+    ) -> List[Dict[str, Any]]:
+        """Search using the vector index (Neo4j 5.x)."""
+        label_clause = ""
+        if label_filter:
+            label_clause = f" AND labels(n) CONTAINS '{label_filter}'"
+        query = f"""
+        CALL db.index.vector.queryNodes('entity_vector_index', $top_k, $embedding)
+        YIELD node AS n, score
+        WHERE 1=1 {label_clause}
+        RETURN n.id AS id, labels(n)[0] AS entity_type, n.name AS name,
+               n.description AS description, n.rich_text AS rich_text, score
+        ORDER BY score DESC
+        """
+        result = self.execute_query(
+            query, {"top_k": top_k, "embedding": query_embedding}
+        )
+        return result or []
+
     # ------------------------------------------------------------------
     # Schema initialisation
     # ------------------------------------------------------------------
@@ -365,4 +415,44 @@ class Neo4jGraphDriver:
                     logger.debug(
                         "Schema already exists for :%s (or cannot create)", label
                     )
+
+            # Full-text index for hybrid retrieval
+            try:
+                session.run(
+                    "CREATE FULLTEXT INDEX entity_text_index IF NOT EXISTS "
+                    "FOR (n:Event|Person|Location|Emotion) "
+                    "ON EACH [n.name, n.description]"
+                )
+                logger.debug("Full-text index created")
+            except Exception:
+                logger.debug("Full-text index already exists or unsupported")
+
+            # Vector index for semantic search (Neo4j 5.x)
+            try:
+                session.run(
+                    "CREATE VECTOR INDEX entity_vector_index IF NOT EXISTS "
+                    "FOR (n:Event) ON (n.embedding) "
+                    "OPTIONS {indexConfig: {"
+                    "`vector.dimensions`: 384, "
+                    "`vector.similarity_function`: 'cosine'"
+                    "}}"
+                )
+                logger.debug("Vector index created")
+            except Exception:
+                logger.debug("Vector index already exists or unsupported")
+
+            # Indexes for cross-session queries
+            for label in ("Event", "Person", "Location", "Emotion", "Insight"):
+                try:
+                    session.run(
+                        f"CREATE INDEX idx_{label}_session IF NOT EXISTS "
+                        f"FOR (n:{label}) ON (n.session_id)"
+                    )
+                    session.run(
+                        f"CREATE INDEX idx_{label}_elder IF NOT EXISTS "
+                        f"FOR (n:{label}) ON (n.elder_id)"
+                    )
+                except Exception:
+                    pass
+
         logger.info("Neo4j schema initialised")

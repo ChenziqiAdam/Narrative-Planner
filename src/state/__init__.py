@@ -24,6 +24,12 @@ from .models import (
     ThemeSummary,
     TurnRecord,
 )
+from .narrative_models import (
+    ExtractedEntity,
+    ExtractedRelationship,
+    GraphExtraction,
+    NarrativeFragment,
+)
 
 __all__ = [
     "ActionType",
@@ -36,10 +42,14 @@ __all__ = [
     "EmotionalState",
     "ExtractionMetadata",
     "ExtractionResult",
+    "ExtractedEntity",
+    "ExtractedRelationship",
     "GraphDelta",
+    "GraphExtraction",
     "GraphSummary",
     "MemoryCapsule",
     "MemoryDelta",
+    "NarrativeFragment",
     "OpenLoop",
     "PersonProfile",
     "PlannerContext",

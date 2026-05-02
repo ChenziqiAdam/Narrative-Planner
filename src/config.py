@@ -72,6 +72,16 @@ class Config:
         "1", "true", "yes", "on",
     }
 
+    # GraphRAG feature flag — switches extraction/merge pipeline
+    GRAPH_RAG_ENABLED = os.getenv("GRAPH_RAG_ENABLED", "false").lower() in {
+        "1", "true", "yes", "on",
+    }
+    EMBEDDING_PROVIDER = os.getenv("EMBEDDING_PROVIDER", "local")  # "local" | "openai"
+    EMBEDDING_MODEL_LOCAL = os.getenv(
+        "EMBEDDING_MODEL_LOCAL",
+        "paraphrase-multilingual-MiniLM-L12-v2",
+    )
+
     # Optional prompt overrides
     INTERVIEWEE_PROMPT_TEMPLATE = os.getenv(
         "INTERVIEWEE_PROMPT_TEMPLATE",

@@ -2,7 +2,10 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field, fields, is_dataclass
 from datetime import datetime
-from typing import Any, Dict, List, Literal, Optional
+from typing import TYPE_CHECKING, Any, Dict, List, Literal, Optional
+
+if TYPE_CHECKING:
+    from src.state.narrative_models import GraphExtraction, NarrativeFragment
 
 
 ActionType = Literal[
@@ -250,6 +253,9 @@ class GraphDelta:
     event_candidates: List[CanonicalEvent] = field(default_factory=list)
     people_candidates: List[PersonProfile] = field(default_factory=list)
     theme_hints: List[str] = field(default_factory=list)
+    # GraphRAG fields (used when GRAPH_RAG_ENABLED=true)
+    fragment_candidates: List[Any] = field(default_factory=list)
+    graph_extraction: Optional[Any] = None
 
     def to_dict(self) -> Dict[str, Any]:
         return serialize_value(self)
@@ -373,6 +379,8 @@ class SessionState:
     pending_question: Optional[str] = None
     pending_action: Optional[str] = None
     metadata: Dict[str, Any] = field(default_factory=dict)
+    # GraphRAG: narrative fragments (used when GRAPH_RAG_ENABLED=true)
+    narrative_fragments: Dict[str, Any] = field(default_factory=dict)
 
     @property
     def turn_count(self) -> int:

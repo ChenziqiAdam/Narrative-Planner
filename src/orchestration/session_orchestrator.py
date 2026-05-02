@@ -47,6 +47,14 @@ if Config.NEO4J_ENABLED:
     from src.services.neo4j_graph_adapter import Neo4jGraphAdapter
     from src.services.neo4j_graph_projector import Neo4jGraphProjector
 
+# GraphRAG components (loaded only when GRAPH_RAG_ENABLED=true)
+if Config.GRAPH_RAG_ENABLED:
+    from src.agents.graph_extraction_agent import GraphExtractionAgent
+    from src.services.entity_vector_store import EntityVectorStore as GraphEntityVectorStore
+    from src.services.graph_writer import GraphWriter
+    from src.services.hybrid_retriever import HybridRetriever
+    from src.services.session_graph_bridge import SessionGraphBridge
+
 
 class SessionOrchestrator:
     def __init__(
@@ -102,6 +110,16 @@ class SessionOrchestrator:
         )
         self._routing_calibrator = RoutingCalibrator()
 
+        # GraphRAG pipeline components (initialized only when GRAPH_RAG_ENABLED=true)
+        self._graph_rag_enabled = Config.GRAPH_RAG_ENABLED
+        if self._graph_rag_enabled:
+            self._graph_extraction_agent = GraphExtractionAgent()
+            self._graph_entity_vector_store = GraphEntityVectorStore()
+            self._graph_writer: Optional[Any] = None  # lazy init after neo4j is ready
+            self._hybrid_retriever: Optional[Any] = None  # lazy init after neo4j is ready
+            self._session_graph_bridge: Optional[Any] = None  # lazy init after neo4j is ready
+            self._decision_ctx_builder: Optional[Any] = None  # lazy init after neo4j is ready
+
     def set_decision_weight_vector(self, vector: Sequence[float]) -> None:
         self.decision_policy = PlannerDecisionPolicy(PlannerDecisionWeights.from_vector(vector))
 
@@ -138,20 +156,44 @@ class SessionOrchestrator:
                 self.graph_manager._refresh_coverage_cache()
             except Exception:
                 logger.debug("Neo4j theme sync skipped", exc_info=True)
+
+        # ── Cross-session memory: load historical graph data ──
+        bridge_context = None
+        if self._graph_rag_enabled:
+            bridge_context = self._load_cross_session_history(state)
+
         state.theme_state = self.graph_projector.build_theme_state(self.graph_manager)
-        graph_summary = self.coverage_calculator.build_graph_summary(state, self.graph_manager)
-        # 统一架构：不再调用 PlannerAgent，规划逻辑整合到 InterviewerAgent 中
-        generated = self.interviewer_agent.generate_question(
-            state.elder_profile,
-            [],
-            state.memory_capsule,
-            graph_summary,
-            focus_event_payload=None,
-        )
+
+        if self._graph_rag_enabled:
+            # GraphRAG mode: use decision context directly
+            decision_ctx = self._get_decision_context_builder().build(
+                state, None, None, bridge_result=bridge_context,
+            )
+            generated = self.interviewer_agent.generate_question_graph_rag(
+                state.elder_profile,
+                [],
+                decision_ctx,
+            )
+            state.current_focus_theme_id = decision_ctx.current_focus_theme_id
+        else:
+            # Legacy mode: use shared path
+            graph_summary = self.coverage_calculator.build_graph_summary(state, self.graph_manager)
+            generation_hints = {}
+            if bridge_context and bridge_context.has_history:
+                generation_hints["cross_session_summary"] = bridge_context.summary_text
+                generation_hints["cross_session_open_loops"] = bridge_context.open_loops
+            generated = self.interviewer_agent.generate_question(
+                state.elder_profile,
+                [],
+                state.memory_capsule,
+                graph_summary,
+                focus_event_payload=None,
+                generation_hints=generation_hints if generation_hints else None,
+            )
+            state.current_focus_theme_id = graph_summary.current_focus_theme_id
         state.pending_plan = None  # 统一架构不再使用 Plan 对象
         state.pending_question = generated["question"]
         state.pending_action = generated["action"]
-        state.current_focus_theme_id = graph_summary.current_focus_theme_id
         state.session_metrics = self.coverage_calculator.calculate_session_metrics(state, self.graph_manager)
         self.store.save(state)
         return state
@@ -185,7 +227,136 @@ class SessionOrchestrator:
             _extraction_ms = 0.0
             _merge_ms = 0.0
             _graph_ms = 0.0
+            _graph_rag_context = None
+        elif self._graph_rag_enabled:
+            # ── GraphRAG pipeline (fully independent) ──
+            _graph_rag_context = None
+
+            # Hybrid retrieval for extraction context
+            _t = time.perf_counter()
+            graph_rag_retrieval = self._get_hybrid_retriever().retrieve(
+                user_response, self.session_id
+            )
+            _retrieval_ms = (time.perf_counter() - _t) * 1000
+            _graph_rag_context = graph_rag_retrieval.prompt_text
+
+            # Graph extraction
+            _t = time.perf_counter()
+            from src.state.narrative_models import NarrativeFragment
+            graph_extraction = await self._graph_extraction_agent.extract(
+                state, turn_record, graph_context=_graph_rag_context
+            )
+            _extraction_ms = (time.perf_counter() - _t) * 1000
+
+            # Write to Neo4j graph
+            _t = time.perf_counter()
+            write_result = self._get_graph_writer().write_extraction(
+                graph_extraction,
+                session_id=self.session_id,
+                elder_id=f"{state.elder_profile.name}_{state.elder_profile.birth_year}",
+            )
+            _merge_ms = (time.perf_counter() - _t) * 1000
+
+            # Update narrative fragments in state
+            for entity in graph_extraction.event_entities:
+                fragment = NarrativeFragment(
+                    fragment_id=f"frag_{uuid.uuid4().hex[:10]}",
+                    rich_text=entity.description,
+                    source_turn_ids=[turn_record.turn_id],
+                    properties=entity.properties,
+                    confidence=graph_extraction.confidence,
+                )
+                state.narrative_fragments[fragment.fragment_id] = fragment
+
+            # Create stub values for compatibility with downstream code
+            extracted_events = []
+            extraction_result = None
+            from src.services.merge_engine import MergeResult
+            merge_result = MergeResult(
+                touched_event_ids=[f.fragment_id for f in state.narrative_fragments.values()
+                                   if turn_record.turn_id in f.source_turn_ids],
+            )
+            graph_changes = {
+                "new_entities": write_result.new_entity_count if write_result else 0,
+                "relationships": write_result.relationship_count if write_result else 0,
+            }
+            _graph_ms = _retrieval_ms
+
+            # ── GraphRAG: independent decision path ──
+            state.transcript.append(turn_record)
+            state.theme_state = self.graph_projector.build_theme_state(self.graph_manager)
+
+            # Build decision context directly from graph + transcript
+            from src.services.graph_rag_decision_context import GraphRAGDecisionContextBuilder
+            decision_ctx = self._get_decision_context_builder().build(
+                state, graph_extraction, _graph_rag_context,
+            )
+
+            # Generate question via GraphRAG-specific method
+            generated = self.interviewer_agent.generate_question_graph_rag(
+                state.elder_profile,
+                state.recent_transcript(3),
+                decision_ctx,
+            )
+
+            # Async display update (MemoryCapsule, Coverage, metrics)
+            self._schedule_display_update(state, turn_record, merge_result)
+            _memory_ms = 0.0
+            _coverage_ms = 0.0
+
+            self._update_generation_metadata(state, generated, turn_record.interviewer_question)
+            turn_debug_trace = {
+                "routing": routing_decision.to_dict(),
+                "extraction_ms": _extraction_ms,
+                "merge_ms": _merge_ms,
+                "graph_ms": _graph_ms,
+                "memory_ms": _memory_ms,
+                "coverage_ms": _coverage_ms,
+                "pipeline": "graph_rag",
+                "decision_ctx": {
+                    "overall_coverage": decision_ctx.overall_coverage,
+                    "low_info_streak": decision_ctx.low_info_streak,
+                    "explorable_angles_count": len(decision_ctx.explorable_angles),
+                },
+            }
+            turn_record.debug_trace = turn_debug_trace
+            state.pending_plan = None
+            state.pending_question = generated["question"]
+            state.pending_action = generated["action"]
+            if decision_ctx.current_focus_theme_id:
+                state.current_focus_theme_id = decision_ctx.current_focus_theme_id
+            self.store.save(state)
+
+            # Dynamic profile update (async, already existing mechanism)
+            profile_update_decision = self._decide_dynamic_profile_update(state, merge_result, turn_record)
+            if profile_update_decision.get("should_update"):
+                self._schedule_dynamic_profile_update(
+                    turn_record.turn_id,
+                    merge_result,
+                    str(profile_update_decision.get("reason", "scheduled")),
+                )
+            self._schedule_turn_evaluation(
+                turn_record.turn_id,
+                pre_graph_summary.overall_coverage,
+                decision_ctx.overall_coverage,
+                current_interviewer_action,
+            )
+
+            return {
+                "question": state.pending_question,
+                "action": state.pending_action,
+                "extracted_events": [],
+                "graph_changes": graph_changes,
+                "current_graph_state": self.get_graph_state(),
+                "turn_count": state.turn_count,
+                "turn_evaluation": {"status": "pending", "turn_id": turn_record.turn_id},
+                "session_metrics": state.session_metrics.to_dict() if state.session_metrics else {},
+                "planner_plan": None,
+                "debug_trace": turn_debug_trace,
+            }
         else:
+            # ── Legacy pipeline (existing) ──
+            _graph_rag_context = None
             _t = time.perf_counter()
             extracted_events, extraction_result = await self.extraction_agent.extract(state, turn_record)
             _extraction_ms = (time.perf_counter() - _t) * 1000
@@ -962,3 +1133,97 @@ class SessionOrchestrator:
             background_summary=elder_info.get("background"),
             stable_facts=stable_facts,
         )
+
+    # ── GraphRAG lazy initialization helpers ──
+
+    def _get_graph_writer(self):
+        if self._graph_writer is None and self._graph_rag_enabled:
+            neo4j_mgr = None
+            if hasattr(self.graph_manager, "get_neo4j_manager"):
+                neo4j_mgr = self.graph_manager.get_neo4j_manager()
+            self._graph_writer = GraphWriter(
+                neo4j_manager=neo4j_mgr,
+                entity_vector_store=self._graph_entity_vector_store,
+            )
+        return self._graph_writer
+
+    def _get_hybrid_retriever(self):
+        if self._hybrid_retriever is None and self._graph_rag_enabled:
+            neo4j_mgr = None
+            if hasattr(self.graph_manager, "get_neo4j_manager"):
+                neo4j_mgr = self.graph_manager.get_neo4j_manager()
+            from src.services.hybrid_retriever import HybridRetriever
+            self._hybrid_retriever = HybridRetriever(
+                neo4j_manager=neo4j_mgr,
+                entity_vector_store=self._graph_entity_vector_store,
+            )
+        return self._hybrid_retriever
+
+    def _get_session_graph_bridge(self):
+        if self._session_graph_bridge is None and self._graph_rag_enabled:
+            neo4j_mgr = None
+            if hasattr(self.graph_manager, "get_neo4j_manager"):
+                neo4j_mgr = self.graph_manager.get_neo4j_manager()
+            self._session_graph_bridge = SessionGraphBridge(
+                neo4j_manager=neo4j_mgr,
+                entity_vector_store=self._graph_entity_vector_store,
+            )
+        return self._session_graph_bridge
+
+    def _load_cross_session_history(self, state: SessionState):
+        """Load previous session data for the current elder, if any."""
+        elder_id = f"{state.elder_profile.name}_{state.elder_profile.birth_year}"
+        try:
+            bridge = self._get_session_graph_bridge()
+            if bridge is None:
+                return None
+            result = bridge.load_previous_session(elder_id)
+            if result.has_history:
+                logger.info(
+                    "Cross-session history loaded: %d entities for %s",
+                    result.entity_count,
+                    elder_id,
+                )
+            return result
+        except Exception:
+            logger.debug("Cross-session history load failed", exc_info=True)
+            return None
+
+    def _get_decision_context_builder(self):
+        if self._decision_ctx_builder is None and self._graph_rag_enabled:
+            from src.services.graph_rag_decision_context import GraphRAGDecisionContextBuilder
+            neo4j_mgr = None
+            if hasattr(self.graph_manager, "get_neo4j_manager"):
+                neo4j_mgr = self.graph_manager.get_neo4j_manager()
+            self._decision_ctx_builder = GraphRAGDecisionContextBuilder(
+                neo4j_manager=neo4j_mgr,
+                entity_vector_store=self._graph_entity_vector_store,
+            )
+        return self._decision_ctx_builder
+
+    def _schedule_display_update(
+        self, state: SessionState, turn_record: TurnRecord, merge_result: Any,
+    ) -> None:
+        """Async update of display-only data (MemoryCapsule, Coverage, metrics)."""
+        worker = threading.Thread(
+            target=self._update_display_background,
+            args=(state.session_id, turn_record.turn_id, merge_result),
+            daemon=True,
+        )
+        worker.start()
+
+    def _update_display_background(
+        self, session_id: str, turn_id: str, merge_result: Any,
+    ) -> None:
+        try:
+            state = self.store.load(session_id) if hasattr(self.store, "load") else None
+            if state is None:
+                return
+            state.memory_capsule = self.memory_projector.refresh(state)
+            self.coverage_calculator.build_graph_summary(state, self.graph_manager)
+            state.session_metrics = self.coverage_calculator.calculate_session_metrics(
+                state, self.graph_manager
+            )
+            self.store.save(state)
+        except Exception:
+            logger.debug("Display background update failed", exc_info=True)

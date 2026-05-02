@@ -8,6 +8,7 @@ from openai import OpenAI
 
 from src.config import Config
 from src.state import ElderProfile, GraphSummary, MemoryCapsule, TurnRecord
+from src.services.graph_rag_decision_context import GraphRAGDecisionContext
 
 try:
     from json_repair import repair_json
@@ -282,18 +283,36 @@ class InterviewerAgent:
             parts.append(f"答：{turn.interviewee_answer}")
             parts.append("")
 
-        # 3. 正在聊的事件
+        # 3. 正在聊的事件 / 叙事片段
         if focus_event_payload:
-            parts.append("## 正在聊的事件")
-            summary = focus_event_payload.get("summary", "")
-            if summary:
-                parts.append(f"事件：{summary}")
+            if focus_event_payload.get("rich_text"):
+                # GraphRAG mode: narrative fragment + graph context
+                parts.append("## 正在聊的经历")
+                parts.append(focus_event_payload["rich_text"])
+                connected_people = focus_event_payload.get("connected_people", [])
+                if connected_people:
+                    parts.append(f"相关人物：{', '.join(connected_people[:4])}")
+                connected_locations = focus_event_payload.get("connected_locations", [])
+                if connected_locations:
+                    parts.append(f"相关地点：{', '.join(connected_locations[:3])}")
+                emotional_thread = focus_event_payload.get("emotional_thread")
+                if emotional_thread:
+                    parts.append(f"情感线索：{emotional_thread}")
+                explorable = focus_event_payload.get("explorable_angles", [])
+                if explorable:
+                    parts.append(f"可追问的方向：{', '.join(explorable[:3])}")
+            else:
+                # Legacy mode: slot-based display
+                parts.append("## 正在聊的事件")
+                summary = focus_event_payload.get("summary", "")
+                if summary:
+                    parts.append(f"事件：{summary}")
 
-            known = focus_event_payload.get("known_slots", {})
-            if known:
-                known_parts = [f"{self.SLOT_NAMES.get(k, k)}：{v}" for k, v in known.items() if v]
-                if known_parts:
-                    parts.append(f"已知的细节：{', '.join(known_parts)}")
+                known = focus_event_payload.get("known_slots", {})
+                if known:
+                    known_parts = [f"{self.SLOT_NAMES.get(k, k)}：{v}" for k, v in known.items() if v]
+                    if known_parts:
+                        parts.append(f"已知的细节：{', '.join(known_parts)}")
 
             missing = focus_event_payload.get("missing_slots", [])
             if missing:
@@ -318,6 +337,12 @@ class InterviewerAgent:
             parts.append("\n## 待探索的话题线索")
             for i, loop in enumerate(memory_capsule.open_loops[:3], 1):
                 parts.append(f"{i}. {loop.description}")
+
+        # 5.5 叙事记忆脉络 (GraphRAG — from hybrid retriever)
+        graph_rag_context = generation_hints.get("graph_rag_context") if generation_hints else None
+        if graph_rag_context:
+            parts.append("\n## 叙事记忆脉络")
+            parts.append(graph_rag_context)
 
         # 6. 情绪观察
         emotional_note = self._build_emotional_note(memory_capsule)
@@ -352,6 +377,10 @@ class InterviewerAgent:
                     break
             if top_slot:
                 parts.append(f"建议优先补槽位：{self.SLOT_NAMES.get(top_slot, top_slot)}")
+            # GraphRAG exploration angles (replaces slot-based guidance)
+            exploration_angles = generation_hints.get("exploration_angles", [])
+            if exploration_angles:
+                parts.append(f"建议探索方向：{', '.join(exploration_angles[:3])}")
             if generation_hints.get("suggest_close"):
                 parts.append("覆盖率较高且连续低增益，可考虑温和收尾。")
 
@@ -370,7 +399,178 @@ class InterviewerAgent:
 
         return "\n".join(parts)
 
-    def _parse_response(self, raw_content: str) -> Dict[str, str]:
+    # ── GraphRAG-specific question generation ──
+
+    def generate_question_graph_rag(
+        self,
+        elder_profile: ElderProfile,
+        recent_transcript: List[TurnRecord],
+        decision_ctx: GraphRAGDecisionContext,
+    ) -> Dict[str, str]:
+        """Generate next question using GraphRAG decision context.
+
+        Same LLM call pattern as ``generate_question`` but builds the user
+        prompt from ``GraphRAGDecisionContext`` instead of MemoryCapsule +
+        GraphSummary + focus_event + hints.
+        """
+        if not recent_transcript:
+            return self._opening_response(elder_profile)
+
+        system_prompt = self._render_system_prompt()
+        user_prompt = self._build_graph_rag_user_prompt(
+            elder_profile, recent_transcript, decision_ctx
+        )
+
+        max_attempts = max(1, min(Config.MAX_RETRIES, 2))
+
+        for model_name in self.model_candidates:
+            candidate_max_tokens = 4096 if self._is_reasoning_heavy_model(model_name) else 1024
+            for attempt in range(1, max_attempts + 1):
+                try:
+                    response = self.client.chat.completions.create(
+                        model=model_name,
+                        messages=[
+                            {"role": "system", "content": system_prompt},
+                            {"role": "user", "content": user_prompt},
+                        ],
+                        max_tokens=candidate_max_tokens,
+                    )
+                    message = response.choices[0].message
+                    raw_content = (message.content or "").strip()
+
+                    if not raw_content:
+                        continue
+
+                    parsed = self._parse_response(raw_content)
+                    if parsed.get("question"):
+                        parsed["_model"] = model_name
+                        return parsed
+                except Exception:
+                    logger.warning(
+                        "GraphRAG question generation failed (model=%s, attempt=%d)",
+                        model_name, attempt, exc_info=True,
+                    )
+
+        return {
+            "action": "continue",
+            "question": "您能再跟我多说说那个时候的事情吗？",
+            "_model": self.model,
+        }
+
+    def _build_graph_rag_user_prompt(
+        self,
+        elder_profile: ElderProfile,
+        recent_transcript: List[TurnRecord],
+        ctx: GraphRAGDecisionContext,
+    ) -> str:
+        """Build user prompt from GraphRAGDecisionContext."""
+        prompt_stage = self._prompt_stage(recent_transcript)
+        parts: List[str] = []
+
+        # 1. Basic info
+        parts.append("## 受访者基本信息")
+        parts.append(self._build_basic_info_text(elder_profile))
+
+        # 2. Recent dialogue
+        parts.append("\n## 最近对话")
+        limit = 1 if prompt_stage == "early" else 2 if prompt_stage == "mid" else 3
+        for turn in recent_transcript[-limit:]:
+            parts.append(f"问：{turn.interviewer_question}")
+            parts.append(f"答：{turn.interviewee_answer}")
+            parts.append("")
+
+        # 3. Focus narrative
+        if ctx.focus_rich_text:
+            parts.append("## 正在聊的经历")
+            parts.append(ctx.focus_rich_text)
+            if ctx.connected_people:
+                parts.append(f"相关人物：{', '.join(ctx.connected_people[:4])}")
+            if ctx.connected_locations:
+                parts.append(f"相关地点：{', '.join(ctx.connected_locations[:3])}")
+            if ctx.emotional_thread:
+                parts.append(f"情感线索：{ctx.emotional_thread}")
+
+        # 4. Coverage (from graph)
+        parts.append("\n## 人生故事覆盖情况")
+        parts.append(f"整体叙事丰富度：{ctx.overall_coverage:.0%}")
+        if ctx.coverage_by_theme:
+            covered = [
+                tid for tid, c in ctx.coverage_by_theme.items() if c >= 0.5
+            ]
+            sparse = ctx.undercovered_themes[:5]
+            if covered:
+                parts.append(f"已有较丰富内容的主题：{len(covered)} 个")
+            if sparse:
+                parts.append(f"还很少涉及的方向：{len(sparse)} 个")
+        if ctx.current_focus_theme_id:
+            parts.append(f"当前焦点方向：{ctx.current_focus_theme_id}")
+
+        # 5. Explorable angles (replaces open_loops)
+        if ctx.explorable_angles:
+            parts.append("\n## 待探索的话题线索")
+            for i, angle in enumerate(ctx.explorable_angles[:4], 1):
+                parts.append(f"{i}. {angle}")
+
+        # 5.5. Narrative memory context (from hybrid retriever)
+        if ctx.graph_rag_context:
+            parts.append("\n## 叙事记忆脉络")
+            parts.append(ctx.graph_rag_context)
+
+        # 6. Emotional observation
+        if ctx.emotional_state:
+            parts.append(f"\n## 情绪观察")
+            parts.append(self._build_emotional_note_from_state(ctx.emotional_state))
+
+        # 7. Strategy hints
+        parts.append("\n## 策略提示")
+        if ctx.low_info_streak >= 2:
+            parts.append(
+                f"最近连续 {ctx.low_info_streak} 轮信息增益偏低。"
+                "优先换一个新切口（人物/时间/地点/主题）再问。"
+            )
+        if ctx.cross_session_summary:
+            parts.append(f"\n## 跨会话历史")
+            parts.append(ctx.cross_session_summary)
+        if ctx.cross_session_open_loops:
+            parts.append("之前访谈中尚未展开的线索：")
+            for loop in ctx.cross_session_open_loops[:3]:
+                parts.append(f"- {loop}")
+
+        # Task instruction
+        parts.append("\n## 你的任务")
+        parts.append("基于以上上下文，先进行【访谈规划思维链】分析，然后生成下一个问题。")
+        parts.append("")
+        parts.append("记住：")
+        parts.append("1. 问题要自然、温暖、像聊天")
+        parts.append("2. 不要暴露任何技术概念")
+        parts.append("3. 如果老人情绪低落，先共情再提问")
+        parts.append("4. 如果老人疲劳，切换到轻松话题")
+        parts.append("")
+        parts.append("返回严格 JSON 格式：")
+        parts.append('{\'action\': \'continue|next_phase|end\', \'question\': \'你的问题\'}')
+
+        return "\n".join(parts)
+
+    def _build_emotional_note_from_state(self, emotional_state) -> str:
+        """Build emotional note from EmotionalState object."""
+        if not emotional_state:
+            return ""
+        lines = []
+        energy = emotional_state.cognitive_energy
+        valence = emotional_state.valence
+        if energy < 0.35:
+            lines.append("老人可能有些疲惫了，回答较短。")
+        elif energy > 0.7:
+            lines.append("老人精力充沛，表达很活跃。")
+        if valence < -0.3:
+            lines.append("情绪偏消极，注意温柔引导。")
+        elif valence > 0.3:
+            lines.append("情绪比较积极，可以深入聊。")
+        if emotional_state.evidence:
+            lines.append(f"依据：{'、'.join(emotional_state.evidence[:2])}")
+        return "\n".join(lines)
+
+
         """解析 LLM 响应"""
         text = raw_content.strip()
 

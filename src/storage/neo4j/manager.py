@@ -539,3 +539,92 @@ class Neo4jGraphManager:
                     rel["rel_type"],
                 )
         return node_id
+
+    # ────────────────────────────────────────────────────────────────
+    # Cross-session queries (by elder_id)
+    # ────────────────────────────────────────────────────────────────
+
+    def get_entities_by_elder(self, elder_id: str) -> List[Dict[str, Any]]:
+        """Return all entity nodes belonging to *elder_id*."""
+        rows = self.driver.execute_query(
+            """
+            MATCH (n)
+            WHERE n.elder_id = $elder_id
+              AND n.type IN ['Event', 'Person', 'Location', 'Emotion', 'Insight']
+            RETURN n
+            """,
+            {"elder_id": elder_id},
+        )
+        if not rows:
+            return []
+        return [dict(r["n"]) for r in rows]
+
+    def get_event_count_by_elder(self, elder_id: str) -> int:
+        """Count Event nodes for *elder_id*."""
+        rows = self.driver.execute_query(
+            """
+            MATCH (e:Event {elder_id: $elder_id})
+            RETURN COUNT(e) AS cnt
+            """,
+            {"elder_id": elder_id},
+        )
+        if rows:
+            return rows[0].get("cnt", 0) or 0
+        return 0
+
+    def get_elder_session_ids(self, elder_id: str) -> List[str]:
+        """Return distinct session_ids associated with *elder_id*."""
+        rows = self.driver.execute_query(
+            """
+            MATCH (n {elder_id: $elder_id})
+            WHERE n.session_id IS NOT NULL
+            RETURN DISTINCT n.session_id AS sid
+            """,
+            {"elder_id": elder_id},
+        )
+        if not rows:
+            return []
+        return [r["sid"] for r in rows if r.get("sid")]
+
+    def get_entity_neighbors(
+        self, entity_id: str, max_hops: int = 1
+    ) -> List[Dict[str, Any]]:
+        """Return 1-hop neighbours of an entity node.
+
+        Each result dict contains ``id``, ``type``, ``name``,
+        ``description`` and ``rel_type``.
+        """
+        rows = self.driver.execute_query(
+            f"""
+            MATCH (n {{id: $id}})-[r]-(neighbor)
+            RETURN neighbor.id AS id, neighbor.type AS type,
+                   neighbor.name AS name, neighbor.description AS description,
+                   type(r) AS rel_type
+            """,
+            {"id": entity_id},
+        )
+        return rows or []
+
+    def get_graph_gaps(self, elder_id: str) -> List[Dict[str, Any]]:
+        """Find Events that lack Person/Location/Emotion connections.
+
+        Returns entities with ``id``, ``name``, ``description`` plus
+        ``person_count``, ``location_count``, ``emotion_count``.
+        """
+        rows = self.driver.execute_query(
+            """
+            MATCH (e:Event {elder_id: $elder_id})
+            OPTIONAL MATCH (e)<-[:PARTICIPATES_IN]-(p:Person)
+            OPTIONAL MATCH (e)-[:LOCATED_AT]->(l:Location)
+            OPTIONAL MATCH (e)-[:TRIGGERS]->(em:Emotion)
+            WITH e, count(DISTINCT p) AS person_count,
+                     count(DISTINCT l) AS location_count,
+                     count(DISTINCT em) AS emotion_count
+            WHERE person_count + location_count + emotion_count < 2
+            RETURN e.id AS id, e.name AS name, e.description AS description,
+                   person_count, location_count, emotion_count
+            ORDER BY e.name
+            """,
+            {"elder_id": elder_id},
+        )
+        return rows or []
