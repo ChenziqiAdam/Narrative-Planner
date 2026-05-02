@@ -1,40 +1,30 @@
-# Narrative Planner - 运行指南
+# Narrative Planner - 安装与运行指南
 
 ## 项目简介
 
-叙事规划器（Narrative Planner）是一个动态事件图谱可视化工具，用于实时访谈和事件图谱管理。
+叙事规划器（Narrative Planner）是一个面向传记访谈的 Planner 系统，用于实时访谈、Planner 决策实验和动态事件图谱展示。
 
 ## 技术栈
 
 - **前端**: React + TypeScript + Vite
-- **后端**: Python Flask
+- **后端**: Python Flask + FastAPI
 - **包管理**: pnpm（前端）、pip（后端）
 
 ---
 
-## 快速开始
+## 快速开始（推荐）
 
-### 1. 克隆代码
+### 1. 准备代码
 
 ```bash
 git clone <repository-url>
-cd narrative-planner
+cd Narrative-Planner
 ```
 
----
-
-## 后端运行
-
-### 环境要求
-
-- Python 3.8+
-- 建议使用虚拟环境
-
-### 安装步骤
+### 2. 安装 Python 依赖
 
 ```bash
-# 1. 创建并激活虚拟环境（推荐）
-python -m venv .venv
+python3 -m venv .venv
 
 # Windows
 .venv\Scripts\activate
@@ -42,22 +32,62 @@ python -m venv .venv
 # macOS/Linux
 source .venv/bin/activate
 
-# 2. 安装依赖
-pip install -r requirements.txt
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
 ```
 
-### 启动后端服务
+### 3. 安装前端依赖
 
 ```bash
-# 方式1：直接使用 Python 运行
-python src/app.py
+cd frontend
+pnpm install
+```
 
-# 方式2：通过 Makefile
-make install    # 安装依赖
+如果本机还没有 pnpm：
+
+```bash
+npm install -g pnpm
+```
+
+---
+
+## 后端运行
+
+### Flask 访谈演示服务
+
+根目录下执行：
+
+```bash
+source .venv/bin/activate
+python start_flask.py
+```
+
+服务默认运行在 `http://localhost:9999`。
+
+也可以直接运行 Flask 入口：
+
+```bash
 python src/app.py
 ```
 
-后端服务默认运行在 `http://localhost:5000`
+直接运行 `src/app.py` 时，端口以文件中的 `app.run(...)` 配置为准。
+
+### 动态图谱 API 服务（FastAPI）
+
+如果需要 WebSocket 图谱 API：
+
+```bash
+source .venv/bin/activate
+uvicorn src.api.server:app --host 127.0.0.1 --port 8000 --reload
+```
+
+API 文档地址：`http://127.0.0.1:8000/docs`
+
+### 环境要求
+
+- Python 3.10+
+- 建议使用虚拟环境
+- 可选：Neo4j（仅在启用 Neo4j 图谱存储时需要）
 
 ---
 
@@ -65,30 +95,20 @@ python src/app.py
 
 ### 环境要求
 
-- Node.js 16+
-- pnpm（必须）
+- Node.js 18+
+- pnpm
 
-### 安装步骤
+### 开发展示
 
 ```bash
-# 1. 进入前端目录
 cd frontend
-
-# 2. 安装 pnpm（如果尚未安装）
-npm install -g pnpm
-
-# 3. 安装依赖
 pnpm install
-```
-
-### 启动前端开发服务器
-
-```bash
-# 在 frontend 目录下执行
 pnpm dev
 ```
 
-前端服务默认运行在 `http://localhost:5173`
+前端开发服务器默认运行在 `http://localhost:3000`。
+
+默认不带 `session` 参数时，前端会加载 Mock 图谱数据，适合独立展示人物视图、主题视图、时间轴和覆盖率仪表盘。
 
 ### 构建生产版本
 
@@ -104,10 +124,13 @@ pnpm build
 
 ```bash
 # 安装依赖
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 
-# 运行 Flask 服务
-python src/app.py
+# 运行 Flask 访谈演示
+python start_flask.py
+
+# 运行动态图谱 API
+uvicorn src.api.server:app --host 127.0.0.1 --port 8000 --reload
 
 # 运行测试
 make test
@@ -162,12 +185,13 @@ narrative-planner/
 
 ## 注意事项
 
-1. **必须先启动后端，再启动前端**
-2. **前端必须使用 pnpm**，不要使用 npm 或 yarn
-3. **Python 依赖建议使用虚拟环境隔离**
+1. **Mock 展示只需要启动前端**；联调实时会话时再启动后端。
+2. **前端使用 pnpm**，锁文件为 `frontend/pnpm-lock.yaml`。
+3. **Python 依赖建议使用虚拟环境隔离**，避免影响系统 Python。
 4. 默认端口：
-   - 后端：`http://localhost:5000`
-   - 前端：`http://localhost:5173`
+   - Flask 访谈演示：`http://localhost:9999`
+   - FastAPI 图谱 API：`http://127.0.0.1:8000`
+   - 前端 Vite：`http://localhost:3000`
 
 ---
 
@@ -178,14 +202,15 @@ narrative-planner/
 **Q: 提示缺少模块？**
 ```bash
 # 确保已激活虚拟环境并安装依赖
-.venv\Scripts\activate  # Windows
-pip install -r requirements.txt
+source .venv/bin/activate  # macOS/Linux
+python -m pip install -r requirements.txt
 ```
 
 **Q: 端口被占用？**
 ```bash
-# 修改 app.py 中的端口，或使用环境变量
-FLASK_RUN_PORT=5001 python src/app.py
+# Flask 演示服务可修改 start_flask.py 中的 port
+# FastAPI 服务可换端口
+uvicorn src.api.server:app --host 127.0.0.1 --port 8001 --reload
 ```
 
 ### 前端问题

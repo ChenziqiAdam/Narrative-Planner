@@ -1,13 +1,26 @@
+# Core runtime
 PyYAML
-camel-ai[all]
-faiss-cpu
-sentence-transformers
 numpy
 python-dotenv
 openai
+json-repair
+camel-ai[all]
+
+# Flask interview demo
 flask
 flask-sock
-json-repair
-# scikit-learn
+
+# Dynamic graph API service
+fastapi
+uvicorn[standard]
+pydantic
+neo4j
+
+# Retrieval / semantic matching
+faiss-cpu
+sentence-transformers
+scikit-learn
+
+# Evaluation and provider experiments
 tencentcloud-sdk-python
-# torch
+pytest>=8,<9

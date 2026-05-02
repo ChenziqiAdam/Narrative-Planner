@@ -36,6 +36,7 @@ from src.services import (
     CoverageCalculator,
     EventVectorStore,
     GraphProjector,
+    GraphRAGMonitor,
     MemoryProjector,
     MergeEngine,
     ProfileProjector,
@@ -64,6 +65,7 @@ class SessionOrchestrator:
         coverage_calculator: Optional[CoverageCalculator] = None,
         decision_weights: Optional[Any] = None,
         event_vector_store: Optional[EventVectorStore] = None,
+        graphrag_monitor: Optional[GraphRAGMonitor] = None,
     ):
         self.session_id = session_id
         self.mode = mode
@@ -87,6 +89,7 @@ class SessionOrchestrator:
         self.memory_projector = memory_projector or MemoryProjector()
         self.profile_projector = profile_projector or ProfileProjector()
         self.coverage_calculator = coverage_calculator or CoverageCalculator()
+        self.graphrag_monitor = graphrag_monitor or GraphRAGMonitor()
         self.decision_policy = PlannerDecisionPolicy(
             PlannerDecisionWeights.from_external(decision_weights)
         )
@@ -250,6 +253,16 @@ class SessionOrchestrator:
             if not generated.get("question"):
                 generated["question"] = "今天聊到这里已经很完整了，谢谢您愿意分享这么多珍贵回忆。"
         self._update_generation_metadata(state, generated, turn_record.interviewer_question)
+        graphrag_metrics = self.graphrag_monitor.build_turn_metrics(
+            state=state,
+            turn_record=turn_record,
+            pre_graph_summary=pre_graph_summary,
+            post_graph_summary=post_graph_summary,
+            generation_hints=generation_hints,
+            focus_event_payload=focus_event_payload,
+            event_vector_store=self.event_vector_store,
+            retrieval_query=turn_record.interviewee_answer,
+        ).to_dict()
         turn_debug_trace = self._build_turn_debug_trace(
             turn_record,
             extraction_result.debug_trace if extraction_result else {},
@@ -259,6 +272,7 @@ class SessionOrchestrator:
             generation_hints,
             generated.get("action", ""),
             profile_update_decision,
+            graphrag_metrics,
         )
         turn_debug_trace["routing"] = routing_decision.to_dict()
         turn_debug_trace["extraction_ms"] = _extraction_ms
@@ -354,6 +368,7 @@ class SessionOrchestrator:
             "latest_turn_evaluation": graph_state.get("latest_turn_evaluation", {}),
             "planner_decision_metrics": self._build_planner_decision_metrics(state),
             "dynamic_profile_metrics": self._build_dynamic_profile_metrics(state),
+            "graphrag_metrics": self.graphrag_monitor.build_session_metrics(state),
             "decision_weight_payload": self.get_decision_weight_payload(),
             "dynamic_profile": self._build_dynamic_profile_hint(state),
         }
@@ -368,6 +383,7 @@ class SessionOrchestrator:
         generation_hints: Optional[Dict[str, Any]] = None,
         next_action: str = "",
         profile_update_decision: Optional[Dict[str, Any]] = None,
+        graphrag_metrics: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         return {
             "schema_version": "planner_debug_v1",
@@ -405,6 +421,7 @@ class SessionOrchestrator:
                 "next_action": next_action or "",
             },
             "profile_update": profile_update_decision or {},
+            "graphrag": graphrag_metrics or {},
         }
 
     def _index_confirmed_events(self, state: "SessionState", touched_event_ids: List[str]) -> None:

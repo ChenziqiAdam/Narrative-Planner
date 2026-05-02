@@ -17,6 +17,7 @@ nohup.out
 .log
 
 node_modules
+.pnpm-store/
 package-lock.json
 pnpm-lock.yaml
 

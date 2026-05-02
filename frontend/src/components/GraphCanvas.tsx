@@ -106,7 +106,7 @@ const GraphCanvas: React.FC<GraphCanvasProps> = ({
     return () => {
       cy.destroy()
     }
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [])
 
   // 更新图谱数据和布局
   useEffect(() => {

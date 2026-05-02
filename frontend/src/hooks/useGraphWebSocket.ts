@@ -6,7 +6,9 @@
  */
 
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { GraphState } from '../types'
+import { EventNode, GraphState, NodeStatus } from '../types'
+
+type WebSocketPayload = Record<string, unknown>
 
 /** 连接状态 */
 export enum WSConnectionStatus {
@@ -20,19 +22,29 @@ export enum WSConnectionStatus {
 /** WebSocket消息类型 */
 interface WSMessage {
   type: string
-  [key: string]: any
+  data?: GraphState
+  delta?: Partial<GraphState>
+  event?: { event_id?: string } & WebSocketPayload
+  node_id?: string
+  payload?: {
+    event?: WebSocketPayload
+    graph_state?: GraphState
+  }
+  session_id?: string
+  status?: string
+  [key: string]: unknown
 }
 
 interface UseGraphWebSocketOptions {
   sessionId?: string | null
   onGraphInit?: (data: GraphState) => void
   onGraphUpdate?: (data: GraphState) => void
-  onGraphDelta?: (delta: any) => void
+  onGraphDelta?: (delta: Partial<GraphState>) => void
   onNodeStatusChange?: (nodeId: string, status: string) => void
-  onNewEvent?: (event: any) => void
+  onNewEvent?: (event: EventNode | WebSocketPayload) => void
   onConnected?: () => void
   onDisconnected?: () => void
-  onError?: (error: any) => void
+  onError?: (error: unknown) => void
 }
 
 interface UseGraphWebSocketReturn {
@@ -133,7 +145,7 @@ export function useGraphWebSocket(options: UseGraphWebSocketOptions): UseGraphWe
         // 增量更新
         if (data.delta) {
           setGraphState((prev) => {
-            if (!prev) return data.delta
+            if (!prev) return prev
             // 合并更新
             return { ...prev, ...data.delta }
           })
@@ -143,31 +155,35 @@ export function useGraphWebSocket(options: UseGraphWebSocketOptions): UseGraphWe
 
       case 'node_status_change':
         // 节点状态变更
-        if (data.node_id && data.status) {
+        if (typeof data.node_id === 'string' && typeof data.status === 'string') {
+          const { node_id } = data
+          const status = data.status as NodeStatus
           setGraphState((prev) => {
             if (!prev) return prev
             // 更新主题节点状态
-            if (prev.theme_nodes && prev.theme_nodes[data.node_id]) {
+            if (prev.theme_nodes && prev.theme_nodes[node_id]) {
               return {
                 ...prev,
                 theme_nodes: {
                   ...prev.theme_nodes,
-                  [data.node_id]: {
-                    ...prev.theme_nodes[data.node_id],
-                    status: data.status,
+                  [node_id]: {
+                    ...prev.theme_nodes[node_id],
+                    status,
                   },
                 },
               }
             }
             return prev
           })
-          handlersRef.current.onNodeStatusChange?.(data.node_id, data.status)
+          handlersRef.current.onNodeStatusChange?.(node_id, status)
         }
         break
 
       case 'new_event':
         // 新增事件
-        if (data.event) {
+        if (data.event && typeof data.event.event_id === 'string') {
+          const eventId = data.event.event_id
+          const event = data.event as unknown as EventNode
           setGraphState((prev) => {
             if (!prev) return prev
             // 添加事件到图谱
@@ -175,12 +191,12 @@ export function useGraphWebSocket(options: UseGraphWebSocketOptions): UseGraphWe
               ...prev,
               event_nodes: {
                 ...prev.event_nodes,
-                [data.event.event_id]: data.event,
+                [eventId]: event,
               },
               event_count: (prev.event_count || 0) + 1,
             }
           })
-          handlersRef.current.onNewEvent?.(data.event)
+          handlersRef.current.onNewEvent?.(event)
         }
         break
 
