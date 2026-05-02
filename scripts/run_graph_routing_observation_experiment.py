@@ -148,6 +148,7 @@ def _build_turn_record(
         "routing_scores": predicted.get("scores", {}),
         "routing_actual": actual,
         "merge_record": debug_trace.get("merge", {}),
+        "graphrag": debug_trace.get("graphrag", {}),
         "profile_update_decision": debug_trace.get("profile_update", {}),
         "profile_after_turn": _profile_snapshot(orchestrator),
         "extracted_events": result.get("extracted_events", []),
@@ -285,6 +286,7 @@ async def run_experiment(args: argparse.Namespace) -> Dict[str, Any]:
         "summary": {
             "turns": len(turns),
             "graph_routing_metrics": evaluation_state.get("graph_routing_metrics", {}),
+            "graphrag_metrics": evaluation_state.get("graphrag_metrics", {}),
             "dynamic_profile_metrics": evaluation_state.get("dynamic_profile_metrics", {}),
             "planner_decision_metrics": evaluation_state.get("planner_decision_metrics", {}),
             "session_metrics": evaluation_state.get("session_metrics", {}),
