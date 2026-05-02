@@ -84,24 +84,12 @@ class EmbeddingService:
         if not texts:
             return []
 
-        try:
-            if self._provider == "local":
-                return self._encode_local(texts)
-            elif self._provider == "openai":
-                return self._encode_openai(texts)
-            else:
-                raise ValueError(f"Unknown embedding provider: {self._provider}")
-        except Exception:
-            logger.exception("Embedding failed (provider=%s), falling back to local", self._provider)
-            if self._provider != "local":
-                original_provider = self._provider
-                self._provider = "local"
-                try:
-                    return self._encode_local(texts)
-                except Exception:
-                    self._provider = original_provider
-                    raise
-            raise
+        if self._provider == "local":
+            return self._encode_local(texts)
+        elif self._provider == "openai":
+            return self._encode_openai(texts)
+        else:
+            raise ValueError(f"Unknown embedding provider: {self._provider}")
 
     def encode_single(self, text: str) -> List[float]:
         """Encode a single text string into an embedding vector."""
