@@ -1566,6 +1566,14 @@ COMPARE_HTML = '''<!DOCTYPE html>
         .message .msg-text {
             word-break: break-word;
         }
+        .message.system, .message.error {
+            align-self: center;
+            max-width: 90%;
+            background: #fff3e0;
+            color: #8a5300;
+            border: 1px solid #ffd194;
+            border-radius: 10px;
+        }
         .message.interviewer {
             align-self: flex-start;
             background: #e8f4fd;
@@ -2726,6 +2734,11 @@ COMPARE_HTML = '''<!DOCTYPE html>
 
             let label = role === "interviewer" ? "访谈者" : "受访者";
             let actionTag = "";
+            const labels = {
+                system: "System",
+                error: "System error",
+            };
+            label = labels[role] || label;
             if (action && action !== "continue") {
                 actionTag = `<span class="action-tag">${action}</span>`;
             }
@@ -2909,6 +2922,11 @@ COMPARE_HTML = '''<!DOCTYPE html>
                 if (msg.role === "done") {
                     evtSource.close();
                     finishAutoTurn("planner", interviewEnded);
+                    return;
+                }
+                if (msg.role === "error") {
+                    appendMessage(chat, "error", msg.text);
+                    document.getElementById("planner-status").textContent = "Error";
                     return;
                 }
 

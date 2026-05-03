@@ -1,5 +1,6 @@
 import json
 import logging
+import re
 from typing import List, Optional, Dict, Any
 
 logger = logging.getLogger(__name__)
@@ -248,7 +249,12 @@ class ElderMemorySystem:
         top_k: int = 3,
     ) -> List[Dict[str, Any]]:
         """语义搜索记忆，适合模糊或概念性查询。返回格式与 search_memories_by_keywords 一致。"""
-        hits = self._vector_store.search_by_text(query, top_k=top_k, entity_type="Memory")
+        try:
+            hits = self._vector_store.search_by_text(query, top_k=top_k, entity_type="Memory")
+        except Exception as exc:
+            logger.warning("Semantic memory search unavailable; using lexical fallback: %s", exc)
+            return self._lexical_memory_fallback(query, top_k)
+
         results = []
         for memory_id, _entity_type, score in hits:
             memory_info = self.memory_index.get(memory_id)
@@ -260,6 +266,47 @@ class ElderMemorySystem:
                     "similarity_score": score,
                 })
         return results
+
+    def _lexical_memory_fallback(self, query: str, top_k: int) -> List[Dict[str, Any]]:
+        query_tokens = set(_fallback_query_tokens(query))
+        if not query_tokens:
+            return []
+
+        ranked: List[Dict[str, Any]] = []
+        for memory_id, memory_info in self.memory_index.items():
+            memory = memory_info["memory"]
+            memory_text = " ".join(filter(None, [
+                memory.get("event_name", ""),
+                memory.get("description", ""),
+                memory.get("details", ""),
+                " ".join(memory.get("tags", []) or []),
+            ]))
+            memory_tokens = set(_fallback_query_tokens(memory_text))
+            if not memory_tokens:
+                continue
+            overlap = len(query_tokens & memory_tokens)
+            if overlap <= 0:
+                continue
+            score = overlap / max(len(query_tokens), 1)
+            ranked.append({
+                "memory_id": memory_id,
+                "memory": memory,
+                "period": memory_info["period"],
+                "similarity_score": float(min(score, 1.0)),
+            })
+
+        ranked.sort(key=lambda item: item["similarity_score"], reverse=True)
+        return ranked[:top_k]
+
+
+def _fallback_query_tokens(text: str) -> List[str]:
+    normalized = (text or "").lower()
+    compact = re.sub(r"\s+", "", normalized)
+    tokens = re.findall(r"[a-z0-9_]+", normalized)
+    tokens.extend(char for char in compact if not char.isspace())
+    tokens.extend(compact[i:i + 2] for i in range(max(0, len(compact) - 1)))
+    tokens.extend(compact[i:i + 3] for i in range(max(0, len(compact) - 2)))
+    return [token for token in tokens if token]
 
 
 def get_tool_schemas() -> List[Dict[str, Any]]:
