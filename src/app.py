@@ -939,7 +939,7 @@ def planner_start():
     _compare_sessions[session_id] = {
         "type": "planner",
         "agent": agent,
-        "history": [{"role": "interviewer", "text": result["question"]}],
+        "history": [{"role": "interviewer", "text": result["question"], "action": result.get("action", "continue")}],
         "mode": mode,
         "elder_info": elder_info,
         "start_time": datetime.now().isoformat(),
@@ -953,6 +953,8 @@ def planner_start():
         "mode": mode,
         "initial_graph": result.get("current_graph_state", {}),
         "decision_weight_payload": decision_weight_payload,
+        "planner_plan": result.get("planner_plan", {}),
+        "debug_trace": result.get("debug_trace", {}),
     })
 
 
@@ -2710,7 +2712,7 @@ COMPARE_HTML = '''<!DOCTYPE html>
             const mode = document.getElementById("planner-mode");
 
             chat.innerHTML = "";
-            appendPlannerQuestion(chat, result.first_question);
+            appendPlannerQuestion(chat, result.first_question, "continue", result.debug_trace);
             status.textContent = "进行中";
             mode.textContent = currentMode === "ai" ? "🤖 AI模式" : "🧑 用户模式";
 
@@ -2779,6 +2781,9 @@ COMPARE_HTML = '''<!DOCTYPE html>
 
                 const extraction = debugTrace.extraction || {};
                 const merge = debugTrace.merge || {};
+                const planning = debugTrace.planning || {};
+                const plannerPlan = debugTrace.planner_plan || {};
+                const toolTrace = debugTrace.tool_trace || [];
                 const candidateCount = extraction.candidate_count || (extraction.candidate_events || []).length || 0;
                 const hintCount = extraction.similarity_hint_count || 0;
                 const decisions = merge.decisions || [];
@@ -2807,6 +2812,25 @@ COMPARE_HTML = '''<!DOCTYPE html>
                         label: `Fallback ${fallbackReasons.length}`,
                         tooltip: `Fallback 原因:\n${JSON.stringify(fallbackReasons, null, 2)}`,
                         warning: true,
+                    });
+                }
+
+                if (Object.keys(planning).length > 0 || Object.keys(plannerPlan).length > 0) {
+                    const action = planning.selected_action || planning.next_action || "plan";
+                    const score = planning.event_completeness_score;
+                    const scoreLabel = typeof score === "number" ? ` ${Math.round(score * 100)}%` : "";
+                    chips.push({
+                        label: `Plan ${action}${scoreLabel}`,
+                        tooltip: `Planner 决策摘要:\n${JSON.stringify(plannerPlan || planning, null, 2)}`,
+                        warning: false,
+                    });
+                }
+
+                if (toolTrace.length > 0) {
+                    chips.push({
+                        label: `Tools ${toolTrace.length}`,
+                        tooltip: `Planner 工具调用:\n${JSON.stringify(toolTrace, null, 2)}`,
+                        warning: false,
                     });
                 }
 

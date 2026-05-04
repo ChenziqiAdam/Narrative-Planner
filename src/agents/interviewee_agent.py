@@ -19,6 +19,7 @@ if project_root not in sys.path:
 
 from src.config import Config
 from src.prompts.roles.elderly_promot import ElderPromptGenerator
+from src.services.llm_retry import is_transient_llm_error, sleep_before_retry
 from src.tools.elder_tools import ElderMemorySystem, get_tool_callables, get_tool_schemas
 
 
@@ -196,7 +197,12 @@ class IntervieweeAgent:
         tool_calls_log: list[dict] = []
 
         while True:
-            response = self._create_completion(messages)
+            try:
+                response = self._create_completion(messages)
+            except Exception as exc:
+                if is_transient_llm_error(exc):
+                    return DEFAULT_REPLY_FALLBACK, tool_calls_log
+                raise
             message = response.choices[0].message
 
             if not message.tool_calls:
@@ -243,19 +249,27 @@ class IntervieweeAgent:
 
     def _create_completion(self, messages):
         last_error = None
+        max_attempts = max(1, Config.MAX_RETRIES)
         for model_name in self.model_candidates:
-            try:
-                response = self.client.chat.completions.create(
-                    model=model_name,
-                    messages=messages,
-                    tools=self.tools,
-                    tool_choice="auto",
-                )
-                self.model = model_name
-                return response
-            except Exception as exc:
-                last_error = exc
-                if not self._should_fallback_model(exc):
+            for attempt in range(1, max_attempts + 1):
+                try:
+                    response = self.client.chat.completions.create(
+                        model=model_name,
+                        messages=messages,
+                        tools=self.tools,
+                        tool_choice="auto",
+                    )
+                    self.model = model_name
+                    return response
+                except Exception as exc:
+                    last_error = exc
+                    if is_transient_llm_error(exc):
+                        if attempt < max_attempts:
+                            sleep_before_retry(exc, attempt)
+                            continue
+                        break
+                    if self._should_fallback_model(exc):
+                        break
                     raise
         raise last_error
 

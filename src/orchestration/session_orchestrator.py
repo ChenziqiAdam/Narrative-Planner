@@ -32,6 +32,7 @@ from src.state import (
 )
 from src.state.narrative_models import NarrativeFragment
 from src.storage.neo4j.manager import Neo4jGraphManager
+from src.tools.planner_tools import PlannerToolSystem
 
 logger = logging.getLogger(__name__)
 
@@ -166,6 +167,7 @@ class SessionOrchestrator:
         state.current_focus_theme_id = decision_ctx.current_focus_theme_id
         state.pending_question = generated["question"]
         state.pending_action = generated["action"]
+        state.metadata["pending_planner_plan"] = generated.get("planner_plan", {})
         state.session_metrics = self._compute_session_metrics()
         self.store.save(state)
         logger.info("[init] TOTAL: %.1fms", (time.perf_counter() - _t0) * 1000)
@@ -257,7 +259,14 @@ class SessionOrchestrator:
             state.elder_profile,
             state.recent_transcript(3),
             decision_ctx,
+            planner_tool_system=PlannerToolSystem(
+                state.elder_profile,
+                state.recent_transcript(3),
+                decision_ctx,
+                neo4j_manager=self._get_neo4j_manager(),
+            ),
         )
+        planner_plan = generated.get("planner_plan", {})
 
         self._update_generation_metadata(state, generated, turn_record.interviewer_question)
         turn_debug_trace = {
@@ -271,10 +280,14 @@ class SessionOrchestrator:
                 "low_info_streak": decision_ctx.low_info_streak,
                 "explorable_angles_count": len(decision_ctx.explorable_angles),
             },
+            "planning": self._build_planning_trace(generated),
+            "planner_plan": planner_plan,
+            "tool_trace": generated.get("tool_trace", []),
         }
         turn_record.debug_trace = turn_debug_trace
         state.pending_question = generated["question"]
         state.pending_action = generated["action"]
+        state.metadata["pending_planner_plan"] = planner_plan
         if decision_ctx.current_focus_theme_id:
             state.current_focus_theme_id = decision_ctx.current_focus_theme_id
         state.session_metrics = self._compute_session_metrics()
@@ -298,6 +311,7 @@ class SessionOrchestrator:
             "turn_count": state.turn_count,
             "turn_evaluation": {"status": "pending", "turn_id": turn_record.turn_id},
             "session_metrics": state.session_metrics.to_dict() if state.session_metrics else {},
+            "planner_plan": planner_plan,
             "debug_trace": turn_debug_trace,
         }
 
@@ -311,7 +325,15 @@ class SessionOrchestrator:
             "turn_count": state.turn_count,
             "turn_evaluation": {},
             "session_metrics": state.session_metrics.to_dict() if state.session_metrics else {},
-            "debug_trace": {},
+            "planner_plan": state.metadata.get("pending_planner_plan", {}),
+            "debug_trace": {
+                "planning": self._build_planning_trace(
+                    {
+                        "action": state.pending_action or "continue",
+                        "planner_plan": state.metadata.get("pending_planner_plan", {}),
+                    }
+                )
+            },
         }
 
     def get_graph_state(self) -> Dict[str, Any]:
@@ -658,6 +680,41 @@ class SessionOrchestrator:
                 state.metadata["fallback_repeat_count"] = 0
             return
         state.metadata["fallback_repeat_count"] = 0
+
+    def _build_planning_trace(self, generated: Dict[str, Any]) -> Dict[str, Any]:
+        planner_plan = generated.get("planner_plan") or {}
+        if not isinstance(planner_plan, dict):
+            planner_plan = {}
+
+        completeness = planner_plan.get("event_completeness") or {}
+        if not isinstance(completeness, dict):
+            completeness = {}
+
+        focus = planner_plan.get("focus") or {}
+        if not isinstance(focus, dict):
+            focus = {"label": str(focus)}
+
+        emotion = planner_plan.get("emotion_signal") or {}
+        if not isinstance(emotion, dict):
+            emotion = {}
+
+        candidates = planner_plan.get("candidate_actions") or []
+        if not isinstance(candidates, list):
+            candidates = []
+
+        return {
+            "next_action": generated.get("action", "continue"),
+            "selected_action": planner_plan.get("selected_action", ""),
+            "stage": planner_plan.get("stage", ""),
+            "focus": focus,
+            "selected_slot_or_angle": planner_plan.get("selected_slot_or_angle", ""),
+            "event_completeness_score": completeness.get("score"),
+            "missing_dimensions": completeness.get("missing_dimensions", []),
+            "emotion_energy": emotion.get("energy"),
+            "emotion_valence": emotion.get("valence"),
+            "candidate_actions": candidates[:4],
+            "question_intent": planner_plan.get("question_intent", ""),
+        }
 
     def _build_elder_profile(self, elder_info: Dict[str, Any]) -> ElderProfile:
         age = elder_info.get("age")

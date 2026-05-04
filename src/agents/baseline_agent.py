@@ -11,6 +11,7 @@ from datetime import datetime
 from openai import OpenAI
 
 from src.config import Config
+from src.services.llm_retry import is_transient_llm_error, sleep_before_retry
 
 
 logger = logging.getLogger(__name__)
@@ -53,26 +54,44 @@ class BaselineAgent:
             self.conversation_history.append({"role": "user", "content": user_response})
 
         last_error = None
+        max_attempts = max(1, Config.MAX_RETRIES)
         for model_name in self.model_candidates:
-            try:
-                response = self.client.chat.completions.create(
-                    model=model_name,
-                    messages=self.conversation_history,
-                    max_tokens=4096,
-                )
-                question = (response.choices[0].message.content or "").strip()
-                if question:
-                    self.model = model_name
-                    self.conversation_history.append(
-                        {"role": "assistant", "content": question}
+            abort_generation = False
+            for attempt in range(1, max_attempts + 1):
+                try:
+                    response = self.client.chat.completions.create(
+                        model=model_name,
+                        messages=self.conversation_history,
+                        max_tokens=4096,
                     )
-                    logger.info("Baseline generated next turn with model=%s", model_name)
-                    return question
-            except Exception as exc:
-                last_error = exc
-                logger.warning("Baseline API call failed with model=%s: %s", model_name, exc)
-                if not self._should_fallback_model(exc):
+                    question = (response.choices[0].message.content or "").strip()
+                    if question:
+                        self.model = model_name
+                        self.conversation_history.append(
+                            {"role": "assistant", "content": question}
+                        )
+                        logger.info("Baseline generated next turn with model=%s", model_name)
+                        return question
+                except Exception as exc:
+                    last_error = exc
+                    logger.warning(
+                        "Baseline API call failed with model=%s attempt=%s/%s: %s",
+                        model_name,
+                        attempt,
+                        max_attempts,
+                        exc,
+                    )
+                    if is_transient_llm_error(exc):
+                        if attempt < max_attempts:
+                            sleep_before_retry(exc, attempt)
+                            continue
+                        break
+                    if self._should_fallback_model(exc):
+                        break
+                    abort_generation = True
                     break
+            if abort_generation:
+                break
 
         logger.error("Baseline API call failed: %s", last_error)
         return "抱歉，我这边刚才没有顺利组织出下一个问题，请稍后再试一次。"

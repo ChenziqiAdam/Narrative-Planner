@@ -78,6 +78,14 @@ class Config:
     )
     PROFILE_GUIDANCE_MAX_NOTES = int(os.getenv("PROFILE_GUIDANCE_MAX_NOTES", "4"))
 
+    # Planner tool-calling controls.  These are intentionally small by default
+    # so tool use can improve planning observability without doubling latency.
+    PLANNER_TOOLS_ENABLED = os.getenv("PLANNER_TOOLS_ENABLED", "true").lower() in {
+        "1", "true", "yes", "on"
+    }
+    PLANNER_MAX_TOOL_ROUNDS = int(os.getenv("PLANNER_MAX_TOOL_ROUNDS", "2"))
+    PLANNER_MAX_TOOLS_PER_ROUND = int(os.getenv("PLANNER_MAX_TOOLS_PER_ROUND", "2"))
+
     @classmethod
     def get_api_key(cls):
         return getattr(cls, "OPENAI_API_KEY", None) or getattr(cls, "MOONSHOT_API_KEY", None)

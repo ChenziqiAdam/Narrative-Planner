@@ -7,8 +7,14 @@ from typing import Any, Dict, List, Optional
 from openai import OpenAI
 
 from src.config import Config
+from src.services.llm_retry import is_transient_llm_error, sleep_before_retry
 from src.state import ElderProfile, TurnRecord
 from src.services.graph_rag_decision_context import GraphRAGDecisionContext
+from src.tools.planner_tools import (
+    PlannerToolSystem,
+    get_planner_tool_callables,
+    get_planner_tool_schemas,
+)
 
 try:
     from json_repair import repair_json
@@ -18,6 +24,8 @@ except ImportError:  # pragma: no cover - optional dependency
 
 
 logger = logging.getLogger(__name__)
+
+LIFE_OVERVIEW_TURN_LIMIT = 8
 
 
 class InterviewerAgent:
@@ -34,7 +42,8 @@ class InterviewerAgent:
         elder_profile: ElderProfile,
         recent_transcript: List[TurnRecord],
         decision_ctx: GraphRAGDecisionContext,
-    ) -> Dict[str, str]:
+        planner_tool_system: Optional[PlannerToolSystem] = None,
+    ) -> Dict[str, Any]:
         """Generate next question using GraphRAG decision context."""
         if not recent_transcript:
             return self._opening_response(elder_profile)
@@ -43,6 +52,18 @@ class InterviewerAgent:
         user_prompt = self._build_user_prompt(
             elder_profile, recent_transcript, decision_ctx
         )
+        tool_schemas: List[Dict[str, Any]] = []
+        tool_callables: Dict[str, Any] = {}
+        if Config.PLANNER_TOOLS_ENABLED:
+            tool_system = planner_tool_system or PlannerToolSystem(
+                elder_profile,
+                recent_transcript,
+                decision_ctx,
+            )
+            tool_schemas = get_planner_tool_schemas(
+                include_graph_tools=tool_system.has_graph_tools
+            )
+            tool_callables = get_planner_tool_callables(tool_system)
 
         max_attempts = max(1, min(Config.MAX_RETRIES, 2))
 
@@ -50,15 +71,16 @@ class InterviewerAgent:
             candidate_max_tokens = 4096 if self._is_reasoning_heavy_model(model_name) else 1024
             for attempt in range(1, max_attempts + 1):
                 try:
-                    response = self.client.chat.completions.create(
-                        model=model_name,
+                    message, tool_trace = self._create_completion_with_optional_tools(
+                        model_name=model_name,
                         messages=[
                             {"role": "system", "content": system_prompt},
                             {"role": "user", "content": user_prompt},
                         ],
                         max_tokens=candidate_max_tokens,
+                        tools=tool_schemas,
+                        tool_callables=tool_callables,
                     )
-                    message = response.choices[0].message
                     raw_content = (message.content or "").strip()
 
                     if not raw_content:
@@ -71,6 +93,8 @@ class InterviewerAgent:
 
                     parsed = self._parse_response(raw_content)
                     if parsed.get("question"):
+                        if tool_trace:
+                            parsed["tool_trace"] = tool_trace
                         self.model = model_name
                         self.max_tokens = candidate_max_tokens
                         return parsed
@@ -79,6 +103,11 @@ class InterviewerAgent:
                         "InterviewerAgent model=%s attempt %s/%s failed: %s",
                         model_name, attempt, max_attempts, exc,
                     )
+                    if is_transient_llm_error(exc):
+                        if attempt < max_attempts:
+                            sleep_before_retry(exc, attempt)
+                            continue
+                        break
                     if self._should_fallback_model(exc):
                         break
 
@@ -86,6 +115,10 @@ class InterviewerAgent:
         return {
             "action": "continue",
             "question": "您能再跟我多说说那个时候的事情吗？",
+            "planner_plan": self._fallback_planner_plan(
+                "continue",
+                "LLM 生成失败，降级为温和追问当前经历。",
+            ),
         }
 
     def _render_system_prompt(self) -> str:
@@ -142,46 +175,42 @@ class InterviewerAgent:
 
 ---
 
-## 【访谈规划思维链】
+## 【内部 Planner 工作流】
 
-在生成下一个问题之前，请先基于以下维度进行分析：
+在生成下一个问题之前，请在内部按以下流程分析。不要输出完整分析过程，只输出结构化 planner_plan 摘要和最终问题。
 
-### 1. 当前叙事分析
-- 老人刚才讲的故事完整吗？（时间、地点、人物、起因、经过、结果、感受）
-- 哪些细节值得深挖？老人是否对某个细节特别有感触？
-- 图谱中有哪些可追问的方向？
-- **策略方向**：
-  * 如果信息缺失且需要确认 → 封闭式确认
-  * 如果老人流露出情感 → 开放式追问感受
-  * 如果故事还有延伸空间 → 开放式引导继续
+### 1. 语义理解
+- 判断老人刚才主要讲的是人生阶段、具体事件、人物关系、地点、价值观，还是情绪表达。
+- 判断当前叙事焦点是否清楚，是否存在突然跳题的风险。
 
-### 2. 情绪状态判断
-- 老人的精力如何？（低 → 简短温和；高 → 可适当深入）
-- 情绪是积极、中性还是消极？（消极 → **先真诚共情，再问问题**）
-- 是否表现出话题疲劳？（是 → 考虑广度跳转）
+### 2. 访谈阶段判断
+- 前 5-10 轮优先建立粗粒度人生脉络：人生阶段、大事节点、关键人物、自我评价、价值观。
+- 如果仍处于人生脉络梳理阶段，不要因为背景或回答中出现"工作/工厂/家庭/地点"等词就立刻深挖单个主题。
 
-### 3. 策略决策（三选一）
+### 3. 当前事件完整度判断
+- 评估当前叙事是否具备：时间、地点、人物、经过、原因、结果、感受、反思。
+- 识别 missing_dimensions 和 weak_dimensions。
+- 事件不完整并不必然继续深挖；还要结合访谈阶段、情绪、主题覆盖和上下文连贯性。
 
-**路径 A：深度挖掘 (Deep Dive)**
-- 适用：当前故事有温度但还不完整，老人愿意聊
-- 方法（结合具体场景，不要照搬例句）：
-  * 由事及人 —— 从事件延伸到人物性格和关系
-  * 由物及情 —— 用具体的物品、场景触发情感记忆
-  * 追问感受 —— 关注情绪变化和内心活动
-  * 挖掘反思 —— 问"回头看"的意义，而非当时的事实
+### 4. 情绪与精力判断
+- 判断情绪能量、认知负担、是否需要先共情承接。
+- 如果老人疲惫、消极或回答变短，问题要更轻、更短、更温和。
 
-**路径 B：广度跳转 (Breadth Switch)**
-- 适用：当前故事已足够完整，或老人出现疲劳
-- 跳转方法（按优先级，结合场景选择）：
-  * 情感/人物路径 —— 抓住情绪线索，连接到其他人生时刻
-  * 地理/时间路径 —— 顺着时空线索自然过渡
-  * 时代背景路径 —— 用历史事件作为切入点
-  * 回溯之前的话题 —— 捡起之前放下的线索
+### 5. 图谱和主题判断
+- 参考主题覆盖、当前焦点、相关人物/地点、待探索线索和跨会话开放线索。
+- 切换主题时必须自然承接，不要为了覆盖率突然跳走。
 
-**路径 C：温和澄清 (Clarify)**
-- 适用：发现时间、地点或人物关系有矛盾/模糊
-- 方法：用温和的封闭式问题确认，不给压力
-  * 例："是1968年吗？" "您说的那位是张师傅还是李师傅？"
+### 6. 候选动作比较
+在内部比较以下动作，并给出 0-1 的相对分数：
+- continue_life_overview：继续人生脉络梳理
+- deep_dive_event：深挖当前事件
+- clarify：澄清含糊或冲突
+- confirm_summary：总结确认当前理解
+- switch_theme：切换主题
+- move_to_person：转向关键人物
+- move_to_period：转向人生阶段
+- gentle_reflection：引导自我评价/反思
+- end：结束
 
 ### 4. 判停与结束判断
 - 童年、青年、中年、晚年是否都有涉及？
@@ -197,6 +226,28 @@ class InterviewerAgent:
 
 ```json
 {
+  "planner_plan": {
+    "stage": "life_overview|event_deepening|theme_expansion|reflection|closing",
+    "selected_action": "continue_life_overview|deep_dive_event|clarify|confirm_summary|switch_theme|move_to_person|move_to_period|gentle_reflection|end",
+    "focus": {"type": "life_period|event|person|location|theme|reflection", "label": "简短中文焦点"},
+    "event_completeness": {
+      "score": 0.0,
+      "missing_dimensions": ["time", "location", "people", "sequence", "cause", "result", "feeling", "reflection"],
+      "reason_summary": "一句话说明，不要写完整思维链"
+    },
+    "emotion_signal": {
+      "energy": 0.5,
+      "valence": "positive|neutral|negative",
+      "support_needed": false
+    },
+    "candidate_actions": [
+      {"action": "continue_life_overview", "score": 0.8, "reason_summary": "一句话理由"},
+      {"action": "deep_dive_event", "score": 0.4, "reason_summary": "一句话理由"}
+    ],
+    "selected_slot_or_angle": "life_timeline|time|location|people|sequence|cause|result|feeling|reflection|theme|person",
+    "tone": "respectful_warm|curious_gentle|empathetic_supportive|light_conversational",
+    "question_intent": "一句话说明下一问意图"
+  },
   "action": "continue|next_phase|end",
   "question": "你的访谈问题"
 }
@@ -205,11 +256,17 @@ class InterviewerAgent:
 - `action=continue`：继续深入当前话题
 - `action=next_phase`：切换到新话题或总结过渡
 - `action=end`：结束访谈
+- `planner_plan` 只用于调试和记录，不要包含完整推理链，只写简短决策摘要
 
 **重要**：
 - question 字段只能包含**一个问题**
 - 问感受时用**开放式问题**，问确认时用**封闭式问题**
-- 语气自然、温暖、好奇，像老朋友聊天一样"""
+- 语气自然、温暖、好奇，像老朋友聊天一样
+
+## 【工具调用】
+
+如果你需要更多证据，可以调用工具查询主题覆盖、当前焦点、事件完整度、相关上下文或开放线索。
+工具只提供证据，不替你决定动作。不要为了调用工具而调用工具；如果上下文已经足够，可以直接输出 JSON。"""
 
     def _build_user_prompt(
         self,
@@ -275,6 +332,8 @@ class InterviewerAgent:
 
         # 8. Strategy hints
         parts.append("\n## 策略提示")
+        if self._is_life_overview_stage(recent_transcript):
+            parts.append(self._build_life_overview_guidance(recent_transcript))
         if ctx.low_info_streak >= 2:
             parts.append(
                 f"最近连续 {ctx.low_info_streak} 轮信息增益偏低。"
@@ -290,20 +349,164 @@ class InterviewerAgent:
 
         # Task instruction
         parts.append("\n## 你的任务")
-        parts.append("基于以上上下文，先进行【访谈规划思维链】分析，然后生成下一个问题。")
+        parts.append("基于以上上下文，在内部完成 Planner 工作流分析，然后生成下一个问题。不要输出完整分析过程。")
         parts.append("")
         parts.append("记住：")
         parts.append("1. 问题要自然、温暖、像聊天")
         parts.append("2. 不要暴露任何技术概念")
         parts.append("3. 如果老人情绪低落，先共情再提问")
         parts.append("4. 如果老人疲劳，切换到轻松话题")
+        parts.append("5. 前几轮不要因为背景里出现某个职业、地点或亲属就立刻深挖；先让老人自己铺开人生脉络")
         parts.append("")
-        parts.append("返回严格 JSON 格式：")
-        parts.append('{\'action\': \'continue|next_phase|end\', \'question\': \'你的问题\'}')
+        parts.append("返回严格 JSON 格式，必须包含 planner_plan、action、question 三个顶层字段：")
+        parts.append(
+            "{"
+            "'planner_plan': {"
+            "'stage': 'life_overview|event_deepening|theme_expansion|reflection|closing', "
+            "'selected_action': 'continue_life_overview|deep_dive_event|clarify|confirm_summary|switch_theme|move_to_person|move_to_period|gentle_reflection|end', "
+            "'focus': {'type': 'life_period|event|person|location|theme|reflection', 'label': '简短中文焦点'}, "
+            "'event_completeness': {'score': 0.0, 'missing_dimensions': [], 'reason_summary': '一句话说明'}, "
+            "'emotion_signal': {'energy': 0.5, 'valence': 'positive|neutral|negative', 'support_needed': false}, "
+            "'candidate_actions': [{'action': 'continue_life_overview', 'score': 0.8, 'reason_summary': '一句话理由'}], "
+            "'selected_slot_or_angle': 'life_timeline|time|location|people|sequence|cause|result|feeling|reflection|theme|person', "
+            "'tone': 'respectful_warm|curious_gentle|empathetic_supportive|light_conversational', "
+            "'question_intent': '一句话说明下一问意图'"
+            "}, "
+            "'action': 'continue|next_phase|end', "
+            "'question': '你的问题'"
+            "}"
+        )
 
         return "\n".join(parts)
 
-    def _parse_response(self, raw_content: str) -> Dict[str, str]:
+    def _create_completion_with_optional_tools(
+        self,
+        *,
+        model_name: str,
+        messages: List[Dict[str, Any]],
+        max_tokens: int,
+        tools: List[Dict[str, Any]],
+        tool_callables: Dict[str, Any],
+        allow_tool_fallback: bool = True,
+    ):
+        if not tools:
+            response = self.client.chat.completions.create(
+                model=model_name,
+                messages=messages,
+                max_tokens=max_tokens,
+            )
+            return response.choices[0].message, []
+
+        working_messages = list(messages)
+        tool_trace: List[Dict[str, Any]] = []
+        max_rounds = max(0, int(Config.PLANNER_MAX_TOOL_ROUNDS))
+        max_tools_per_round = max(1, int(Config.PLANNER_MAX_TOOLS_PER_ROUND))
+
+        for round_index in range(max_rounds + 1):
+            try:
+                response = self.client.chat.completions.create(
+                    model=model_name,
+                    messages=working_messages,
+                    max_tokens=max_tokens,
+                    tools=tools,
+                    tool_choice="auto",
+                )
+            except Exception as exc:
+                if allow_tool_fallback and self._should_disable_tools_for_error(exc):
+                    logger.warning("Planner tools unsupported by model/API; retrying without tools: %s", exc)
+                    return self._create_completion_with_optional_tools(
+                        model_name=model_name,
+                        messages=messages,
+                        max_tokens=max_tokens,
+                        tools=[],
+                        tool_callables={},
+                        allow_tool_fallback=False,
+                    )
+                raise
+
+            message = response.choices[0].message
+            tool_calls = list(getattr(message, "tool_calls", None) or [])
+            if not tool_calls:
+                return message, tool_trace
+
+            if round_index >= max_rounds:
+                logger.warning("Planner tool loop exhausted before final answer")
+                return message, tool_trace
+
+            selected_calls = tool_calls[:max_tools_per_round]
+            working_messages.append(
+                {
+                    "role": "assistant",
+                    "content": message.content,
+                    "tool_calls": [
+                        {
+                            "id": tool_call.id,
+                            "type": "function",
+                            "function": {
+                                "name": tool_call.function.name,
+                                "arguments": tool_call.function.arguments,
+                            },
+                        }
+                        for tool_call in selected_calls
+                    ],
+                }
+            )
+
+            for tool_call in selected_calls:
+                fn_name = tool_call.function.name
+                fn_args = self._parse_tool_arguments(tool_call.function.arguments or "{}")
+                fn = tool_callables.get(fn_name)
+                if fn is None:
+                    result: Any = {"error": f"unknown planner tool: {fn_name}"}
+                else:
+                    try:
+                        result = fn(**fn_args)
+                    except Exception as exc:
+                        logger.debug("Planner tool %s failed", fn_name, exc_info=True)
+                        result = {"error": str(exc)}
+
+                tool_trace.append(
+                    {
+                        "round": round_index + 1,
+                        "tool": fn_name,
+                        "args": fn_args,
+                        "result": result,
+                    }
+                )
+                working_messages.append(
+                    {
+                        "role": "tool",
+                        "tool_call_id": tool_call.id,
+                        "content": json.dumps(result, ensure_ascii=False),
+                    }
+                )
+
+        raise RuntimeError("Planner tool loop ended unexpectedly.")
+
+    def _parse_tool_arguments(self, raw: str) -> Dict[str, Any]:
+        try:
+            repaired = repair_json(raw)
+            parsed = json.loads(repaired)
+            if isinstance(parsed, dict):
+                return parsed
+        except Exception:
+            logger.debug("Failed to parse planner tool arguments: %s", raw, exc_info=True)
+        return {}
+
+    def _should_disable_tools_for_error(self, error: Exception) -> bool:
+        message = str(error).lower()
+        return (
+            "tool" in message
+            and (
+                "unsupported" in message
+                or "not supported" in message
+                or "unrecognized" in message
+                or "unknown parameter" in message
+                or "tool_choice" in message
+            )
+        )
+
+    def _parse_response(self, raw_content: str) -> Dict[str, Any]:
         text = raw_content.strip()
         if "```json" in text:
             text = text.split("```json", 1)[1].split("```", 1)[0].strip()
@@ -315,10 +518,36 @@ class InterviewerAgent:
 
         try:
             parsed = json.loads(repair_json(text))
-        except json.JSONDecodeError:
-            return {"action": "continue", "question": text.strip().strip('"')}
+        except (json.JSONDecodeError, TypeError, ValueError):
+            question = text.strip().strip('"')
+            return {
+                "action": "continue",
+                "question": question,
+                "planner_plan": self._fallback_planner_plan(
+                    "continue",
+                    "模型未返回 JSON，按自然文本问题降级处理。",
+                ),
+            }
+        if not isinstance(parsed, dict):
+            question = str(parsed).strip()
+            return {
+                "action": "continue",
+                "question": question,
+                "planner_plan": self._fallback_planner_plan(
+                    "continue",
+                    "模型返回了非对象 JSON，按自然文本问题降级处理。",
+                ),
+            }
 
-        action = str(parsed.get("action", "continue")).strip() or "continue"
+        planner_plan = parsed.get("planner_plan")
+        if not isinstance(planner_plan, dict):
+            planner_plan = {}
+
+        action = str(parsed.get("action", "")).strip()
+        if not action:
+            action = self._infer_top_level_action(planner_plan)
+        if action not in {"continue", "next_phase", "end"}:
+            action = "continue"
         question = str(parsed.get("question", "")).strip()
 
         if action == "end" and not question:
@@ -327,34 +556,248 @@ class InterviewerAgent:
         if not question:
             raise ValueError("Interviewer response missing question.")
 
-        return {"action": action, "question": question}
+        planner_plan = self._normalize_planner_plan(planner_plan, action)
+        return {"action": action, "question": question, "planner_plan": planner_plan}
 
-    def _opening_response(self, elder_profile: ElderProfile) -> Dict[str, str]:
+    def _opening_response(self, elder_profile: ElderProfile) -> Dict[str, Any]:
         question = self._build_opening_question(elder_profile)
-        return {"action": "continue", "question": question}
+        return {
+            "action": "continue",
+            "question": question,
+            "planner_plan": self._opening_planner_plan(elder_profile),
+        }
+
+    def _opening_planner_plan(self, elder_profile: ElderProfile) -> Dict[str, Any]:
+        focus_label = "早年经历"
+        if elder_profile.hometown:
+            focus_label = f"{elder_profile.hometown}的早年记忆"
+        return {
+            "stage": "life_overview",
+            "selected_action": "continue_life_overview",
+            "focus": {"type": "life_period", "label": focus_label},
+            "event_completeness": {
+                "score": 0.0,
+                "missing_dimensions": [
+                    "time",
+                    "location",
+                    "people",
+                    "sequence",
+                    "feeling",
+                    "reflection",
+                ],
+                "reason_summary": "访谈刚开始，尚未形成具体事件。",
+            },
+            "emotion_signal": {
+                "energy": 0.5,
+                "valence": "neutral",
+                "support_needed": False,
+            },
+            "candidate_actions": [
+                {
+                    "action": "continue_life_overview",
+                    "score": 0.9,
+                    "reason_summary": "开场阶段应先帮助老人铺开人生脉络。",
+                },
+                {
+                    "action": "deep_dive_event",
+                    "score": 0.2,
+                    "reason_summary": "尚无明确事件，不适合立即深挖。",
+                },
+            ],
+            "selected_slot_or_angle": "life_timeline",
+            "tone": "respectful_warm",
+            "question_intent": "邀请老人从最早、最清楚的记忆开始讲述。",
+        }
+
+    def _fallback_planner_plan(self, action: str, reason_summary: str) -> Dict[str, Any]:
+        selected_action = "end" if action == "end" else "switch_theme" if action == "next_phase" else "deep_dive_event"
+        return {
+            "stage": "event_deepening",
+            "selected_action": selected_action,
+            "focus": {"type": "event", "label": "当前经历"},
+            "event_completeness": {
+                "score": 0.0,
+                "missing_dimensions": [],
+                "reason_summary": reason_summary,
+            },
+            "emotion_signal": {
+                "energy": 0.5,
+                "valence": "neutral",
+                "support_needed": False,
+            },
+            "candidate_actions": [
+                {
+                    "action": selected_action,
+                    "score": 1.0,
+                    "reason_summary": reason_summary,
+                }
+            ],
+            "selected_slot_or_angle": "theme",
+            "tone": "respectful_warm",
+            "question_intent": reason_summary,
+        }
+
+    def _normalize_planner_plan(self, planner_plan: Dict[str, Any], action: str) -> Dict[str, Any]:
+        if not planner_plan:
+            return self._fallback_planner_plan(action, "模型未提供 planner_plan，按顶层 action 记录。")
+
+        normalized = dict(planner_plan)
+        normalized.setdefault("stage", "event_deepening")
+        normalized.setdefault("selected_action", self._infer_selected_action(action))
+        focus = normalized.get("focus")
+        if not isinstance(focus, dict):
+            normalized["focus"] = {"type": "event", "label": str(focus or "当前经历")}
+
+        completeness = normalized.get("event_completeness")
+        if not isinstance(completeness, dict):
+            completeness = {}
+        score = completeness.get("score", 0.0)
+        try:
+            score = max(0.0, min(float(score), 1.0))
+        except (TypeError, ValueError):
+            score = 0.0
+        missing = completeness.get("missing_dimensions", [])
+        if not isinstance(missing, list):
+            missing = []
+        normalized["event_completeness"] = {
+            "score": score,
+            "missing_dimensions": [str(item) for item in missing[:8]],
+            "reason_summary": str(completeness.get("reason_summary", "") or "")[:160],
+        }
+
+        emotion = normalized.get("emotion_signal")
+        if not isinstance(emotion, dict):
+            emotion = {}
+        energy = emotion.get("energy", 0.5)
+        try:
+            energy = max(0.0, min(float(energy), 1.0))
+        except (TypeError, ValueError):
+            energy = 0.5
+        normalized["emotion_signal"] = {
+            "energy": energy,
+            "valence": str(emotion.get("valence", "neutral") or "neutral"),
+            "support_needed": bool(emotion.get("support_needed", False)),
+        }
+
+        candidates = normalized.get("candidate_actions")
+        if not isinstance(candidates, list) or not candidates:
+            candidates = [
+                {
+                    "action": normalized["selected_action"],
+                    "score": 1.0,
+                    "reason_summary": "模型只给出了最终动作。",
+                }
+            ]
+        normalized["candidate_actions"] = [
+            self._normalize_candidate_action(item)
+            for item in candidates[:4]
+            if isinstance(item, dict)
+        ] or [
+            {
+                "action": normalized["selected_action"],
+                "score": 1.0,
+                "reason_summary": "模型只给出了最终动作。",
+            }
+        ]
+        normalized.setdefault("selected_slot_or_angle", "theme")
+        normalized.setdefault("tone", "respectful_warm")
+        normalized.setdefault("question_intent", "继续推进访谈。")
+        return normalized
+
+    def _normalize_candidate_action(self, item: Dict[str, Any]) -> Dict[str, Any]:
+        score = item.get("score", 0.0)
+        try:
+            score = max(0.0, min(float(score), 1.0))
+        except (TypeError, ValueError):
+            score = 0.0
+        return {
+            "action": str(item.get("action", "") or ""),
+            "score": score,
+            "reason_summary": str(item.get("reason_summary", "") or "")[:160],
+        }
+
+    def _infer_top_level_action(self, planner_plan: Dict[str, Any]) -> str:
+        selected_action = str(planner_plan.get("selected_action", "") or "")
+        if selected_action == "end":
+            return "end"
+        if selected_action in {"switch_theme", "move_to_period", "confirm_summary"}:
+            return "next_phase"
+        return "continue"
+
+    def _infer_selected_action(self, action: str) -> str:
+        if action == "end":
+            return "end"
+        if action == "next_phase":
+            return "switch_theme"
+        return "deep_dive_event"
 
     def _build_opening_question(self, elder_profile: ElderProfile) -> str:
         background = (elder_profile.background_summary or "").strip()
         hometown = (elder_profile.hometown or "").strip()
         birth_year = elder_profile.birth_year
-        name = elder_profile.name or "您"
-
-        if any(keyword in background for keyword in ["工厂", "上班", "工作", "纺织", "车间"]):
-            return f"{name}，从您的人生经历里，年轻时工作那段日子一定很值得一提。您还记得自己刚参加工作时最难忘的一幕吗？"
-
-        if any(keyword in background for keyword in ["结婚", "家庭", "孩子", "成家", "老伴"]):
-            return f"{name}，您的人生里一定有一段和成家有关的经历特别重要。您愿意先从那件最难忘的事讲起吗？"
+        address = self._safe_opening_address(elder_profile)
 
         if hometown and birth_year:
-            return f"{name}，您是{birth_year}年出生的，又和{hometown}有很深的缘分。要是从最早记得的一段经历说起，您最先想到的是哪件事？"
+            return (
+                f"{address}，您是{birth_year}年出生的，又和{hometown}有很深的缘分。"
+                "如果从人生最早的一段清楚记忆说起，您最先想到的是哪里、什么人，或者哪一幕场景？"
+            )
 
         if birth_year:
-            return f"{name}，您是{birth_year}年出生的，走过了这么长的人生路。您愿意先从一段年轻时至今还记得很清楚的经历讲起吗？"
+            return (
+                f"{address}，您是{birth_year}年出生的，走过了这么长的人生路。"
+                "您愿意先从一段现在还记得很清楚的早年经历讲起吗？"
+            )
+
+        if hometown:
+            return (
+                f"{address}，您和{hometown}有很深的缘分。"
+                "要是从最早的家乡记忆聊起，您脑海里先浮现的是哪一幕？"
+            )
 
         if background:
-            return f"{name}，从您的人生经历里，一定有一段故事一直留在心里。您愿意先从那件最难忘的事讲起吗？"
+            return (
+                f"{address}，从您的这些人生经历里，一定有些画面一直留在心里。"
+                "您愿意先从一段最早、最清楚的记忆慢慢讲起吗？"
+            )
 
-        return f"{name}，您愿意先和我讲一段您年轻时至今还记得很清楚的具体经历吗？"
+        return f"{address}，您愿意先和我讲一段现在还记得很清楚的早年经历吗？"
+
+    @staticmethod
+    def _safe_opening_address(elder_profile: ElderProfile) -> str:
+        name = (elder_profile.name or "").strip()
+        if not name:
+            return "奶奶"
+        if name.endswith(("奶奶", "爷爷", "阿姨", "叔叔", "老师")):
+            return name
+        if len(name) <= 4:
+            return f"{name}奶奶"
+        return "奶奶"
+
+    def _is_life_overview_stage(self, recent_transcript: List[TurnRecord]) -> bool:
+        return len(recent_transcript) < LIFE_OVERVIEW_TURN_LIMIT
+
+    def _build_life_overview_guidance(self, recent_transcript: List[TurnRecord]) -> str:
+        turn_number = len(recent_transcript) + 1
+        stage_targets = [
+            "先帮助老人把人生大致分成几个阶段，优先问最早、最清楚的生活画面。",
+            "继续梳理童年/少年时期的生活环境、家人和日常，不急着追问单个细节。",
+            "引导老人说出青年时期的重要转折，例如求学、离家、参加工作或成家，但让老人自己选择最想讲的入口。",
+            "补出中年阶段的大事和责任变化，例如家庭、工作、迁居、社会变化对生活的影响。",
+            "询问一两个老人认为最重要的人，建立人物画像和关系脉络。",
+            "询问人生中最困难或最有转折意义的阶段，重点收集阶段名和影响，不做创伤式深挖。",
+            "询问老人最自豪、最欣慰或最想被记住的一面，用于形成自我评价。",
+            "请老人回看一生，概括自己是什么样的人、哪些价值观最重要，再决定后续深挖方向。",
+        ]
+        target = stage_targets[min(turn_number - 1, len(stage_targets) - 1)]
+        return (
+            "当前处于【人生脉络梳理阶段】（建议前 5-10 轮）。\n"
+            "目标：先建立粗粒度人生地图，包括人生阶段、大事节点、关键人物、自我评价和价值观，"
+            "供后续主题规划、人物画像和动态 profile 更新使用。\n"
+            f"本轮建议：{target}\n"
+            "提问方式：礼貌寒暄后给老人选择空间；问题可以稍宽，但必须只问一个问题。\n"
+            "避免：一上来因为背景中出现“工作/工厂/家庭”等关键词就直接深挖该主题；避免像填表一样连续追槽位。"
+        )
 
     def _build_basic_info_text(self, elder_profile: ElderProfile) -> str:
         parts = []

@@ -1,0 +1,75 @@
+{
+  "experiment_id": "planner_cot_tool_ablation",
+  "goal": "比较 Planner COT 工作流、结构化 planner_plan、轻量工具和图谱增强工具对下一问决策的影响。",
+  "fixed_conditions": {
+    "interviewer_agent": "single_agent_planner_cot",
+    "output_schema": "planner_plan + action + question",
+    "max_turns": 10,
+    "recommended_mode": "compare_ai_single_turn_or_batch"
+  },
+  "variants": [
+    {
+      "name": "cot_plan_no_tools",
+      "description": "只使用内部 Planner 工作流和 planner_plan，不允许工具调用，用于衡量提示词和结构化摘要的独立收益。",
+      "env": {
+        "PLANNER_TOOLS_ENABLED": "false"
+      },
+      "expected_behavior": {
+        "tool_trace_count": 0,
+        "planner_plan_required": true
+      }
+    },
+    {
+      "name": "cot_plan_light_tools",
+      "description": "允许轻量上下文工具，主要查看主题覆盖、当前焦点、事件完整度和开放线索。",
+      "env": {
+        "PLANNER_TOOLS_ENABLED": "true",
+        "PLANNER_MAX_TOOL_ROUNDS": "1",
+        "PLANNER_MAX_TOOLS_PER_ROUND": "2"
+      },
+      "tool_scope": [
+        "get_theme_coverage",
+        "get_current_focus_snapshot",
+        "assess_event_completeness",
+        "retrieve_related_context",
+        "detect_open_loops_and_conflicts"
+      ]
+    },
+    {
+      "name": "cot_plan_graph_tools",
+      "description": "在 Neo4j 可用时额外开放实体邻域、实体搜索、模式检测、图谱摘要和主题详情。",
+      "env": {
+        "PLANNER_TOOLS_ENABLED": "true",
+        "PLANNER_MAX_TOOL_ROUNDS": "2",
+        "PLANNER_MAX_TOOLS_PER_ROUND": "2",
+        "NEO4J_ENABLED": "true"
+      },
+      "tool_scope": [
+        "get_entity_context",
+        "query_graph_entities",
+        "detect_graph_patterns",
+        "get_graph_summary",
+        "get_theme_detail"
+      ]
+    }
+  ],
+  "metrics": [
+    "planner_plan_parse_success_rate",
+    "tool_trace_count",
+    "tool_influence_rate",
+    "life_overview_progress",
+    "premature_deep_dive_rate",
+    "abrupt_switch_rate",
+    "event_completeness_delta",
+    "average_information_gain",
+    "average_turn_quality",
+    "planner_latency_ms"
+  ],
+  "manual_review_questions": [
+    "前 5-10 轮是否先建立了人生阶段和大事脉络？",
+    "Planner 是否因为图谱工具结果而改变 selected_action？",
+    "工具调用是否减少突兀跳转，还是导致问题变得机械？",
+    "event_completeness 的 missing_dimensions 是否与实际回答一致？",
+    "question 是否服从 planner_plan.question_intent？"
+  ]
+}
