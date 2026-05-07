@@ -153,6 +153,31 @@ class TestGraphRAGPipeline(unittest.TestCase):
         self.assertEqual(manager.driver.nodes[event_id]["theme_id"], "THEME_01_LIFE_CHAPTERS")
         self.assertIn(("THEME_01_LIFE_CHAPTERS", event_id, "INCLUDES", {}), manager.driver.edges)
 
+    def test_graph_writer_counts_deterministic_upsert_as_update(self):
+        manager = FakeNeo4jManager()
+        writer = GraphWriter(
+            manager,
+            FakeVectorStore(),
+            embedding_service=FakeEmbeddingService(),
+        )
+        extraction = GraphExtraction(
+            entities=[
+                ExtractedEntity(
+                    entity_type="Event",
+                    name="住院手术",
+                    description="那年我在医院做了一次手术。",
+                )
+            ],
+            confidence=0.8,
+        )
+
+        first = writer.write_extraction(extraction, "session_1", "elder_1")
+        second = writer.write_extraction(extraction, "session_1", "elder_1")
+
+        self.assertEqual(first.new_entity_count, 1)
+        self.assertEqual(second.new_entity_count, 0)
+        self.assertEqual(second.updated_entity_count, 1)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -24,12 +24,18 @@ class PlannerInterviewAgent:
     existing Flask compare endpoints can keep working unchanged.
     """
 
-    def __init__(self, session_id: str | None = None, decision_weights: Optional[Any] = None):
+    def __init__(
+        self,
+        session_id: str | None = None,
+        decision_weights: Optional[Any] = None,
+        reset_graph_on_start: bool = False,
+    ):
         self.session_id = session_id or datetime.now().strftime("%Y%m%d_%H%M%S")
         self.orchestrator = SessionOrchestrator(
             self.session_id,
             mode="planner",
             decision_weights=decision_weights,
+            reset_graph_on_start=reset_graph_on_start,
         )
         self._initialized = False
 
@@ -65,8 +71,17 @@ class PlannerInterviewAgent:
 class PlannerInterviewAgentSync:
     """Synchronous adapter for Flask handlers."""
 
-    def __init__(self, session_id: str | None = None, decision_weights: Optional[Any] = None):
-        self.async_agent = PlannerInterviewAgent(session_id, decision_weights=decision_weights)
+    def __init__(
+        self,
+        session_id: str | None = None,
+        decision_weights: Optional[Any] = None,
+        reset_graph_on_start: bool = False,
+    ):
+        self.async_agent = PlannerInterviewAgent(
+            session_id,
+            decision_weights=decision_weights,
+            reset_graph_on_start=reset_graph_on_start,
+        )
         self.loop = asyncio.new_event_loop()
         asyncio.set_event_loop(self.loop)
 
