@@ -3434,16 +3434,22 @@ COMPARE_HTML = '''<!DOCTYPE html>
                 container.innerHTML = '<p class="no-events">暂无事件</p>';
                 return;
             }
+            const typeIcons = {Event:'📌', Person:'👤', Location:'📍', Emotion:'💭', Insight:'💡'};
             container.innerHTML = `
-                <h4>共 ${events.length} 个事件</h4>
+                <h4>共 ${events.length} 个实体</h4>
                 <div class="event-list">
-                    ${events.slice(-10).reverse().map(e => `
+                    ${events.slice(-15).reverse().map(e => {
+                        const icon = typeIcons[e.entity_type] || '📌';
+                        const title = e.name || e.slots?.event || e.event || "未知";
+                        const desc = e.description ? e.description.slice(0, 50) : '';
+                        return `
                         <div class="event-item">
-                            <span class="event-icon">📌</span>
-                            <span class="event-title">${e.slots?.event || e.event || "未知事件"}</span>
-                            <span class="event-confidence">${Math.round((e.confidence || 0) * 100)}%</span>
-                        </div>
-                    `).join('')}
+                            <span class="event-icon">${icon}</span>
+                            <span class="event-title">${title}</span>
+                            ${e.entity_type ? `<span style="font-size:11px;color:#9ca3af;margin-left:4px">${e.entity_type}</span>` : ''}
+                            ${desc ? `<div style="font-size:11px;color:#6b7280;margin-left:24px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${desc}</div>` : ''}
+                        </div>`;
+                    }).join('')}
                 </div>
             `;
         }
