@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "动态事件图谱可视化工具 - 叙事导航者",
   "private": true,
+  "packageManager": "pnpm@9.15.9",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
