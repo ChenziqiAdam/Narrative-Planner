@@ -68,10 +68,13 @@ class HybridRetriever:
         t0 = time.monotonic()
 
         # 1. Vector search (always available — in-memory FAISS)
+        channel_errors: Dict[str, str] = {}
+
         try:
             vector_results = self._vector_search(query)
-        except Exception:
+        except Exception as exc:
             logger.warning("Vector search failed, continuing without it", exc_info=True)
+            channel_errors["vector"] = str(exc)
             vector_results = []
 
         # 2. Graph expansion from top vector hits
@@ -80,15 +83,17 @@ class HybridRetriever:
             seed_ids = [r.entity_id for r in vector_results[:3]]
             if seed_ids:
                 graph_results = self._graph_expand(seed_ids)
-        except Exception:
+        except Exception as exc:
             logger.warning("Graph expand failed, continuing without it", exc_info=True)
+            channel_errors["graph"] = str(exc)
 
         # 3. Full-text search (requires Neo4j)
         fulltext_results: List[ScoredEntity] = []
         try:
-            fulltext_results = self._fulltext_search(query)
-        except Exception:
+            fulltext_results = self._fulltext_search(query, session_id=session_id)
+        except Exception as exc:
             logger.warning("Fulltext search failed, continuing without it", exc_info=True)
+            channel_errors["fulltext"] = str(exc)
 
         # 4. Merge and rank with RRF
         ranked = self._merge_and_rank(vector_results, graph_results, fulltext_results)
@@ -108,6 +113,29 @@ class HybridRetriever:
             prompt_text=prompt_text,
             token_count=token_count,
             latency_ms=latency_ms,
+            trace={
+                "query_length": len(query or ""),
+                "session_id": session_id,
+                "channel_counts": {
+                    "vector": len(vector_results),
+                    "graph": len(graph_results),
+                    "fulltext": len(fulltext_results),
+                    "ranked": len(ranked),
+                },
+                "channel_errors": channel_errors,
+                "prompt_empty": not bool(prompt_text),
+                "prompt_length": len(prompt_text),
+                "top_entities": [
+                    {
+                        "entity_id": entity.entity_id,
+                        "entity_type": entity.entity_type,
+                        "name": entity.name,
+                        "combined_score": round(entity.combined_score, 6),
+                        "sources": list(entity.sources),
+                    }
+                    for entity in ranked[:5]
+                ],
+            },
         )
 
     # ------------------------------------------------------------------
@@ -119,11 +147,15 @@ class HybridRetriever:
         hits = self._vector_store.search_by_text(query, top_k=top_k)
         results: List[ScoredEntity] = []
         for entity_id, entity_type, score in hits:
+            hydrated = self._hydrate_entity(entity_id)
+            hydrated_type = hydrated.get("type") or hydrated.get("entity_type") or entity_type
+            name = hydrated.get("name") or entity_id
+            description = hydrated.get("description") or hydrated.get("rich_text") or ""
             results.append(ScoredEntity(
                 entity_id=entity_id,
-                entity_type=entity_type,
-                name=entity_id,  # name not returned by search_by_text
-                description="",
+                entity_type=hydrated_type,
+                name=name,
+                description=description,
                 score=score,
             ))
         return results
@@ -178,6 +210,7 @@ class HybridRetriever:
                         entity_id=nb_id,
                         entity_type=nb.get("type", "Entity"),
                         name=nb.get("name", nb_id),
+                        description=nb.get("description", ""),
                         relationship_path=path_desc,
                         hop_distance=hop,
                     ))
@@ -188,10 +221,10 @@ class HybridRetriever:
     # Channel 3: Full-text search (Neo4j fulltext index)
     # ------------------------------------------------------------------
 
-    def _fulltext_search(self, query: str, top_k: int = 5) -> List[ScoredEntity]:
+    def _fulltext_search(self, query: str, top_k: int = 5, session_id: str = "") -> List[ScoredEntity]:
         """Keyword search via Neo4j fulltext index."""
         driver = self._neo4j.driver
-        rows = driver.fulltext_search(query, top_k=top_k)
+        rows = driver.fulltext_search(query, top_k=top_k, session_id=session_id)
         results: List[ScoredEntity] = []
         for row in (rows or []):
             results.append(ScoredEntity(
@@ -235,7 +268,7 @@ class HybridRetriever:
         sorted_graph = sorted(graph_results, key=lambda e: e.hop_distance)
         for rank, entity in enumerate(sorted_graph):
             eid = entity.entity_id
-            _ensure(eid, entity.entity_type, entity.name, "")
+            _ensure(eid, entity.entity_type, entity.name, entity.description)
             entity_scores[eid] = entity_scores.get(eid, 0.0) + self.beta / (_RRF_K + rank + 1)
             entity_sources[eid].add("graph")
 
@@ -261,6 +294,24 @@ class HybridRetriever:
 
         ranked.sort(key=lambda e: e.combined_score, reverse=True)
         return ranked
+
+    def _hydrate_entity(self, entity_id: str) -> Dict[str, str]:
+        """Fetch display fields for an entity ID from Neo4j when available."""
+        if not entity_id:
+            return {}
+        driver = getattr(self._neo4j, "driver", None)
+        if driver is None:
+            return {}
+        try:
+            if hasattr(driver, "get_node"):
+                node = driver.get_node(entity_id)
+                return dict(node or {})
+            if hasattr(self._neo4j, "get_node_by_id"):
+                node = self._neo4j.get_node_by_id(entity_id)
+                return dict(node or {})
+        except Exception:
+            logger.debug("Failed to hydrate entity %s", entity_id, exc_info=True)
+        return {}
 
     # ------------------------------------------------------------------
     # Prompt formatting

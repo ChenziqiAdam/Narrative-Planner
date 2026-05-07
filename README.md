@@ -76,7 +76,7 @@ cd frontend && pnpm install && pnpm dev
 | 服务 | 端口 | 用途 |
 |------|------|------|
 | FastAPI | `http://localhost:8000` | 主 API + WebSocket |
-| Flask | `http://localhost:9999` | 对比调试界面 |
+| Flask | `http://localhost:9999/compare` | 对比调试界面 | (不加compare只有baseline agent)
 | React | `http://localhost:3000` | 前端主界面 |
 | Neo4j Browser | `http://localhost:7474` | 图数据库管理 |
 | Neo4j Bolt | `bolt://localhost:7687` | 图数据库连接 |

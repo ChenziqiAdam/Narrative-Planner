@@ -326,6 +326,7 @@ class Neo4jGraphDriver:
         text: str,
         entity_type: Optional[str] = None,
         max_results: int = 10,
+        session_id: str = "",
     ) -> List[Dict[str, Any]]:
         where_clauses = [
             "(toLower(n.name) CONTAINS toLower($text) OR "
@@ -333,6 +334,8 @@ class Neo4jGraphDriver:
         ]
         if entity_type:
             where_clauses.append("n.type = $entity_type")
+        if session_id:
+            where_clauses.append("(n.session_id = $session_id OR n:Topic)")
         where_str = " AND ".join(where_clauses)
 
         query = f"""
@@ -345,6 +348,8 @@ class Neo4jGraphDriver:
         params: Dict[str, Any] = {"text": text, "max_results": max_results}
         if entity_type:
             params["entity_type"] = entity_type
+        if session_id:
+            params["session_id"] = session_id
         result = self.execute_query(query, params)
         return result or []
 
@@ -353,26 +358,31 @@ class Neo4jGraphDriver:
         query_text: str,
         top_k: int = 10,
         label_filter: Optional[str] = None,
+        session_id: str = "",
     ) -> List[Dict[str, Any]]:
         """Search using the full-text index."""
         label_clause = ""
         if label_filter:
             label_clause = f" AND labels(n) CONTAINS '{label_filter}'"
+        session_clause = ""
+        if session_id:
+            session_clause = " AND (n.session_id = $session_id OR n:Topic)"
         query = f"""
         CALL db.index.fulltext.queryNodes('entity_text_index', $query)
         YIELD node AS n, score
-        WHERE 1=1 {label_clause}
+        WHERE 1=1 {label_clause} {session_clause}
         RETURN n.id AS id, labels(n)[0] AS entity_type, n.name AS name,
                n.description AS description, score
         ORDER BY score DESC
         LIMIT $top_k
         """
-        result = self.execute_query(
-            query, {"query": query_text, "top_k": top_k}
-        )
+        params: Dict[str, Any] = {"query": query_text, "top_k": top_k}
+        if session_id:
+            params["session_id"] = session_id
+        result = self.execute_query(query, params)
         if result is None:
             # Fallback to basic text search if fulltext index not available
-            return self.query_by_text_similarity(query_text, label_filter, top_k)
+            return self.query_by_text_similarity(query_text, label_filter, top_k, session_id=session_id)
         return result
 
     def vector_search(

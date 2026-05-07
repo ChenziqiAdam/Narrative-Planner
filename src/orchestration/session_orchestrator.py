@@ -17,6 +17,7 @@ from src.orchestration.state_store import InMemorySessionStateStore
 from src.services import ProfileProjector
 from src.services.entity_vector_store import EntityVectorStore
 from src.services.graph_coverage import GraphCoverageCalculator
+from src.services.graph_rag_metrics import build_graph_rag_metrics
 from src.services.graph_rag_decision_context import GraphRAGDecisionContextBuilder
 from src.services.graph_writer import GraphWriter
 from src.services.hybrid_retriever import HybridRetriever
@@ -47,6 +48,7 @@ class SessionOrchestrator:
         profile_projector: Optional[ProfileProjector] = None,
         mode: Optional[str] = None,
         decision_weights: Optional[Any] = None,
+        reset_graph_on_start: bool = False,
     ):
         self.session_id = session_id
         self.store = store or InMemorySessionStateStore()
@@ -56,6 +58,7 @@ class SessionOrchestrator:
         self.mode = "graph_rag"
         self._legacy_mode = mode
         self._decision_weights = decision_weights
+        self._reset_graph_on_start = bool(reset_graph_on_start)
 
         # Neo4j graph manager (lazy connect)
         self._neo4j_manager: Optional[Neo4jGraphManager] = None
@@ -134,6 +137,10 @@ class SessionOrchestrator:
         _t1 = time.perf_counter()
         try:
             neo4j = self._get_neo4j_manager()
+            if self._reset_graph_on_start:
+                reset_result = neo4j.reset_interview_graph(preserve_topics=True)
+                state.metadata["graph_reset_on_start"] = reset_result
+                logger.info("[init] graph reset: %s", reset_result)
             neo4j.sync_themes_to_neo4j()
         except Exception:
             logger.debug("Neo4j theme sync skipped", exc_info=True)
@@ -186,18 +193,13 @@ class SessionOrchestrator:
         )
         current_interviewer_action = state.pending_action or "continue"
 
-        # ── Hybrid retrieval ──
-        _t = time.perf_counter()
-        graph_rag_retrieval = self._get_hybrid_retriever().retrieve(
-            user_response, self.session_id
-        )
-        _retrieval_ms = (time.perf_counter() - _t) * 1000
-        _graph_rag_context = graph_rag_retrieval.prompt_text
-
         # ── Graph extraction ──
+        # The current answer is extracted first, then written to the graph.
+        # Planner retrieval happens after the write so the next question can
+        # use freshly committed GraphRAG evidence.
         _t = time.perf_counter()
         graph_extraction = await self._graph_extraction_agent.extract(
-            state, turn_record, graph_context=_graph_rag_context,
+            state, turn_record, graph_context=None,
             neo4j_manager=self._get_neo4j_manager(),
         )
         _extraction_ms = (time.perf_counter() - _t) * 1000
@@ -252,6 +254,12 @@ class SessionOrchestrator:
         state.transcript.append(turn_record)
         state.theme_state = self._build_theme_state_from_neo4j()
 
+        # ── Planner retrieval from the updated graph ──
+        graph_rag_retrieval = self._get_hybrid_retriever().retrieve(
+            user_response, self.session_id
+        )
+        _graph_rag_context = graph_rag_retrieval.prompt_text
+
         # ── Build decision context and generate next question ──
         decision_ctx = self._get_decision_context_builder().build(
             state, graph_extraction, _graph_rag_context,
@@ -268,12 +276,20 @@ class SessionOrchestrator:
             ),
         )
         planner_plan = generated.get("planner_plan", {})
+        graph_rag_metrics = build_graph_rag_metrics(
+            extraction=graph_extraction,
+            write_result=write_result,
+            planner_retrieval=graph_rag_retrieval,
+            decision_ctx=decision_ctx,
+            extraction_ms=_extraction_ms,
+            write_ms=_write_ms,
+        )
 
         self._update_generation_metadata(state, generated, turn_record.interviewer_question)
         turn_debug_trace = {
             "extraction_ms": _extraction_ms,
             "write_ms": _write_ms,
-            "retrieval_ms": _retrieval_ms,
+            "retrieval_ms": graph_rag_retrieval.latency_ms,
             "pipeline": "graph_rag",
             "graph_changes": graph_changes,
             "decision_ctx": {
@@ -283,6 +299,7 @@ class SessionOrchestrator:
             },
             "planning": self._build_planning_trace(generated),
             "planner_plan": planner_plan,
+            "graph_rag_metrics": graph_rag_metrics,
             "tool_trace": generated.get("tool_trace", []),
         }
         turn_record.debug_trace = turn_debug_trace
@@ -319,6 +336,7 @@ class SessionOrchestrator:
             },
             "session_metrics": state.session_metrics.to_dict() if state.session_metrics else {},
             "planner_plan": planner_plan,
+            "graph_rag_metrics": graph_rag_metrics,
             "debug_trace": turn_debug_trace,
             "extracted_events": [e.to_dict() for e in graph_extraction.entities],
         }

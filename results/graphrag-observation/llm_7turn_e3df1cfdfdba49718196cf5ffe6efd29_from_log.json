@@ -1,0 +1,349 @@
+{
+  "summary": {
+    "session_id": "e3df1cfdfdba49718196cf5ffe6efd29",
+    "turns": 7,
+    "source_log": "/Users/oier/Downloads/Narrative-Planner/logs/interviews/planner/planner_e3df1cfdfdba49718196cf5ffe6efd29_20260508_032447_turns.jsonl",
+    "metrics_present_rate": 1.0,
+    "retrieval_nonempty_rate": 1.0,
+    "total_new_entities": 44,
+    "total_updated_entities": 2,
+    "total_relationships": 30,
+    "avg_ranked_entities": 19.71,
+    "final_coverage": 0.0
+  },
+  "turns": [
+    {
+      "turn": 1,
+      "has_graph_rag_metrics": true,
+      "event_count": 1,
+      "entity_count": 6,
+      "open_loops_count": 1,
+      "new_entity_count": 6,
+      "updated_entity_count": 0,
+      "relationship_count": 5,
+      "retrieval_context_empty": false,
+      "ranked_entity_count": 8,
+      "top_entities": [
+        {
+          "entity_id": "emotion_ab2a8c89c49e",
+          "entity_type": "Emotion",
+          "name": "心头暖烘烘",
+          "combined_score": 0.015807,
+          "sources": [
+            "fulltext",
+            "graph",
+            "vector"
+          ]
+        },
+        {
+          "entity_id": "person_67301f4b528d",
+          "entity_type": "Person",
+          "name": "母亲",
+          "combined_score": 0.012454,
+          "sources": [
+            "graph",
+            "vector"
+          ]
+        },
+        {
+          "entity_id": "person_d5ec91174cca",
+          "entity_type": "Person",
+          "name": "陈秀英",
+          "combined_score": 0.011423,
+          "sources": [
+            "fulltext",
+            "vector"
+          ]
+        }
+      ],
+      "overall_coverage": 0.0,
+      "question": "李建国奶奶，您是1948年出生的，又和江苏扬州有很深的缘分。如果从人生最早的一段清楚记忆说起，您最先想到的是哪里、什么人，或者哪一幕场景？",
+      "answer": "哎哟，你说的啥子嘛，你是不是把人搞错了哦？我不叫李建国，我姓陈，叫陈秀英。我也不是1948年出生的，我是1942年的，今年都82岁了。还有嘛，我不是江苏扬州人，我是四川成都人，土生土长的成都人。\n\n你说的那个李建国，应该是个男的嘛？而且比我小好几岁呢。你是不是在做啥子访谈记录，把人搞混了？\n\n不过嘛，你问我最早的记忆，"
+    },
+    {
+      "turn": 2,
+      "has_graph_rag_metrics": true,
+      "event_count": 0,
+      "entity_count": 3,
+      "open_loops_count": 1,
+      "new_entity_count": 2,
+      "updated_entity_count": 1,
+      "relationship_count": 2,
+      "retrieval_context_empty": false,
+      "ranked_entity_count": 9,
+      "top_entities": [
+        {
+          "entity_id": "emotion_9f22b06acc9d",
+          "entity_type": "Emotion",
+          "name": "对访谈者的理解",
+          "combined_score": 0.015826,
+          "sources": [
+            "fulltext",
+            "graph",
+            "vector"
+          ]
+        },
+        {
+          "entity_id": "event_07142763825f",
+          "entity_type": "Event",
+          "name": "童年家中避雨",
+          "combined_score": 0.015735,
+          "sources": [
+            "fulltext",
+            "graph",
+            "vector"
+          ]
+        },
+        {
+          "entity_id": "person_d5ec91174cca",
+          "entity_type": "Person",
+          "name": "陈秀英",
+          "combined_score": 0.011423,
+          "sources": [
+            "fulltext",
+            "vector"
+          ]
+        }
+      ],
+      "overall_coverage": 0.0,
+      "question": "那时候除了爸爸妈妈，家里还有其他人吗？您有没有兄弟姐妹，或者和您一起玩耍的邻居小伙伴？",
+      "answer": "哎哟，年轻人，你是不是又搞错了哦？我还是那个陈秀英嘛，不是李建国，你咋个又这样喊我喃？我是成都的陈婆婆，不是扬州的李爷爷哈。\n\n不过算了，你问的问题我听得懂，是想问我小时候家里还有啥子人，有没有兄弟姐妹，对吧？这个我记得，让我想想嘛..."
+    },
+    {
+      "turn": 3,
+      "has_graph_rag_metrics": true,
+      "event_count": 3,
+      "entity_count": 8,
+      "open_loops_count": 1,
+      "new_entity_count": 7,
+      "updated_entity_count": 1,
+      "relationship_count": 6,
+      "retrieval_context_empty": false,
+      "ranked_entity_count": 18,
+      "top_entities": [
+        {
+          "entity_id": "person_4001037593df",
+          "entity_type": "Person",
+          "name": "小花",
+          "combined_score": 0.015415,
+          "sources": [
+            "fulltext",
+            "graph",
+            "vector"
+          ]
+        },
+        {
+          "entity_id": "person_bb0ef7ea7977",
+          "entity_type": "Person",
+          "name": "姐姐",
+          "combined_score": 0.01204,
+          "sources": [
+            "graph",
+            "vector"
+          ]
+        },
+        {
+          "entity_id": "location_49c1e44cbc8d",
+          "entity_type": "Location",
+          "name": "灌县街",
+          "combined_score": 0.01129,
+          "sources": [
+            "fulltext",
+            "vector"
+          ]
+        }
+      ],
+      "overall_coverage": 0.0,
+      "question": "陈婆婆您慢慢想，不着急。那后来呢？您小时候有没有一起玩耍的小伙伴？再后来长大一些，您是在成都这边上学、工作吗？",
+      "answer": "哎哟，年轻人，你又来了嘛！我跟你说了我不是李建国，我是陈秀英，陈婆婆！你是咋个回事哦，一直在那儿李建国李建国的，我都跟你说了两遍了，你是不是没听进去哦？\n\n算了算了，我看你是做访谈做昏头了。我再跟你说一遍哈，我叫陈秀英，1942年生，成都人，以前在纺织厂工作的。你记到咯，不要再喊错了，不然我都要生气了哈。\n\n你问我小时"
+    },
+    {
+      "turn": 4,
+      "has_graph_rag_metrics": true,
+      "event_count": 3,
+      "entity_count": 7,
+      "open_loops_count": 2,
+      "new_entity_count": 7,
+      "updated_entity_count": 0,
+      "relationship_count": 3,
+      "retrieval_context_empty": false,
+      "ranked_entity_count": 33,
+      "top_entities": [
+        {
+          "entity_id": "event_49d548cf7a13",
+          "entity_type": "Event",
+          "name": "结婚",
+          "combined_score": 0.015285,
+          "sources": [
+            "fulltext",
+            "graph",
+            "vector"
+          ]
+        },
+        {
+          "entity_id": "person_dae983c9fb5d",
+          "entity_type": "Person",
+          "name": "老二",
+          "combined_score": 0.012454,
+          "sources": [
+            "graph",
+            "vector"
+          ]
+        },
+        {
+          "entity_id": "event_7fe6dece6abd",
+          "entity_type": "Event",
+          "name": "生子",
+          "combined_score": 0.011475,
+          "sources": [
+            "fulltext",
+            "vector"
+          ]
+        }
+      ],
+      "overall_coverage": 0.0,
+      "question": "陈婆婆，您在纺织厂一干就是35年，这中间的人生大事呢——后来成了家吗？有没有娃儿？",
+      "answer": "哎呀，你问这个嘛...让我想想哈。\n\n我肯定是成了家的嘛，我们那会儿，二十多岁不出嫁，人家都要说闲话的。我在纺织厂干了35年，这中间嘛，结婚、生娃儿，日子就那么过来了。\n\n我有三个娃儿，老大是儿子，今年52岁了，开出租车的；老二是个女儿，49岁，在重庆当老师；老幺也是个儿子，46岁，在深圳做程序员。三个娃儿，各有各的本"
+    },
+    {
+      "turn": 5,
+      "has_graph_rag_metrics": true,
+      "event_count": 1,
+      "entity_count": 6,
+      "open_loops_count": 2,
+      "new_entity_count": 6,
+      "updated_entity_count": 0,
+      "relationship_count": 5,
+      "retrieval_context_empty": false,
+      "ranked_entity_count": 25,
+      "top_entities": [
+        {
+          "entity_id": "insight_11387478d7f5",
+          "entity_type": "Insight",
+          "name": "知足的人生态度",
+          "combined_score": 0.012308,
+          "sources": [
+            "graph",
+            "vector"
+          ]
+        },
+        {
+          "entity_id": "event_53343351cb57",
+          "entity_type": "Event",
+          "name": "退休生活",
+          "combined_score": 0.011475,
+          "sources": [
+            "fulltext",
+            "vector"
+          ]
+        },
+        {
+          "entity_id": "emotion_4875ce7f70ac",
+          "entity_type": "Emotion",
+          "name": "偶尔觉得闷",
+          "combined_score": 0.008065,
+          "sources": [
+            "vector"
+          ]
+        }
+      ],
+      "overall_coverage": 0.0,
+      "question": "陈婆婆，您从纺织厂退休之后，这二三十年是怎么过的呢？平时喜欢做点啥子？",
+      "answer": "哎呀，我退休都二十多年咯，日子嘛，过得简单。我是55岁从纺织厂退下来的，那会儿2002年左右嘛，具体哪年我记不清了。\n\n退了以后，一开始还不习惯，天天早上还是六点钟就醒了，跟上班一个样。后来嘛，慢慢就适应了。现在我每天就是早上爬起来弄早饭，吃了去菜市场买菜，回来收拾收拾屋子。上午有时候去公园走走，有时候就在屋头看看电视"
+    },
+    {
+      "turn": 6,
+      "has_graph_rag_metrics": true,
+      "event_count": 4,
+      "entity_count": 11,
+      "open_loops_count": 2,
+      "new_entity_count": 11,
+      "updated_entity_count": 0,
+      "relationship_count": 9,
+      "retrieval_context_empty": false,
+      "ranked_entity_count": 13,
+      "top_entities": [
+        {
+          "entity_id": "event_a065408767be",
+          "entity_type": "Event",
+          "name": "在纺织厂工作35年",
+          "combined_score": 0.015956,
+          "sources": [
+            "fulltext",
+            "graph",
+            "vector"
+          ]
+        },
+        {
+          "entity_id": "emotion_dc28437a4106",
+          "entity_type": "Emotion",
+          "name": "辛苦但值得",
+          "combined_score": 0.011274,
+          "sources": [
+            "fulltext",
+            "vector"
+          ]
+        },
+        {
+          "entity_id": "event_7fe6dece6abd",
+          "entity_type": "Event",
+          "name": "生子",
+          "combined_score": 0.010971,
+          "sources": [
+            "fulltext",
+            "vector"
+          ]
+        }
+      ],
+      "overall_coverage": 0.0,
+      "question": "您在纺织厂工作的时候，一边拉扯三个孩子，那时候家里的日子是怎样的？能和我分享一些那时候的温馨故事吗？",
+      "answer": "哎哟，说起我们那会儿嘛...真是一言难尽。我在纺织厂干了35年，生了三个娃儿，拉扯大不容易哦。\n\n那会儿我年轻，在车间里挡车，三班倒，有时候上夜班，白天回来还要带娃娃。我大儿子是74年生的，我虚岁都32了才生他。老二女儿77年，老三80年。那时候计划生育开始严了，我生完老三还差点被拉去结扎，吓得我不敢再生了。\n\n你说日"
+    },
+    {
+      "turn": 7,
+      "has_graph_rag_metrics": true,
+      "event_count": 5,
+      "entity_count": 5,
+      "open_loops_count": 4,
+      "new_entity_count": 5,
+      "updated_entity_count": 0,
+      "relationship_count": 0,
+      "retrieval_context_empty": false,
+      "ranked_entity_count": 32,
+      "top_entities": [
+        {
+          "entity_id": "event_c2de8068f2da",
+          "entity_type": "Event",
+          "name": "瓦片房里的皂角香",
+          "combined_score": 0.012224,
+          "sources": [
+            "graph",
+            "vector"
+          ]
+        },
+        {
+          "entity_id": "event_9e8fb205a355",
+          "entity_type": "Event",
+          "name": "三个娃儿的妈",
+          "combined_score": 0.011239,
+          "sources": [
+            "fulltext",
+            "vector"
+          ]
+        },
+        {
+          "entity_id": "event_53343351cb57",
+          "entity_type": "Event",
+          "name": "退休生活",
+          "combined_score": 0.008197,
+          "sources": [
+            "vector"
+          ]
+        }
+      ],
+      "overall_coverage": 0.0,
+      "question": "陈婆婆，听您讲了这么多，从灌县街的童年，到纺织厂拉扯三个孩子，再到现在退休养花听川剧……如果让您把这一辈子比作一本书，您觉得能分成几个章节？每个章节您会取什么名字呢？",
+      "answer": "哎呀，你这个问题问得...让我想想嘛，把我这一辈子比作一本书...（沉默片刻）\n\n我觉得嘛，可以分成四章。\n\n**第一章，我想叫它'瓦片房里的皂角香'。** 这就是我小时候，在灌县街的日子。那会儿虽然穷，房子漏雨，但是我妈把我裹在怀里，她身上那股子皂角味道，我到现在都记得。这一章就是讲我咋个长大的，跟我姐姐弟弟一起，跟"
+    }
+  ]
+}

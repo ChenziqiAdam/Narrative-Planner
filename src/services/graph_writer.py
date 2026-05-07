@@ -96,11 +96,20 @@ class GraphWriter:
                     result.deduplicated_count += 1
                     result.updated_entity_count += 1
                 else:
+                    deterministic_id = self._generate_entity_id(
+                        entity.entity_type,
+                        entity.name,
+                        namespace=elder_id or session_id,
+                    )
+                    already_exists = self._node_exists(deterministic_id)
                     node_id = self._upsert_entity(
                         entity, session_id, elder_id, embedding
                     )
                     if node_id:
-                        result.new_entity_count += 1
+                        if already_exists:
+                            result.updated_entity_count += 1
+                        else:
+                            result.new_entity_count += 1
 
                 if node_id:
                     result.entity_ids.append(node_id)
@@ -178,7 +187,11 @@ class GraphWriter:
 
         Returns the Neo4j node ID, or ``None`` on failure.
         """
-        node_id = self._generate_entity_id(entity.entity_type, entity.name)
+        node_id = self._generate_entity_id(
+            entity.entity_type,
+            entity.name,
+            namespace=elder_id or session_id,
+        )
         theme_id = ""
         if entity.entity_type == "Event":
             theme_id = self._resolve_event_theme(entity, embedding)
@@ -367,6 +380,15 @@ class GraphWriter:
         except Exception:
             return False
 
+    def _node_exists(self, node_id: str) -> bool:
+        try:
+            driver = getattr(self._neo4j, "driver", None)
+            if driver is not None and hasattr(driver, "node_exists"):
+                return bool(driver.node_exists(node_id))
+        except Exception:
+            logger.debug("Node existence check failed for %s", node_id, exc_info=True)
+        return False
+
     def _link_event_to_theme(self, theme_id: str, event_id: str) -> None:
         try:
             self._neo4j.add_event_to_topic(theme_id, event_id)
@@ -389,7 +411,7 @@ class GraphWriter:
         return arr / norm
 
     @staticmethod
-    def _generate_entity_id(entity_type: str, name: str) -> str:
+    def _generate_entity_id(entity_type: str, name: str, namespace: str = "") -> str:
         """Generate a stable, deterministic ID from entity type and name."""
-        raw = f"{entity_type}:{name}"
+        raw = f"{namespace}:{entity_type}:{name}" if namespace else f"{entity_type}:{name}"
         return f"{entity_type.lower()}_{hashlib.sha256(raw.encode()).hexdigest()[:12]}"
