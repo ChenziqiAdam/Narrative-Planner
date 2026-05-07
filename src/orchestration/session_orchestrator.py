@@ -647,34 +647,18 @@ class SessionOrchestrator:
     # ── Utility methods ──
 
     def _build_dynamic_profile_hint(self, state: SessionState) -> Dict[str, Any]:
+        from src.services.graph_rag_decision_context import GraphRAGDecisionContextBuilder
+
         profile = state.dynamic_profile
         if not profile:
             return {}
-        sections: Dict[str, Dict[str, Dict[str, Any]]] = {}
-        for section_name in (
-            "core_identity_and_personality",
-            "current_life_status",
-            "family_situation",
-            "life_views_and_attitudes",
-        ):
-            section = getattr(profile, section_name, {})
-            compact_fields: Dict[str, Dict[str, Any]] = {}
-            for field_name, field in section.items():
-                if not field or field.value in (None, "", []):
-                    continue
-                compact_fields[field_name] = {
-                    "value": field.value,
-                    "confidence": field.confidence,
-                }
-            if compact_fields:
-                sections[section_name] = compact_fields
+        compact = GraphRAGDecisionContextBuilder._build_dynamic_profile_hint(profile)
         return {
             "schema_version": profile.schema_version,
             "update_count": profile.update_count,
             "last_updated_turn_id": profile.last_updated_turn_id,
             "profile_quality": dict(profile.profile_quality or {}),
-            "planner_guidance": list(profile.planner_guidance or []),
-            "sections": sections,
+            **compact,
         }
 
     def _update_generation_metadata(

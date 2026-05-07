@@ -89,6 +89,9 @@ class GraphRAGDecisionContext:
     cross_session_summary: Optional[str] = None
     cross_session_open_loops: List[str] = field(default_factory=list)
 
+    # ── Dynamic profile ──
+    dynamic_profile_hint: Optional[Dict[str, Any]] = None
+
 
 class GraphRAGDecisionContextBuilder:
     """Builds a ``GraphRAGDecisionContext`` from graph + transcript."""
@@ -155,6 +158,11 @@ class GraphRAGDecisionContextBuilder:
         if bridge_result and getattr(bridge_result, "has_history", False):
             ctx.cross_session_summary = bridge_result.summary_text
             ctx.cross_session_open_loops = bridge_result.open_loops
+
+        # 10. Dynamic profile hint
+        dynamic_profile = getattr(state, "dynamic_profile", None)
+        if dynamic_profile:
+            ctx.dynamic_profile_hint = self._build_dynamic_profile_hint(dynamic_profile)
 
         return ctx
 
@@ -265,3 +273,28 @@ class GraphRAGDecisionContextBuilder:
             else:
                 break
         return streak
+
+    @staticmethod
+    def _build_dynamic_profile_hint(profile: Any) -> Dict[str, Any]:
+        sections: Dict[str, Dict[str, Dict[str, Any]]] = {}
+        for section_name in (
+            "core_identity_and_personality",
+            "current_life_status",
+            "family_situation",
+            "life_views_and_attitudes",
+        ):
+            section = getattr(profile, section_name, {})
+            compact_fields: Dict[str, Dict[str, Any]] = {}
+            for field_name, field in section.items():
+                if not field or field.value in (None, "", []):
+                    continue
+                compact_fields[field_name] = {
+                    "value": field.value,
+                    "confidence": field.confidence,
+                }
+            if compact_fields:
+                sections[section_name] = compact_fields
+        return {
+            "sections": sections,
+            "planner_guidance": list(profile.planner_guidance or []),
+        }

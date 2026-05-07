@@ -123,8 +123,7 @@ class InterviewerAgent:
 
     def _render_system_prompt(self) -> str:
         return """你是一位充满好奇心、善于倾听的传记访谈者，正在陪一位老人重温他/她的人生旅程。
-
-你的目标不是"收集信息"，而是帮老人讲述一个完整、有温度的生命故事。让老人感到被理解、被珍视。
+你的目标不是"收集信息"，而是引导老人讲述一个完整、有温度的生命故事，覆盖他人生的主要阶段，如童年、求学、工作、家庭、重要转折点、起伏等。让老人感到被理解、被珍视。
 
 ---
 
@@ -141,12 +140,13 @@ class InterviewerAgent:
    - 转折点：改变人生方向的关键决定
    - 童年记忆：早期对性格形成有影响的事
    - 智慧时刻：展现洞察力的经历
+   - 温情时刻：最难忘的亲情、友情、爱情
 
 **3. 重要人物** —— 生命中影响深远的人
    - 家人、恩师、挚友、对手
 
 **4. 价值观与信仰** —— 人生的指南针
-   - 经历了这么多，老人最看重什么？
+   - 经历了这么多，老人的最信仰什么、看重什么？
 
 **5. 未来展望** —— 对剩余生命的期待
    - 还有什么心愿？想留下什么话？
@@ -169,7 +169,7 @@ class InterviewerAgent:
    - **问感受/故事** → 多用**开放式问题**
      * 例："那时候您心里是什么感觉？" "能给我讲讲当时的情景吗？"
 
-4. **一次只问一件事** —— 问题清晰、聚焦，不堆叠多个问题
+4. **抓住一个切入点提问** —— 把老人意犹未尽或者到嘴边没说出来的话延展出去。问题清晰、聚焦，不堆叠多个问题但可以交叉确认或核实必要的信息
 
 5. **隐藏技术细节** —— 永远不提"图谱"、"节点"、"槽位"、"覆盖率"等概念
 
@@ -189,8 +189,8 @@ class InterviewerAgent:
 
 ### 3. 当前事件完整度判断
 - 评估当前叙事是否具备：时间、地点、人物、经过、原因、结果、感受、反思。
-- 识别 missing_dimensions 和 weak_dimensions。
-- 事件不完整并不必然继续深挖；还要结合访谈阶段、情绪、主题覆盖和上下文连贯性。
+- 识别 missing_dimensions 和 weak_dimensions，优先作为切入点深挖。
+- 事件不完整还要结合主题覆盖和关联性判断事件是否重要、值得深挖。
 
 ### 4. 情绪与精力判断
 - 判断情绪能量、认知负担、是否需要先共情承接。
@@ -281,6 +281,10 @@ class InterviewerAgent:
         # 1. Basic info
         parts.append("## 受访者基本信息")
         parts.append(self._build_basic_info_text(elder_profile))
+
+        # 1.5 Dynamic profile (long-term memory)
+        if ctx.dynamic_profile_hint:
+            self._append_dynamic_profile(parts, ctx.dynamic_profile_hint)
 
         # 2. Recent dialogue
         parts.append("\n## 最近对话")
@@ -798,6 +802,36 @@ class InterviewerAgent:
             "提问方式：礼貌寒暄后给老人选择空间；问题可以稍宽，但必须只问一个问题。\n"
             "避免：一上来因为背景中出现“工作/工厂/家庭”等关键词就直接深挖该主题；避免像填表一样连续追槽位。"
         )
+
+    @staticmethod
+    def _append_dynamic_profile(parts: List[str], hint: Dict[str, Any]) -> None:
+        section_labels = {
+            "core_identity_and_personality": "核心身份与性格",
+            "current_life_status": "当前生活状况",
+            "family_situation": "家庭情况",
+            "life_views_and_attitudes": "人生观与态度",
+        }
+        sections = hint.get("sections", {})
+        if not sections:
+            return
+        parts.append("\n## 已了解的受访者特点（动态画像）")
+        for section_key, fields in sections.items():
+            label = section_labels.get(section_key, section_key)
+            lines = []
+            for fname, fdata in fields.items():
+                val = fdata.get("value")
+                if not val:
+                    continue
+                display = ", ".join(val) if isinstance(val, list) else str(val)
+                lines.append(f"- {fname}: {display}")
+            if lines:
+                parts.append(f"**{label}**：")
+                parts.extend(lines)
+        guidance = hint.get("planner_guidance", [])
+        if guidance:
+            parts.append("\n**画像引导建议**：")
+            for g in guidance:
+                parts.append(f"- {g}")
 
     def _build_basic_info_text(self, elder_profile: ElderProfile) -> str:
         parts = []
