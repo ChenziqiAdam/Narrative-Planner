@@ -20,6 +20,16 @@ from src.agents.interviewee_agent import IntervieweeAgent, extract_interviewee_r
 from src.agents.planner_interview_agent import PlannerInterviewAgentSync
 from src.config import Config
 from src.orchestration.baseline_evaluation_runtime import BaselineEvaluationRuntime
+from src.services.interview_logger import (
+    CoverageLog,
+    DialogueLog,
+    EvaluationLog,
+    PlannerDecisionLog,
+    SessionSummary,
+    TurnLogData,
+    create_baseline_logger,
+    create_planner_logger,
+)
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -659,6 +669,129 @@ def _build_aligned_turn_payload(
     }
 
 
+def _log_compare_turn(
+    session: dict,
+    *,
+    question: str,
+    answer: str,
+    action: str = "continue",
+    turn_evaluation: dict | None = None,
+    current_graph_state: dict | None = None,
+    planner_plan: dict | None = None,
+    memory_calls: list | None = None,
+    debug_trace: dict | None = None,
+) -> None:
+    logger = session.get("logger")
+    if not logger:
+        return
+
+    turn_index = max(
+        len([item for item in session.get("history", []) if item.get("role") == "interviewee"]) - 1,
+        0,
+    )
+    turn_evaluation = turn_evaluation or {}
+    current_graph_state = current_graph_state or {}
+    debug_trace = debug_trace or {}
+    planner_plan = planner_plan or {}
+
+    coverage_metrics = current_graph_state.get("coverage_metrics", {}) or {}
+    theme_richness = coverage_metrics.get("theme_richness", {}) or {}
+    coverage_after = coverage_metrics.get(
+        "overall_richness",
+        coverage_metrics.get("overall_coverage", 0.0),
+    )
+    coverage_before = debug_trace.get("coverage", {}).get("before")
+    if coverage_before is None:
+        decision_ctx = debug_trace.get("decision_ctx", {}) or {}
+        coverage_before = max(float(coverage_after or 0.0) - float(turn_evaluation.get("coverage_gain", 0.0) or 0.0), 0.0)
+        if isinstance(decision_ctx.get("overall_coverage"), (int, float)):
+            coverage_after = decision_ctx.get("overall_coverage")
+
+    planning = debug_trace.get("planning", {}) or {}
+    candidate_scores = {}
+    for item in planning.get("candidate_actions", []) or []:
+        if isinstance(item, dict) and item.get("action"):
+            candidate_scores[str(item["action"])] = item.get("score", 0.0)
+
+    log_data = TurnLogData(
+        turn_id=str(turn_evaluation.get("turn_id") or f"turn_{turn_index:03d}"),
+        turn_index=turn_index,
+        timestamp=datetime.now().isoformat(),
+        dialogue=DialogueLog(
+            interviewer_question=question or "",
+            interviewee_answer=answer or "",
+            interviewer_action=action or "continue",
+        ),
+        coverage=CoverageLog(
+            before=float(coverage_before or 0.0),
+            after=float(coverage_after or 0.0),
+            delta=float(turn_evaluation.get("coverage_gain", 0.0) or 0.0),
+            slot_coverage=theme_richness,
+        ),
+        evaluation=EvaluationLog(
+            question_quality_score=float(turn_evaluation.get("question_quality_score", 0.0) or 0.0),
+            information_gain_score=float(turn_evaluation.get("information_gain_score", 0.0) or 0.0),
+            non_redundancy_score=float(turn_evaluation.get("non_redundancy_score", 0.0) or 0.0),
+            slot_targeting_score=float(turn_evaluation.get("slot_targeting_score", 0.0) or 0.0),
+            emotional_alignment_score=float(turn_evaluation.get("emotional_alignment_score", 0.0) or 0.0),
+            planner_alignment_score=float(turn_evaluation.get("planner_alignment_score", 0.0) or 0.0),
+            coverage_gain=float(turn_evaluation.get("coverage_gain", 0.0) or 0.0),
+            targeted_slots=list(turn_evaluation.get("targeted_slots", []) or planning.get("missing_dimensions", []) or []),
+            notes=list(turn_evaluation.get("notes", []) or []),
+        ),
+        planner_decision=PlannerDecisionLog(
+            next_action=planning.get("next_action", action or "continue"),
+            recommended_theme_id=(planning.get("focus") or {}).get("id") if isinstance(planning.get("focus"), dict) else None,
+            recommended_theme_title=(planning.get("focus") or {}).get("label") if isinstance(planning.get("focus"), dict) else None,
+            targeted_slots=list(planner_plan.get("target_slots", []) or planning.get("missing_dimensions", []) or []),
+            decision_signals={
+                "stage": planning.get("stage", ""),
+                "selected_action": planning.get("selected_action", ""),
+                "question_intent": planning.get("question_intent", ""),
+                "emotion_energy": planning.get("emotion_energy"),
+                "emotion_valence": planning.get("emotion_valence"),
+            },
+            decision_scores=candidate_scores,
+            low_info_streak=int((debug_trace.get("decision_ctx", {}) or {}).get("low_info_streak", 0) or 0),
+        ) if session.get("type") == "planner" else None,
+        memory_calls=memory_calls or [],
+        debug_trace=debug_trace,
+    )
+    try:
+        logger.log_turn(log_data)
+    except Exception:
+        app.logger.exception("Failed to write interview turn log for session %s", logger.session_id)
+
+
+def _finalize_interview_log(session: dict, end_reason: str = "") -> None:
+    logger = session.get("logger")
+    if not logger:
+        return
+    evaluations = [turn.evaluation for turn in logger.turns if turn.evaluation]
+    coverage = logger.turns[-1].coverage if logger.turns else CoverageLog()
+    try:
+        logger.finalize_session(
+            SessionSummary(
+                total_turns=len(logger.turns),
+                final_coverage=coverage.after,
+                final_slot_coverage=coverage.slot_coverage,
+                extracted_events_count=len(session.get("extracted_events", []) or []),
+                average_turn_quality=(
+                    sum(item.question_quality_score for item in evaluations) / len(evaluations)
+                    if evaluations else 0.0
+                ),
+                average_information_gain=(
+                    sum(item.information_gain_score for item in evaluations) / len(evaluations)
+                    if evaluations else 0.0
+                ),
+                final_action=(session.get("history") or [{}])[-1].get("action", "end"),
+                end_reason=end_reason,
+            )
+        )
+    except Exception:
+        app.logger.exception("Failed to finalize interview log for session %s", logger.session_id)
+
+
 @app.route("/compare")
 def compare_interface():
     """返回对比调试界面"""
@@ -717,11 +850,17 @@ def baseline_start():
     first_action = result.get("action", "continue") if isinstance(result, dict) else "continue"
     scorer = BaselineEvaluationRuntime(session_id)
     scorer.initialize_session(elder_info if isinstance(elder_info, dict) else {"background": basic_info_text})
+    interview_logger = create_baseline_logger(
+        session_id,
+        elder_info if isinstance(elder_info, dict) else {"background": basic_info_text},
+        mode,
+    )
 
     # 存储会话
     _compare_sessions[session_id] = {
         "type": "baseline",
         "agent": agent,
+        "logger": interview_logger,
         "history": [{"role": "interviewer", "text": question, "action": first_action}],
         "scorer": scorer,
         "mode": mode,
@@ -778,6 +917,14 @@ def baseline_reply():
         previous_question.get("action", "continue"),
     )
     session["history"].append({"role": "interviewer", "text": question, "action": action})
+    _log_compare_turn(
+        session,
+        question=previous_question.get("text", ""),
+        answer=answer,
+        action=previous_question.get("action", "continue"),
+        turn_evaluation=turn_evaluation,
+        debug_trace={"pipeline": "baseline"},
+    )
 
     # 检查是否应该结束
     done = action == "end" or len(session["history"]) >= 100
@@ -850,6 +997,15 @@ def baseline_auto():
                 last_question_entry.get("action", "continue"),
             )
             session["history"].append({"role": "interviewer", "text": question, "action": action})
+            _log_compare_turn(
+                session,
+                question=last_question,
+                answer=answer,
+                action=last_question_entry.get("action", "continue"),
+                turn_evaluation=turn_evaluation,
+                memory_calls=memory_calls,
+                debug_trace={"pipeline": "baseline"},
+            )
             aligned = _build_aligned_turn_payload(
                 question=question,
                 action=action,
@@ -934,11 +1090,17 @@ def planner_start():
     # 获取首条问题
     result = agent.get_next_question()
     decision_weight_payload = agent.async_agent.orchestrator.get_decision_weight_payload()
+    interview_logger = create_planner_logger(
+        session_id,
+        elder_info if isinstance(elder_info, dict) else {"background": str(elder_info)},
+        mode,
+    )
 
     # 存储会话
     _compare_sessions[session_id] = {
         "type": "planner",
         "agent": agent,
+        "logger": interview_logger,
         "history": [{"role": "interviewer", "text": result["question"], "action": result.get("action", "continue")}],
         "mode": mode,
         "elder_info": elder_info,
@@ -980,6 +1142,7 @@ def planner_reply():
 
     session = _compare_sessions[session_id]
     agent = session["agent"]
+    previous_question = session["history"][-1] if session["history"] else {"text": "", "action": "continue"}
 
     # 记录回答
     session["history"].append({"role": "interviewee", "text": answer})
@@ -988,11 +1151,21 @@ def planner_reply():
     result = agent.get_next_question(answer)
 
     # 记录问题
-    session["history"].append({"role": "interviewer", "text": result["question"]})
+    session["history"].append({"role": "interviewer", "text": result["question"], "action": result.get("action", "continue")})
 
     # 累计提取的事件
     session["extracted_events"].extend(result.get("extracted_events", []))
     _broadcast_planner_graph_update(session_id, result)
+    _log_compare_turn(
+        session,
+        question=previous_question.get("text", ""),
+        answer=answer,
+        action=previous_question.get("action", "continue"),
+        turn_evaluation=result.get("turn_evaluation", {}),
+        current_graph_state=result.get("current_graph_state", {}),
+        planner_plan=result.get("planner_plan", {}),
+        debug_trace=result.get("debug_trace", {}),
+    )
 
     # 检查是否应该结束
     done = result["action"] == "end" or len(session["history"]) >= 100
@@ -1048,7 +1221,8 @@ def planner_auto():
             max_turns = 1 if single_turn else 20
             for turn in range(max_turns):
                 # 获取上一个问题
-                last_question = session["history"][-1]["text"] if session["history"] else ""
+                last_question_entry = session["history"][-1] if session["history"] else {"text": "", "action": "continue"}
+                last_question = last_question_entry.get("text", "")
 
                 # AI受访者回答
                 answer, memory_calls = _run_compare_interviewee_turn(interviewee, last_question)
@@ -1064,7 +1238,18 @@ def planner_auto():
                 _broadcast_planner_graph_update(session_id, result)
 
                 # 发送事件
-                session["history"].append({"role": "interviewer", "text": result["question"]})
+                session["history"].append({"role": "interviewer", "text": result["question"], "action": result.get("action", "continue")})
+                _log_compare_turn(
+                    session,
+                    question=last_question,
+                    answer=answer,
+                    action=last_question_entry.get("action", "continue"),
+                    turn_evaluation=result.get("turn_evaluation", {}),
+                    current_graph_state=result.get("current_graph_state", {}),
+                    planner_plan=result.get("planner_plan", {}),
+                    memory_calls=memory_calls,
+                    debug_trace=result.get("debug_trace", {}),
+                )
 
                 aligned = _build_aligned_turn_payload(
                     question=result.get("question", ""),
@@ -1179,6 +1364,7 @@ def _build_basic_info_text(elder_info):
 
 def _save_conversation(session_id, session):
     """保存对话记录"""
+    _finalize_interview_log(session, "conversation_saved")
     results_dir = "results/conversations"
     os.makedirs(results_dir, exist_ok=True)
 

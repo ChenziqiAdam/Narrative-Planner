@@ -291,17 +291,20 @@ class SessionOrchestrator:
         if decision_ctx.current_focus_theme_id:
             state.current_focus_theme_id = decision_ctx.current_focus_theme_id
         state.session_metrics = self._compute_session_metrics()
-        self.store.save(state)
-
-        # ── Async background tasks ──
+        # ── Background profile update + synchronous turn evaluation ──
         self._schedule_dynamic_profile_update(state, turn_record)
         post_coverage = decision_ctx.overall_coverage
-        self._schedule_turn_evaluation(
-            turn_record.turn_id,
+        turn_evaluation = self.evaluator_agent.evaluate_turn(
+            state,
+            turn_record,
             pre_coverage,
             post_coverage,
             current_interviewer_action,
         )
+        turn_record.turn_evaluation = turn_evaluation
+        state.evaluation_trace.append(turn_evaluation)
+        state.session_metrics = self._compute_session_metrics()
+        self.store.save(state)
 
         return {
             "question": state.pending_question,
@@ -309,7 +312,10 @@ class SessionOrchestrator:
             "graph_changes": graph_changes,
             "current_graph_state": self.get_graph_state(),
             "turn_count": state.turn_count,
-            "turn_evaluation": {"status": "pending", "turn_id": turn_record.turn_id},
+            "turn_evaluation": {
+                **turn_evaluation.to_dict(),
+                "status": "completed",
+            },
             "session_metrics": state.session_metrics.to_dict() if state.session_metrics else {},
             "planner_plan": planner_plan,
             "debug_trace": turn_debug_trace,
@@ -392,6 +398,7 @@ class SessionOrchestrator:
             "completed_turn_count": len(completed),
             "turn_evaluations": completed,
             "turns": turns,
+            "latest_turn_evaluation": state.evaluation_trace[-1].to_dict() if state.evaluation_trace else None,
             "session_metrics": state.session_metrics.to_dict() if state.session_metrics else {},
             "dynamic_profile": self._build_dynamic_profile_hint(state),
         }
