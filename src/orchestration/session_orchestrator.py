@@ -313,6 +313,7 @@ class SessionOrchestrator:
             "session_metrics": state.session_metrics.to_dict() if state.session_metrics else {},
             "planner_plan": planner_plan,
             "debug_trace": turn_debug_trace,
+            "extracted_events": [e.to_dict() for e in graph_extraction.entities],
         }
 
     def get_pending_question_result(self) -> Dict[str, Any]:
@@ -334,6 +335,7 @@ class SessionOrchestrator:
                     }
                 )
             },
+            "extracted_events": [],
         }
 
     def get_graph_state(self) -> Dict[str, Any]:

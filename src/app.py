@@ -1,6 +1,7 @@
 import json
 import os
 import sys
+import time
 import uuid
 import re
 from datetime import datetime
@@ -76,13 +77,15 @@ def _build_compare_interviewee(session_data: dict) -> IntervieweeAgent:
     return interviewee
 
 
-def _run_compare_interviewee_turn(interviewee: IntervieweeAgent, question: str) -> tuple[str, list[dict]]:
-    """Returns (answer, memory_calls) where memory_calls is the tool call log."""
+def _run_compare_interviewee_turn(interviewee: IntervieweeAgent, question: str) -> tuple[str, list[dict], dict]:
+    """Returns (answer, memory_calls, timing) where memory_calls is the tool call log."""
     prompt = interviewee._load_step_prompt(interviewee.history, question)
+    _t0 = time.perf_counter()
     raw_reply, memory_calls = interviewee.step_with_metadata(prompt)
+    _total_ms = (time.perf_counter() - _t0) * 1000
     answer = extract_reply(raw_reply)
     interviewee.record_turn(question, answer)
-    return answer, memory_calls
+    return answer, memory_calls, {"interviewee_total_ms": round(_total_ms, 1)}
 
 
 # ── Routes ───────────────────────────────────────────────────────────────────
@@ -830,13 +833,15 @@ def baseline_auto():
             last_question = last_question_entry.get("text", "")
 
             # AI受访者回答
-            answer, memory_calls = _run_compare_interviewee_turn(interviewee, last_question)
+            answer, memory_calls, interviewee_timing = _run_compare_interviewee_turn(interviewee, last_question)
 
             session["history"].append({"role": "interviewee", "text": answer})
-            yield f"data: {json.dumps({'role': 'interviewee', 'action': 'answer', 'text': answer, 'memory_calls': memory_calls}, ensure_ascii=False)}\n\n"
+            yield f"data: {json.dumps({'role': 'interviewee', 'action': 'answer', 'text': answer, 'memory_calls': memory_calls, 'timing': interviewee_timing}, ensure_ascii=False)}\n\n"
 
             # 访谈者提问
+            _t_iv = time.perf_counter()
             result = agent.get_next_question(answer)
+            _iv_ms = (time.perf_counter() - _t_iv) * 1000
             if isinstance(result, dict):
                 question = result.get("question", "")
                 action = result.get("action", "continue")
@@ -857,7 +862,7 @@ def baseline_auto():
                 turn_evaluation=turn_evaluation,
                 debug_trace={"pipeline": "baseline"},
             )
-            yield f"data: {json.dumps({'role': 'interviewer', 'action': aligned['action'], 'text': aligned['question'], 'turn_evaluation': aligned['turn_evaluation'], 'debug_trace': aligned['debug_trace']}, ensure_ascii=False)}\n\n"
+            yield f"data: {json.dumps({'role': 'interviewer', 'action': aligned['action'], 'text': aligned['question'], 'turn_evaluation': aligned['turn_evaluation'], 'debug_trace': aligned['debug_trace'], 'timing': {'interviewer_llm_ms': round(_iv_ms, 1)}}, ensure_ascii=False)}\n\n"
 
             if action == "end":
                 break
@@ -1051,10 +1056,10 @@ def planner_auto():
                 last_question = session["history"][-1]["text"] if session["history"] else ""
 
                 # AI受访者回答
-                answer, memory_calls = _run_compare_interviewee_turn(interviewee, last_question)
+                answer, memory_calls, interviewee_timing = _run_compare_interviewee_turn(interviewee, last_question)
 
                 session["history"].append({"role": "interviewee", "text": answer})
-                yield f"data: {json.dumps({'role': 'interviewee', 'text': answer, 'extracted_events': [], 'graph_delta': {}, 'memory_calls': memory_calls}, ensure_ascii=False)}\n\n"
+                yield f"data: {json.dumps({'role': 'interviewee', 'text': answer, 'extracted_events': [], 'graph_delta': {}, 'memory_calls': memory_calls, 'timing': interviewee_timing}, ensure_ascii=False)}\n\n"
 
                 # 获取下一个问题（包含事件提取）
                 result = agent.get_next_question(answer)
@@ -1062,6 +1067,14 @@ def planner_auto():
                 # 累计提取的事件
                 session["extracted_events"].extend(result.get("extracted_events", []))
                 _broadcast_planner_graph_update(session_id, result)
+
+                # 构建计时汇总
+                _dt = result.get("debug_trace", {})
+                planner_timing = {
+                    "retrieval_ms": _dt.get("retrieval_ms"),
+                    "extraction_ms": _dt.get("extraction_ms"),
+                    "write_ms": _dt.get("write_ms"),
+                }
 
                 # 发送事件
                 session["history"].append({"role": "interviewer", "text": result["question"]})
@@ -1088,6 +1101,7 @@ def planner_auto():
                     'session_metrics': aligned['session_metrics'],
                     'planner_plan': aligned['planner_plan'],
                     'debug_trace': aligned['debug_trace'],
+                    'timing': planner_timing,
                 }
                 yield f"data: {json.dumps(interviewer_data, ensure_ascii=False)}\n\n"
 
@@ -1741,6 +1755,100 @@ COMPARE_HTML = '''<!DOCTYPE html>
             line-height: 1.5;
         }
 
+        /* Timing chips */
+        .timing-chips {
+            margin-top: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        .timing-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            padding: 3px 8px;
+            border-radius: 999px;
+            font-size: 0.68rem;
+            font-weight: 600;
+            background: #e0f2f1;
+            color: #00695c;
+        }
+        .timing-chip.slow {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        /* Timing summary */
+        .timing-summary {
+            background: linear-gradient(180deg, #e0f7fa 0%, #e8f5e9 100%);
+            border: 1px solid #b2dfdb;
+            border-radius: 12px;
+            padding: 14px;
+        }
+        .timing-summary.placeholder {
+            color: #607d8b;
+            font-size: 0.84rem;
+            line-height: 1.6;
+        }
+        .timing-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+        }
+        .timing-row + .timing-row {
+            border-top: 1px solid rgba(0,0,0,0.06);
+        }
+        .timing-label {
+            font-size: 0.78rem;
+            color: #455a64;
+            font-weight: 500;
+        }
+        .timing-bar-container {
+            flex: 1;
+            margin: 0 12px;
+            height: 6px;
+            background: rgba(0,0,0,0.06);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .timing-bar {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+        .timing-bar.baseline { background: #9e9e9e; }
+        .timing-bar.planner { background: #2196f3; }
+        .timing-value {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #37474f;
+            min-width: 48px;
+            text-align: right;
+        }
+
+        /* Plan chips */
+        .plan-chips {
+            margin-top: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        .plan-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            padding: 3px 8px;
+            border-radius: 999px;
+            font-size: 0.68rem;
+            font-weight: 600;
+        }
+        .plan-chip.stage { background: #e3f2fd; color: #1565c0; }
+        .plan-chip.focus { background: #fce4ec; color: #c62828; }
+        .plan-chip.completeness { background: #e8f5e9; color: #2e7d32; }
+        .plan-chip.emotion { background: #fff8e1; color: #f57f17; }
+        .plan-chip.intent { background: #f3e5f5; color: #6a1b9a; }
+
         /* Controls */
         .controls {
             padding: 16px 20px;
@@ -2121,6 +2229,78 @@ COMPARE_HTML = '''<!DOCTYPE html>
         let baselineEvaluationStatusText = "idle";
         let plannerEvaluationStatusText = "idle";
 
+        // Timing accumulator
+        const timingAccum = { baseline: [], planner: [] };
+
+        function accumulateTiming(kind, timing) {
+            if (!timing || typeof timing !== "object") return;
+            timingAccum[kind].push(timing);
+            renderTimingSummary();
+        }
+
+        function avgMs(arr, key) {
+            const vals = arr.map(r => r[key]).filter(v => v != null);
+            if (vals.length === 0) return null;
+            return vals.reduce((a, b) => a + b, 0) / vals.length;
+        }
+
+        function renderTimingSummary() {
+            const el = document.getElementById("timing-summary-content");
+            if (!el) return;
+
+            const bAvgIv = avgMs(timingAccum.baseline, "interviewee_total_ms");
+            const bAvgQ = avgMs(timingAccum.baseline, "interviewer_llm_ms");
+            const pAvgIv = avgMs(timingAccum.planner, "interviewee_total_ms");
+            const pAvgRet = avgMs(timingAccum.planner, "retrieval_ms");
+            const pAvgExt = avgMs(timingAccum.planner, "extraction_ms");
+            const pAvgWr = avgMs(timingAccum.planner, "write_ms");
+
+            const bTurns = timingAccum.baseline.length;
+            const pTurns = timingAccum.planner.length;
+
+            if (bTurns === 0 && pTurns === 0) {
+                el.innerHTML = '<div class="timing-summary placeholder">计时数据将在对话开始后自动显示</div>';
+                return;
+            }
+
+            const maxMs = Math.max(bAvgIv || 0, bAvgQ || 0, pAvgIv || 0, pAvgRet || 0, pAvgExt || 0, pAvgWr || 0, 1);
+
+            function row(label, bVal, pVal) {
+                const bStr = bVal != null ? `${(bVal/1000).toFixed(1)}s` : "-";
+                const pStr = pVal != null ? `${(pVal/1000).toFixed(1)}s` : "-";
+                const bW = bVal != null ? Math.max(2, (bVal / maxMs) * 100) : 0;
+                const pW = pVal != null ? Math.max(2, (pVal / maxMs) * 100) : 0;
+                return `
+                    <div class="timing-row">
+                        <span class="timing-label">${label}</span>
+                        <div class="timing-bar-container">
+                            <div class="timing-bar baseline" style="width:${bW}%"></div>
+                        </div>
+                        <span class="timing-value">${bStr}</span>
+                    </div>
+                    <div class="timing-row">
+                        <span class="timing-label"></span>
+                        <div class="timing-bar-container">
+                            <div class="timing-bar planner" style="width:${pW}%"></div>
+                        </div>
+                        <span class="timing-value">${pStr}</span>
+                    </div>`;
+            }
+
+            el.innerHTML = `
+                <div class="timing-summary">
+                    <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+                        <span style="font-size:0.72rem;color:#9e9e9e">● Baseline (${bTurns} turns)</span>
+                        <span style="font-size:0.72rem;color:#2196f3">● Planner (${pTurns} turns)</span>
+                    </div>
+                    ${row("受访者", bAvgIv, pAvgIv)}
+                    ${row("检索", null, pAvgRet)}
+                    ${row("提取", null, pAvgExt)}
+                    ${row("写入", null, pAvgWr)}
+                    ${row("访谈者", bAvgQ, null)}
+                </div>`;
+        }
+
         // DOM elements
         const configModal = document.getElementById("config-modal");
         const btnConfig = document.getElementById("btn-config");
@@ -2282,6 +2462,14 @@ COMPARE_HTML = '''<!DOCTYPE html>
                 </section>
                 <section class="side-section">
                     <div class="side-section-header">
+                        <h4>Timing</h4>
+                    </div>
+                    <div id="timing-summary-content">
+                        <div class="timing-summary placeholder">计时数据将在对话开始后自动显示</div>
+                    </div>
+                </section>
+                <section class="side-section">
+                    <div class="side-section-header">
                         <h4>Recent Events</h4>
                     </div>
                     <div id="events-list-content">
@@ -2392,8 +2580,8 @@ COMPARE_HTML = '''<!DOCTYPE html>
             `;
         }
 
-        function appendScoredQuestion(queueRef, container, text, action, debugTrace) {
-            const msg = appendMessage(container, "interviewer", text, action, null, debugTrace);
+        function appendScoredQuestion(queueRef, container, text, action, debugTrace, timingData) {
+            const msg = appendMessage(container, "interviewer", text, action, null, debugTrace, timingData);
             const evaluationEl = document.createElement("div");
             evaluationEl.className = "message-evaluation";
             renderPendingEvaluation(evaluationEl);
@@ -2408,12 +2596,56 @@ COMPARE_HTML = '''<!DOCTYPE html>
             return item;
         }
 
-        function appendBaselineQuestion(container, text, action, debugTrace) {
-            return appendScoredQuestion(baselineQuestionQueue, container, text, action, debugTrace);
+        function appendBaselineQuestion(container, text, action, debugTrace, timingData) {
+            return appendScoredQuestion(baselineQuestionQueue, container, text, action, debugTrace, timingData);
         }
 
-        function appendPlannerQuestion(container, text, action, debugTrace) {
-            return appendScoredQuestion(plannerQuestionQueue, container, text, action, debugTrace);
+        function appendPlannerQuestion(container, text, action, debugTrace, timingData, plannerPlan) {
+            const item = appendScoredQuestion(plannerQuestionQueue, container, text, action, debugTrace, timingData);
+            if (plannerPlan && typeof plannerPlan === "object" && Object.keys(plannerPlan).length > 0) {
+                const planDiv = document.createElement("div");
+                planDiv.className = "plan-chips";
+                const stageLabels = {
+                    life_overview: "人生概览", event_deepening: "事件深挖",
+                    theme_expansion: "主题拓展", reflection: "回顾反思", closing: "收尾总结",
+                };
+                const emotionLabels = { positive: "正面", neutral: "中性", negative: "低落" };
+                if (plannerPlan.stage) {
+                    const chip = document.createElement("span");
+                    chip.className = "plan-chip stage";
+                    chip.textContent = stageLabels[plannerPlan.stage] || plannerPlan.stage;
+                    planDiv.appendChild(chip);
+                }
+                if (plannerPlan.focus && plannerPlan.focus.label) {
+                    const chip = document.createElement("span");
+                    chip.className = "plan-chip focus";
+                    chip.textContent = plannerPlan.focus.label;
+                    planDiv.appendChild(chip);
+                }
+                if (plannerPlan.event_completeness && plannerPlan.event_completeness.score != null) {
+                    const chip = document.createElement("span");
+                    chip.className = "plan-chip completeness";
+                    chip.textContent = `完整度 ${Math.round(plannerPlan.event_completeness.score * 100)}%`;
+                    planDiv.appendChild(chip);
+                }
+                if (plannerPlan.emotion_signal) {
+                    const chip = document.createElement("span");
+                    chip.className = "plan-chip emotion";
+                    const e = plannerPlan.emotion_signal;
+                    chip.textContent = `${emotionLabels[e.valence] || e.valence || ""} ${Math.round((e.energy || 0) * 100)}%`;
+                    planDiv.appendChild(chip);
+                }
+                if (plannerPlan.question_intent) {
+                    const chip = document.createElement("span");
+                    chip.className = "plan-chip intent";
+                    chip.textContent = plannerPlan.question_intent;
+                    planDiv.appendChild(chip);
+                }
+                if (planDiv.children.length > 0) {
+                    item.element.appendChild(planDiv);
+                }
+            }
+            return item;
         }
 
         function bindPendingEvaluation(queueRef, mapRef, turnEvaluation, statusUpdater) {
@@ -2730,7 +2962,7 @@ COMPARE_HTML = '''<!DOCTYPE html>
 
         }
 
-        function appendMessage(container, role, text, action, memoryCalls, debugTrace) {
+        function appendMessage(container, role, text, action, memoryCalls, debugTrace, timingData) {
             const msg = document.createElement("div");
             msg.className = `message ${role}`;
 
@@ -2749,6 +2981,31 @@ COMPARE_HTML = '''<!DOCTYPE html>
                 <div class="msg-label">${label}${actionTag}</div>
                 <div class="msg-text">${text}</div>
             `;
+
+            // Timing chips
+            if (timingData && typeof timingData === "object" && Object.keys(timingData).length > 0) {
+                const timingDiv = document.createElement("div");
+                timingDiv.className = "timing-chips";
+                const labels = {
+                    interviewee_total_ms: "受访者",
+                    interviewee_llm_ms: "LLM",
+                    interviewee_tool_ms: "工具",
+                    interviewer_llm_ms: "访谈者",
+                    retrieval_ms: "检索",
+                    extraction_ms: "提取",
+                    write_ms: "写入",
+                };
+                for (const [key, val] of Object.entries(timingData)) {
+                    if (val == null) continue;
+                    const chip = document.createElement("span");
+                    const sec = (val / 1000).toFixed(1);
+                    const lbl = labels[key] || key;
+                    chip.className = `timing-chip${val > 5000 ? " slow" : ""}`;
+                    chip.textContent = `${lbl} ${sec}s`;
+                    timingDiv.appendChild(chip);
+                }
+                msg.appendChild(timingDiv);
+            }
 
             if (memoryCalls && memoryCalls.length > 0) {
                 const memDiv = document.createElement("div");
@@ -2880,10 +3137,11 @@ COMPARE_HTML = '''<!DOCTYPE html>
                 }
                 if (msg.role === "interviewer") {
                     bindPendingBaselineTurnEvaluation(msg.turn_evaluation);
-                    appendBaselineQuestion(chat, msg.text, msg.action, msg.debug_trace);
+                    appendBaselineQuestion(chat, msg.text, msg.action, msg.debug_trace, msg.timing);
                 } else {
-                    appendMessage(chat, msg.role, msg.text, msg.action, msg.memory_calls);
+                    appendMessage(chat, msg.role, msg.text, msg.action, msg.memory_calls, null, msg.timing);
                 }
+                accumulateTiming("baseline", msg.timing);
             };
 
             evtSource.onerror = () => {
@@ -2955,18 +3213,19 @@ COMPARE_HTML = '''<!DOCTYPE html>
                 }
 
                 if (msg.role === "interviewee") {
-                    appendMessage(chat, "interviewee", msg.text, null, msg.memory_calls);
+                    appendMessage(chat, "interviewee", msg.text, null, msg.memory_calls, null, msg.timing);
                 } else {
                     if (msg.action === "end") {
                         interviewEnded = true;
                     }
                     bindPendingTurnEvaluation(msg.turn_evaluation);
-                    appendPlannerQuestion(chat, msg.text, msg.action, msg.debug_trace);
+                    appendPlannerQuestion(chat, msg.text, msg.action, msg.debug_trace, msg.timing, msg.planner_plan);
                     if (msg.extracted_events && msg.extracted_events.length > 0) {
                         allExtractedEvents.push(...msg.extracted_events);
                         updateEventList(allExtractedEvents);
                     }
                 }
+                accumulateTiming("planner", msg.timing);
 
                 // Broadcast to dashboard via WebSocket
                 if (msg.graph_delta && dashboardWindow) {
@@ -2999,7 +3258,7 @@ COMPARE_HTML = '''<!DOCTYPE html>
                 body: JSON.stringify({ session_id: plannerSessionId, answer })
             });
             bindPendingTurnEvaluation(data.turn_evaluation);
-            appendPlannerQuestion(chat, data.question, data.action, data.debug_trace);
+            appendPlannerQuestion(chat, data.question, data.action, data.debug_trace, null, data.planner_plan);
 
             // Accumulate and update extracted events
             if (data.extracted_events && data.extracted_events.length > 0) {
