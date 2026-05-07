@@ -129,6 +129,17 @@ class Neo4jGraphDriver:
             logger.warning("Failed to upsert node %s", node_id)
         return ok
 
+    def update_node_properties(self, node_id: str, properties: Dict[str, Any]) -> bool:
+        """Update properties on an existing node by ID."""
+        result = self.execute_query(
+            "MATCH (n {id: $id}) SET n += $properties RETURN n",
+            {"id": node_id, "properties": properties},
+        )
+        ok = result is not None
+        if not ok:
+            logger.warning("Failed to update node %s", node_id)
+        return ok
+
     def node_exists(self, node_id: str) -> bool:
         result = self.execute_query(
             "MATCH (n {id: $id}) RETURN n LIMIT 1", {"id": node_id}

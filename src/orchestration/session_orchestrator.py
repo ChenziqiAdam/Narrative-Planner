@@ -197,7 +197,8 @@ class SessionOrchestrator:
         # ── Graph extraction ──
         _t = time.perf_counter()
         graph_extraction = await self._graph_extraction_agent.extract(
-            state, turn_record, graph_context=_graph_rag_context
+            state, turn_record, graph_context=_graph_rag_context,
+            neo4j_manager=self._get_neo4j_manager(),
         )
         _extraction_ms = (time.perf_counter() - _t) * 1000
 

@@ -55,9 +55,10 @@ class GraphExtractionAgent:
         state: SessionState,
         turn_record: TurnRecord,
         graph_context: Optional[str] = None,
+        neo4j_manager: Optional[Any] = None,
     ) -> GraphExtraction:
         """从当前对话轮次中提取图谱实体和关系。"""
-        prompt = self._build_prompt(state, turn_record, graph_context)
+        prompt = self._build_prompt(state, turn_record, graph_context, neo4j_manager)
         response_text = self._call_llm(prompt)
 
         if not response_text:
@@ -74,7 +75,8 @@ class GraphExtractionAgent:
         state: SessionState,
         turn_record: TurnRecord,
         graph_context: Optional[str] = None,
-    ) -> str:
+        neo4j_manager: Optional[Any] = None,
+    ) -> str:  # noqa: ARG002 graph_context kept for call-site compat
         """组装提取 prompt 的输入 JSON。"""
         current_turn = {
             "interviewer": turn_record.interviewer_question or "",
@@ -90,8 +92,23 @@ class GraphExtractionAgent:
             })
 
         existing_context = []
-        if graph_context:
-            existing_context.append({"raw_context": graph_context})
+
+        # 从 Neo4j 查询该老人的所有已有实体摘要
+        if neo4j_manager:
+            try:
+                profile = getattr(state, "elder_profile", None)
+                if profile:
+                    elder_id = f"{getattr(profile, 'name', '')}_{getattr(profile, 'birth_year', '')}"
+                    all_entities = neo4j_manager.get_entities_by_elder(elder_id)
+                    for ent in all_entities[:60]:
+                        existing_context.append({
+                            "id": ent.get("id", ""),
+                            "entity_type": ent.get("type", ""),
+                            "name": ent.get("name", ""),
+                            "description": (ent.get("description") or "")[:80],
+                        })
+            except Exception:
+                logger.debug("Failed to query existing entities for extraction context", exc_info=True)
 
         input_data = {
             "current_turn": current_turn,
@@ -144,11 +161,16 @@ class GraphExtractionAgent:
 
         entities = []
         for e in data.get("entities", []):
+            action = e.get("merge_action", "new")
+            if action not in ("new", "update", "skip"):
+                action = "new"
             entities.append(ExtractedEntity(
                 entity_type=e.get("entity_type", "Event"),
                 name=e.get("name", ""),
                 description=e.get("description", ""),
                 properties=e.get("properties", {}),
+                merge_action=action,
+                merge_target_id=e.get("merge_target_id"),
             ))
 
         relationships = []

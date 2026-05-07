@@ -73,14 +73,20 @@ class ExtractedEntity:
     name: str
     description: str
     properties: Dict[str, Any] = field(default_factory=dict)
+    merge_action: str = "new"  # "new" | "update" | "skip"
+    merge_target_id: Optional[str] = None  # update 时指向已有实体 ID
 
     def to_dict(self) -> Dict[str, Any]:
-        return {
+        d = {
             "entity_type": self.entity_type,
             "name": self.name,
             "description": self.description,
             "properties": dict(self.properties),
+            "merge_action": self.merge_action,
         }
+        if self.merge_target_id:
+            d["merge_target_id"] = self.merge_target_id
+        return d
 
 
 @dataclass

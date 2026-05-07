@@ -69,11 +69,27 @@ class GraphWriter:
 
         for entity in extraction.entities:
             try:
-                # Compute embedding from name + description.
+                # 1. LLM marked skip → skip entirely.
+                if entity.merge_action == "skip":
+                    continue
+
+                # 2. LLM marked update with target → update directly.
+                if entity.merge_action == "update" and entity.merge_target_id:
+                    node_id = self._update_existing_entity(
+                        entity.merge_target_id, entity,
+                    )
+                    if node_id:
+                        result.entity_ids.append(node_id)
+                        name_to_id[entity.name] = node_id
+                        name_to_id[entity.name.lower()] = node_id
+                        result.updated_entity_count += 1
+                        continue
+                    # Target not found in graph → fall through to normal path.
+
+                # 3. LLM marked new (or update fallback) → create with vector dedup.
                 text = f"{entity.name}. {entity.description}"
                 embedding = self._embedding.encode_single(text)
 
-                # Dedup check — reuse existing node when possible.
                 existing_id = self._deduplicate(entity, embedding)
                 if existing_id:
                     node_id = existing_id
@@ -88,7 +104,6 @@ class GraphWriter:
 
                 if node_id:
                     result.entity_ids.append(node_id)
-                    # Map *both* name and lowercased name for flexible lookup.
                     name_to_id[entity.name] = node_id
                     name_to_id[entity.name.lower()] = node_id
             except Exception:
@@ -116,6 +131,41 @@ class GraphWriter:
     # ------------------------------------------------------------------
     # Internals
     # ------------------------------------------------------------------
+
+    def _update_existing_entity(
+        self,
+        target_id: str,
+        entity: ExtractedEntity,
+    ) -> Optional[str]:
+        """Update an existing entity node by ID.
+
+        Returns the node ID on success, or None if the node does not exist.
+        """
+        try:
+            node_dict: Dict[str, Any] = {
+                "description": entity.description,
+                **entity.properties,
+            }
+            if entity.name:
+                node_dict["name"] = entity.name
+            ok = self._neo4j.driver.update_node_properties(target_id, node_dict)
+            if not ok:
+                logger.warning("Failed to update entity node %s", target_id)
+                return None
+
+            # Update vector store embedding with new description.
+            text = f"{entity.name}. {entity.description}"
+            embedding = self._embedding.encode_single(text)
+            self._vector_store.add(
+                entity_id=target_id,
+                entity_type=entity.entity_type,
+                text=text,
+                embedding=embedding,
+            )
+            return target_id
+        except Exception:
+            logger.exception("Failed to update existing entity %s", target_id)
+            return None
 
     def _upsert_entity(
         self,
