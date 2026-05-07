@@ -83,6 +83,110 @@ cd frontend && pnpm install && pnpm dev
 
 ---
 
+## Neo4j 图数据库（Docker 本地运行）
+
+本项目使用 Neo4j 5 Community Edition 作为图数据库，通过 Docker 容器在本地运行。
+
+### 前提条件
+
+- 已安装 [Docker Desktop](https://www.docker.com/products/docker-desktop/) 并启动
+- Docker Desktop 状态栏图标显示为运行中（绿色）
+
+### 启动 Neo4j
+
+```bash
+make neo4j
+# 或直接使用 docker compose
+docker compose up -d
+```
+
+首次运行会拉取 `neo4j:5-community` 镜像（约 300MB），后续启动只需数秒。
+
+### 访问 Neo4j
+
+| 入口 | 地址 | 说明 |
+|------|------|------|
+| Neo4j Browser（可视化界面） | `http://localhost:7474` | 在浏览器中打开，可执行 Cypher 查询、浏览图谱 |
+| Bolt 协议（应用连接） | `bolt://localhost:7687` | 后端通过此端口连接数据库 |
+
+Neo4j Browser 登录凭据：
+
+- 用户名: `neo4j`
+- 密码: `narrative2026`
+
+### 容器配置说明
+
+[docker-compose.yml](docker-compose.yml) 中的关键配置：
+
+| 配置项 | 值 | 说明 |
+|--------|----|------|
+| 镜像 | `neo4j:5-community` | 社区版，免费使用 |
+| 容器名 | `narrative-neo4j` | 方便通过 `docker ps` 识别 |
+| 内存堆 | 512MB ~ 1GB | 根据本地机器配置自动调整 |
+| 页缓存 | 256MB | 提升查询性能 |
+| 插件 | APOC | 扩展 Cypher 功能（如路径遍历、文本处理） |
+| 数据持久化 | `./data/neo4j` | 数据存储在项目目录下，容器重建不丢失 |
+| 重启策略 | `unless-stopped` | Docker 重启后自动恢复运行 |
+
+### 启用 Neo4j 功能
+
+在 `.env` 文件中设置：
+
+```env
+NEO4J_ENABLED=true
+```
+
+> 未设置或设为 `false` 时，系统跳过图谱功能正常运行，不依赖 Neo4j。
+
+### 停止 Neo4j
+
+```bash
+make neo4j-down
+# 或
+docker compose down
+```
+
+> 停止容器不会删除数据（数据持久化在 `./data/neo4j` 目录）。
+
+### 清除所有数据
+
+如需完全重置 Neo4j 数据：
+
+```bash
+docker compose down -v
+# 或手动删除数据目录
+rm -rf data/neo4j
+```
+
+> **警告**: 此操作不可恢复，图谱中的所有实体和关系将被删除。
+
+### 常见问题
+
+**Q: Docker Desktop 未启动？**
+
+确保 Docker Desktop 应用已打开且状态为运行中。可在终端执行 `docker ps` 验证。
+
+**Q: 端口 7474 或 7687 被占用？**
+
+```bash
+# Windows 查看端口占用
+netstat -ano | findstr :7474
+netstat -ano | findstr :7687
+
+# 修改 docker-compose.yml 中的端口映射，如改为 7475:7474
+```
+
+**Q: 容器启动后立即退出？**
+
+```bash
+# 查看容器日志
+docker logs narrative-neo4j
+
+# 常见原因：内存不足，尝试减少 docker-compose.yml 中的内存配置
+```
+
+---
+
 ## Makefile 命令
 
 ```bash
