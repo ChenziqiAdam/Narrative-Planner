@@ -1,0 +1,77 @@
+{
+  "experiment_id": "smoke_codex_fixed",
+  "created_at": "2026-05-08T04:30:28.612991",
+  "config": {
+    "runs_per_agent": 1,
+    "turns": 1,
+    "use_llm_scorer": false,
+    "llm_weight": 0.3,
+    "variance_penalty_weight": 1.0,
+    "model_override": "moonshot-v1-8k",
+    "planner_tools_enabled": false,
+    "reset_graph_before_experiment": true,
+    "score_weights": {
+      "question_quality": 0.28,
+      "information_gain": 0.24,
+      "non_redundancy": 0.2,
+      "coverage": 0.18,
+      "completion": 0.1
+    }
+  },
+  "agents": {
+    "baseline": {
+      "run_count": 1,
+      "mean_score": 0.4346,
+      "variance": 0.0,
+      "std": 0.0,
+      "mean_minus_variance_penalty": 0.4346,
+      "deterministic_mean": 0.4346,
+      "avg_completed_turns": 1.0,
+      "avg_information_gain": 0.1,
+      "avg_non_redundancy": 1.0,
+      "avg_final_coverage": 0.0,
+      "runs": [
+        {
+          "run_index": 1,
+          "session_id": "9c54aa49fec545d1b4ee180a56639c75",
+          "status": "completed",
+          "overall_score": 0.4346,
+          "deterministic_score": 0.4346,
+          "llm_score": null,
+          "run_dir": "/Users/oier/Downloads/Narrative-Planner/results/baseline-vs-planner/smoke_codex_fixed/runs/baseline/run_01"
+        }
+      ]
+    },
+    "planner": {
+      "run_count": 1,
+      "mean_score": 0.7274,
+      "variance": 0.0,
+      "std": 0.0,
+      "mean_minus_variance_penalty": 0.7274,
+      "deterministic_mean": 0.7274,
+      "avg_completed_turns": 1.0,
+      "avg_information_gain": 0.9,
+      "avg_non_redundancy": 1.0,
+      "avg_final_coverage": 0.0,
+      "runs": [
+        {
+          "run_index": 1,
+          "session_id": "aac1a802a6954cfdac2213c300834d4f",
+          "status": "completed",
+          "overall_score": 0.7274,
+          "deterministic_score": 0.7274,
+          "llm_score": null,
+          "run_dir": "/Users/oier/Downloads/Narrative-Planner/results/baseline-vs-planner/smoke_codex_fixed/runs/planner/run_01"
+        }
+      ],
+      "graph_rag": {
+        "retrieval_nonempty_rate_mean": 0.0,
+        "avg_ranked_entities_mean": 8.0,
+        "total_new_entities": 6,
+        "total_relationships_written": 5
+      }
+    }
+  },
+  "winner_by_mean": "planner",
+  "winner_by_mean_minus_variance_penalty": "planner"
+}
