@@ -1135,6 +1135,78 @@ def planner_graph(session_id):
     return jsonify(agent.get_graph_state())
 
 
+@app.route("/api/planner/report/<session_id>")
+def planner_report(session_id):
+    """GraphRAG 运行报告：会话概览 + Neo4j 统计 + 轮次汇总 + 覆盖率 + embedding 状态"""
+    if session_id not in _compare_sessions:
+        return jsonify({"error": "会话不存在"}), 400
+    session = _compare_sessions[session_id]
+    if session["type"] != "planner":
+        return jsonify({"error": "非 Planner 会话"}), 400
+
+    # 1. 会话基本信息
+    agent = session["agent"]
+    orch = agent.async_agent
+    turn_count = len(session.get("history", [])) // 2
+    report = {
+        "session_id": session_id,
+        "turn_count": turn_count,
+        "start_time": session.get("start_time", ""),
+        "mode": session.get("mode", ""),
+    }
+
+    # 2. Neo4j 图谱统计
+    neo4j_stats = {"nodes": [], "relationships": [], "themes": []}
+    try:
+        neo4j = orch.orchestrator._get_neo4j_manager()
+        rows = neo4j.driver.execute_query(
+            "MATCH (n) RETURN labels(n)[0] AS type, count(n) AS cnt ORDER BY cnt DESC"
+        )
+        neo4j_stats["nodes"] = [{"type": r["type"], "count": r["cnt"]} for r in (rows or [])]
+        rows = neo4j.driver.execute_query(
+            "MATCH ()-[r]->() RETURN type(r) AS rel_type, count(r) AS cnt ORDER BY cnt DESC"
+        )
+        neo4j_stats["relationships"] = [{"type": r["rel_type"], "count": r["cnt"]} for r in (rows or [])]
+        rows = neo4j.driver.execute_query(
+            """
+            MATCH (t:Topic) OPTIONAL MATCH (t)-[:INCLUDES]->(e:Event)
+            RETURN t.id AS id, t.name AS name, t.status AS status, count(e) AS event_count
+            ORDER BY t.id
+            """
+        )
+        neo4j_stats["themes"] = [
+            {"id": r["id"], "name": r.get("name", r["id"]), "status": r.get("status", "pending"), "event_count": r.get("event_count", 0)}
+            for r in (rows or [])
+        ]
+    except Exception:
+        pass
+    report["neo4j"] = neo4j_stats
+
+    # 3. 覆盖率
+    try:
+        gs = agent.get_graph_state()
+        report["coverage"] = gs.get("coverage_metrics", {})
+    except Exception:
+        report["coverage"] = {}
+
+    # 4. 每轮 timing 汇总
+    turn_timings = []
+    for msg in session.get("history", []):
+        t = msg.get("timing") or {}
+        if t and isinstance(t, dict):
+            turn_timings.append(t)
+    report["turn_timings"] = turn_timings[-20:]  # 最近 20 轮
+
+    # 5. Embedding 状态
+    try:
+        from src.services.embedding_service import EmbeddingService
+        report["embedding"] = EmbeddingService().get_status()
+    except Exception:
+        report["embedding"] = {"provider": "unknown"}
+
+    return jsonify(report)
+
+
 # ========== 通用辅助函数 ==========
 
 def _generate_baseline_interviewee_reply(elder_info, question: str, history: list[dict]) -> str:
@@ -2049,6 +2121,71 @@ COMPARE_HTML = '''<!DOCTYPE html>
         }
         .btn-text:hover { background: #f5f1eb; }
         .btn-text:disabled { color: #999; cursor: not-allowed; }
+
+        /* === Report Drawer === */
+        .btn-report-toggle {
+            position: fixed; right: 0; top: 50%; transform: translateY(-50%);
+            z-index: 1001; background: #2563eb; color: #fff; border: none;
+            border-radius: 6px 0 0 6px; padding: 12px 8px; font-size: 18px;
+            cursor: pointer; writing-mode: vertical-lr; letter-spacing: 2px;
+            box-shadow: -2px 0 8px rgba(0,0,0,.15);
+        }
+        .btn-report-toggle:hover { background: #1d4ed8; }
+        .drawer-overlay {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,.3);
+            z-index: 1002;
+        }
+        .drawer-overlay.show { display: block; }
+        .report-drawer {
+            position: fixed; top: 0; right: -440px; width: 420px; height: 100vh;
+            background: #fff; z-index: 1003; transition: right .3s ease;
+            box-shadow: -4px 0 16px rgba(0,0,0,.1); display: flex; flex-direction: column;
+            overflow: hidden;
+        }
+        .report-drawer.open { right: 0; }
+        .drawer-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 16px 20px; border-bottom: 1px solid #e5e7eb;
+            background: #f9fafb;
+        }
+        .drawer-header h3 { margin: 0; font-size: 16px; color: #111827; }
+        .drawer-close { background: none; border: none; font-size: 20px; cursor: pointer; color: #6b7280; padding: 4px 8px; }
+        .drawer-close:hover { color: #111827; }
+        .drawer-body { flex: 1; overflow-y: auto; padding: 16px 20px; }
+        .report-section { margin-bottom: 20px; }
+        .report-section h4 {
+            font-size: 13px; color: #6b7280; text-transform: uppercase;
+            letter-spacing: .5px; margin: 0 0 10px; padding-bottom: 6px;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        .report-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .report-table th, .report-table td { padding: 6px 10px; text-align: left; border-bottom: 1px solid #f3f4f6; }
+        .report-table th { color: #6b7280; font-weight: 500; }
+        .report-table td { color: #111827; }
+        .report-kv { display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px; }
+        .report-kv .k { color: #6b7280; }
+        .report-kv .v { color: #111827; font-weight: 500; }
+        .richness-bar { height: 8px; border-radius: 4px; background: #e5e7eb; overflow: hidden; flex: 1; margin: 0 8px; }
+        .richness-fill { height: 100%; border-radius: 4px; background: #3b82f6; transition: width .3s; }
+        .timing-bar-row { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; font-size: 12px; }
+        .timing-bar-row .turn-label { width: 32px; text-align: right; color: #6b7280; flex-shrink: 0; }
+        .timing-bar-stack { display: flex; height: 16px; border-radius: 3px; overflow: hidden; flex: 1; background: #f3f4f6; }
+        .timing-bar-stack .seg { height: 100%; }
+        .seg-retrieval { background: #3b82f6; }
+        .seg-extraction { background: #f59e0b; }
+        .seg-write { background: #10b981; }
+        .timing-legend { display: flex; gap: 14px; font-size: 11px; color: #6b7280; margin-bottom: 10px; }
+        .timing-legend span::before { content: ''; display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; vertical-align: middle; }
+        .timing-legend .l-ret::before { background: #3b82f6; }
+        .timing-legend .l-ext::before { background: #f59e0b; }
+        .timing-legend .l-wri::before { background: #10b981; }
+        .status-ok { color: #10b981; font-weight: 500; }
+        .status-warn { color: #f59e0b; font-weight: 500; }
+        .btn-refresh-report {
+            background: #2563eb; color: #fff; border: none; border-radius: 6px;
+            padding: 6px 14px; font-size: 13px; cursor: pointer;
+        }
+        .btn-refresh-report:hover { background: #1d4ed8; }
     </style>
 </head>
 <body>
@@ -2198,6 +2335,22 @@ COMPARE_HTML = '''<!DOCTYPE html>
             </div>
         </section>
     </main>
+
+    <!-- Report Drawer -->
+    <button id="btn-report" class="btn-report-toggle" onclick="toggleReport()">报告</button>
+    <div id="drawer-overlay" class="drawer-overlay" onclick="toggleReport()"></div>
+    <aside id="report-drawer" class="report-drawer">
+        <div class="drawer-header">
+            <h3>GraphRAG 运行报告</h3>
+            <div style="display:flex;gap:8px;align-items:center">
+                <button class="btn-refresh-report" onclick="loadReport()">刷新</button>
+                <button class="drawer-close" onclick="toggleReport()">✕</button>
+            </div>
+        </div>
+        <div class="drawer-body" id="report-content">
+            <p style="color:#9ca3af;font-size:13px">开始对比测试后点击刷新查看报告</p>
+        </div>
+    </aside>
 
     <!-- Footer -->
     <footer class="compare-footer">
@@ -3304,6 +3457,122 @@ COMPARE_HTML = '''<!DOCTYPE html>
             if (confirm("确定要重置测试吗？所有进度将丢失。")) {
                 location.reload();
             }
+        }
+
+        // ========== Report Drawer ==========
+        function toggleReport() {
+            const drawer = document.getElementById('report-drawer');
+            const overlay = document.getElementById('drawer-overlay');
+            const isOpen = drawer.classList.contains('open');
+            drawer.classList.toggle('open');
+            overlay.classList.toggle('show');
+            if (!isOpen && plannerSessionId) loadReport();
+        }
+
+        async function loadReport() {
+            if (!plannerSessionId) return;
+            const content = document.getElementById('report-content');
+            content.innerHTML = '<p style="color:#9ca3af">加载中...</p>';
+            try {
+                const data = await requestJson(`/api/planner/report/${plannerSessionId}`);
+                renderReport(data, content);
+            } catch (e) {
+                content.innerHTML = `<p style="color:#ef4444">加载失败: ${e.message}</p>`;
+            }
+        }
+
+        function renderReport(data, el) {
+            const s = data.session_id || '';
+            const t = data.turn_count || 0;
+            const start = data.start_time ? new Date(data.start_time).toLocaleString('zh-CN') : '-';
+            const mode = data.mode === 'ai' ? 'AI 自动' : '用户输入';
+
+            let html = '';
+
+            // Session overview
+            html += '<div class="report-section"><h4>会话概览</h4>';
+            html += `<div class="report-kv"><span class="k">会话 ID</span><span class="v">${s.slice(0,12)}...</span></div>`;
+            html += `<div class="report-kv"><span class="k">对话轮次</span><span class="v">${t}</span></div>`;
+            html += `<div class="report-kv"><span class="k">开始时间</span><span class="v">${start}</span></div>`;
+            html += `<div class="report-kv"><span class="k">模式</span><span class="v">${mode}</span></div>`;
+            html += '</div>';
+
+            // Neo4j stats
+            const neo4j = data.neo4j || {};
+            if (neo4j.nodes && neo4j.nodes.length > 0) {
+                html += '<div class="report-section"><h4>Neo4j 图谱节点</h4>';
+                html += '<table class="report-table"><tr><th>类型</th><th>数量</th></tr>';
+                for (const n of neo4j.nodes) {
+                    html += `<tr><td>${n.type || '-'}</td><td>${n.count}</td></tr>`;
+                }
+                html += '</table></div>';
+            }
+            if (neo4j.relationships && neo4j.relationships.length > 0) {
+                html += '<div class="report-section"><h4>Neo4j 关系</h4>';
+                html += '<table class="report-table"><tr><th>关系类型</th><th>数量</th></tr>';
+                for (const r of neo4j.relationships) {
+                    html += `<tr><td>${r.type || '-'}</td><td>${r.count}</td></tr>`;
+                }
+                html += '</table></div>';
+            }
+
+            // Theme coverage
+            if (neo4j.themes && neo4j.themes.length > 0) {
+                const cov = data.coverage || {};
+                const richness = cov.theme_richness || {};
+                html += '<div class="report-section"><h4>主题覆盖</h4>';
+                html += '<table class="report-table"><tr><th>主题</th><th>状态</th><th>事件</th><th>丰富度</th></tr>';
+                for (const th of neo4j.themes) {
+                    const r = richness[th.id] || 0;
+                    const pct = Math.round(r * 100);
+                    html += `<tr><td>${th.name || th.id}</td><td>${th.status}</td><td>${th.event_count}</td>`;
+                    html += `<td><div style="display:flex;align-items:center"><div class="richness-bar"><div class="richness-fill" style="width:${pct}%"></div></div><span style="font-size:12px;min-width:36px">${pct}%</span></div></td></tr>`;
+                }
+                if (cov.overall_richness != null) {
+                    const op = Math.round(cov.overall_richness * 100);
+                    html += `<tr style="font-weight:600"><td>整体</td><td></td><td></td><td>${op}%</td></tr>`;
+                }
+                html += '</table></div>';
+            }
+
+            // Turn timing chart
+            const timings = data.turn_timings || [];
+            if (timings.length > 0) {
+                const maxTotal = Math.max(...timings.map(t => (t.retrieval_ms || 0) + (t.extraction_ms || 0) + (t.write_ms || 0)), 1);
+                html += '<div class="report-section"><h4>每轮延迟趋势</h4>';
+                html += '<div class="timing-legend"><span class="l-ret">检索</span><span class="l-ext">提取</span><span class="l-wri">写入</span></div>';
+                for (let i = 0; i < timings.length; i++) {
+                    const t = timings[i];
+                    const ret = t.retrieval_ms || 0;
+                    const ext = t.extraction_ms || 0;
+                    const wri = t.write_ms || 0;
+                    const total = ret + ext + wri;
+                    const scale = total / maxTotal * 100;
+                    const retW = total > 0 ? ret / total * 100 : 0;
+                    const extW = total > 0 ? ext / total * 100 : 0;
+                    const wriW = total > 0 ? wri / total * 100 : 0;
+                    html += `<div class="timing-bar-row"><span class="turn-label">T${i + 1}</span>`;
+                    html += `<div class="timing-bar-stack" style="width:${scale}%">`;
+                    html += `<div class="seg seg-retrieval" style="width:${retW}%"></div>`;
+                    html += `<div class="seg seg-extraction" style="width:${extW}%"></div>`;
+                    html += `<div class="seg seg-write" style="width:${wriW}%"></div>`;
+                    html += `</div><span style="min-width:40px;text-align:right;color:#6b7280">${(total / 1000).toFixed(1)}s</span></div>`;
+                }
+                html += '</div>';
+            }
+
+            // Embedding status
+            const emb = data.embedding || {};
+            if (emb.provider) {
+                const fallback = emb.fallback_active;
+                html += '<div class="report-section"><h4>Embedding 服务</h4>';
+                html += `<div class="report-kv"><span class="k">Provider</span><span class="v">${emb.provider}</span></div>`;
+                html += `<div class="report-kv"><span class="k">维度</span><span class="v">${emb.dimension || '-'}</span></div>`;
+                html += `<div class="report-kv"><span class="k">状态</span><span class="${fallback ? 'status-warn' : 'status-ok'}">${fallback ? 'Fallback (' + (emb.fallback_reason || '').slice(0, 60) + ')' : '正常'}</span></div>`;
+                html += '</div>';
+            }
+
+            el.innerHTML = html;
         }
     </script>
 </body>
