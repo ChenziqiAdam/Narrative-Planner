@@ -59,16 +59,16 @@ class GraphExtractionAgent:
     ) -> GraphExtraction:
         """从当前对话轮次中提取图谱实体和关系。"""
         prompt = self._build_prompt(state, turn_record, graph_context, neo4j_manager)
-        response_text = self._call_llm(prompt)
+        response_text, _extraction_usage = self._call_llm(prompt)
 
         if not response_text:
-            return self._build_fallback_extraction(turn_record)
+            return self._build_fallback_extraction(turn_record), {}
 
         extraction = self._parse_response(response_text)
         if extraction is None:
-            return self._build_fallback_extraction(turn_record)
+            return self._build_fallback_extraction(turn_record), {}
 
-        return extraction
+        return extraction, _extraction_usage
 
     def _build_prompt(
         self,
@@ -119,8 +119,8 @@ class GraphExtractionAgent:
         template = self._load_prompt_template()
         return f"{template}\n\n## 当前输入\n```json\n{json.dumps(input_data, ensure_ascii=False, indent=2)}\n```"
 
-    def _call_llm(self, prompt: str) -> str:
-        """调用 LLM 获取提取结果。"""
+    def _call_llm(self, prompt: str) -> tuple:
+        """调用 LLM 获取提取结果。Returns (response_text, usage_dict)."""
         try:
             client = self._get_client()
             model = Config.EXTRACTOR_MODEL_NAME
@@ -133,10 +133,16 @@ class GraphExtractionAgent:
                 max_tokens=2048,
                 temperature=0.2,
             )
-            return response.choices[0].message.content or ""
+            _usage: dict = {}
+            if response.usage:
+                _usage = {
+                    "prompt_tokens": response.usage.prompt_tokens or 0,
+                    "completion_tokens": response.usage.completion_tokens or 0,
+                }
+            return response.choices[0].message.content or "", _usage
         except Exception:
             logger.exception("Graph extraction LLM call failed")
-            return ""
+            return "", {}
 
     def _parse_response(self, text: str) -> Optional[GraphExtraction]:
         """解析 LLM 返回的 JSON。"""
