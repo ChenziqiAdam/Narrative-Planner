@@ -59,16 +59,16 @@ class GraphExtractionAgent:
     ) -> GraphExtraction:
         """从当前对话轮次中提取图谱实体和关系。"""
         prompt = self._build_prompt(state, turn_record, graph_context, neo4j_manager)
-        response_text = self._call_llm(prompt)
+        response_text, _extraction_usage = self._call_llm(prompt)
 
         if not response_text:
-            return self._build_fallback_extraction(turn_record)
+            return self._build_fallback_extraction(turn_record), {}
 
         extraction = self._parse_response(response_text)
         if extraction is None:
-            return self._build_fallback_extraction(turn_record)
+            return self._build_fallback_extraction(turn_record), {}
 
-        return extraction
+        return extraction, _extraction_usage
 
     def _build_prompt(
         self,
@@ -119,8 +119,8 @@ class GraphExtractionAgent:
         template = self._load_prompt_template()
         return f"{template}\n\n## 当前输入\n```json\n{json.dumps(input_data, ensure_ascii=False, indent=2)}\n```"
 
-    def _call_llm(self, prompt: str) -> str:
-        """调用 LLM 获取提取结果。"""
+    def _call_llm(self, prompt: str) -> tuple:
+        """调用 LLM 获取提取结果。Returns (response_text, usage_dict)."""
         try:
             client = self._get_client()
             model = Config.EXTRACTOR_MODEL_NAME
@@ -133,10 +133,16 @@ class GraphExtractionAgent:
                 max_tokens=2048,
                 temperature=0.2,
             )
-            return response.choices[0].message.content or ""
+            _usage: dict = {}
+            if response.usage:
+                _usage = {
+                    "prompt_tokens": response.usage.prompt_tokens or 0,
+                    "completion_tokens": response.usage.completion_tokens or 0,
+                }
+            return response.choices[0].message.content or "", _usage
         except Exception:
             logger.exception("Graph extraction LLM call failed")
-            return ""
+            return "", {}
 
     def _parse_response(self, text: str) -> Optional[GraphExtraction]:
         """解析 LLM 返回的 JSON。"""
@@ -260,6 +266,51 @@ class GraphExtractionAgent:
 }
 
 所有字段可选，有什么提什么。"""
+
+    def query_memory(
+        self,
+        query: str,
+        session_id: str,
+        neo4j_manager: Optional[Any] = None,
+        entity_vector_store: Optional[Any] = None,
+    ) -> str:
+        """Query graph RAG memory for retrieval context.
+        
+        This method is called by the decision context builder when
+        QUERY_OPTIMIZATION_ENABLED is True, consolidating memory queries
+        through the extraction agent.
+        
+        Args:
+            query: User's latest response or question
+            session_id: Current session ID
+            neo4j_manager: Neo4j connection for graph queries
+            entity_vector_store: Vector store for semantic search
+            
+        Returns:
+            Formatted prompt text with retrieved context
+        """
+        if neo4j_manager is None or entity_vector_store is None:
+            logger.debug("query_memory: missing neo4j_manager or entity_vector_store")
+            return ""
+        
+        try:
+            # Import HybridRetriever locally to avoid circular imports
+            from src.services.hybrid_retriever import HybridRetriever
+            
+            retriever = HybridRetriever(
+                neo4j_manager=neo4j_manager,
+                entity_vector_store=entity_vector_store,
+            )
+            result = retriever.retrieve(query, session_id, max_tokens=400)
+            
+            logger.info(
+                "Memory query succeeded: %d entities, %.1f ms",
+                len(result.entities), result.latency_ms
+            )
+            return result.prompt_text or ""
+        except Exception as exc:
+            logger.warning("Memory query failed for session %s: %s", session_id, exc, exc_info=True)
+            return ""
 
     async def close(self) -> None:
         pass

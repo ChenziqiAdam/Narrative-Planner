@@ -33,6 +33,7 @@ from src.state import (
 )
 from src.state.narrative_models import NarrativeFragment
 from src.storage.neo4j.manager import Neo4jGraphManager
+from src.pipeline.timing import TurnTokenUsage
 from src.tools.planner_tools import PlannerToolSystem
 
 logger = logging.getLogger(__name__)
@@ -114,6 +115,7 @@ class SessionOrchestrator:
             self._decision_ctx_builder = GraphRAGDecisionContextBuilder(
                 neo4j_manager=self._get_neo4j_manager(),
                 entity_vector_store=self._entity_vector_store,
+                extraction_agent=self._graph_extraction_agent,
             )
         return self._decision_ctx_builder
 
@@ -159,7 +161,11 @@ class SessionOrchestrator:
         # Build decision context and generate first question
         _t4 = time.perf_counter()
         decision_ctx = self._get_decision_context_builder().build(
-            state, None, None, bridge_result=bridge_context,
+            state, 
+            None, 
+            None, 
+            bridge_result=bridge_context,
+            enable_query_optimization=Config.QUERY_OPTIMIZATION_ENABLED,
         )
         logger.info("[init] decision context: %.1fms", (time.perf_counter() - _t4) * 1000)
 
@@ -198,7 +204,7 @@ class SessionOrchestrator:
         # Planner retrieval happens after the write so the next question can
         # use freshly committed GraphRAG evidence.
         _t = time.perf_counter()
-        graph_extraction = await self._graph_extraction_agent.extract(
+        graph_extraction, _extraction_usage = await self._graph_extraction_agent.extract(
             state, turn_record, graph_context=None,
             neo4j_manager=self._get_neo4j_manager(),
         )
@@ -255,15 +261,28 @@ class SessionOrchestrator:
         state.theme_state = self._build_theme_state_from_neo4j()
 
         # ── Planner retrieval from the updated graph ──
-        graph_rag_retrieval = self._get_hybrid_retriever().retrieve(
-            user_response, self.session_id
-        )
-        _graph_rag_context = graph_rag_retrieval.prompt_text
+        # If query optimization is enabled, the decision context builder will
+        # delegate retrieval to the extraction agent. Otherwise, use HybridRetriever.
+        _graph_rag_context = None
+        graph_rag_retrieval = None
+        
+        if not Config.QUERY_OPTIMIZATION_ENABLED:
+            # Direct retrieval path
+            graph_rag_retrieval = self._get_hybrid_retriever().retrieve(
+                user_response, self.session_id
+            )
+            _graph_rag_context = graph_rag_retrieval.prompt_text
 
         # ── Build decision context and generate next question ──
         decision_ctx = self._get_decision_context_builder().build(
-            state, graph_extraction, _graph_rag_context,
+            state, 
+            graph_extraction, 
+            _graph_rag_context,
+            session_id=self.session_id,
+            user_response=user_response,
+            enable_query_optimization=Config.QUERY_OPTIMIZATION_ENABLED,
         )
+        _t = time.perf_counter()
         generated = self.interviewer_agent.generate_question(
             state.elder_profile,
             state.recent_transcript(3),
@@ -275,7 +294,16 @@ class SessionOrchestrator:
                 neo4j_manager=self._get_neo4j_manager(),
             ),
         )
+        _interviewer_llm_ms = (time.perf_counter() - _t) * 1000
         planner_plan = generated.get("planner_plan", {})
+        
+        # If retrieval wasn't done earlier, do it now for metrics
+        # (but only the decision context will be used for planning in optimization mode)
+        if Config.QUERY_OPTIMIZATION_ENABLED and graph_rag_retrieval is None:
+            graph_rag_retrieval = self._get_hybrid_retriever().retrieve(
+                user_response, self.session_id
+            )
+        
         graph_rag_metrics = build_graph_rag_metrics(
             extraction=graph_extraction,
             write_result=write_result,
@@ -285,11 +313,20 @@ class SessionOrchestrator:
             write_ms=_write_ms,
         )
 
+        _interviewer_llm_usage = generated.get("llm_usage") or {}
+        _token_usage = TurnTokenUsage(
+            interviewer_prompt_tokens=_interviewer_llm_usage.get("prompt_tokens"),
+            interviewer_completion_tokens=_interviewer_llm_usage.get("completion_tokens"),
+            extraction_prompt_tokens=_extraction_usage.get("prompt_tokens"),
+            extraction_completion_tokens=_extraction_usage.get("completion_tokens"),
+        )
+
         self._update_generation_metadata(state, generated, turn_record.interviewer_question)
         turn_debug_trace = {
             "extraction_ms": _extraction_ms,
             "write_ms": _write_ms,
-            "retrieval_ms": graph_rag_retrieval.latency_ms,
+            "retrieval_ms": graph_rag_retrieval.latency_ms,            
+            "interviewer_llm_ms": _interviewer_llm_ms,
             "pipeline": "graph_rag",
             "graph_changes": graph_changes,
             "decision_ctx": {
@@ -301,6 +338,7 @@ class SessionOrchestrator:
             "planner_plan": planner_plan,
             "graph_rag_metrics": graph_rag_metrics,
             "tool_trace": generated.get("tool_trace", []),
+            "token_usage": _token_usage.to_dict(),
         }
         turn_record.debug_trace = turn_debug_trace
         state.pending_question = generated["question"]

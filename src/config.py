@@ -95,6 +95,12 @@ class Config:
         os.getenv("HISTORY_COMPRESS_MAX_CHAR_THRESHOLD", "12000")
     )
 
+    # Query optimization: delegate graph RAG retrieval to extraction agent
+    # When enabled, the extraction agent performs memory queries instead of direct HybridRetriever calls
+    QUERY_OPTIMIZATION_ENABLED = os.getenv("QUERY_OPTIMIZATION_ENABLED", "false").lower() in {
+        "1", "true", "yes", "on"
+    }
+
     @classmethod
     def get_api_key(cls):
         return getattr(cls, "OPENAI_API_KEY", None) or getattr(cls, "MOONSHOT_API_KEY", None)

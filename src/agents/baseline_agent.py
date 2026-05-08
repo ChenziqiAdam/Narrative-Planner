@@ -51,7 +51,8 @@ class BaselineAgent:
         self._summary_message = None
         logger.info("Baseline conversation initialized")
 
-    def get_next_question(self, user_response: str | None = None) -> str:
+    def get_next_question(self, user_response: str | None = None) -> dict:
+        """Returns {"question": str, "llm_usage": {"prompt_tokens": int, "completion_tokens": int}}."""
         if user_response:
             self.conversation_history.append({"role": "user", "content": user_response})
 
@@ -74,8 +75,14 @@ class BaselineAgent:
                         self.conversation_history.append(
                             {"role": "assistant", "content": question}
                         )
+                        llm_usage: dict = {}
+                        if response.usage:
+                            llm_usage = {
+                                "prompt_tokens": response.usage.prompt_tokens or 0,
+                                "completion_tokens": response.usage.completion_tokens or 0,
+                            }
                         logger.info("Baseline generated next turn with model=%s", model_name)
-                        return question
+                        return {"question": question, "llm_usage": llm_usage}
                 except Exception as exc:
                     last_error = exc
                     logger.warning(
@@ -98,7 +105,7 @@ class BaselineAgent:
                 break
 
         logger.error("Baseline API call failed: %s", last_error)
-        return "抱歉，我这边刚才没有顺利组织出下一个问题，请稍后再试一次。"
+        return {"question": "抱歉，我这边刚才没有顺利组织出下一个问题，请稍后再试一次。", "llm_usage": {}}
 
     def _effective_history(self) -> list[dict[str, str]]:
         """Return conversation history with summary replacing old turns."""

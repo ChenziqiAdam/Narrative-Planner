@@ -100,9 +100,11 @@ class GraphRAGDecisionContextBuilder:
         self,
         neo4j_manager: Optional[Any] = None,
         entity_vector_store: Optional[Any] = None,
+        extraction_agent: Optional[Any] = None,
     ) -> None:
         self._neo4j = neo4j_manager
         self._vector_store = entity_vector_store
+        self._extraction_agent = extraction_agent
         self._coverage_calc = GraphCoverageCalculator()
         self._richness_scorer = NarrativeRichnessScorer()
 
@@ -112,6 +114,9 @@ class GraphRAGDecisionContextBuilder:
         graph_extraction: Optional[Any] = None,
         graph_rag_context: Optional[str] = None,
         bridge_result: Optional[Any] = None,
+        session_id: Optional[str] = None,
+        user_response: Optional[str] = None,
+        enable_query_optimization: bool = False,
     ) -> GraphRAGDecisionContext:
         ctx = GraphRAGDecisionContext()
 
@@ -151,8 +156,18 @@ class GraphRAGDecisionContextBuilder:
         # 7. Low info streak
         ctx.low_info_streak = self._count_low_info_streak(transcript)
 
-        # 8. Retrieval context
-        ctx.graph_rag_context = graph_rag_context
+        # 8. Retrieval context — support query optimization
+        if enable_query_optimization and self._extraction_agent and session_id and user_response:
+            # Delegate query to extraction agent
+            ctx.graph_rag_context = self._extraction_agent.query_memory(
+                user_response,
+                session_id,
+                neo4j_manager=self._neo4j,
+                entity_vector_store=self._vector_store,
+            )
+        else:
+            # Use provided context or empty string
+            ctx.graph_rag_context = graph_rag_context
 
         # 9. Cross-session
         if bridge_result and getattr(bridge_result, "has_history", False):
