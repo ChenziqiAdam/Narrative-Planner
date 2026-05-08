@@ -261,5 +261,50 @@ class GraphExtractionAgent:
 
 所有字段可选，有什么提什么。"""
 
+    def query_memory(
+        self,
+        query: str,
+        session_id: str,
+        neo4j_manager: Optional[Any] = None,
+        entity_vector_store: Optional[Any] = None,
+    ) -> str:
+        """Query graph RAG memory for retrieval context.
+        
+        This method is called by the decision context builder when
+        QUERY_OPTIMIZATION_ENABLED is True, consolidating memory queries
+        through the extraction agent.
+        
+        Args:
+            query: User's latest response or question
+            session_id: Current session ID
+            neo4j_manager: Neo4j connection for graph queries
+            entity_vector_store: Vector store for semantic search
+            
+        Returns:
+            Formatted prompt text with retrieved context
+        """
+        if neo4j_manager is None or entity_vector_store is None:
+            logger.debug("query_memory: missing neo4j_manager or entity_vector_store")
+            return ""
+        
+        try:
+            # Import HybridRetriever locally to avoid circular imports
+            from src.services.hybrid_retriever import HybridRetriever
+            
+            retriever = HybridRetriever(
+                neo4j_manager=neo4j_manager,
+                entity_vector_store=entity_vector_store,
+            )
+            result = retriever.retrieve(query, session_id, max_tokens=400)
+            
+            logger.info(
+                "Memory query succeeded: %d entities, %.1f ms",
+                len(result.entities), result.latency_ms
+            )
+            return result.prompt_text or ""
+        except Exception as exc:
+            logger.warning("Memory query failed for session %s: %s", session_id, exc, exc_info=True)
+            return ""
+
     async def close(self) -> None:
         pass

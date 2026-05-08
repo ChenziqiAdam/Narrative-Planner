@@ -114,6 +114,7 @@ class SessionOrchestrator:
             self._decision_ctx_builder = GraphRAGDecisionContextBuilder(
                 neo4j_manager=self._get_neo4j_manager(),
                 entity_vector_store=self._entity_vector_store,
+                extraction_agent=self._graph_extraction_agent,
             )
         return self._decision_ctx_builder
 
@@ -159,7 +160,11 @@ class SessionOrchestrator:
         # Build decision context and generate first question
         _t4 = time.perf_counter()
         decision_ctx = self._get_decision_context_builder().build(
-            state, None, None, bridge_result=bridge_context,
+            state, 
+            None, 
+            None, 
+            bridge_result=bridge_context,
+            enable_query_optimization=Config.QUERY_OPTIMIZATION_ENABLED,
         )
         logger.info("[init] decision context: %.1fms", (time.perf_counter() - _t4) * 1000)
 
@@ -255,14 +260,26 @@ class SessionOrchestrator:
         state.theme_state = self._build_theme_state_from_neo4j()
 
         # ── Planner retrieval from the updated graph ──
-        graph_rag_retrieval = self._get_hybrid_retriever().retrieve(
-            user_response, self.session_id
-        )
-        _graph_rag_context = graph_rag_retrieval.prompt_text
+        # If query optimization is enabled, the decision context builder will
+        # delegate retrieval to the extraction agent. Otherwise, use HybridRetriever.
+        _graph_rag_context = None
+        graph_rag_retrieval = None
+        
+        if not Config.QUERY_OPTIMIZATION_ENABLED:
+            # Direct retrieval path
+            graph_rag_retrieval = self._get_hybrid_retriever().retrieve(
+                user_response, self.session_id
+            )
+            _graph_rag_context = graph_rag_retrieval.prompt_text
 
         # ── Build decision context and generate next question ──
         decision_ctx = self._get_decision_context_builder().build(
-            state, graph_extraction, _graph_rag_context,
+            state, 
+            graph_extraction, 
+            _graph_rag_context,
+            session_id=self.session_id,
+            user_response=user_response,
+            enable_query_optimization=Config.QUERY_OPTIMIZATION_ENABLED,
         )
         generated = self.interviewer_agent.generate_question(
             state.elder_profile,
@@ -276,6 +293,14 @@ class SessionOrchestrator:
             ),
         )
         planner_plan = generated.get("planner_plan", {})
+        
+        # If retrieval wasn't done earlier, do it now for metrics
+        # (but only the decision context will be used for planning in optimization mode)
+        if Config.QUERY_OPTIMIZATION_ENABLED and graph_rag_retrieval is None:
+            graph_rag_retrieval = self._get_hybrid_retriever().retrieve(
+                user_response, self.session_id
+            )
+        
         graph_rag_metrics = build_graph_rag_metrics(
             extraction=graph_extraction,
             write_result=write_result,

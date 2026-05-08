@@ -86,6 +86,12 @@ class Config:
     PLANNER_MAX_TOOL_ROUNDS = int(os.getenv("PLANNER_MAX_TOOL_ROUNDS", "2"))
     PLANNER_MAX_TOOLS_PER_ROUND = int(os.getenv("PLANNER_MAX_TOOLS_PER_ROUND", "2"))
 
+    # Query optimization: delegate graph RAG retrieval to extraction agent
+    # When enabled, the extraction agent performs memory queries instead of direct HybridRetriever calls
+    QUERY_OPTIMIZATION_ENABLED = os.getenv("QUERY_OPTIMIZATION_ENABLED", "false").lower() in {
+        "1", "true", "yes", "on"
+    }
+
     @classmethod
     def get_api_key(cls):
         return getattr(cls, "OPENAI_API_KEY", None) or getattr(cls, "MOONSHOT_API_KEY", None)
