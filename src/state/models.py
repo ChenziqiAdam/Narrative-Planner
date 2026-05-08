@@ -188,6 +188,7 @@ class SessionState:
     pending_question: Optional[str] = None
     metadata: Dict[str, Any] = field(default_factory=dict)
     narrative_fragments: Dict[str, Any] = field(default_factory=dict)
+    conversation_summary: str = ""
 
     @property
     def turn_count(self) -> int:

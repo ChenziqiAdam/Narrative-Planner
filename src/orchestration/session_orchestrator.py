@@ -16,12 +16,15 @@ from src.config import Config
 from src.orchestration.state_store import InMemorySessionStateStore
 from src.services import ProfileProjector
 from src.services.entity_vector_store import EntityVectorStore
+from src.services.history_compressor import HistoryCompressor
 from src.services.graph_coverage import GraphCoverageCalculator
 from src.services.graph_rag_metrics import build_graph_rag_metrics
 from src.services.graph_rag_decision_context import GraphRAGDecisionContextBuilder
 from src.services.graph_writer import GraphWriter
 from src.services.hybrid_retriever import HybridRetriever
 from src.services.session_graph_bridge import SessionGraphBridge
+from openai import OpenAI
+
 from src.state import (
     BackgroundJobStatus,
     ElderProfile,
@@ -76,6 +79,9 @@ class SessionOrchestrator:
         self._evaluation_threads: Dict[str, threading.Thread] = {}
         self._profile_threads: Dict[str, threading.Thread] = {}
 
+        # Conversation summary compressor (lazy init)
+        self._compressor: Optional[HistoryCompressor] = None
+
     # ── Neo4j lazy connection ──
 
     def _get_neo4j_manager(self) -> Neo4jGraphManager:
@@ -118,6 +124,12 @@ class SessionOrchestrator:
                 extraction_agent=self._graph_extraction_agent,
             )
         return self._decision_ctx_builder
+
+    def _get_compressor(self) -> HistoryCompressor:
+        if self._compressor is None:
+            client = OpenAI(**Config.get_openai_client_kwargs())
+            self._compressor = HistoryCompressor(client)
+        return self._compressor
 
     # ── Session lifecycle ──
 
@@ -259,6 +271,9 @@ class SessionOrchestrator:
         # ── Append turn and update state ──
         state.transcript.append(turn_record)
         state.theme_state = self._build_theme_state_from_neo4j()
+
+        # ── Update within-session conversation summary ──
+        self._maybe_update_conversation_summary(state)
 
         # ── Planner retrieval from the updated graph ──
         # If query optimization is enabled, the decision context builder will
@@ -590,6 +605,37 @@ class SessionOrchestrator:
         except Exception:
             logger.debug("Cross-session history load failed", exc_info=True)
             return None
+
+    # ── Conversation summary ──
+
+    def _maybe_update_conversation_summary(self, state: SessionState) -> None:
+        max_recent = Config.HISTORY_COMPRESS_MAX_RECENT_TURNS
+        if state.turn_count <= max_recent:
+            return
+        old_turns = state.transcript[:-max_recent]
+        total_chars = sum(
+            len(t.interviewer_question or "") + len(t.interviewee_answer or "")
+            for t in old_turns
+        )
+        if total_chars < Config.HISTORY_COMPRESS_MAX_CHAR_THRESHOLD // 3:
+            return
+        turns_data = [
+            {"question": t.interviewer_question or "", "answer": t.interviewee_answer or ""}
+            for t in old_turns
+        ]
+        try:
+            compressor = self._get_compressor()
+            new_summary = compressor.compress_qa_pairs(
+                turns_data, state.conversation_summary,
+            )
+            if new_summary:
+                state.conversation_summary = new_summary
+                logger.info(
+                    "Conversation summary updated: %d old turns → %d chars",
+                    len(old_turns), len(new_summary),
+                )
+        except Exception as exc:
+            logger.warning("Conversation summary update failed: %s", exc)
 
     # ── Dynamic profile (async) ──
 

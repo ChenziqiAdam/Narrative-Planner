@@ -328,6 +328,11 @@ class InterviewerAgent:
             parts.append("\n## 叙事记忆脉络")
             parts.append(ctx.graph_rag_context)
 
+        # 6.5 Within-session conversation flow summary
+        if ctx.session_conversation_summary:
+            parts.append("\n## 本次访谈对话流")
+            parts.append(ctx.session_conversation_summary)
+
         # 7. Strategy hints
         parts.append("\n## 策略提示")
         if ctx.low_info_streak >= 3:

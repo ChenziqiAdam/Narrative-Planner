@@ -89,6 +89,9 @@ class GraphRAGDecisionContext:
     cross_session_summary: Optional[str] = None
     cross_session_open_loops: List[str] = field(default_factory=list)
 
+    # ── Within-session conversation flow summary ──
+    session_conversation_summary: Optional[str] = None
+
     # ── Dynamic profile ──
     dynamic_profile_hint: Optional[Dict[str, Any]] = None
 
@@ -178,6 +181,11 @@ class GraphRAGDecisionContextBuilder:
         dynamic_profile = getattr(state, "dynamic_profile", None)
         if dynamic_profile:
             ctx.dynamic_profile_hint = self._build_dynamic_profile_hint(dynamic_profile)
+
+        # 11. Within-session conversation summary
+        conversation_summary = getattr(state, "conversation_summary", "")
+        if conversation_summary:
+            ctx.session_conversation_summary = conversation_summary
 
         return ctx
 

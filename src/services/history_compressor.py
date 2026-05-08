@@ -13,19 +13,19 @@ from src.services.llm_retry import is_transient_llm_error, sleep_before_retry
 logger = logging.getLogger(__name__)
 
 SUMMARIZATION_SYSTEM_PROMPT = """\
-你是一位专业的访谈记录整理助手。你的任务是将一段访谈对话历史压缩成简洁但完整的摘要。
+你是一位专业的访谈记录整理助手。你的任务是将一段访谈对话历史压缩成结构化的摘要。
 
-摘要必须保留以下信息：
-1. 已讨论的主要话题和主题
-2. 受访者提到的关键事实、人名、地名、时间节点
-3. 受访者的情感状态变化
-4. 叙事的进展脉络（故事讲到了哪里、哪个阶段）
+请按以下格式输出（如果已有旧摘要，请与新对话整合为一份更新后的摘要）：
+
+【话题脉络】按时间顺序列出已讨论的主要话题（每条一句话）
+【关键事实】受访者提到的人名、地名、时间节点、重要事件
+【情感走向】受访者的情绪变化轨迹
+【叙事进展】故事推进到了哪个阶段、当前焦点
 
 要求：
 - 只从原文中提取事实，不要编造
-- 使用简洁的中文
-- 保持时间顺序
-- 字数控制在200字以内"""
+- 每个板块内容简洁，合并同类信息
+- 总字数控制在400-600字"""
 
 
 class HistoryCompressor:
@@ -93,7 +93,7 @@ class HistoryCompressor:
                     response = self.client.chat.completions.create(
                         model=model_name,
                         messages=messages,
-                        max_tokens=512,
+                        max_tokens=1024,
                     )
                     summary = (response.choices[0].message.content or "").strip()
                     if summary:
