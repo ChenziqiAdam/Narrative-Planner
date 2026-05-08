@@ -989,12 +989,15 @@ def baseline_auto():
             _t_iv = time.perf_counter()
             result = agent.get_next_question(answer)
             _iv_ms = (time.perf_counter() - _t_iv) * 1000
-            if isinstance(result, dict):
-                question = result.get("question", "")
-                action = result.get("action", "continue")
-            else:
-                question = result
-                action = "continue"
+            question = result.get("question", "")
+            action = result.get("action", "continue")
+            _raw_usage = result.get("llm_usage") or {}
+            _baseline_token_usage = {
+                "interviewer_prompt_tokens": _raw_usage.get("prompt_tokens"),
+                "interviewer_completion_tokens": _raw_usage.get("completion_tokens"),
+                "prompt_tokens": _raw_usage.get("prompt_tokens"),
+                "completion_tokens": _raw_usage.get("completion_tokens"),
+            } if _raw_usage else {}
 
             turn_evaluation = scorer.submit_turn(
                 last_question,
@@ -1018,7 +1021,7 @@ def baseline_auto():
                 turn_evaluation=turn_evaluation,
                 debug_trace={"pipeline": "baseline"},
             )
-            yield f"data: {json.dumps({'role': 'interviewer', 'action': aligned['action'], 'text': aligned['question'], 'turn_evaluation': aligned['turn_evaluation'], 'debug_trace': aligned['debug_trace'], 'timing': {'interviewer_llm_ms': round(_iv_ms, 1)}}, ensure_ascii=False)}\n\n"
+            yield f"data: {json.dumps({'role': 'interviewer', 'action': aligned['action'], 'text': aligned['question'], 'turn_evaluation': aligned['turn_evaluation'], 'debug_trace': aligned['debug_trace'], 'timing': {'interviewer_llm_ms': round(_iv_ms, 1), 'token_usage': _baseline_token_usage}}, ensure_ascii=False)}\n\n"
 
             if action == "end":
                 break
@@ -1248,6 +1251,8 @@ def planner_auto():
                     "retrieval_ms": _dt.get("retrieval_ms"),
                     "extraction_ms": _dt.get("extraction_ms"),
                     "write_ms": _dt.get("write_ms"),
+                    "interviewer_llm_ms": _dt.get("interviewer_llm_ms"),
+                    "token_usage": _dt.get("token_usage"),
                 }
 
                 # 发送事件
@@ -2035,6 +2040,49 @@ COMPARE_HTML = '''<!DOCTYPE html>
             background: #fff3e0;
             color: #e65100;
         }
+        .token-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            padding: 3px 8px;
+            border-radius: 999px;
+            font-size: 0.68rem;
+            font-weight: 600;
+            background: #ede7f6;
+            color: #512da8;
+        }
+
+        /* Token summary */
+        .token-summary {
+            background: linear-gradient(180deg, #ede7f6 0%, #e8eaf6 100%);
+            border: 1px solid #ce93d8;
+            border-radius: 12px;
+            padding: 14px;
+            margin-top: 8px;
+        }
+        .token-summary.placeholder {
+            color: #607d8b;
+            font-size: 0.84rem;
+            line-height: 1.6;
+        }
+        .token-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 0;
+            border-top: 1px solid rgba(0,0,0,0.06);
+        }
+        .token-row:first-child { border-top: none; }
+        .token-label {
+            font-size: 0.78rem;
+            color: #455a64;
+            font-weight: 500;
+        }
+        .token-value {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #37474f;
+        }
 
         /* Timing summary */
         .timing-summary {
@@ -2570,10 +2618,16 @@ COMPARE_HTML = '''<!DOCTYPE html>
 
         // Timing accumulator
         const timingAccum = { baseline: [], planner: [] };
+        // Token accumulator: { baseline: [...], planner: [...] }
+        const tokenAccum = { baseline: [], planner: [] };
 
         function accumulateTiming(kind, timing) {
             if (!timing || typeof timing !== "object") return;
             timingAccum[kind].push(timing);
+            if (timing.token_usage && typeof timing.token_usage === "object") {
+                tokenAccum[kind].push(timing.token_usage);
+                renderTokenSummary();
+            }
             renderTimingSummary();
         }
 
@@ -2637,6 +2691,78 @@ COMPARE_HTML = '''<!DOCTYPE html>
                     ${row("提取", null, pAvgExt)}
                     ${row("写入", null, pAvgWr)}
                     ${row("访谈者", bAvgQ, null)}
+                </div>`;
+        }
+
+        function sumTokens(arr, key) {
+            return arr.reduce((acc, r) => acc + (r[key] || 0), 0);
+        }
+
+        function renderTokenSummary() {
+            const el = document.getElementById("token-summary-content");
+            if (!el) return;
+            const bTurns = tokenAccum.baseline;
+            const pTurns = tokenAccum.planner;
+            if (bTurns.length === 0 && pTurns.length === 0) {
+                el.innerHTML = '<div class="token-summary placeholder">Token 数据将在对话开始后显示</div>';
+                return;
+            }
+
+            function trow(label, bIn, bOut, pIn, pOut) {
+                const bStr = (bIn != null || bOut != null)
+                    ? `↑${(bIn||0).toLocaleString()} / ↓${(bOut||0).toLocaleString()}`
+                    : "—";
+                const pStr = (pIn != null || pOut != null)
+                    ? `↑${(pIn||0).toLocaleString()} / ↓${(pOut||0).toLocaleString()}`
+                    : "—";
+                return `<div class="token-row">
+                    <span class="token-label">${label}</span>
+                    <span class="token-value" style="color:#9e9e9e;min-width:120px;text-align:right">${bStr}</span>
+                    <span class="token-value" style="color:#512da8;min-width:120px;text-align:right">${pStr}</span>
+                </div>`;
+            }
+
+            // Baseline: only interviewer (no extraction module)
+            const bIvIn  = bTurns.length ? sumTokens(bTurns, "interviewer_prompt_tokens") : null;
+            const bIvOut = bTurns.length ? sumTokens(bTurns, "interviewer_completion_tokens") : null;
+            const bTotIn  = bTurns.length ? sumTokens(bTurns, "prompt_tokens") : null;
+            const bTotOut = bTurns.length ? sumTokens(bTurns, "completion_tokens") : null;
+            const bAvgIn  = bTurns.length ? Math.round(bTotIn / bTurns.length) : null;
+            const bAvgOut = bTurns.length ? Math.round(bTotOut / bTurns.length) : null;
+
+            // Planner: interviewer + extraction
+            const pIvIn  = pTurns.length ? sumTokens(pTurns, "interviewer_prompt_tokens") : null;
+            const pIvOut = pTurns.length ? sumTokens(pTurns, "interviewer_completion_tokens") : null;
+            const pExIn  = pTurns.length ? sumTokens(pTurns, "extraction_prompt_tokens") : null;
+            const pExOut = pTurns.length ? sumTokens(pTurns, "extraction_completion_tokens") : null;
+            const pTotIn  = pTurns.length ? sumTokens(pTurns, "total_prompt_tokens") : null;
+            const pTotOut = pTurns.length ? sumTokens(pTurns, "total_completion_tokens") : null;
+            const pAvgIn  = pTurns.length ? Math.round(pTotIn / pTurns.length) : null;
+            const pAvgOut = pTurns.length ? Math.round(pTotOut / pTurns.length) : null;
+
+            const bLabel = bTurns.length ? `Baseline (${bTurns.length})` : "Baseline (—)";
+            const pLabel = pTurns.length ? `Planner (${pTurns.length})` : "Planner (—)";
+            const bAvgStr = bAvgIn != null ? `avg ↑${bAvgIn.toLocaleString()} / ↓${bAvgOut.toLocaleString()}` : "";
+            const pAvgStr = pAvgIn != null ? `avg ↑${pAvgIn.toLocaleString()} / ↓${pAvgOut.toLocaleString()}` : "";
+
+            el.innerHTML = `
+                <div class="token-summary">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px;">
+                        <span style="font-size:0.7rem;font-weight:600;flex:1"></span>
+                        <span style="font-size:0.7rem;color:#9e9e9e;min-width:120px;text-align:right">${bLabel}</span>
+                        <span style="font-size:0.7rem;color:#512da8;min-width:120px;text-align:right">${pLabel}</span>
+                    </div>
+                    <div style="display:flex;justify-content:flex-end;gap:0;margin-bottom:6px;">
+                        <span style="font-size:0.65rem;color:#9e9e9e;min-width:120px;text-align:right">${bAvgStr}</span>
+                        <span style="font-size:0.65rem;color:#7b1fa2;min-width:120px;text-align:right">${pAvgStr}</span>
+                    </div>
+                    ${trow("访谈者", bIvIn, bIvOut, pIvIn, pIvOut)}
+                    ${pExIn != null ? trow("提取", null, null, pExIn, pExOut) : ""}
+                    <div class="token-row" style="border-top:2px solid rgba(81,45,168,0.15);margin-top:4px;padding-top:8px;">
+                        <span class="token-label" style="font-weight:700">总计</span>
+                        <span class="token-value" style="color:#616161;min-width:120px;text-align:right">${bTotIn != null ? "↑" + bTotIn.toLocaleString() + " / ↓" + bTotOut.toLocaleString() : "—"}</span>
+                        <span class="token-value" style="color:#512da8;min-width:120px;text-align:right">${pTotIn != null ? "↑" + pTotIn.toLocaleString() + " / ↓" + pTotOut.toLocaleString() : "—"}</span>
+                    </div>
                 </div>`;
         }
 
@@ -2805,6 +2931,14 @@ COMPARE_HTML = '''<!DOCTYPE html>
                     </div>
                     <div id="timing-summary-content">
                         <div class="timing-summary placeholder">计时数据将在对话开始后自动显示</div>
+                    </div>
+                </section>
+                <section class="side-section">
+                    <div class="side-section-header">
+                        <h4>Tokens</h4>
+                    </div>
+                    <div id="token-summary-content">
+                        <div class="token-summary placeholder">Token 数据将在 Planner 对话开始后显示</div>
                     </div>
                 </section>
                 <section class="side-section">
@@ -3335,13 +3469,33 @@ COMPARE_HTML = '''<!DOCTYPE html>
                     write_ms: "写入",
                 };
                 for (const [key, val] of Object.entries(timingData)) {
-                    if (val == null) continue;
+                    if (val == null || key === "token_usage") continue;
                     const chip = document.createElement("span");
                     const sec = (val / 1000).toFixed(1);
                     const lbl = labels[key] || key;
                     chip.className = `timing-chip${val > 5000 ? " slow" : ""}`;
                     chip.textContent = `${lbl} ${sec}s`;
                     timingDiv.appendChild(chip);
+                }
+                // Token chips — use total_* (planner) or prompt_tokens (baseline)
+                const tu = timingData.token_usage;
+                if (tu && typeof tu === "object") {
+                    const totalIn = tu.total_prompt_tokens ?? tu.prompt_tokens;
+                    const totalOut = tu.total_completion_tokens ?? tu.completion_tokens;
+                    if (totalIn != null) {
+                        const chip = document.createElement("span");
+                        chip.className = "token-chip";
+                        chip.textContent = `↑${totalIn.toLocaleString()} tok`;
+                        chip.title = "Prompt tokens this turn";
+                        timingDiv.appendChild(chip);
+                    }
+                    if (totalOut != null) {
+                        const chip = document.createElement("span");
+                        chip.className = "token-chip";
+                        chip.textContent = `↓${totalOut.toLocaleString()} tok`;
+                        chip.title = "Completion tokens this turn";
+                        timingDiv.appendChild(chip);
+                    }
                 }
                 msg.appendChild(timingDiv);
             }

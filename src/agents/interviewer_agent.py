@@ -71,7 +71,7 @@ class InterviewerAgent:
             candidate_max_tokens = 4096 if self._is_reasoning_heavy_model(model_name) else 1024
             for attempt in range(1, max_attempts + 1):
                 try:
-                    message, tool_trace = self._create_completion_with_optional_tools(
+                    message, tool_trace, _llm_usage = self._create_completion_with_optional_tools(
                         model_name=model_name,
                         messages=[
                             {"role": "system", "content": system_prompt},
@@ -95,6 +95,7 @@ class InterviewerAgent:
                     if parsed.get("question"):
                         if tool_trace:
                             parsed["tool_trace"] = tool_trace
+                        parsed["llm_usage"] = _llm_usage
                         self.model = model_name
                         self.max_tokens = candidate_max_tokens
                         return parsed
@@ -389,13 +390,20 @@ class InterviewerAgent:
         tool_callables: Dict[str, Any],
         allow_tool_fallback: bool = True,
     ):
+        accumulated_prompt_tokens: int = 0
+        accumulated_completion_tokens: int = 0
+
         if not tools:
             response = self.client.chat.completions.create(
                 model=model_name,
                 messages=messages,
                 max_tokens=max_tokens,
             )
-            return response.choices[0].message, []
+            if response.usage:
+                accumulated_prompt_tokens += response.usage.prompt_tokens or 0
+                accumulated_completion_tokens += response.usage.completion_tokens or 0
+            _usage = {"prompt_tokens": accumulated_prompt_tokens, "completion_tokens": accumulated_completion_tokens}
+            return response.choices[0].message, [], _usage
 
         working_messages = list(messages)
         tool_trace: List[Dict[str, Any]] = []
@@ -424,14 +432,19 @@ class InterviewerAgent:
                     )
                 raise
 
+            if response.usage:
+                accumulated_prompt_tokens += response.usage.prompt_tokens or 0
+                accumulated_completion_tokens += response.usage.completion_tokens or 0
+            _usage = {"prompt_tokens": accumulated_prompt_tokens, "completion_tokens": accumulated_completion_tokens}
+
             message = response.choices[0].message
             tool_calls = list(getattr(message, "tool_calls", None) or [])
             if not tool_calls:
-                return message, tool_trace
+                return message, tool_trace, _usage
 
             if round_index >= max_rounds:
                 logger.warning("Planner tool loop exhausted before final answer")
-                return message, tool_trace
+                return message, tool_trace, _usage
 
             selected_calls = tool_calls[:max_tools_per_round]
             working_messages.append(
