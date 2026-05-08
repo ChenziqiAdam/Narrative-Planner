@@ -25,8 +25,6 @@ except ImportError:  # pragma: no cover - optional dependency
 
 logger = logging.getLogger(__name__)
 
-LIFE_OVERVIEW_TURN_LIMIT = 8
-
 
 class InterviewerAgent:
     """GraphRAG 访谈助手 — 基于图谱决策上下文生成访谈问题。"""
@@ -124,8 +122,7 @@ class InterviewerAgent:
 
     def _render_system_prompt(self) -> str:
         return """你是一位充满好奇心、善于倾听的传记访谈者，正在陪一位老人重温他/她的人生旅程。
-
-你的目标不是"收集信息"，而是帮老人讲述一个完整、有温度的生命故事。让老人感到被理解、被珍视。
+你的目标不是"收集信息"，而是引导老人讲述一个完整、有温度的生命故事，覆盖他人生的主要阶段，如童年、求学、工作、家庭、重要转折点、起伏等。让老人感到被理解、被珍视。
 
 ---
 
@@ -142,12 +139,13 @@ class InterviewerAgent:
    - 转折点：改变人生方向的关键决定
    - 童年记忆：早期对性格形成有影响的事
    - 智慧时刻：展现洞察力的经历
+   - 温情时刻：最难忘的亲情、友情、爱情
 
 **3. 重要人物** —— 生命中影响深远的人
    - 家人、恩师、挚友、对手
 
 **4. 价值观与信仰** —— 人生的指南针
-   - 经历了这么多，老人最看重什么？
+   - 经历了这么多，老人的最信仰什么、看重什么？
 
 **5. 未来展望** —— 对剩余生命的期待
    - 还有什么心愿？想留下什么话？
@@ -170,7 +168,7 @@ class InterviewerAgent:
    - **问感受/故事** → 多用**开放式问题**
      * 例："那时候您心里是什么感觉？" "能给我讲讲当时的情景吗？"
 
-4. **一次只问一件事** —— 问题清晰、聚焦，不堆叠多个问题
+4. **抓住一个切入点提问** —— 把老人意犹未尽或者到嘴边没说出来的话延展出去。问题清晰、聚焦，不堆叠多个问题但可以交叉确认或核实必要的信息
 
 5. **隐藏技术细节** —— 永远不提"图谱"、"节点"、"槽位"、"覆盖率"等概念
 
@@ -190,8 +188,8 @@ class InterviewerAgent:
 
 ### 3. 当前事件完整度判断
 - 评估当前叙事是否具备：时间、地点、人物、经过、原因、结果、感受、反思。
-- 识别 missing_dimensions 和 weak_dimensions。
-- 事件不完整并不必然继续深挖；还要结合访谈阶段、情绪、主题覆盖和上下文连贯性。
+- 识别 missing_dimensions 和 weak_dimensions，优先作为切入点深挖。
+- 事件不完整还要结合主题覆盖和关联性判断事件是否重要、值得深挖。
 
 ### 4. 情绪与精力判断
 - 判断情绪能量、认知负担、是否需要先共情承接。
@@ -283,9 +281,13 @@ class InterviewerAgent:
         parts.append("## 受访者基本信息")
         parts.append(self._build_basic_info_text(elder_profile))
 
+        # 1.5 Dynamic profile (long-term memory)
+        if ctx.dynamic_profile_hint:
+            self._append_dynamic_profile(parts, ctx.dynamic_profile_hint)
+
         # 2. Recent dialogue
         parts.append("\n## 最近对话")
-        limit = 1 if prompt_stage == "early" else 2 if prompt_stage == "mid" else 3
+        limit = 3 if prompt_stage == "early" else 4 if prompt_stage == "mid" else 5
         for turn in recent_transcript[-limit:]:
             parts.append(f"问：{turn.interviewer_question}")
             parts.append(f"答：{turn.interviewee_answer}")
@@ -326,16 +328,9 @@ class InterviewerAgent:
             parts.append("\n## 叙事记忆脉络")
             parts.append(ctx.graph_rag_context)
 
-        # 7. Emotional observation
-        if ctx.emotional_state:
-            parts.append("\n## 情绪观察")
-            parts.append(self._build_emotional_note(ctx.emotional_state))
-
-        # 8. Strategy hints
+        # 7. Strategy hints
         parts.append("\n## 策略提示")
-        if self._is_life_overview_stage(recent_transcript):
-            parts.append(self._build_life_overview_guidance(recent_transcript))
-        if ctx.low_info_streak >= 2:
+        if ctx.low_info_streak >= 3:
             parts.append(
                 f"最近连续 {ctx.low_info_streak} 轮信息增益偏低。"
                 "优先换一个新切口（人物/时间/地点/主题）再问。"
@@ -787,30 +782,35 @@ class InterviewerAgent:
             return f"{name}奶奶"
         return "奶奶"
 
-    def _is_life_overview_stage(self, recent_transcript: List[TurnRecord]) -> bool:
-        return len(recent_transcript) < LIFE_OVERVIEW_TURN_LIMIT
-
-    def _build_life_overview_guidance(self, recent_transcript: List[TurnRecord]) -> str:
-        turn_number = len(recent_transcript) + 1
-        stage_targets = [
-            "先帮助老人把人生大致分成几个阶段，优先问最早、最清楚的生活画面。",
-            "继续梳理童年/少年时期的生活环境、家人和日常，不急着追问单个细节。",
-            "引导老人说出青年时期的重要转折，例如求学、离家、参加工作或成家，但让老人自己选择最想讲的入口。",
-            "补出中年阶段的大事和责任变化，例如家庭、工作、迁居、社会变化对生活的影响。",
-            "询问一两个老人认为最重要的人，建立人物画像和关系脉络。",
-            "询问人生中最困难或最有转折意义的阶段，重点收集阶段名和影响，不做创伤式深挖。",
-            "询问老人最自豪、最欣慰或最想被记住的一面，用于形成自我评价。",
-            "请老人回看一生，概括自己是什么样的人、哪些价值观最重要，再决定后续深挖方向。",
-        ]
-        target = stage_targets[min(turn_number - 1, len(stage_targets) - 1)]
-        return (
-            "当前处于【人生脉络梳理阶段】（建议前 5-10 轮）。\n"
-            "目标：先建立粗粒度人生地图，包括人生阶段、大事节点、关键人物、自我评价和价值观，"
-            "供后续主题规划、人物画像和动态 profile 更新使用。\n"
-            f"本轮建议：{target}\n"
-            "提问方式：礼貌寒暄后给老人选择空间；问题可以稍宽，但必须只问一个问题。\n"
-            "避免：一上来因为背景中出现“工作/工厂/家庭”等关键词就直接深挖该主题；避免像填表一样连续追槽位。"
-        )
+    @staticmethod
+    def _append_dynamic_profile(parts: List[str], hint: Dict[str, Any]) -> None:
+        section_labels = {
+            "core_identity_and_personality": "核心身份与性格",
+            "current_life_status": "当前生活状况",
+            "family_situation": "家庭情况",
+            "life_views_and_attitudes": "人生观与态度",
+        }
+        sections = hint.get("sections", {})
+        if not sections:
+            return
+        parts.append("\n## 已了解的受访者特点（动态画像）")
+        for section_key, fields in sections.items():
+            label = section_labels.get(section_key, section_key)
+            lines = []
+            for fname, fdata in fields.items():
+                val = fdata.get("value")
+                if not val:
+                    continue
+                display = ", ".join(val) if isinstance(val, list) else str(val)
+                lines.append(f"- {fname}: {display}")
+            if lines:
+                parts.append(f"**{label}**：")
+                parts.extend(lines)
+        guidance = hint.get("planner_guidance", [])
+        if guidance:
+            parts.append("\n**画像引导建议**：")
+            for g in guidance:
+                parts.append(f"- {g}")
 
     def _build_basic_info_text(self, elder_profile: ElderProfile) -> str:
         parts = []
@@ -823,24 +823,6 @@ class InterviewerAgent:
         if elder_profile.background_summary:
             parts.append(f"背景：{elder_profile.background_summary}")
         return "；".join(parts) if parts else "一位受访老人"
-
-    def _build_emotional_note(self, emotional_state) -> str:
-        if not emotional_state:
-            return ""
-        lines = []
-        energy = emotional_state.cognitive_energy
-        valence = emotional_state.valence
-        if energy < 0.35:
-            lines.append("老人可能有些疲惫了，回答较短。")
-        elif energy > 0.7:
-            lines.append("老人精力充沛，表达很活跃。")
-        if valence < -0.3:
-            lines.append("情绪偏消极，注意温柔引导。")
-        elif valence > 0.3:
-            lines.append("情绪比较积极，可以深入聊。")
-        if emotional_state.evidence:
-            lines.append(f"依据：{'、'.join(emotional_state.evidence[:2])}")
-        return "\n".join(lines)
 
     def _prompt_stage(self, recent_transcript: List[TurnRecord]) -> str:
         turn_count = len(recent_transcript)

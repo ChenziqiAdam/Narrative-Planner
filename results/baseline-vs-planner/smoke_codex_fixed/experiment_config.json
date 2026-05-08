@@ -1,0 +1,23 @@
+{
+  "runs_per_agent": 1,
+  "turns": 1,
+  "use_llm_scorer": false,
+  "llm_weight": 0.3,
+  "variance_penalty_weight": 1.0,
+  "model_override": "moonshot-v1-8k",
+  "planner_tools_enabled": false,
+  "reset_graph_before_experiment": true,
+  "score_weights": {
+    "question_quality": 0.28,
+    "information_gain": 0.24,
+    "non_redundancy": 0.2,
+    "coverage": 0.18,
+    "completion": 0.1
+  },
+  "elder_info": {
+    "name": "李秀兰",
+    "birth_year": 1944,
+    "hometown": "四川成都",
+    "background": "退休中学语文教师，经历过知青下乡、恢复高考、改革开放后的城市变迁。她有一个儿子和一个女儿，晚年喜欢整理旧照片和写日记。"
+  }
+}

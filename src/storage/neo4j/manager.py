@@ -104,7 +104,7 @@ class Neo4jGraphManager:
         node_dict["id"] = topic.id or topic.theme_id
         node_dict["type"] = "Topic"
         node_dict["name"] = topic.name or topic.theme_id
-        ok = self.driver.insert_node(node_dict)
+        ok = self.driver.insert_node(_sanitize_node_dict(node_dict))
         if ok:
             logger.debug("Upserted Topic %s", topic.theme_id)
         return ok
@@ -144,6 +144,54 @@ class Neo4jGraphManager:
         themes = ThemeLoader().load()
         topics = [TopicNode.from_theme_node(theme) for theme in themes.values()]
         return self.batch_upsert_topics(topics)
+
+    def reset_interview_graph(self, preserve_topics: bool = True) -> Dict[str, int]:
+        """Clear interview-specific GraphRAG nodes before a fresh planner run.
+
+        Topic nodes are preserved by default because they define the fixed life
+        story scaffold. Their mutable exploration fields are reset so coverage
+        and reports start from a clean state.
+        """
+        count_rows = self.driver.execute_query(
+            """
+            MATCH (n)
+            WHERE n:Event OR n:Person OR n:Location OR n:Emotion OR n:Insight
+               OR n.type IN ['Event', 'Person', 'Location', 'Emotion', 'Insight']
+            RETURN count(n) AS deleted_count
+            """
+        )
+        deleted_count = int((count_rows or [{}])[0].get("deleted_count", 0) or 0)
+        self.driver.execute_query(
+            """
+            MATCH (n)
+            WHERE n:Event OR n:Person OR n:Location OR n:Emotion OR n:Insight
+               OR n.type IN ['Event', 'Person', 'Location', 'Emotion', 'Insight']
+            DETACH DELETE n
+            """
+        )
+
+        topic_reset_count = 0
+        if preserve_topics:
+            topic_rows = self.driver.execute_query(
+                """
+                MATCH (t:Topic)
+                SET t.status = coalesce(t.initial_status, 'pending'),
+                    t.exploration_depth = 0,
+                    t.extracted_events = [],
+                    t.slots_filled = null
+                RETURN count(t) AS topic_count
+                """
+            )
+            topic_reset_count = int((topic_rows or [{}])[0].get("topic_count", 0) or 0)
+        else:
+            topic_rows = self.driver.execute_query("MATCH (t:Topic) DETACH DELETE t RETURN count(t) AS topic_count")
+            topic_reset_count = int((topic_rows or [{}])[0].get("topic_count", 0) or 0)
+
+        self._node_cache.clear()
+        return {
+            "deleted_nodes": deleted_count,
+            "reset_topics": topic_reset_count,
+        }
 
     def get_topic(self, theme_id: str) -> Optional[Dict[str, Any]]:
         """Read a single Topic node by its ``theme_id``."""
@@ -188,9 +236,10 @@ class Neo4jGraphManager:
         result = self.driver.execute_query(
             """
             MATCH (t:Topic {id: $id})
+            WITH t, coalesce(t.exploration_depth, 0) + 1 AS next_depth
             SET t.exploration_depth = CASE
-                WHEN t.exploration_depth IS NULL THEN 1
-                ELSE min(t.exploration_depth + 1, 5)
+                WHEN next_depth > 5 THEN 5
+                ELSE next_depth
             END
             RETURN t
             """,
@@ -225,7 +274,7 @@ class Neo4jGraphManager:
         node_dict["id"] = event.id
         node_dict["type"] = "Event"
         node_dict["name"] = event.title or event.name or event.id
-        ok = self.driver.insert_node(node_dict)
+        ok = self.driver.insert_node(_sanitize_node_dict(node_dict))
         if ok and theme_id:
             self.driver.insert_edge(theme_id, event.id, self.REL_INCLUDES)
         return ok
@@ -253,7 +302,7 @@ class Neo4jGraphManager:
         node_dict["id"] = person.id
         node_dict["type"] = "Person"
         node_dict["name"] = person.name or person.id
-        ok = self.driver.insert_node(node_dict)
+        ok = self.driver.insert_node(_sanitize_node_dict(node_dict))
         if ok and event_id:
             self.driver.insert_edge(event_id, person.id, self.REL_PARTICIPATES_IN)
         return ok
@@ -273,7 +322,7 @@ class Neo4jGraphManager:
         node_dict["id"] = location.id
         node_dict["type"] = "Location"
         node_dict["name"] = location.name or location.id
-        ok = self.driver.insert_node(node_dict)
+        ok = self.driver.insert_node(_sanitize_node_dict(node_dict))
         if ok and event_id:
             self.driver.insert_edge(event_id, location.id, self.REL_LOCATED_AT)
         return ok
@@ -287,7 +336,7 @@ class Neo4jGraphManager:
         node_dict["id"] = emotion.id
         node_dict["type"] = "Emotion"
         node_dict["name"] = emotion.name or emotion.id
-        ok = self.driver.insert_node(node_dict)
+        ok = self.driver.insert_node(_sanitize_node_dict(node_dict))
         if ok and event_id:
             self.driver.insert_edge(event_id, emotion.id, self.REL_TRIGGERS)
         return ok

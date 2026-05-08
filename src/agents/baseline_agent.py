@@ -21,9 +21,7 @@ class BaselineAgent:
     """Standalone interview agent for the no-planner control group."""
 
     _PROMPT_PLACEHOLDERS = (
-        "[用户的基本生平信息]",
-        "[鐢ㄦ埛鐨勫熀鏈敓骞充俊鎭痌",
-    )
+        "[用户的基本生平信息]")
 
     def __init__(self, session_id: str | None = None):
         self.session_id = session_id or datetime.now().strftime("%Y%m%d_%H%M%S")

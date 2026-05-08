@@ -34,11 +34,46 @@ from src.services.interview_logger import (
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
+_GRAPH_RESET_ON_PORT_OPEN_DONE = False
 
 PROFILE_PATH = os.path.join(os.path.dirname(__file__), "prompts/roles/elder_profile_1.json")
 
 # Per-session agent pairs
 _sessions: dict[str, dict] = {}
+
+
+def _reset_graphrag_once_for_server() -> None:
+    """Reset GraphRAG once per Flask server process, before serving traffic."""
+    global _GRAPH_RESET_ON_PORT_OPEN_DONE
+    if _GRAPH_RESET_ON_PORT_OPEN_DONE:
+        return
+    _GRAPH_RESET_ON_PORT_OPEN_DONE = True
+
+    if os.getenv("RESET_GRAPHRAG_ON_SERVER_START", "true").lower() not in {
+        "1",
+        "true",
+        "yes",
+        "on",
+    }:
+        app.logger.info("GraphRAG startup reset disabled by RESET_GRAPHRAG_ON_SERVER_START")
+        return
+
+    try:
+        from src.storage.neo4j.manager import Neo4jGraphManager
+
+        neo4j = Neo4jGraphManager()
+        neo4j.initialize()
+        reset_result = neo4j.reset_interview_graph(preserve_topics=True)
+        neo4j.sync_themes_to_neo4j()
+        neo4j.close()
+        app.logger.info("GraphRAG reset on server start: %s", reset_result)
+    except Exception:
+        app.logger.exception("GraphRAG reset on server start failed")
+
+
+@app.before_request
+def _reset_graphrag_before_first_request():
+    _reset_graphrag_once_for_server()
 
 
 def get_session_agents(session_id: str) -> dict:
@@ -1090,7 +1125,10 @@ def planner_start():
 
     # 创建PlannerAgent（同步包装器）
     try:
-        agent = PlannerInterviewAgentSync(session_id, decision_weights=weight_input)
+        agent = PlannerInterviewAgentSync(
+            session_id,
+            decision_weights=weight_input,
+        )
     except ValueError as exc:
         return jsonify({"error": str(exc)}), 400
     agent.initialize_conversation(elder_info)

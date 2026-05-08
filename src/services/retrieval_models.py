@@ -1,7 +1,7 @@
 """Data classes for hybrid retrieval results."""
 
 from dataclasses import dataclass, field
-from typing import List
+from typing import Any, Dict, List
 
 
 @dataclass
@@ -24,6 +24,7 @@ class ConnectedEntity:
     name: str
     relationship_path: str
     hop_distance: int
+    description: str = ""
 
 
 @dataclass
@@ -46,3 +47,4 @@ class RetrievalResult:
     prompt_text: str = ""
     token_count: int = 0
     latency_ms: float = 0.0
+    trace: Dict[str, Any] = field(default_factory=dict)
