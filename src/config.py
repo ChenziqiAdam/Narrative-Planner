@@ -86,6 +86,15 @@ class Config:
     PLANNER_MAX_TOOL_ROUNDS = int(os.getenv("PLANNER_MAX_TOOL_ROUNDS", "2"))
     PLANNER_MAX_TOOLS_PER_ROUND = int(os.getenv("PLANNER_MAX_TOOLS_PER_ROUND", "2"))
 
+    # History compression — summarise old turns to stay within token limits
+    SUMMARIZER_MODEL_NAME = os.getenv("SUMMARIZER_MODEL_NAME") or CHAT_MODEL_NAME
+    HISTORY_COMPRESS_MAX_RECENT_TURNS = int(
+        os.getenv("HISTORY_COMPRESS_MAX_RECENT_TURNS", "6")
+    )
+    HISTORY_COMPRESS_MAX_CHAR_THRESHOLD = int(
+        os.getenv("HISTORY_COMPRESS_MAX_CHAR_THRESHOLD", "12000")
+    )
+
     @classmethod
     def get_api_key(cls):
         return getattr(cls, "OPENAI_API_KEY", None) or getattr(cls, "MOONSHOT_API_KEY", None)
@@ -120,6 +129,7 @@ class Config:
             "camel": cls.CAMEL_MODEL_NAME,
             "structured": cls.STRUCTURED_MODEL_NAME,
             "chat": cls.CHAT_MODEL_NAME,
+            "summarizer": cls.SUMMARIZER_MODEL_NAME,
         }
         return model_map.get(role_key, cls.MODEL_NAME)
 
@@ -132,7 +142,7 @@ class Config:
                 cls.STRUCTURED_MODEL_NAME,
                 cls.MODEL_NAME,
             ]
-        elif role_key in {"interviewer", "streaming", "baseline", "interviewee"}:
+        elif role_key in {"interviewer", "streaming", "baseline", "interviewee", "summarizer"}:
             candidates = [
                 cls.get_model_name(role_key),
                 cls.CHAT_MODEL_NAME,

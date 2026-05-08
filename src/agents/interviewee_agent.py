@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 import re
 import sys
@@ -19,8 +20,11 @@ if project_root not in sys.path:
 
 from src.config import Config
 from src.prompts.roles.elderly_promot import ElderPromptGenerator
+from src.services.history_compressor import HistoryCompressor
 from src.services.llm_retry import is_transient_llm_error, sleep_before_retry
 from src.tools.elder_tools import ElderMemorySystem, get_tool_callables, get_tool_schemas
+
+logger = logging.getLogger(__name__)
 
 
 REPLY_KEYS = ("reply", "response", "answer")
@@ -82,6 +86,8 @@ class IntervieweeAgent:
         self.save_path = save_path
         self.history = ""
         self.basic_info = ""
+        self._history_summary = ""
+        self._history_turns: list[dict[str, str]] = []
         self.model_candidates = Config.get_model_candidates("interviewee")
         self.model = self.model_candidates[0]
         self._prompt_generator = ElderPromptGenerator(template_path=Config.INTERVIEWEE_PROMPT_TEMPLATE)
@@ -90,10 +96,13 @@ class IntervieweeAgent:
         self._load_sys_prompt()
         self._load_tools()
         self._init_client()
+        self._compressor = HistoryCompressor(self.client, self.model_candidates)
 
     def initialize_conversation(self, basic_info: str | dict[str, Any] = ""):
         self.basic_info = self._stringify_basic_info(basic_info)
         self.history = f"受访者基本信息: {self.basic_info}\n" if self.basic_info else ""
+        self._history_summary = ""
+        self._history_turns = []
         self._load_sys_prompt(basic_info if isinstance(basic_info, dict) else None)
 
     def _load_tools(self):
@@ -108,7 +117,20 @@ class IntervieweeAgent:
         self.sys_prompt = self._prompt_generator.generate_prompt(profile_data)
 
     def _load_step_prompt(self, history, question):
-        return f"访谈历史：{history}\n访谈问题：{question}"
+        max_recent = Config.HISTORY_COMPRESS_MAX_RECENT_TURNS
+        recent_turns = self._history_turns[-max_recent:]
+        recent_text = "\n".join(
+            f"Q: {t['question']}\nA: {t['answer']}" for t in recent_turns
+        )
+        if self._history_summary:
+            return (
+                f"访谈历史摘要：{self._history_summary}\n\n"
+                f"近期对话：\n{recent_text}\n"
+                f"访谈问题：{question}"
+            )
+        if recent_text:
+            return f"访谈历史：\n{recent_text}\n访谈问题：{question}"
+        return f"访谈问题：{question}"
 
     def _init_client(self):
         self.client = OpenAI(**Config.get_openai_client_kwargs())
@@ -178,6 +200,31 @@ class IntervieweeAgent:
         answer = (answer or "").strip()
         if question or answer:
             self.history += f"Q: {question}\nA: {answer}\n"
+            self._history_turns.append({"question": question, "answer": answer})
+            self._maybe_compress_history()
+
+    def _maybe_compress_history(self):
+        max_recent = Config.HISTORY_COMPRESS_MAX_RECENT_TURNS
+        if len(self._history_turns) <= max_recent:
+            return
+        split = len(self._history_turns) - max_recent
+        old_turns = self._history_turns[:split]
+        total_chars = sum(len(t["question"]) + len(t["answer"]) for t in old_turns)
+        if total_chars < Config.HISTORY_COMPRESS_MAX_CHAR_THRESHOLD // 3:
+            return
+        try:
+            new_summary = self._compressor.compress_qa_pairs(
+                old_turns, self._history_summary,
+            )
+            if new_summary:
+                self._history_summary = new_summary
+                self._history_turns = self._history_turns[split:]
+                logger.info(
+                    "Interviewee history compressed: %d old turns → %d-char summary",
+                    split, len(new_summary),
+                )
+        except Exception as exc:
+            logger.warning("History compression failed, keeping raw turns: %s", exc)
 
     def step(self, prompt: str) -> str:
         """Send a prompt and return the text reply, executing any tool calls."""

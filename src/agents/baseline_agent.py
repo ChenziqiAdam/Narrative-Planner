@@ -11,6 +11,7 @@ from datetime import datetime
 from openai import OpenAI
 
 from src.config import Config
+from src.services.history_compressor import HistoryCompressor
 from src.services.llm_retry import is_transient_llm_error, sleep_before_retry
 
 
@@ -29,6 +30,8 @@ class BaselineAgent:
         self.model_candidates = Config.get_model_candidates("baseline")
         self.model = self.model_candidates[0]
         self.conversation_history: list[dict[str, str]] = []
+        self._summary_message: dict[str, str] | None = None
+        self._compressor = HistoryCompressor(self.client, self.model_candidates)
 
         prompt_path = os.path.join(Config.PROMPTS_DIR, "baseline_system_prompt.txt")
         with open(prompt_path, "r", encoding="utf-8") as file:
@@ -45,11 +48,14 @@ class BaselineAgent:
             {"role": "system", "content": system_message},
             {"role": "user", "content": "请开始访谈，先向受访者问好并提出第一个问题。"},
         ]
+        self._summary_message = None
         logger.info("Baseline conversation initialized")
 
     def get_next_question(self, user_response: str | None = None) -> str:
         if user_response:
             self.conversation_history.append({"role": "user", "content": user_response})
+
+        self._maybe_compress_history()
 
         last_error = None
         max_attempts = max(1, Config.MAX_RETRIES)
@@ -59,7 +65,7 @@ class BaselineAgent:
                 try:
                     response = self.client.chat.completions.create(
                         model=model_name,
-                        messages=self.conversation_history,
+                        messages=self._effective_history(),
                         max_tokens=4096,
                     )
                     question = (response.choices[0].message.content or "").strip()
@@ -93,6 +99,44 @@ class BaselineAgent:
 
         logger.error("Baseline API call failed: %s", last_error)
         return "抱歉，我这边刚才没有顺利组织出下一个问题，请稍后再试一次。"
+
+    def _effective_history(self) -> list[dict[str, str]]:
+        """Return conversation history with summary replacing old turns."""
+        if self._summary_message is None:
+            return self.conversation_history
+        system_msg = self.conversation_history[0]
+        rest = self.conversation_history[1:]
+        return [system_msg, self._summary_message] + rest
+
+    def _maybe_compress_history(self):
+        max_recent = Config.HISTORY_COMPRESS_MAX_RECENT_TURNS
+        # non-system messages: each turn = 1 user + 1 assistant = 2 messages
+        non_system = self.conversation_history[1:]
+        if len(non_system) <= 2 * max_recent:
+            return
+
+        split_index = len(non_system) - 2 * max_recent
+        old_messages = non_system[:split_index]
+        total_chars = sum(len(m.get("content", "")) for m in old_messages)
+        if total_chars < Config.HISTORY_COMPRESS_MAX_CHAR_THRESHOLD // 3:
+            return
+
+        try:
+            summary_text = self._compressor.compress_messages(old_messages)
+            if summary_text:
+                self._summary_message = {
+                    "role": "user",
+                    "content": f"[之前的对话摘要]\n{summary_text}",
+                }
+                self.conversation_history = (
+                    [self.conversation_history[0]] + non_system[split_index:]
+                )
+                logger.info(
+                    "Baseline history compressed: %d old messages → %d-char summary",
+                    split_index, len(summary_text),
+                )
+        except Exception as exc:
+            logger.warning("Baseline history compression failed: %s", exc)
 
     def save_conversation(self) -> str:
         results_dir = "results/conversations"
