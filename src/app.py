@@ -19,6 +19,7 @@ from flask import Flask, Response, jsonify, render_template_string, request, ses
 from src.agents.baseline_agent import BaselineAgent as InterviewerAgent
 from src.agents.interviewee_agent import IntervieweeAgent, extract_interviewee_reply
 from src.agents.planner_interview_agent import PlannerInterviewAgentSync
+from src.legacy.planner_interview_agent import LegacyPlannerInterviewAgentSync
 from src.config import Config
 from src.orchestration.baseline_evaluation_runtime import BaselineEvaluationRuntime
 from src.services.interview_logger import (
@@ -1094,6 +1095,7 @@ def planner_start():
     Body: {
       "elder_info": dict,
       "mode": "ai"|"user",
+      "version": "graphrag"|"legacy",           # 可选，默认 graphrag
       "decision_weight_vector": [float, ...],   # 可选，按固定顺序
       "decision_weights": {"new_info_weight": ...}  # 可选
     }
@@ -1102,6 +1104,7 @@ def planner_start():
     data = request.get_json(force=True)
     elder_info = data.get("elder_info", {})
     mode = data.get("mode", "ai")
+    version = data.get("version", "graphrag")
     decision_weight_vector = data.get("decision_weight_vector")
     decision_weights = data.get("decision_weights")
 
@@ -1125,17 +1128,26 @@ def planner_start():
 
     # 创建PlannerAgent（同步包装器）
     try:
-        agent = PlannerInterviewAgentSync(
-            session_id,
-            decision_weights=weight_input,
-        )
+        if version == "legacy":
+            agent = LegacyPlannerInterviewAgentSync(
+                session_id,
+                decision_weights=weight_input,
+            )
+        else:
+            agent = PlannerInterviewAgentSync(
+                session_id,
+                decision_weights=weight_input,
+            )
     except ValueError as exc:
         return jsonify({"error": str(exc)}), 400
     agent.initialize_conversation(elder_info)
 
     # 获取首条问题
     result = agent.get_next_question()
-    decision_weight_payload = agent.async_agent.orchestrator.get_decision_weight_payload()
+    if version == "legacy":
+        decision_weight_payload = agent.async_agent.orchestrator.get_decision_weight_payload()
+    else:
+        decision_weight_payload = agent.async_agent.orchestrator.get_decision_weight_payload()
     interview_logger = create_planner_logger(
         session_id,
         elder_info if isinstance(elder_info, dict) else {"background": str(elder_info)},
@@ -1145,6 +1157,7 @@ def planner_start():
     # 存储会话
     _compare_sessions[session_id] = {
         "type": "planner",
+        "version": version,
         "agent": agent,
         "logger": interview_logger,
         "history": [{"role": "interviewer", "text": result["question"], "action": result.get("action", "continue")}],
@@ -1603,7 +1616,7 @@ COMPARE_HTML = '''<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>传记访谈系统 - Baseline vs Planner 对比</title>
+    <title>传记访谈系统 - 版本对比</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -1828,6 +1841,22 @@ COMPARE_HTML = '''<!DOCTYPE html>
             background: #2196f3;
             color: #fff;
         }
+        .badge.legacy {
+            background: #7b5ea7;
+            color: #fff;
+        }
+        .version-select {
+            font-size: 0.8rem;
+            padding: 4px 8px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #fff;
+            color: #333;
+            cursor: pointer;
+            outline: none;
+        }
+        .version-select:focus { border-color: #6b4f3a; }
+        .version-select:disabled { background: #f5f5f5; cursor: not-allowed; }
         .panel-title h2 {
             font-size: 1.1rem;
             color: #333;
@@ -2465,7 +2494,7 @@ COMPARE_HTML = '''<!DOCTYPE html>
     <header class="top-bar">
         <div class="brand">
             <h1>🔬 访谈系统对比调试</h1>
-            <span class="subtitle">Baseline vs Planner</span>
+            <span class="subtitle">版本对比测试</span>
         </div>
 
         <div class="global-controls">
@@ -2535,10 +2564,15 @@ COMPARE_HTML = '''<!DOCTYPE html>
         <section class="panel baseline-panel" id="baseline-panel">
             <header class="panel-header">
                 <div class="panel-title">
-                    <span class="badge control">对照组</span>
-                    <h2>Baseline 版</h2>
+                    <span class="badge control" id="left-badge">对照组</span>
+                    <h2 id="left-title">Baseline 版</h2>
                 </div>
                 <div class="panel-status">
+                    <select id="left-version-select" class="version-select" onchange="onVersionChange()">
+                        <option value="baseline">Baseline</option>
+                        <option value="graphrag">GraphRAG Planner</option>
+                        <option value="legacy">Legacy Planner</option>
+                    </select>
                     <span class="status-text" id="baseline-status">等待开始</span>
                     <span class="mode-indicator" id="baseline-mode">-</span>
                 </div>
@@ -2566,10 +2600,15 @@ COMPARE_HTML = '''<!DOCTYPE html>
         <section class="panel planner-panel" id="planner-panel">
             <header class="panel-header">
                 <div class="panel-title">
-                    <span class="badge experiment">实验组</span>
-                    <h2>Planner 版</h2>
+                    <span class="badge experiment" id="right-badge">实验组</span>
+                    <h2 id="right-title">GraphRAG Planner</h2>
                 </div>
                 <div class="panel-status">
+                    <select id="right-version-select" class="version-select" onchange="onVersionChange()">
+                        <option value="baseline">Baseline</option>
+                        <option value="graphrag" selected>GraphRAG Planner</option>
+                        <option value="legacy">Legacy Planner</option>
+                    </select>
                     <span class="status-text" id="planner-status">等待开始</span>
                     <span class="mode-indicator" id="planner-mode">-</span>
                 </div>
@@ -2637,6 +2676,8 @@ COMPARE_HTML = '''<!DOCTYPE html>
         let config = null;
         let baselineSessionId = null;
         let plannerSessionId = null;
+        let leftPanelVersion = "baseline";
+        let rightPanelVersion = "graphrag";
         let currentMode = "ai";
         let dashboardWindow = null;
         let allExtractedEvents = [];  // 累积所有提取的事件
@@ -2809,6 +2850,10 @@ COMPARE_HTML = '''<!DOCTYPE html>
         const btnConfig = document.getElementById("btn-config");
         const btnStart = document.getElementById("btn-start-compare");
         const configForm = document.getElementById("elder-config-form");
+
+        // Initialize panel styles from default select values
+        applyVersionStyle("left", document.getElementById("left-version-select").value);
+        applyVersionStyle("right", document.getElementById("right-version-select").value);
         const footerActions = document.querySelector(".compare-footer > div");
 
         if (footerActions && !document.getElementById("planner-eval-status")) {
@@ -3003,9 +3048,11 @@ COMPARE_HTML = '''<!DOCTYPE html>
             btnGenerateMetrics.disabled = true;
             btnGenerateMetrics.textContent = "Loading...";
             try {
+                const leftEvalEndpoint = leftPanelVersion === "baseline" ? "/api/baseline/evaluation" : "/api/planner/evaluation";
+                const rightEvalEndpoint = rightPanelVersion === "baseline" ? "/api/baseline/evaluation" : "/api/planner/evaluation";
                 const [baselineSnapshot, plannerSnapshot] = await Promise.all([
-                    baselineSessionId ? requestJson(`/api/baseline/evaluation/${baselineSessionId}`) : Promise.resolve(null),
-                    plannerSessionId ? requestJson(`/api/planner/evaluation/${plannerSessionId}`) : Promise.resolve(null),
+                    baselineSessionId ? requestJson(`${leftEvalEndpoint}/${baselineSessionId}`) : Promise.resolve(null),
+                    plannerSessionId ? requestJson(`${rightEvalEndpoint}/${plannerSessionId}`) : Promise.resolve(null),
                 ]);
                 if (baselineSnapshot) {
                     applyBaselineEvaluationSnapshot(baselineSnapshot);
@@ -3289,7 +3336,8 @@ COMPARE_HTML = '''<!DOCTYPE html>
             if (!baselineSessionId) return;
 
             try {
-                const snapshot = await requestJson(`/api/baseline/evaluation/${baselineSessionId}`);
+                const leftEvalEndpoint = leftPanelVersion === "baseline" ? "/api/baseline/evaluation" : "/api/planner/evaluation";
+                const snapshot = await requestJson(`${leftEvalEndpoint}/${baselineSessionId}`);
                 applyBaselineEvaluationSnapshot(snapshot);
             } catch (err) {
                 console.warn("Baseline evaluation polling failed:", err);
@@ -3314,7 +3362,8 @@ COMPARE_HTML = '''<!DOCTYPE html>
             if (!plannerSessionId) return;
 
             try {
-                const snapshot = await requestJson(`/api/planner/evaluation/${plannerSessionId}`);
+                const rightEvalEndpoint = rightPanelVersion === "baseline" ? "/api/baseline/evaluation" : "/api/planner/evaluation";
+                const snapshot = await requestJson(`${rightEvalEndpoint}/${plannerSessionId}`);
                 applyPlannerEvaluationSnapshot(snapshot);
             } catch (err) {
                 console.warn("Planner evaluation polling failed:", err);
@@ -3339,6 +3388,9 @@ COMPARE_HTML = '''<!DOCTYPE html>
         btnStart.onclick = async () => {
             if (!config) return;
 
+            const leftVersion  = document.getElementById("left-version-select").value;
+            const rightVersion = document.getElementById("right-version-select").value;
+
             // Reset state
             allExtractedEvents = [];
             resetPlannerTracking();
@@ -3350,8 +3402,13 @@ COMPARE_HTML = '''<!DOCTYPE html>
             baselineAutoFinished = false;
             plannerAutoFinished = false;
 
-            // Open dashboard window for Planner
-            if (config.dashboard_url) {
+            // Lock version selects for the duration of this session
+            document.getElementById("left-version-select").disabled = true;
+            document.getElementById("right-version-select").disabled = true;
+
+            // Open dashboard window only when a graphrag/legacy panel is present
+            const hasPlanner = leftVersion !== "baseline" || rightVersion !== "baseline";
+            if (hasPlanner && config.dashboard_url) {
                 dashboardWindow = openDashboardLoadingWindow();
                 updateDashboardStatus(Boolean(dashboardWindow));
             }
@@ -3359,21 +3416,23 @@ COMPARE_HTML = '''<!DOCTYPE html>
             try {
                 // Start both sessions in parallel
                 const [baselineResult, plannerResult] = await Promise.all([
-                    startBaseline(),
-                    startPlanner()
+                    startLeftPanel(),
+                    startRightPanel()
                 ]);
 
                 baselineSessionId = baselineResult.session_id;
                 plannerSessionId = plannerResult.session_id;
+                leftPanelVersion = leftVersion;
+                rightPanelVersion = rightVersion;
 
-                // Update dashboard window with correct session ID
-                if (dashboardWindow && plannerSessionId) {
+                // Update dashboard window with the planner session on the right (if any)
+                if (dashboardWindow && plannerSessionId && rightVersion !== "baseline") {
                     dashboardWindow.location.href = buildDashboardUrl(plannerSessionId);
                 }
 
                 // Update UI
                 document.getElementById("session-info").textContent =
-                    `会话: Baseline(${baselineSessionId.slice(0, 8)})... / Planner(${plannerSessionId.slice(0, 8)})...`;
+                    `会话: ${getVersionLabel(leftVersion)}(${baselineSessionId.slice(0, 8)})... / ${getVersionLabel(rightVersion)}(${plannerSessionId.slice(0, 8)})...`;
 
                 // Setup panels
                 setupBaselinePanel(baselineResult);
@@ -3401,30 +3460,88 @@ COMPARE_HTML = '''<!DOCTYPE html>
                 alert("启动失败: " + err.message);
                 btnStart.disabled = false;
                 btnStart.textContent = "▶ 开始对比测试";
+                document.getElementById("left-version-select").disabled = false;
+                document.getElementById("right-version-select").disabled = false;
             }
         };
 
-        async function startBaseline() {
-            return await requestJson("/api/baseline/start", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    elder_info: config,
-                    mode: config.mode
-                })
-            });
+        function getVersionLabel(version) {
+            return { baseline: "Baseline", graphrag: "GraphRAG Planner", legacy: "Legacy Planner" }[version] || version;
         }
 
-        async function startPlanner() {
-            return await requestJson("/api/planner/start", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    elder_info: config,
-                    mode: config.mode
-                })
-            });
+        function onVersionChange() {
+            const leftSel = document.getElementById("left-version-select");
+            const rightSel = document.getElementById("right-version-select");
+            const lv = leftSel.value;
+            const rv = rightSel.value;
+
+            // Prevent same version on both sides
+            if (lv === rv) {
+                // Pick any version that differs
+                const all = ["baseline", "graphrag", "legacy"];
+                const alt = all.find(v => v !== lv);
+                rightSel.value = alt;
+            }
+
+            // Update panel titles and badges
+            applyVersionStyle("left", document.getElementById("left-version-select").value);
+            applyVersionStyle("right", document.getElementById("right-version-select").value);
         }
+
+        function applyVersionStyle(side, version) {
+            const badge = document.getElementById(side + "-badge");
+            const title = document.getElementById(side + "-title");
+            const panel = document.getElementById(side === "left" ? "baseline-panel" : "planner-panel");
+
+            const configs = {
+                baseline:  { label: "对照组", badgeClass: "control",    bg: "linear-gradient(135deg, #e8e4e0 0%, #f5f1eb 100%)", text: "Baseline" },
+                graphrag:  { label: "实验组", badgeClass: "experiment",  bg: "linear-gradient(135deg, #e3f2fd 0%, #f3f9ff 100%)", text: "GraphRAG Planner" },
+                legacy:    { label: "旧版本", badgeClass: "legacy",      bg: "linear-gradient(135deg, #ede7f6 0%, #f9f5ff 100%)", text: "Legacy Planner" },
+            };
+            const c = configs[version] || configs.baseline;
+            badge.className = "badge " + c.badgeClass;
+            badge.textContent = c.label;
+            title.textContent = c.text;
+            panel.querySelector(".panel-header").style.background = c.bg;
+        }
+
+        async function startLeftPanel() {
+            const version = document.getElementById("left-version-select").value;
+            if (version === "baseline") {
+                return await requestJson("/api/baseline/start", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ elder_info: config, mode: config.mode })
+                });
+            } else {
+                return await requestJson("/api/planner/start", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ elder_info: config, mode: config.mode, version })
+                });
+            }
+        }
+
+        async function startRightPanel() {
+            const version = document.getElementById("right-version-select").value;
+            if (version === "baseline") {
+                return await requestJson("/api/baseline/start", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ elder_info: config, mode: config.mode })
+                });
+            } else {
+                return await requestJson("/api/planner/start", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ elder_info: config, mode: config.mode, version })
+                });
+            }
+        }
+
+        // Legacy aliases kept for any inline callers
+        async function startBaseline() { return startLeftPanel(); }
+        async function startPlanner()  { return startRightPanel(); }
 
         function setupBaselinePanel(result) {
             const chat = document.getElementById("baseline-chat");
@@ -3654,7 +3771,8 @@ COMPARE_HTML = '''<!DOCTYPE html>
             const chat = document.getElementById("baseline-chat");
             let interviewEnded = false;
 
-            const evtSource = new EventSource(`/api/baseline/auto?session_id=${baselineSessionId}&single_turn=1`);
+            const leftAutoEndpoint = leftPanelVersion === "baseline" ? "/api/baseline/auto" : "/api/planner/auto";
+            const evtSource = new EventSource(`${leftAutoEndpoint}?session_id=${baselineSessionId}&single_turn=1`);
 
             evtSource.onmessage = (e) => {
                 const msg = JSON.parse(e.data);
@@ -3694,7 +3812,8 @@ COMPARE_HTML = '''<!DOCTYPE html>
 
             appendMessage(chat, "interviewee", answer);
 
-            const data = await requestJson("/api/baseline/reply", {
+            const leftReplyEndpoint = leftPanelVersion === "baseline" ? "/api/baseline/reply" : "/api/planner/reply";
+            const data = await requestJson(leftReplyEndpoint, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ session_id: baselineSessionId, answer })
@@ -3728,7 +3847,8 @@ COMPARE_HTML = '''<!DOCTYPE html>
             const chat = document.getElementById("planner-chat");
             let interviewEnded = false;
 
-            const evtSource = new EventSource(`/api/planner/auto?session_id=${plannerSessionId}&single_turn=1`);
+            const rightAutoEndpoint = rightPanelVersion === "baseline" ? "/api/baseline/auto" : "/api/planner/auto";
+            const evtSource = new EventSource(`${rightAutoEndpoint}?session_id=${plannerSessionId}&single_turn=1`);
 
             evtSource.onmessage = (e) => {
                 const msg = JSON.parse(e.data);
@@ -3783,7 +3903,8 @@ COMPARE_HTML = '''<!DOCTYPE html>
 
             appendMessage(chat, "interviewee", answer);
 
-            const data = await requestJson("/api/planner/reply", {
+            const rightReplyEndpoint = rightPanelVersion === "baseline" ? "/api/baseline/reply" : "/api/planner/reply";
+            const data = await requestJson(rightReplyEndpoint, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ session_id: plannerSessionId, answer })
