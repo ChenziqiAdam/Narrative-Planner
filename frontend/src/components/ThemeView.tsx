@@ -11,6 +11,7 @@ import {
   NodeStatus,
   StatusColors,
 } from '../types'
+import { ClipboardIcon, ElderIcon } from './icons'
 import './ThemeView.css'
 
 interface ThemeViewProps {
@@ -49,7 +50,7 @@ const ThemeView: React.FC<ThemeViewProps> = ({
     return (
       <div className={`theme-view-container ${className}`}>
         <div className="theme-view-empty">
-          <span className="empty-icon">📋</span>
+          <ClipboardIcon className="empty-icon" color="#9CA3AF" />
           <span>暂无主题数据</span>
         </div>
       </div>
@@ -64,7 +65,7 @@ const ThemeView: React.FC<ThemeViewProps> = ({
         {/* 中心节点 - 受访者 */}
         <div className="mindmap-center">
           <div className="center-node">
-            <span className="center-avatar">👵</span>
+            <ElderIcon size={36} color="#6b4f3a" className="center-avatar" />
             <span className="center-name">
               {graphState.elder_info?.name || '受访者'}
             </span>

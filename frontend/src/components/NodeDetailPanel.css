@@ -29,8 +29,10 @@
 }
 
 .empty-icon {
-  font-size: 48px;
+  display: flex;
+  align-items: center;
   opacity: 0.5;
+  margin-bottom: 8px;
 }
 
 .empty-state p {

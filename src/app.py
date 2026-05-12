@@ -276,127 +276,229 @@ HTML = """<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>传记访谈系统</title>
+<title>忆述 · 传记访谈系统</title>
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: #f5f1eb; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --brand: #5c3d2e;
+  --brand-light: #7a5243;
+  --brand-bg: #fdf8f4;
+  --accent: #c8956c;
+  --accent-hover: #b07a53;
+  --surface: #ffffff;
+  --border: #e8e0d8;
+  --text-primary: #2d1f17;
+  --text-secondary: #6b5a50;
+  --text-muted: #a08a7e;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --shadow-card: 0 2px 12px rgba(92,61,46,.08), 0 1px 3px rgba(92,61,46,.05);
+  --shadow-hover: 0 8px 28px rgba(92,61,46,.14), 0 2px 8px rgba(92,61,46,.07);
+  --transition: 0.22s cubic-bezier(.4,0,.2,1);
+}
+body { font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif; background: var(--brand-bg); height: 100vh; display: flex; flex-direction: column; overflow: hidden; color: var(--text-primary); font-size: 15px; line-height: 1.6; }
 
-header { background: #6b4f3a; color: #fff; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
-header h1 { font-size: 1.1rem; font-weight: bold; }
-#status-badge { font-size: .8rem; padding: 4px 12px; border-radius: 12px; background: rgba(255,255,255,.2); }
+/* ── Header ── */
+header { background: var(--brand); color: #fff; padding: 0 28px; height: 56px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; box-shadow: 0 1px 0 rgba(0,0,0,.12); }
+.header-brand { display: flex; align-items: center; gap: 10px; }
+.header-logo { width: 28px; height: 28px; opacity: .92; }
+header h1 { font-size: 1.05rem; font-weight: 700; letter-spacing: .02em; }
+#status-badge { font-size: .78rem; padding: 4px 12px; border-radius: 20px; background: rgba(255,255,255,.18); letter-spacing: .01em; }
 
-/* Setup panel */
-#setup { flex: 1; display: flex; align-items: center; justify-content: center; }
-#setup-card { background: #fff; border-radius: 16px; padding: 36px; width: 500px; box-shadow: 0 4px 20px rgba(0,0,0,.1); }
-#setup-card h2 { font-size: 1.1rem; color: #6b4f3a; margin-bottom: 20px; }
-#setup-card textarea { width: 100%; height: 100px; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: .95rem; resize: vertical; font-family: inherit; }
-#setup-card textarea:focus { outline: none; border-color: #6b4f3a; }
+/* ── Landing / Setup ── */
+#setup { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 32px 20px; gap: 32px; overflow-y: auto; }
 
-/* Mode selector */
-.mode-selector { display: flex; gap: 10px; margin: 14px 0 18px; }
-.mode-option { flex: 1; border: 2px solid #ddd; border-radius: 10px; padding: 12px 10px; cursor: pointer; text-align: center; transition: all .2s; }
-.mode-option:hover { border-color: #6b4f3a; }
-.mode-option.selected { border-color: #6b4f3a; background: #fdf8f4; }
-.mode-option input[type=radio] { display: none; }
-.mode-option .mode-icon { font-size: 1.4rem; display: block; margin-bottom: 4px; }
-.mode-option .mode-label { font-size: .88rem; font-weight: 600; color: #4a3328; display: block; }
-.mode-option .mode-desc { font-size: .75rem; color: #999; margin-top: 3px; display: block; }
+.landing-hero { text-align: center; max-width: 540px; }
+.landing-hero h2 { font-size: 1.7rem; font-weight: 700; color: var(--text-primary); line-height: 1.3; margin-bottom: 10px; }
+.landing-hero p { font-size: .97rem; color: var(--text-secondary); max-width: 400px; margin: 0 auto; }
 
-#start-btn { width: 100%; padding: 13px; background: #6b4f3a; color: #fff; border: none; border-radius: 10px; font-size: 1rem; cursor: pointer; transition: opacity .2s; }
+/* Mode cards */
+.mode-cards { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; max-width: 760px; width: 100%; }
+.mode-card { flex: 1; min-width: 200px; max-width: 230px; background: var(--surface); border: 2px solid var(--border); border-radius: var(--radius-lg); padding: 24px 20px 22px; cursor: pointer; text-align: center; transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition); box-shadow: var(--shadow-card); user-select: none; }
+.mode-card:hover { border-color: var(--accent); box-shadow: var(--shadow-hover); transform: translateY(-3px); }
+.mode-card.selected { border-color: var(--brand); background: #fdf5ef; box-shadow: var(--shadow-hover); transform: translateY(-3px); }
+.mode-card.link-card { text-decoration: none; color: inherit; display: flex; flex-direction: column; align-items: center; }
+.mode-card-icon { width: 52px; height: 52px; margin: 0 auto 14px; background: var(--brand-bg); border-radius: 14px; display: flex; align-items: center; justify-content: center; transition: background var(--transition); }
+.mode-card:hover .mode-card-icon, .mode-card.selected .mode-card-icon { background: #f0e6dc; }
+.mode-card-icon svg { color: var(--brand); }
+.mode-card-title { font-size: 1rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
+.mode-card-desc { font-size: .82rem; color: var(--text-muted); line-height: 1.5; }
+.mode-card input[type=radio] { display: none; }
+
+/* Info form (shown after mode select) */
+#info-form { width: 100%; max-width: 520px; display: none; flex-direction: column; gap: 14px; animation: fadeUp .25s ease; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+#info-form label { font-size: .88rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 2px; display: block; }
+#basic-info { width: 100%; height: 96px; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: var(--radius-md); font-size: .94rem; font-family: inherit; resize: vertical; background: var(--surface); color: var(--text-primary); line-height: 1.6; transition: border-color var(--transition); }
+#basic-info:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px rgba(92,61,46,.1); }
+#start-btn { padding: 13px 24px; background: var(--brand); color: #fff; border: none; border-radius: var(--radius-md); font-size: 1rem; font-weight: 600; cursor: pointer; transition: background var(--transition), opacity var(--transition); letter-spacing: .01em; }
+#start-btn:hover { background: var(--brand-light); }
 #start-btn:disabled { opacity: .5; cursor: not-allowed; }
 
-/* Main layout */
-#main { flex: 1; display: none; flex-direction: row; gap: 0; overflow: hidden; }
+/* ── Main layout ── */
+#main { flex: 1; display: none; flex-direction: row; overflow: hidden; }
 
 /* Chat panel */
-#chat-panel { flex: 1; display: flex; flex-direction: column; border-right: 1px solid #ddd; }
-#chat-panel h2 { padding: 12px 20px; font-size: .9rem; font-weight: 600; color: #6b4f3a; background: #faf7f3; border-bottom: 1px solid #eee; flex-shrink: 0; }
-#chat { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+#chat-panel { flex: 1; display: flex; flex-direction: column; }
+.chat-panel-header { padding: 12px 22px; font-size: .9rem; font-weight: 600; color: var(--brand); background: #faf6f2; border-bottom: 1px solid var(--border); flex-shrink: 0; display: flex; align-items: center; gap: 8px; }
+.chat-panel-header svg { color: var(--brand); opacity: .7; }
+#chat { flex: 1; overflow-y: auto; padding: 22px; display: flex; flex-direction: column; gap: 16px; }
+#chat::-webkit-scrollbar { width: 5px; }
+#chat::-webkit-scrollbar-thumb { background: rgba(92,61,46,.15); border-radius: 3px; }
 
-.msg { max-width: 75%; padding: 11px 15px; border-radius: 16px; line-height: 1.65; word-break: break-word; font-size: .92rem; }
-.msg .label { font-size: .72rem; margin-bottom: 4px; opacity: .65; font-weight: 600; }
-.msg.interviewer { align-self: flex-start; background: #e8f4fd; color: #1a4a6b; border-bottom-left-radius: 4px; }
-.action-badge { display: inline-block; font-size: .68rem; padding: 2px 7px; border-radius: 8px; margin-left: 6px; vertical-align: middle; font-weight: 600; }
-.action-badge.continue { background: #d4edff; color: #1a4a6b; }
-.action-badge.next_phase { background: #fff0cc; color: #7a5800; }
-.action-badge.end { background: #ffe0e0; color: #7a0000; }
-.msg.interviewee { align-self: flex-end; background: #fff; color: #333; border-bottom-right-radius: 4px; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
-.msg.system { align-self: center; background: transparent; color: #999; font-size: .8rem; font-style: italic; }
-.msg-memory-calls { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
-.msg-memory-chip { display: inline-flex; align-items: center; gap: 3px; padding: 2px 7px; border-radius: 999px; font-size: .66rem; font-weight: 600; background: #f0e8ff; color: #5b21b6; border: 1px solid #d8b4fe; cursor: default; position: relative; }
-.msg-memory-chip:hover .msg-memory-tip, .msg-memory-tip:hover { display: block; }
-.msg-memory-tip { display: none; position: absolute; bottom: calc(100% + 5px); left: 0; min-width: 200px; max-width: 300px; max-height: 300px; overflow-y: auto; background: #1e1b2e; color: #e2d9ff; font-size: .7rem; font-weight: 400; padding: 7px 9px; border-radius: 7px; z-index: 100; white-space: pre-wrap; word-break: break-word; box-shadow: 0 4px 12px rgba(0,0,0,.3); line-height: 1.4; }
-.typing-dots span { display: inline-block; animation: blink 1.2s infinite; }
+.msg { max-width: 76%; padding: 12px 16px; border-radius: var(--radius-md); line-height: 1.7; word-break: break-word; font-size: .93rem; }
+.msg .label { font-size: .72rem; margin-bottom: 5px; opacity: .6; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+.msg.interviewer { align-self: flex-start; background: #e9f3fd; color: #1a3f6b; border-bottom-left-radius: 4px; }
+.msg.interviewee { align-self: flex-end; background: var(--surface); color: var(--text-primary); border-bottom-right-radius: 4px; box-shadow: var(--shadow-card); }
+.msg.system { align-self: center; background: transparent; color: var(--text-muted); font-size: .8rem; font-style: italic; padding: 4px 0; }
+.action-badge { display: inline-block; font-size: .68rem; padding: 2px 8px; border-radius: 8px; margin-left: 6px; vertical-align: middle; font-weight: 700; }
+.action-badge.continue { background: #dbeafe; color: #1e40af; }
+.action-badge.next_phase { background: #fef3c7; color: #92400e; }
+.action-badge.end { background: #fee2e2; color: #991b1b; }
+.msg-memory-calls { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+.msg-memory-chip { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 999px; font-size: .66rem; font-weight: 700; background: #f0e8ff; color: #5b21b6; border: 1px solid #d8b4fe; cursor: default; position: relative; }
+.msg-memory-chip svg { flex-shrink: 0; }
+.msg-memory-chip:hover .msg-memory-tip { display: block; }
+.msg-memory-tip { display: none; position: absolute; bottom: calc(100% + 6px); left: 0; min-width: 220px; max-width: 320px; max-height: 280px; overflow-y: auto; background: #1e1b2e; color: #e2d9ff; font-size: .7rem; font-weight: 400; padding: 8px 10px; border-radius: 8px; z-index: 100; white-space: pre-wrap; word-break: break-word; box-shadow: 0 6px 20px rgba(0,0,0,.35); line-height: 1.45; }
+.typing-dots span { display: inline-block; animation: blink 1.2s infinite; font-size: 1rem; }
 .typing-dots span:nth-child(2) { animation-delay: .2s; }
 .typing-dots span:nth-child(3) { animation-delay: .4s; }
 @keyframes blink { 0%,80%,100% { opacity:0 } 40% { opacity:1 } }
 
-/* AI mode controls */
-#chat-controls-ai { padding: 14px 20px; background: #faf7f3; border-top: 1px solid #eee; display: flex; gap: 10px; flex-shrink: 0; }
-#run-btn { flex: 1; padding: 11px; background: #6b4f3a; color: #fff; border: none; border-radius: 10px; font-size: .95rem; cursor: pointer; }
+/* Controls */
+#chat-controls-ai { padding: 14px 22px; background: #faf6f2; border-top: 1px solid var(--border); display: flex; gap: 10px; flex-shrink: 0; align-items: flex-start; }
+#run-btn { display: flex; align-items: center; gap: 7px; padding: 11px 18px; background: var(--brand); color: #fff; border: none; border-radius: var(--radius-sm); font-size: .93rem; font-weight: 600; cursor: pointer; transition: background var(--transition); white-space: nowrap; flex-shrink: 0; }
+#run-btn:hover { background: var(--brand-light); }
 #run-btn:disabled { opacity: .5; cursor: not-allowed; }
-
-/* AI mode input area (原回忆录位置) */
 #ai-input-area { flex: 1; display: flex; flex-direction: column; gap: 8px; }
-#ai-input { width: 100%; padding: 11px 14px; border: 1px solid #ddd; border-radius: 10px; font-size: .93rem; font-family: inherit; resize: none; height: 60px; line-height: 1.5; }
-#ai-input:focus { outline: none; border-color: #6b4f3a; }
-#ai-input:disabled { background: #f5f5f5; color: #aaa; }
-#ai-send-btn { padding: 10px 16px; background: #6b4f3a; color: #fff; border: none; border-radius: 10px; font-size: .93rem; cursor: pointer; }
+#ai-input { width: 100%; padding: 10px 13px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: .92rem; font-family: inherit; resize: none; height: 58px; line-height: 1.5; transition: border-color var(--transition); }
+#ai-input:focus { outline: none; border-color: var(--brand); }
+#ai-input:disabled { background: #f5f0eb; color: #bbb; }
+#ai-send-btn { padding: 9px 15px; background: var(--brand); color: #fff; border: none; border-radius: var(--radius-sm); font-size: .9rem; cursor: pointer; transition: background var(--transition); }
+#ai-send-btn:hover { background: var(--brand-light); }
 #ai-send-btn:disabled { opacity: .5; cursor: not-allowed; }
 
-/* User mode input area */
-#chat-controls-user { padding: 14px 20px; background: #faf7f3; border-top: 1px solid #eee; display: none; flex-direction: column; gap: 8px; flex-shrink: 0; }
-#user-input { width: 100%; padding: 11px 14px; border: 1px solid #ddd; border-radius: 10px; font-size: .93rem; font-family: inherit; resize: none; height: 80px; line-height: 1.5; }
-#user-input:focus { outline: none; border-color: #6b4f3a; }
-#user-input:disabled { background: #f5f5f5; color: #aaa; }
-#user-controls-row { display: flex; gap: 10px; }
-#send-btn { flex: 1; padding: 10px; background: #6b4f3a; color: #fff; border: none; border-radius: 10px; font-size: .93rem; cursor: pointer; }
+#chat-controls-user { padding: 14px 22px; background: #faf6f2; border-top: 1px solid var(--border); display: none; flex-direction: column; gap: 10px; flex-shrink: 0; }
+#user-input { width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: .93rem; font-family: inherit; resize: none; height: 82px; line-height: 1.6; transition: border-color var(--transition); }
+#user-input:focus { outline: none; border-color: var(--brand); }
+#user-input:disabled { background: #f5f0eb; color: #bbb; }
+#user-controls-row { display: flex; gap: 10px; align-items: center; }
+#send-btn { flex: 1; padding: 11px; background: var(--brand); color: #fff; border: none; border-radius: var(--radius-sm); font-size: .94rem; font-weight: 600; cursor: pointer; transition: background var(--transition); }
+#send-btn:hover { background: var(--brand-light); }
 #send-btn:disabled { opacity: .5; cursor: not-allowed; }
+.user-hint { font-size: .77rem; color: var(--text-muted); }
+
+/* ── Footer / landing ── */
+.landing-footer { font-size: .78rem; color: var(--text-muted); text-align: center; }
+
+@media (max-width: 640px) {
+  .mode-cards { gap: 10px; }
+  .mode-card { min-width: 160px; padding: 18px 14px; }
+  #setup { padding: 20px 14px; gap: 22px; }
+  .landing-hero h2 { font-size: 1.35rem; }
+}
 </style>
 </head>
 <body>
 
 <header>
-  <h1 id="header-title">传记访谈系统</h1>
+  <div class="header-brand">
+    <svg class="header-logo" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="4" y="3" width="15" height="22" rx="2.5" stroke="rgba(255,255,255,.85)" stroke-width="1.6"/>
+      <path d="M8 8h7M8 12h7M8 16h4" stroke="rgba(255,255,255,.65)" stroke-width="1.4" stroke-linecap="round"/>
+      <circle cx="21" cy="21" r="5" fill="rgba(255,255,255,.15)" stroke="rgba(255,255,255,.7)" stroke-width="1.4"/>
+      <path d="M21 18.5v2.7l1.5 1.5" stroke="rgba(255,255,255,.85)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <h1 id="header-title">忆述 · 传记访谈</h1>
+  </div>
   <span id="status-badge">就绪</span>
 </header>
 
-<!-- Setup screen -->
+<!-- Landing / Setup screen -->
 <div id="setup">
-  <div id="setup-card">
-    <h2>开始新访谈</h2>
-    <textarea id="basic-info" placeholder="请输入受访者基本信息，例如：&#10;出生于1942年，四川成都人，曾是纺织厂工人，经历过文革和改革开放，育有三个子女，现独居。"></textarea>
+  <div class="landing-hero">
+    <h2>记录每一段珍贵的人生故事</h2>
+    <p>选择访谈模式，开启您的传记访谈之旅</p>
+  </div>
 
-    <div class="mode-selector">
-      <label class="mode-option selected" id="mode-ai-label">
-        <input type="radio" name="mode" value="ai" checked onchange="selectMode('ai')">
-        <span class="mode-icon">🤖</span>
-        <span class="mode-label">AI 模拟受访者</span>
-        <span class="mode-desc">由 AI 自动回答问题</span>
-      </label>
-      <label class="mode-option" id="mode-user-label">
-        <input type="radio" name="mode" value="user" onchange="selectMode('user')">
-        <span class="mode-icon">🧑</span>
-        <span class="mode-label">我来亲自回答</span>
-        <span class="mode-desc">由您本人回答访谈问题</span>
-      </label>
+  <!-- Mode cards -->
+  <div class="mode-cards">
+    <!-- AI mode -->
+    <label class="mode-card selected" id="mode-ai-label">
+      <input type="radio" name="mode" value="ai" checked onchange="selectMode('ai')">
+      <div class="mode-card-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="10" rx="2"/>
+          <path d="M12 11V7"/><circle cx="12" cy="5" r="2"/>
+          <circle cx="8.5" cy="15.5" r="1" fill="currentColor" stroke="none"/>
+          <circle cx="12" cy="15.5" r="1" fill="currentColor" stroke="none"/>
+          <circle cx="15.5" cy="15.5" r="1" fill="currentColor" stroke="none"/>
+          <path d="M3 16l-1.5 1M21 16l1.5 1"/>
+        </svg>
+      </div>
+      <div class="mode-card-title">AI 模拟受访者</div>
+      <div class="mode-card-desc">由 AI 扮演受访者自动回答，适合系统测试与内容演示</div>
+    </label>
+
+    <!-- User mode -->
+    <label class="mode-card" id="mode-user-label">
+      <input type="radio" name="mode" value="user" onchange="selectMode('user')">
+      <div class="mode-card-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="7" r="4"/>
+          <path d="M4 21c0-4.418 3.582-8 8-8s8 3.582 8 8"/>
+        </svg>
+      </div>
+      <div class="mode-card-title">亲自回答访谈</div>
+      <div class="mode-card-desc">由您本人真实作答，记录真实的人生回忆与故事</div>
+    </label>
+
+    <!-- Compare mode -->
+    <a class="mode-card link-card" href="/compare" id="mode-compare-card">
+      <div class="mode-card-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="4" width="9" height="16" rx="2"/>
+          <rect x="13" y="4" width="9" height="16" rx="2"/>
+          <path d="M7 9h3M7 12h3M7 15h3M14 9h3M14 12h3M14 15h3"/>
+        </svg>
+      </div>
+      <div class="mode-card-title">版本对比</div>
+      <div class="mode-card-desc">并排对比不同访谈策略的效果，分析访谈质量差异</div>
+    </a>
+  </div>
+
+  <!-- Subject info form (shown after AI/User mode selected) -->
+  <div id="info-form">
+    <div>
+      <label for="basic-info">受访者基本信息</label>
+      <textarea id="basic-info" placeholder="例如：出生于1942年，四川成都人，曾是纺织厂工人，经历过文革和改革开放，育有三个子女，现独居。"></textarea>
     </div>
-
     <button id="start-btn" onclick="startInterview()">开始访谈</button>
   </div>
+
+  <div class="landing-footer">忆述 · Narrative Planner &nbsp;—&nbsp; 让每段故事都值得被记录</div>
 </div>
 
 <!-- Main interview view -->
 <div id="main">
   <div id="chat-panel">
-    <h2>访谈对话</h2>
+    <div class="chat-panel-header">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+      </svg>
+      访谈对话
+    </div>
     <div id="chat"></div>
 
     <!-- AI mode controls -->
     <div id="chat-controls-ai">
-      <button id="run-btn" onclick="runAutoInterview()" disabled>▶ 自动运行访谈</button>
+      <button id="run-btn" onclick="runAutoInterview()" disabled>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5,3 19,12 5,21"/></svg>
+        自动运行访谈
+      </button>
       <div id="ai-input-area">
-        <textarea id="ai-input" placeholder="AI模式下可在此输入干预内容（可选）…" onkeydown="handleAiKey(event)" disabled></textarea>
+        <textarea id="ai-input" placeholder="可在此输入干预内容（可选）…" onkeydown="handleAiKey(event)" disabled></textarea>
         <button id="ai-send-btn" onclick="sendAiIntervention()" disabled>发送干预</button>
       </div>
     </div>
@@ -406,6 +508,7 @@ header h1 { font-size: 1.1rem; font-weight: bold; }
       <textarea id="user-input" placeholder="请输入您的回答…" onkeydown="handleUserKey(event)"></textarea>
       <div id="user-controls-row">
         <button id="send-btn" onclick="sendUserReply()">发送回答</button>
+        <span class="user-hint">Ctrl+Enter 快速发送</span>
       </div>
     </div>
   </div>
@@ -421,9 +524,13 @@ const sendBtn  = document.getElementById('send-btn');
 const userInput = document.getElementById('user-input');
 const aiInput = document.getElementById('ai-input');
 const aiSendBtn = document.getElementById('ai-send-btn');
+const infoForm = document.getElementById('info-form');
 
 let interviewDone = false;
 let currentMode = 'ai';
+
+// Show info form on load (AI mode is pre-selected)
+infoForm.style.display = 'flex';
 
 function setStatus(text, color='rgba(255,255,255,.2)') {
   statusEl.textContent = text;
@@ -434,12 +541,23 @@ function selectMode(mode) {
   currentMode = mode;
   document.getElementById('mode-ai-label').classList.toggle('selected', mode === 'ai');
   document.getElementById('mode-user-label').classList.toggle('selected', mode === 'user');
+  document.getElementById('mode-compare-card').classList.remove('selected');
+  infoForm.style.display = 'flex';
 }
+
+const TOOL_SVGS = {
+  search_memories_by_keywords: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>',
+  search_memories_by_tags: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><circle cx="7" cy="7" r="1.5" fill="currentColor" stroke="none"/></svg>',
+  get_memories_by_period: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>',
+  get_memory_by_id: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a5 5 0 015 5c0 5-5 13-5 13S7 12 7 7a5 5 0 015-5z"/><circle cx="12" cy="7" r="2"/></svg>',
+  get_related_memories: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>',
+};
+const TOOL_LABELS = { search_memories_by_keywords: '关键词', search_memories_by_tags: '标签', get_memories_by_period: '时期', get_memory_by_id: '记忆ID', get_related_memories: '关联' };
 
 const actionLabels = { continue: '深入', next_phase: '下一阶段', end: '结束访谈' };
 
 function appendMsg(role, text, action, memoryCalls) {
-  const labels = { interviewer: '访谈者', interviewee: '受访者（您）', system: '' };
+  const labels = { interviewer: '访谈者', interviewee: '受访者', system: '' };
   const d = document.createElement('div');
   d.className = 'msg ' + role;
   if (role !== 'system') {
@@ -458,18 +576,17 @@ function appendMsg(role, text, action, memoryCalls) {
   p.textContent = text;
   d.appendChild(p);
   if (memoryCalls && memoryCalls.length > 0) {
-    const toolNames = { search_memories_by_keywords: '🔍 关键词', search_memories_by_tags: '🏷 标签', get_memories_by_period: '📅 时期', get_memory_by_id: '📌 记忆ID', get_related_memories: '🔗 关联' };
     const memDiv = document.createElement('div');
     memDiv.className = 'msg-memory-calls';
     for (const call of memoryCalls) {
       const chip = document.createElement('span');
       chip.className = 'msg-memory-chip';
       const cnt = Array.isArray(call.result) ? call.result.length : (call.result ? 1 : 0);
-      const label = toolNames[call.tool] || call.tool;
+      const svg = TOOL_SVGS[call.tool] || '';
+      const label = TOOL_LABELS[call.tool] || call.tool;
       const argsStr = JSON.stringify(call.args, null, 2);
-      const chipLabel = Array.isArray(call.result) ? call.result.map(r => r.memory?.event_name || r.memory_id || '?').join(', ') : (call.result?.event_name || '');
       const fullResult = JSON.stringify(call.result, null, 2);
-      chip.innerHTML = `${label} (${cnt})<span class="msg-memory-tip">工具：${call.tool}\n参数：${argsStr}\n结果：${fullResult || '无'}</span>`;
+      chip.innerHTML = svg + label + ' (' + cnt + ')<span class="msg-memory-tip">工具：' + call.tool + '\\n参数：' + argsStr + '\\n结果：' + (fullResult || '无') + '</span>';
       memDiv.appendChild(chip);
     }
     d.appendChild(memDiv);
@@ -512,22 +629,19 @@ async function startInterview() {
     setupEl.style.display = 'none';
     mainEl.style.display = 'flex';
 
-    // Show correct controls based on mode
     if (currentMode === 'user') {
       document.getElementById('chat-controls-ai').style.display = 'none';
       document.getElementById('chat-controls-user').style.display = 'flex';
-      document.getElementById('header-title').textContent = '传记访谈系统 · 亲历模式';
+      document.getElementById('header-title').textContent = '忆述 · 亲历模式';
       userInput.disabled = false;
       sendBtn.disabled = false;
-      // AI模式输入框禁用
       aiInput.disabled = true;
       aiSendBtn.disabled = true;
     } else {
       document.getElementById('chat-controls-ai').style.display = 'flex';
       document.getElementById('chat-controls-user').style.display = 'none';
-      document.getElementById('header-title').textContent = '传记访谈系统 · 自动对话';
+      document.getElementById('header-title').textContent = '忆述 · 自动对话';
       runBtn.disabled = false;
-      // AI模式下输入框启用（用于干预）
       aiInput.disabled = false;
       aiSendBtn.disabled = false;
     }
@@ -542,126 +656,63 @@ async function startInterview() {
   }
 }
 
-// ── User mode ────────────────────────────────────────────────────────────────
-
 function handleUserKey(e) {
-  // Ctrl+Enter or Cmd+Enter to send
-  if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-    e.preventDefault();
-    sendUserReply();
-  }
+  if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); sendUserReply(); }
 }
 
 async function sendUserReply() {
   const answer = userInput.value.trim();
   if (!answer) return;
-
   sendBtn.disabled = true;
   userInput.disabled = true;
   userInput.value = '';
-
   appendMsg('interviewee', answer);
   setStatus('访谈者思考中…', 'rgba(255,200,100,.4)');
-
-  // Show typing indicator for interviewer
   const typingEl = appendTyping('interviewer');
-
   try {
-    const res = await fetch('/user_reply', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ answer })
-    });
+    const res = await fetch('/user_reply', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ answer }) });
     const data = await res.json();
     typingEl.remove();
-
-    if (data.error) {
-      appendMsg('system', '错误：' + data.error);
-      setStatus('出错', 'rgba(255,100,100,.4)');
-      return;
-    }
-
+    if (data.error) { appendMsg('system', '错误：' + data.error); setStatus('出错', 'rgba(255,100,100,.4)'); return; }
     appendMsg('interviewer', data.question, data.action);
-
     if (data.done) {
-      interviewDone = true;
-      sendBtn.disabled = true;
-      userInput.disabled = true;
-      setStatus('访谈完成', 'rgba(100,200,150,.4)');
-      appendMsg('system', '访谈已结束');
+      interviewDone = true; sendBtn.disabled = true; userInput.disabled = true;
+      setStatus('访谈完成', 'rgba(100,200,150,.4)'); appendMsg('system', '访谈已结束');
     } else {
-      sendBtn.disabled = false;
-      userInput.disabled = false;
-      userInput.focus();
+      sendBtn.disabled = false; userInput.disabled = false; userInput.focus();
       setStatus('等待您的回答', 'rgba(255,255,255,.2)');
     }
   } catch(e) {
-    typingEl.remove();
-    appendMsg('system', '网络错误，请重试');
-    setStatus('连接中断', 'rgba(255,100,100,.4)');
-    sendBtn.disabled = false;
-    userInput.disabled = false;
+    typingEl.remove(); appendMsg('system', '网络错误，请重试');
+    setStatus('连接中断', 'rgba(255,100,100,.4)'); sendBtn.disabled = false; userInput.disabled = false;
   }
 }
 
-// ── AI mode ──────────────────────────────────────────────────────────────────
-
 function runAutoInterview() {
-  runBtn.disabled = true;
-  aiInput.disabled = true;
-  aiSendBtn.disabled = true;
+  runBtn.disabled = true; aiInput.disabled = true; aiSendBtn.disabled = true;
   setStatus('访谈进行中…', 'rgba(255,200,100,.4)');
-
   const evtSource = new EventSource('/auto_interview');
-
   evtSource.onmessage = (e) => {
     const msg = JSON.parse(e.data);
     if (msg.role === 'done') {
-      evtSource.close();
-      interviewDone = true;
-      aiInput.disabled = false;
-      aiSendBtn.disabled = false;
-      setStatus('访谈完成', 'rgba(100,200,150,.4)');
-      appendMsg('system', '访谈已由访谈者自然结束');
-      return;
+      evtSource.close(); interviewDone = true; aiInput.disabled = false; aiSendBtn.disabled = false;
+      setStatus('访谈完成', 'rgba(100,200,150,.4)'); appendMsg('system', '访谈已由访谈者自然结束'); return;
     }
     appendMsg(msg.role, msg.text, msg.action, msg.memory_calls);
   };
-
-  evtSource.onerror = () => {
-    evtSource.close();
-    setStatus('连接中断', 'rgba(255,100,100,.4)');
-    runBtn.disabled = false;
-  };
+  evtSource.onerror = () => { evtSource.close(); setStatus('连接中断', 'rgba(255,100,100,.4)'); runBtn.disabled = false; };
 }
 
-// ── AI Intervention ───────────────────────────────────────────────────────────
-
 function handleAiKey(e) {
-  // Ctrl+Enter or Cmd+Enter to send
-  if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-    e.preventDefault();
-    sendAiIntervention();
-  }
+  if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); sendAiIntervention(); }
 }
 
 async function sendAiIntervention() {
   const text = aiInput.value.trim();
   if (!text) return;
-
-  aiSendBtn.disabled = true;
-  aiInput.disabled = true;
-
-  // 显示干预消息
+  aiSendBtn.disabled = true; aiInput.disabled = true;
   appendMsg('system', '[用户干预] ' + text);
-
-  // 这里可以添加向后端发送干预的逻辑
-  // 目前仅作为展示用途
-
-  aiInput.value = '';
-  aiInput.disabled = false;
-  aiSendBtn.disabled = false;
-  aiInput.focus();
+  aiInput.value = ''; aiInput.disabled = false; aiSendBtn.disabled = false; aiInput.focus();
 }
 </script>
 </body>
@@ -2493,17 +2544,30 @@ COMPARE_HTML = '''<!DOCTYPE html>
     <!-- Top Bar -->
     <header class="top-bar">
         <div class="brand">
-            <h1>🔬 访谈系统对比调试</h1>
+            <a href="/" style="display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,.7);text-decoration:none;font-size:.85rem;margin-right:12px;padding:5px 10px;border-radius:6px;border:1px solid rgba(255,255,255,.25);transition:background .2s;" onmouseover="this.style.background='rgba(255,255,255,.12)'" onmouseout="this.style.background='transparent'">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+              返回首页
+            </a>
+            <h1 style="display:inline-flex;align-items:center;gap:8px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="9" height="16" rx="2"/><rect x="13" y="4" width="9" height="16" rx="2"/><path d="M7 9h3M7 12h3M7 15h3M14 9h3M14 12h3M14 15h3"/></svg>
+              访谈系统对比调试
+            </h1>
             <span class="subtitle">版本对比测试</span>
         </div>
 
         <div class="global-controls">
-            <button id="btn-config" class="btn-icon">⚙️ 老人信息</button>
+            <button id="btn-config" class="btn-icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+              老人信息
+            </button>
             <div id="dashboard-status" class="status-indicator">
                 <span class="dot"></span>
                 <span class="label">数据看板</span>
             </div>
-            <button id="btn-start-compare" class="btn-primary" disabled>▶ 开始对比测试</button>
+            <button id="btn-start-compare" class="btn-primary" disabled>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="none" style="display:inline;vertical-align:middle;margin-right:5px"><polygon points="5,3 19,12 5,21"/></svg>
+              开始对比测试
+            </button>
         </div>
     </header>
 
@@ -2511,7 +2575,7 @@ COMPARE_HTML = '''<!DOCTYPE html>
     <div id="config-modal" class="modal">
         <div class="modal-content">
             <header class="modal-header">
-                <h2>👤 老人信息配置</h2>
+                <h2>老人信息配置</h2>
                 <button class="btn-close" onclick="closeConfig()">&times;</button>
             </header>
             <form id="elder-config-form">
@@ -2541,8 +2605,8 @@ COMPARE_HTML = '''<!DOCTYPE html>
                     <label>
                         <span>访谈模式</span>
                         <select name="mode">
-                            <option value="ai">🤖 AI自动对话</option>
-                            <option value="user">🧑 我亲自回答</option>
+                            <option value="ai">AI自动对话</option>
+                            <option value="user">我亲自回答</option>
                         </select>
                     </label>
                     <label>
@@ -2580,7 +2644,7 @@ COMPARE_HTML = '''<!DOCTYPE html>
             <div class="panel-body">
                 <div class="chat-container" id="baseline-chat">
                     <div class="empty-state">
-                        <div class="empty-icon">📝</div>
+                        <div class="empty-icon" style="font-size:36px;opacity:.4;">—</div>
                         <p>请先配置老人信息并开始测试</p>
                     </div>
                 </div>
@@ -2616,7 +2680,7 @@ COMPARE_HTML = '''<!DOCTYPE html>
             <div class="panel-body">
                 <div class="chat-container" id="planner-chat">
                     <div class="empty-state">
-                        <div class="empty-icon">🌳</div>
+                        <div class="empty-icon" style="font-size:36px;opacity:.4;">—</div>
                         <p>Planner版本将实时构建事件图谱</p>
                         <p class="hint">数据看板连接后可在新窗口查看完整可视化</p>
                     </div>
@@ -2637,7 +2701,9 @@ COMPARE_HTML = '''<!DOCTYPE html>
         <section class="events-panel" id="events-panel">
             <header class="panel-header">
                 <div class="panel-title">
-                    <span class="badge" style="background: #9c27b0; color: #fff;">📌</span>
+                    <span class="badge" style="background: #9c27b0; color: #fff; display:inline-flex; align-items:center; padding:2px 6px;">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a5 5 0 015 5c0 5-5 13-5 13S7 12 7 7a5 5 0 015-5z"/><circle cx="12" cy="7" r="2"/></svg>
+                    </span>
                     <h2>最近提取的事件</h2>
                 </div>
             </header>
@@ -2655,7 +2721,7 @@ COMPARE_HTML = '''<!DOCTYPE html>
             <h3>GraphRAG 运行报告</h3>
             <div style="display:flex;gap:8px;align-items:center">
                 <button class="btn-refresh-report" onclick="loadReport()">刷新</button>
-                <button class="drawer-close" onclick="toggleReport()">✕</button>
+                <button class="drawer-close" onclick="toggleReport()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
             </div>
         </div>
         <div class="drawer-body" id="report-content">
@@ -2667,7 +2733,7 @@ COMPARE_HTML = '''<!DOCTYPE html>
     <footer class="compare-footer">
         <span id="session-info">会话: 未开始</span>
         <div>
-            <button id="btn-reset" class="btn-text" onclick="resetTest()">🔄 重置测试</button>
+            <button id="btn-reset" class="btn-text" onclick="resetTest()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.95"/></svg>重置测试</button>
         </div>
     </footer>
 
@@ -3551,7 +3617,7 @@ COMPARE_HTML = '''<!DOCTYPE html>
             chat.innerHTML = "";
             appendBaselineQuestion(chat, result.first_question);
             status.textContent = "进行中";
-            mode.textContent = currentMode === "ai" ? "🤖 AI模式" : "🧑 用户模式";
+            mode.textContent = currentMode === "ai" ? "AI模式" : "用户模式";
 
             // Show controls
             if (currentMode === "ai") {
@@ -3574,7 +3640,7 @@ COMPARE_HTML = '''<!DOCTYPE html>
             chat.innerHTML = "";
             appendPlannerQuestion(chat, result.first_question, "continue", result.debug_trace);
             status.textContent = "进行中";
-            mode.textContent = currentMode === "ai" ? "🤖 AI模式" : "🧑 用户模式";
+            mode.textContent = currentMode === "ai" ? "AI模式" : "用户模式";
 
             // Show controls
             if (currentMode === "ai") {
@@ -3662,11 +3728,11 @@ COMPARE_HTML = '''<!DOCTYPE html>
                     const chip = document.createElement("span");
                     chip.className = "memory-chip";
                     const toolLabel = {
-                        search_memories_by_keywords: "🔍 关键词",
-                        search_memories_by_tags: "🏷 标签",
-                        get_memories_by_period: "📅 时期",
-                        get_memory_by_id: "📌 记忆ID",
-                        get_related_memories: "🔗 关联记忆",
+                        search_memories_by_keywords: "关键词",
+                        search_memories_by_tags: "标签",
+                        get_memories_by_period: "时期",
+                        get_memory_by_id: "记忆ID",
+                        get_related_memories: "关联记忆",
                     }[call.tool] || call.tool;
 
                     const resultCount = Array.isArray(call.result) ? call.result.length : (call.result ? 1 : 0);
@@ -3933,12 +3999,12 @@ COMPARE_HTML = '''<!DOCTYPE html>
                 container.innerHTML = '<p class="no-events">暂无事件</p>';
                 return;
             }
-            const typeIcons = {Event:'📌', Person:'👤', Location:'📍', Emotion:'💭', Insight:'💡'};
+            const typeLabels = {Event:'事件', Person:'人物', Location:'地点', Emotion:'情感', Insight:'洞察'};
             container.innerHTML = `
                 <h4>共 ${events.length} 个实体</h4>
                 <div class="event-list">
                     ${events.slice(-15).reverse().map(e => {
-                        const icon = typeIcons[e.entity_type] || '📌';
+                        const icon = typeLabels[e.entity_type] || e.entity_type || '实体';
                         const title = e.name || e.slots?.event || e.event || "未知";
                         const desc = e.description ? e.description.slice(0, 50) : '';
                         return `

@@ -5,6 +5,7 @@ import {
   NarrativeFragmentNode,
   GraphState,
 } from '../types'
+import { NodeEmptyIcon } from './icons'
 import './NodeDetailPanel.css'
 
 interface NodeDetailPanelProps {
@@ -62,7 +63,7 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({
     return (
       <div className={`node-detail-panel empty ${className}`}>
         <div className="empty-state">
-          <span className="empty-icon">○</span>
+          <NodeEmptyIcon color="#9CA3AF" className="empty-icon" />
           <p>点击节点查看详情</p>
         </div>
       </div>
@@ -73,7 +74,7 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({
     return (
       <div className={`node-detail-panel empty ${className}`}>
         <div className="empty-state">
-          <span className="empty-icon">○</span>
+          <NodeEmptyIcon color="#9CA3AF" className="empty-icon" />
           <p>未找到节点数据</p>
         </div>
         <button className="close-btn" onClick={onClose}>

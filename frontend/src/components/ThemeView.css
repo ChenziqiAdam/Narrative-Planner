@@ -40,7 +40,8 @@
 }
 
 .center-avatar {
-  font-size: 28px;
+  display: flex;
+  align-items: center;
 }
 
 .center-name {
@@ -162,8 +163,10 @@
 }
 
 .empty-icon {
-  font-size: 48px;
+  display: flex;
+  align-items: center;
   margin-bottom: 16px;
+  opacity: 0.6;
 }
 
 /* 响应式 */
