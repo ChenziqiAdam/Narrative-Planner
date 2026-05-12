@@ -1,0 +1,1207 @@
+{
+  "coverage_metrics": {
+    "overall_richness": 0.0,
+    "theme_richness": {
+      "THEME_01_LIFE_CHAPTERS": 0.0,
+      "THEME_02_PEAK_EXPERIENCE": 0.0,
+      "THEME_03_LOW_POINT": 0.0,
+      "THEME_04_TURNING_POINT": 0.0,
+      "THEME_05_CHILDHOOD_POSITIVE": 0.0,
+      "THEME_06_CHILDHOOD_NEGATIVE": 0.0,
+      "THEME_07_ADULT_MEMORY": 0.0,
+      "THEME_08_RELIGIOUS_EXPERIENCE": 0.0,
+      "THEME_09_WISDOM_EVENT": 0.0,
+      "THEME_10_NEXT_CHAPTER": 0.0,
+      "THEME_11_DREAMS_PLANS": 0.0,
+      "THEME_12_LIFE_PROJECT": 0.0,
+      "THEME_13_LIFE_CHALLENGE": 0.0,
+      "THEME_14_HEALTH": 0.0,
+      "THEME_15_LOSS": 0.0,
+      "THEME_16_FAILURE_REGRET": 0.0,
+      "THEME_17_RELIGIOUS_VALUES": 0.0,
+      "THEME_18_POLITICAL_VALUES": 0.0,
+      "THEME_19_VALUE_EVOLUTION": 0.0,
+      "THEME_20_SINGLE_VALUE": 0.0,
+      "THEME_21_SESSION_SUMMARY": 0.0,
+      "THEME_22_INFORMATION_INTEGRATION": 0.0,
+      "THEME_23_CONTEXT_MANAGEMENT": 0.0
+    }
+  },
+  "dynamic_profile": {
+    "last_updated_turn_id": "turn_50db19ac79",
+    "planner_guidance": [
+      "Family profile is still thin; when the story naturally allows it, ask about spouse, children, siblings, or grandchildren.",
+      "Current-life profile is undercovered; consider a gentle bridge to daily routines, hobbies, social activity, or health concerns.",
+      "Adapt question shape to speaking style: brief replies; use short, concrete prompts and avoid stacking multiple questions."
+    ],
+    "profile_quality": {
+      "core_identity_and_personality": 0.6667,
+      "current_life_status": 0.0,
+      "family_situation": 0.0,
+      "life_views_and_attitudes": 0.0,
+      "overall": 0.1667
+    },
+    "schema_version": "dynamic_elder_profile_v1",
+    "sections": {
+      "core_identity_and_personality": {
+        "common_expressions": {
+          "confidence": 0.35,
+          "value": [
+            "大家都拍手叫好，觉得这孩子真是不简单",
+            "哎哟，说起阿强的故事嘛，它对我来说意义重大",
+            "这个故事让我看到，勇气和决心可以解决很多问题",
+            "这个问题我得再想想"
+          ]
+        },
+        "identity_background": {
+          "confidence": 0.9,
+          "value": "name=李秀兰; birth_year=1944; age=82; hometown=四川成都; background=退休中学语文教师，经历过知青下乡、恢复高考、改革开放后的城市变迁。她有一个儿子和一个女儿，晚年喜欢整理旧照片和写日记。"
+        },
+        "life_overview": {
+          "confidence": 0.75,
+          "value": [
+            "退休中学语文教师，经历过知青下乡、恢复高考、改革开放后的城市变迁。她有一个儿子和一个女儿，晚年喜欢整理旧照片和写日记。"
+          ]
+        },
+        "speaking_style": {
+          "confidence": 0.45,
+          "value": "brief replies; use short, concrete prompts and avoid stacking multiple questions"
+        }
+      }
+    },
+    "update_count": 7
+  },
+  "narrative_fragments": {
+    "frag_0d05c9033e": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_0d05c9033e",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张后转为感激",
+        "location": "河边",
+        "people": [
+          "秀兰奶奶",
+          "小芳"
+        ],
+        "significance": "加深了两人的友情",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和小芳去河边摸鱼时不慎滑倒掉入河中，不会游泳的秀兰奶奶被小芳用长棍子救起",
+      "source_turn_ids": [
+        "turn_41adee6dff"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_166fb3b180": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_166fb3b180",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "高兴",
+        "location": "山上",
+        "people": [
+          "秀兰奶奶",
+          "小军",
+          "小丽",
+          "阿强"
+        ],
+        "significance": "学会了合作，懂得了大自然的美丽和危险",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "一大早"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们一大早带着篮子和棍子出发去山上摘果子，分工合作，有的找果子，有的摘，有的看路，途中遇到滑的山路和蜜蜂，但最终摘到很多果子，大家都很高兴",
+      "source_turn_ids": [
+        "turn_339165333a"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_197bd47635": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_197bd47635",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "敬佩和期待",
+        "location": "巷子",
+        "people": [
+          "阿强",
+          "秀兰奶奶",
+          "小伙伴们"
+        ],
+        "significance": "激励人们面对困难时要有勇气",
+        "theme_id": "THEME_01_LIFE_CHAPTERS",
+        "time_anchor": "过去"
+      },
+      "rich_text": "阿强一个人扛起了挡路的大石头，赢得了周围人的敬佩和期待",
+      "source_turn_ids": [
+        "turn_7a3cd7efd5"
+      ],
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "updated_at": null
+    },
+    "frag_2b05d9d6ec": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_2b05d9d6ec",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "积极和启发性",
+        "people": [
+          "秀兰奶奶",
+          "孩子们"
+        ],
+        "significance": "让孩子们学会勇气和坚持，比书本知识更宝贵",
+        "theme_id": "THEME_07_ADULT_MEMORY"
+      },
+      "rich_text": "秀兰奶奶在课堂上使用阿强的故事来激发孩子们的勇气和决心，通过分组编排短剧、写作文和讨论会等教学活动，让孩子们学会勇气和坚持。",
+      "source_turn_ids": [
+        "turn_b25f91b2e8"
+      ],
+      "theme_id": "THEME_07_ADULT_MEMORY",
+      "updated_at": null
+    },
+    "frag_2b66acbcda": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_2b66acbcda",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "激动人心",
+        "significance": "勇气和决心的象征，影响秀兰奶奶的教育理念",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "阿强在童年时展现出勇气和决心，成功扛起了一块大石头，这件事成为了秀兰奶奶教育孩子们的活生生的例子",
+      "source_turn_ids": [
+        "turn_a0297dd8de"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_2f4e7148a3": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_2f4e7148a3",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "温馨愉快",
+        "location": "巷子里",
+        "people": [
+          "秀兰奶奶",
+          "童年玩伴"
+        ],
+        "significance": "童年的欢乐时光",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和童年玩伴在巷子里玩捉迷藏",
+      "source_turn_ids": [
+        "turn_8f96215629"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_49f58f4a15": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_49f58f4a15",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张又兴奋",
+        "location": "山上",
+        "people": [
+          "秀兰奶奶",
+          "小芳",
+          "小伙伴们"
+        ],
+        "significance": "学会了团队合作和小心谨慎",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们上山摘野果的冒险经历，山路滑且陡峭，需要小心行走",
+      "source_turn_ids": [
+        "turn_d05750239c"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_55bcf22a24": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_55bcf22a24",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "快乐",
+        "people": [
+          "小军",
+          "小丽",
+          "阿强",
+          "小芳",
+          "秀兰奶奶"
+        ],
+        "significance": "童年时光对秀兰奶奶来说充满了快乐和友谊",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶回忆起和小伙伴们一起度过的童年时光，虽然条件艰苦，但充满了快乐",
+      "source_turn_ids": [
+        "turn_0c6687b49f"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_64850e1928": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_64850e1928",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "惊险后怕",
+        "location": "山上果树林",
+        "people": [
+          "秀兰奶奶",
+          "小伙伴们",
+          "小军"
+        ],
+        "significance": "学会了遇到危险要冷静，不能慌",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们上山摘果子时，意外遇到一群蜜蜂，通过小军的建议躲避蜜蜂，最终安全脱险",
+      "source_turn_ids": [
+        "turn_b108de8bdb"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_64f18038e3": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_64f18038e3",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "羡慕和温馨",
+        "people": [
+          "小丽",
+          "其他小伙伴"
+        ],
+        "significance": "体现了小丽的心灵手巧和童年的简单快乐",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶回忆起小丽手巧，做的风筝飞得最高，让其他小伙伴羡慕的往事",
+      "source_turn_ids": [
+        "turn_4dbf94a292"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_679fb152a3": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_679fb152a3",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "乐趣",
+        "location": "果树林",
+        "people": [
+          "秀兰奶奶",
+          "小军",
+          "小伙伴们"
+        ],
+        "significance": "与小伙伴们共度的快乐时光",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "秋天"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们常在秋天去山上的果树林摘果子的活动",
+      "source_turn_ids": [
+        "turn_e39f4048ff"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_69c90ca972": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_69c90ca972",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "正面积极",
+        "people": [
+          "秀兰奶奶",
+          "数学成绩不好的学生"
+        ],
+        "significance": "阿强故事的实际影响",
+        "theme_id": "THEME_07_ADULT_MEMORY",
+        "time_anchor": "秀兰奶奶的教师生涯"
+      },
+      "rich_text": "秀兰奶奶通过讲述阿强的故事，激励一个数学成绩不好的学生发愤图强，最终成绩提高并考上大学",
+      "source_turn_ids": [
+        "turn_a0297dd8de"
+      ],
+      "theme_id": "THEME_07_ADULT_MEMORY",
+      "updated_at": null
+    },
+    "frag_701c0f568a": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_701c0f568a",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "significance": "成为秀兰奶奶教育孩子们的活生生例子，影响深远",
+        "theme_id": "THEME_07_ADULT_MEMORY"
+      },
+      "rich_text": "阿强展现出勇气和决心，成功扛起大石头的事件",
+      "source_turn_ids": [
+        "turn_c430a090c5"
+      ],
+      "theme_id": "THEME_07_ADULT_MEMORY",
+      "updated_at": null
+    },
+    "frag_70c3316cc1": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_70c3316cc1",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "激动人心",
+        "location": "老王家门口",
+        "people": [
+          "阿强",
+          "秀兰奶奶",
+          "其他小孩"
+        ],
+        "significance": "显示了阿强的力量和潜力，赢得了大家的敬佩和期待",
+        "theme_id": "THEME_02_PEAK_EXPERIENCE",
+        "time_anchor": "过去"
+      },
+      "rich_text": "阿强在老王家翻修房子时，一个人扛起了门口挡路的大石头，令在场的大人和小孩都感到惊讶",
+      "source_turn_ids": [
+        "turn_4b486e0e85"
+      ],
+      "theme_id": "THEME_02_PEAK_EXPERIENCE",
+      "updated_at": null
+    },
+    "frag_71f1180eb9": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_71f1180eb9",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "惊讶和温馨",
+        "people": [
+          "阿强",
+          "巷子里的老王家",
+          "其他小伙伴"
+        ],
+        "significance": "展现了阿强的力气和童年的简单快乐",
+        "theme_id": "THEME_07_ADULT_MEMORY",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶讲述阿强力气大，一个人扛起老王家大石头，让其他人惊讶的事件",
+      "source_turn_ids": [
+        "turn_4dbf94a292"
+      ],
+      "theme_id": "THEME_07_ADULT_MEMORY",
+      "updated_at": null
+    },
+    "frag_73ad37b425": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_73ad37b425",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "慌张、害怕、感激",
+        "location": "河边",
+        "people": [
+          "秀兰奶奶",
+          "小芳",
+          "其他小孩子"
+        ],
+        "significance": "让秀兰奶奶懂得生命的宝贵，加深了和小芳的友情",
+        "theme_id": "THEME_09_WISDOM_EVENT",
+        "time_anchor": "未提及具体时间"
+      },
+      "rich_text": "秀兰奶奶和几个小孩子约着去河边摸鱼，不慎滑倒掉入水中的事件",
+      "source_turn_ids": [
+        "turn_a2265b7b02"
+      ],
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "updated_at": null
+    },
+    "frag_756df9b213": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_756df9b213",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "兴奋和成就感",
+        "people": [
+          "秀兰奶奶",
+          "小伙伴们"
+        ],
+        "significance": "锻炼勇气，增进友谊",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们上山摘果子，遇到蜜蜂但最终摘到很多果子的经历",
+      "source_turn_ids": [
+        "turn_c757db9ae5"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_79b3e19cf4": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_79b3e19cf4",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "自我反思",
+        "people": [
+          "孩子们"
+        ],
+        "significance": "让孩子们通过写作认识和表达个人的勇气",
+        "theme_id": "THEME_01_LIFE_CHAPTERS"
+      },
+      "rich_text": "秀兰奶奶让孩子们写一篇作文，题目为《我最勇敢的一刻》，通过写作反思和表达自己的感受",
+      "source_turn_ids": [
+        "turn_3340a831d6"
+      ],
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "updated_at": null
+    },
+    "frag_7a72140af2": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_7a72140af2",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "惊讶和敬佩",
+        "location": "老王家门口",
+        "people": [
+          "阿强",
+          "巷子里的大人",
+          "秀兰奶奶和其他小孩子"
+        ],
+        "significance": "显示了阿强的力气和潜力",
+        "theme_id": "THEME_07_ADULT_MEMORY",
+        "time_anchor": "过去"
+      },
+      "rich_text": "老王家翻修房子时，门口有块大石头挡路，阿强一个人扛起了这块大石头",
+      "source_turn_ids": [
+        "turn_ad97e46aac"
+      ],
+      "theme_id": "THEME_07_ADULT_MEMORY",
+      "updated_at": null
+    },
+    "frag_867b2496c5": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_867b2496c5",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "鼓励和激励",
+        "people": [
+          "秀兰奶奶",
+          "孩子们"
+        ],
+        "significance": "教育孩子们的重要方式",
+        "theme_id": "THEME_16_FAILURE_REGRET"
+      },
+      "rich_text": "秀兰奶奶在教育生涯中，用阿强的故事鼓励孩子们勇敢面对困难，不要怕失败",
+      "source_turn_ids": [
+        "turn_a0297dd8de"
+      ],
+      "theme_id": "THEME_16_FAILURE_REGRET",
+      "updated_at": null
+    },
+    "frag_882c303b88": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_882c303b88",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "积极",
+        "people": [
+          "孩子们"
+        ],
+        "significance": "让孩子们通过表演学习勇气和面对困难",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION"
+      },
+      "rich_text": "秀兰奶奶让孩子们分组，编排一个关于勇气和面对困难的小短剧，灵感来源于阿强的故事",
+      "source_turn_ids": [
+        "turn_3340a831d6"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_9db84c7e15": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_9db84c7e15",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张",
+        "people": [
+          "秀兰奶奶",
+          "小伙伴们"
+        ],
+        "significance": "锻炼勇气，增进友谊",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们在河边摸鱼时差点被水冲走的经历",
+      "source_turn_ids": [
+        "turn_c757db9ae5"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_a16a8cc840": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_a16a8cc840",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "积极",
+        "location": "山上",
+        "people": [
+          "秀兰奶奶",
+          "小军",
+          "小丽",
+          "阿强"
+        ],
+        "significance": "增进了友谊，学到了安全知识",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "未提及具体时间"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们一起上山摘果子的经历，期间提醒大家注意安全并使用棍子作为拐杖",
+      "source_turn_ids": [
+        "turn_0c746aa7f3"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_a2f8ca2008": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_a2f8ca2008",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "惊险但有收获",
+        "location": "山上",
+        "people": [
+          "秀兰奶奶",
+          "小军",
+          "小丽",
+          "阿强"
+        ],
+        "significance": "学到了团队合作和小心谨慎的重要性",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和几个小伙伴去山上摘野果的冒险经历，山上野果丰富但山路陡峭，他们勇敢地攀登并在一条急流的小溪前手拉手过河，秀兰奶奶差点被冲走但被小军拉住，这次经历让她学到了团队合作的重要性和冒险时的小心谨慎",
+      "source_turn_ids": [
+        "turn_08b3984da8"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_a4b8abed3a": {
+      "confidence": 0.8,
+      "created_at": null,
+      "fragment_id": "frag_a4b8abed3a",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "正面激励",
+        "people": [
+          "秀兰奶奶",
+          "孩子们"
+        ],
+        "significance": "教育孩子们勇敢面对困难",
+        "theme_id": "THEME_07_ADULT_MEMORY"
+      },
+      "rich_text": "秀兰奶奶在课堂上使用阿强的故事来激发孩子们的勇气和决心",
+      "source_turn_ids": [
+        "turn_6afc72c905"
+      ],
+      "theme_id": "THEME_07_ADULT_MEMORY",
+      "updated_at": null
+    },
+    "frag_ac116e56a1": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_ac116e56a1",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "正面积极",
+        "location": "未提及具体地点",
+        "people": [
+          "内向学生",
+          "秀兰奶奶"
+        ],
+        "significance": "故事激发学生潜能，帮助克服困难",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "未提及具体时间"
+      },
+      "rich_text": "秀兰奶奶讲述阿强的故事，启发了一个内向且成绩不佳的学生，使其开始主动参与课堂讨论，成绩得到提高",
+      "source_turn_ids": [
+        "turn_14730c7ac4"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_ad48a092e6": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_ad48a092e6",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "惊心动魄后感到生命的宝贵和友情的深厚",
+        "location": "河边",
+        "people": [
+          "秀兰奶奶",
+          "小芳"
+        ],
+        "significance": "改变了秀兰奶奶对安全和冒险的看法，成为她人生的一次重要教训",
+        "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶在童年时与玩伴小芳去河边摸鱼，不慎滑倒掉入河中，不会游泳的她在水中挣扎，最终被小芳用长棍子拉上岸的经历",
+      "source_turn_ids": [
+        "turn_6968ce8bcd"
+      ],
+      "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+      "updated_at": null
+    },
+    "frag_add30eab44": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_add30eab44",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "愉快",
+        "location": "河边",
+        "people": [
+          "秀兰奶奶",
+          "童年玩伴"
+        ],
+        "significance": "童年的欢乐时光",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和童年玩伴跑到河边摸鱼",
+      "source_turn_ids": [
+        "turn_8f96215629"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_af4086dfe1": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_af4086dfe1",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "责任感",
+        "people": [
+          "秀兰奶奶",
+          "弟弟妹妹",
+          "小伙伴"
+        ],
+        "significance": "在群体中树立了安全意识的榜样",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE"
+      },
+      "rich_text": "秀兰奶奶在河边摸鱼经历后，开始在孩子们中担任起安全提醒的角色，提醒大家注意安全。",
+      "source_turn_ids": [
+        "turn_e144efd4ff"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_b0fb0e186e": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_b0fb0e186e",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "正面激励",
+        "location": "未明确提及具体地点",
+        "people": [
+          "秀兰奶奶",
+          "调皮的学生"
+        ],
+        "significance": "阿强的故事作为教学工具，对学生产生了积极影响",
+        "theme_id": "THEME_07_ADULT_MEMORY",
+        "time_anchor": "未明确提及具体时间"
+      },
+      "rich_text": "秀兰奶奶在教学时讲述阿强如何有勇气面对困难、扛起大石头的故事，激励了一个调皮、成绩不好的学生",
+      "source_turn_ids": [
+        "turn_b3744f72c2"
+      ],
+      "theme_id": "THEME_07_ADULT_MEMORY",
+      "updated_at": null
+    },
+    "frag_b4b2125afd": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_b4b2125afd",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "积极正面",
+        "location": "山上",
+        "people": [
+          "秀兰奶奶",
+          "小军",
+          "小丽",
+          "阿强"
+        ],
+        "significance": "让秀兰奶奶懂得了团队合作的重要性，学会了面对困难时不退缩",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "未提及具体时间"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们一起上山摘果子的经历，大家分工合作，有的找果子，有的摘，有的看路，互相帮助",
+      "source_turn_ids": [
+        "turn_acdbf53b4a"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_bbb9a3fd5c": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_bbb9a3fd5c",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "温馨感动",
+        "location": "巷子里",
+        "people": [
+          "秀兰奶奶",
+          "王婆婆"
+        ],
+        "significance": "邻里间的情谊",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "隔壁王婆婆做了红烧肉，给秀兰奶奶家送了一碗",
+      "source_turn_ids": [
+        "turn_8f96215629"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_bc778bbc64": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_bc778bbc64",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "敬佩和期待",
+        "people": [
+          "阿强"
+        ],
+        "significance": "象征勇气和决心，对秀兰奶奶的教学和生活态度产生深远影响",
+        "theme_id": "THEME_01_LIFE_CHAPTERS"
+      },
+      "rich_text": "阿强面对困难时勇敢地搬走了一块石头，赢得了他人的敬佩和期待",
+      "source_turn_ids": [
+        "turn_c65662660a"
+      ],
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "updated_at": null
+    },
+    "frag_c538e36c0a": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_c538e36c0a",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "惊讶和敬佩",
+        "location": "老王家门口",
+        "people": [
+          "阿强",
+          "秀兰奶奶",
+          "其他大人和小孩"
+        ],
+        "significance": "阿强的力气和勇气给巷子里的人留下了深刻印象",
+        "theme_id": "THEME_02_PEAK_EXPERIENCE",
+        "time_anchor": "未提及具体时间"
+      },
+      "rich_text": "老王家翻修房子时，阿强一个人扛起了门口挡路的大石头，令在场的大人和小孩都感到惊讶",
+      "source_turn_ids": [
+        "turn_3bc78443dd"
+      ],
+      "theme_id": "THEME_02_PEAK_EXPERIENCE",
+      "updated_at": null
+    },
+    "frag_cb9727bb81": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_cb9727bb81",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "分享与启发",
+        "people": [
+          "孩子们"
+        ],
+        "significance": "通过讨论会让孩子们学会勇气和坚持",
+        "theme_id": "THEME_07_ADULT_MEMORY"
+      },
+      "rich_text": "秀兰奶奶在班级里举办讨论会，让孩子们分享面对困难时的经历和感受，阿强的故事启发孩子们说出自己的故事",
+      "source_turn_ids": [
+        "turn_3340a831d6"
+      ],
+      "theme_id": "THEME_07_ADULT_MEMORY",
+      "updated_at": null
+    },
+    "frag_d7c0153623": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_d7c0153623",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "惊讶和敬佩",
+        "location": "巷子里老王家门口",
+        "people": [
+          "阿强",
+          "老王家",
+          "其他大人",
+          "其他小孩"
+        ],
+        "significance": "显示了阿强的力气和潜力，成为巷子里的传奇",
+        "theme_id": "THEME_07_ADULT_MEMORY",
+        "time_anchor": "过去"
+      },
+      "rich_text": "老王家翻修房子时，门口有块大石头挡路，阿强一个人扛起了这块大石头，让在场的大人和小孩都感到惊讶。",
+      "source_turn_ids": [
+        "turn_b18a442ea3"
+      ],
+      "theme_id": "THEME_07_ADULT_MEMORY",
+      "updated_at": null
+    },
+    "frag_dbbe39d844": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_dbbe39d844",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "有惊无险，团结合作",
+        "location": "山上",
+        "people": [
+          "秀兰奶奶",
+          "小伙伴们"
+        ],
+        "significance": "学会了安全第一，团结合作的重要性，面对困难和危险时保持冷静",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "未提及具体时间"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们上山摘果子，遇到了蜜蜂但最终平安返回，摘到了许多果子",
+      "source_turn_ids": [
+        "turn_e355e3afc3"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_dfc704ec4a": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_dfc704ec4a",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "鼓舞人心",
+        "location": "教室",
+        "people": [
+          "秀兰奶奶",
+          "班上的孩子们"
+        ],
+        "significance": "故事激励孩子们学会勇敢面对困难",
+        "theme_id": "THEME_01_LIFE_CHAPTERS",
+        "time_anchor": "未提及具体时间"
+      },
+      "rich_text": "秀兰奶奶在课堂上给孩子们讲述了阿强如何勇敢面对困难，如何一个人扛起大石头的故事",
+      "source_turn_ids": [
+        "turn_3a5a49943b"
+      ],
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "updated_at": null
+    },
+    "frag_ed017c83a2": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_ed017c83a2",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "虽然苦但心里暖暖的",
+        "location": "老式瓦房",
+        "people": [
+          "我",
+          "妈妈"
+        ],
+        "significance": "童年艰苦但家庭温暖",
+        "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "李秀兰奶奶回忆童年时家中条件艰苦，住在老式瓦房，下雨时会漏水，母亲年轻且忙碌，既要照顾孩子又要干农活",
+      "source_turn_ids": [
+        "turn_4af90a801a"
+      ],
+      "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+      "updated_at": null
+    },
+    "frag_f00af7cd83": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_f00af7cd83",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "谨慎",
+        "location": "山上",
+        "people": [
+          "秀兰奶奶",
+          "小伙伴"
+        ],
+        "significance": "体现了秀兰奶奶对安全的重视",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION"
+      },
+      "rich_text": "秀兰奶奶在一次上山摘果子的活动中，提醒大家注意山路滑，还找来棍子当拐杖使用。",
+      "source_turn_ids": [
+        "turn_e144efd4ff"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_f96a8c2917": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_f96a8c2917",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "深刻教训后的谨慎",
+        "significance": "提升了个人安全意识，影响了日常行为",
+        "theme_id": "THEME_09_WISDOM_EVENT",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶在河边摸鱼不慎落水后，对安全和冒险有了新的认识，并在日常生活中变得更加小心，注意安全。",
+      "source_turn_ids": [
+        "turn_e144efd4ff"
+      ],
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "updated_at": null
+    },
+    "frag_feac6926a2": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_feac6926a2",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "敬佩和期待",
+        "location": "老王家门口",
+        "people": [
+          "阿强",
+          "秀兰奶奶",
+          "小伙伴们"
+        ],
+        "significance": "提升了阿强的信心，加深了小伙伴们之间的友谊和互助精神",
+        "theme_id": "THEME_02_PEAK_EXPERIENCE",
+        "time_anchor": "未提及具体时间"
+      },
+      "rich_text": "阿强在老王家翻修房子时，一个人扛起了挡路的大石头，赢得了周围人的敬佩和期待",
+      "source_turn_ids": [
+        "turn_58b832140e"
+      ],
+      "theme_id": "THEME_02_PEAK_EXPERIENCE",
+      "updated_at": null
+    }
+  },
+  "session_id": "5a4aee0b0bd648c99109cc90d0530f56",
+  "theme_nodes": [
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_02_PEAK_EXPERIENCE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_03_LOW_POINT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_04_TURNING_POINT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_07_ADULT_MEMORY",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_08_RELIGIOUS_EXPERIENCE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_10_NEXT_CHAPTER",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_11_DREAMS_PLANS",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_12_LIFE_PROJECT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_13_LIFE_CHALLENGE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_14_HEALTH",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_15_LOSS",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_16_FAILURE_REGRET",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_17_RELIGIOUS_VALUES",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_18_POLITICAL_VALUES",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_19_VALUE_EVOLUTION",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_20_SINGLE_VALUE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_21_SESSION_SUMMARY",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_23_CONTEXT_MANAGEMENT",
+      "title": null
+    }
+  ],
+  "timestamp": "2026-05-08T10:47:06.684194",
+  "turn_count": 35
+}

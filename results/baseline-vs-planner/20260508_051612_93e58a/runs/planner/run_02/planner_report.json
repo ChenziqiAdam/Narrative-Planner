@@ -1,0 +1,243 @@
+{
+  "coverage": {
+    "overall_richness": 0.0,
+    "theme_richness": {
+      "THEME_01_LIFE_CHAPTERS": 0.0,
+      "THEME_02_PEAK_EXPERIENCE": 0.0,
+      "THEME_03_LOW_POINT": 0.0,
+      "THEME_04_TURNING_POINT": 0.0,
+      "THEME_05_CHILDHOOD_POSITIVE": 0.0,
+      "THEME_06_CHILDHOOD_NEGATIVE": 0.0,
+      "THEME_07_ADULT_MEMORY": 0.0,
+      "THEME_08_RELIGIOUS_EXPERIENCE": 0.0,
+      "THEME_09_WISDOM_EVENT": 0.0,
+      "THEME_10_NEXT_CHAPTER": 0.0,
+      "THEME_11_DREAMS_PLANS": 0.0,
+      "THEME_12_LIFE_PROJECT": 0.0,
+      "THEME_13_LIFE_CHALLENGE": 0.0,
+      "THEME_14_HEALTH": 0.0,
+      "THEME_15_LOSS": 0.0,
+      "THEME_16_FAILURE_REGRET": 0.0,
+      "THEME_17_RELIGIOUS_VALUES": 0.0,
+      "THEME_18_POLITICAL_VALUES": 0.0,
+      "THEME_19_VALUE_EVOLUTION": 0.0,
+      "THEME_20_SINGLE_VALUE": 0.0,
+      "THEME_21_SESSION_SUMMARY": 0.0,
+      "THEME_22_INFORMATION_INTEGRATION": 0.0,
+      "THEME_23_CONTEXT_MANAGEMENT": 0.0
+    }
+  },
+  "embedding": {
+    "dimension": 2048,
+    "fallback_active": false,
+    "fallback_reason": null,
+    "provider": "openai"
+  },
+  "mode": "ai",
+  "neo4j": {
+    "nodes": [
+      {
+        "count": 40,
+        "type": "Emotion"
+      },
+      {
+        "count": 37,
+        "type": "Event"
+      },
+      {
+        "count": 34,
+        "type": "Insight"
+      },
+      {
+        "count": 23,
+        "type": "Topic"
+      },
+      {
+        "count": 14,
+        "type": "Person"
+      },
+      {
+        "count": 8,
+        "type": "Location"
+      }
+    ],
+    "relationships": [
+      {
+        "count": 64,
+        "type": "TRIGGERS"
+      },
+      {
+        "count": 48,
+        "type": "INCLUDES"
+      },
+      {
+        "count": 37,
+        "type": "PARTICIPATES_IN"
+      },
+      {
+        "count": 32,
+        "type": "RELATES_TO"
+      },
+      {
+        "count": 11,
+        "type": "DEPENDS_ON"
+      },
+      {
+        "count": 8,
+        "type": "CAUSES"
+      },
+      {
+        "count": 7,
+        "type": "LOCATED_AT"
+      },
+      {
+        "count": 4,
+        "type": "TEMPORAL_NEXT"
+      }
+    ],
+    "themes": [
+      {
+        "event_count": 2,
+        "id": "THEME_01_LIFE_CHAPTERS",
+        "name": "人生篇章概览",
+        "status": "mentioned"
+      },
+      {
+        "event_count": 0,
+        "id": "THEME_02_PEAK_EXPERIENCE",
+        "name": "高潮",
+        "status": "pending"
+      },
+      {
+        "event_count": 0,
+        "id": "THEME_03_LOW_POINT",
+        "name": "低谷",
+        "status": "pending"
+      },
+      {
+        "event_count": 1,
+        "id": "THEME_04_TURNING_POINT",
+        "name": "转折点",
+        "status": "mentioned"
+      },
+      {
+        "event_count": 21,
+        "id": "THEME_05_CHILDHOOD_POSITIVE",
+        "name": "童年积极回忆",
+        "status": "mentioned"
+      },
+      {
+        "event_count": 4,
+        "id": "THEME_06_CHILDHOOD_NEGATIVE",
+        "name": "童年消极回忆",
+        "status": "mentioned"
+      },
+      {
+        "event_count": 7,
+        "id": "THEME_07_ADULT_MEMORY",
+        "name": "生动的成人记忆",
+        "status": "mentioned"
+      },
+      {
+        "event_count": 0,
+        "id": "THEME_08_RELIGIOUS_EXPERIENCE",
+        "name": "宗教、精神或神秘体验",
+        "status": "pending"
+      },
+      {
+        "event_count": 4,
+        "id": "THEME_09_WISDOM_EVENT",
+        "name": "智慧事件",
+        "status": "mentioned"
+      },
+      {
+        "event_count": 0,
+        "id": "THEME_10_NEXT_CHAPTER",
+        "name": "下一章",
+        "status": "pending"
+      },
+      {
+        "event_count": 1,
+        "id": "THEME_11_DREAMS_PLANS",
+        "name": "梦想、希望和未来计划",
+        "status": "mentioned"
+      },
+      {
+        "event_count": 1,
+        "id": "THEME_12_LIFE_PROJECT",
+        "name": "人生项目",
+        "status": "mentioned"
+      },
+      {
+        "event_count": 0,
+        "id": "THEME_13_LIFE_CHALLENGE",
+        "name": "人生挑战",
+        "status": "pending"
+      },
+      {
+        "event_count": 0,
+        "id": "THEME_14_HEALTH",
+        "name": "健康",
+        "status": "pending"
+      },
+      {
+        "event_count": 0,
+        "id": "THEME_15_LOSS",
+        "name": "失落",
+        "status": "pending"
+      },
+      {
+        "event_count": 0,
+        "id": "THEME_16_FAILURE_REGRET",
+        "name": "失败的遗憾",
+        "status": "pending"
+      },
+      {
+        "event_count": 0,
+        "id": "THEME_17_RELIGIOUS_VALUES",
+        "name": "宗教/伦理价值观",
+        "status": "pending"
+      },
+      {
+        "event_count": 0,
+        "id": "THEME_18_POLITICAL_VALUES",
+        "name": "政治/社会价值观",
+        "status": "pending"
+      },
+      {
+        "event_count": 0,
+        "id": "THEME_19_VALUE_EVOLUTION",
+        "name": "宗教和政治观点转变和发展",
+        "status": "pending"
+      },
+      {
+        "event_count": 0,
+        "id": "THEME_20_SINGLE_VALUE",
+        "name": "单一价值观",
+        "status": "pending"
+      },
+      {
+        "event_count": 0,
+        "id": "THEME_21_SESSION_SUMMARY",
+        "name": "会话摘要",
+        "status": "pending"
+      },
+      {
+        "event_count": 7,
+        "id": "THEME_22_INFORMATION_INTEGRATION",
+        "name": "信息整合",
+        "status": "mentioned"
+      },
+      {
+        "event_count": 0,
+        "id": "THEME_23_CONTEXT_MANAGEMENT",
+        "name": "上下文管理",
+        "status": "pending"
+      }
+    ]
+  },
+  "session_id": "11cbc9e6dbad429788985a1d54f758ce",
+  "start_time": "2026-05-08T06:58:32.960813",
+  "turn_count": 32,
+  "turn_timings": []
+}

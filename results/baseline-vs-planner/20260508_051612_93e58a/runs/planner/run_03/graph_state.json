@@ -1,0 +1,1099 @@
+{
+  "coverage_metrics": {
+    "overall_richness": 0.0,
+    "theme_richness": {
+      "THEME_01_LIFE_CHAPTERS": 0.0,
+      "THEME_02_PEAK_EXPERIENCE": 0.0,
+      "THEME_03_LOW_POINT": 0.0,
+      "THEME_04_TURNING_POINT": 0.0,
+      "THEME_05_CHILDHOOD_POSITIVE": 0.0,
+      "THEME_06_CHILDHOOD_NEGATIVE": 0.0,
+      "THEME_07_ADULT_MEMORY": 0.0,
+      "THEME_08_RELIGIOUS_EXPERIENCE": 0.0,
+      "THEME_09_WISDOM_EVENT": 0.0,
+      "THEME_10_NEXT_CHAPTER": 0.0,
+      "THEME_11_DREAMS_PLANS": 0.0,
+      "THEME_12_LIFE_PROJECT": 0.0,
+      "THEME_13_LIFE_CHALLENGE": 0.0,
+      "THEME_14_HEALTH": 0.0,
+      "THEME_15_LOSS": 0.0,
+      "THEME_16_FAILURE_REGRET": 0.0,
+      "THEME_17_RELIGIOUS_VALUES": 0.0,
+      "THEME_18_POLITICAL_VALUES": 0.0,
+      "THEME_19_VALUE_EVOLUTION": 0.0,
+      "THEME_20_SINGLE_VALUE": 0.0,
+      "THEME_21_SESSION_SUMMARY": 0.0,
+      "THEME_22_INFORMATION_INTEGRATION": 0.0,
+      "THEME_23_CONTEXT_MANAGEMENT": 0.0
+    }
+  },
+  "dynamic_profile": {
+    "last_updated_turn_id": "turn_ef83455476",
+    "planner_guidance": [
+      "Family profile is still thin; when the story naturally allows it, ask about spouse, children, siblings, or grandchildren.",
+      "Current-life profile is undercovered; consider a gentle bridge to daily routines, hobbies, social activity, or health concerns.",
+      "Adapt question shape to speaking style: story-rich replies; allow narrative space, then follow up on one concrete detail."
+    ],
+    "profile_quality": {
+      "core_identity_and_personality": 0.6667,
+      "current_life_status": 0.0,
+      "family_situation": 0.0,
+      "life_views_and_attitudes": 0.0,
+      "overall": 0.1667
+    },
+    "schema_version": "dynamic_elder_profile_v1",
+    "sections": {
+      "core_identity_and_personality": {
+        "common_expressions": {
+          "confidence": 0.35,
+          "value": [
+            "现在想想，那时候的我们真是天真烂漫，快乐得很",
+            "她那种乐观和信心，真的感染了我们每一个人",
+            "她还有个特别的品质，就是特别会照顾人",
+            "她那种无私和关怀，让我们都觉得心里暖暖的",
+            "哎哟，说起团结精神，我感触蛮深的",
+            "现在安逸咯，想想那些年，虽然苦，但是心里踏实",
+            "在我们教学生涯中，也有类似的事情让我印象深刻"
+          ]
+        },
+        "identity_background": {
+          "confidence": 0.9,
+          "value": "name=李秀兰; birth_year=1944; age=82; hometown=四川成都; background=退休中学语文教师，经历过知青下乡、恢复高考、改革开放后的城市变迁。她有一个儿子和一个女儿，晚年喜欢整理旧照片和写日记。"
+        },
+        "life_overview": {
+          "confidence": 0.75,
+          "value": [
+            "退休中学语文教师，经历过知青下乡、恢复高考、改革开放后的城市变迁。她有一个儿子和一个女儿，晚年喜欢整理旧照片和写日记。"
+          ]
+        },
+        "speaking_style": {
+          "confidence": 0.45,
+          "value": "story-rich replies; allow narrative space, then follow up on one concrete detail"
+        }
+      }
+    },
+    "update_count": 6
+  },
+  "narrative_fragments": {
+    "frag_039ab0deb0": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_039ab0deb0",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "温馨、开心",
+        "location": "成都老城区的家",
+        "people": [
+          "我",
+          "妈妈",
+          "爸爸"
+        ],
+        "significance": "最早的记忆，童年的快乐时光",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "1940年代末"
+      },
+      "rich_text": "李秀兰奶奶在成都老城区的家，条件不好但温馨，母亲在门口石板上搓衣服，她在旁边玩泥巴，父亲带她去茶馆听评书",
+      "source_turn_ids": [
+        "turn_7a79c5b79e"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_09dd4c460c": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_09dd4c460c",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "累但心里暖和",
+        "people": [
+          "我",
+          "组长",
+          "老师傅",
+          "工友们"
+        ],
+        "significance": "体现了团结互助的精神",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "那个晚上"
+      },
+      "rich_text": "小组在组长的带领下，大家分工合作，经过一个晚上的努力最终修好了机器",
+      "source_turn_ids": [
+        "turn_1a7a25c9a9"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_0d42172b28": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_0d42172b28",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "暖洋洋的",
+        "location": "",
+        "people": [
+          "我",
+          "组长",
+          "老师傅"
+        ],
+        "significance": "体现了团结互助的精神，对老人后来的生活产生了深远影响",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "那个晚上"
+      },
+      "rich_text": "在条件艰苦的情况下，大家团结一心，共同修理坏了的机器，经过一个晚上的努力最终修好",
+      "source_turn_ids": [
+        "turn_8569d05ca6"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_1b1117f4b9": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_1b1117f4b9",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "欣慰和温暖",
+        "location": "老人家中",
+        "people": [
+          "老李",
+          "老人",
+          "小儿子"
+        ],
+        "significance": "体现了邻里间的无私帮助和老人对子女教育的关心",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "未提及具体时间"
+      },
+      "rich_text": "老李参加家长会后到老人家中详细汇报学校情况，包括老人小儿子的学习表现和学校新设备",
+      "source_turn_ids": [
+        "turn_a971588c40"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_22ed00d6b0": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_22ed00d6b0",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "感激和温暖",
+        "people": [
+          "我",
+          "张阿姨"
+        ],
+        "significance": "体现了邻里互助精神，给予勇气和力量",
+        "theme_id": "THEME_07_ADULT_MEMORY"
+      },
+      "rich_text": "老人生病时，邻居张阿姨送饭送药并照顾了好几天",
+      "source_turn_ids": [
+        "turn_59250a6250"
+      ],
+      "theme_id": "THEME_07_ADULT_MEMORY",
+      "updated_at": null
+    },
+    "frag_2ad2316f8d": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_2ad2316f8d",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "团结互助",
+        "location": "纺织厂",
+        "people": [
+          "我",
+          "工人同事"
+        ],
+        "significance": "体现了童年游戏中学到的团结和义气",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "成年后"
+      },
+      "rich_text": "在纺织厂工作时，工人之间像兄弟姐妹一样互相帮助，共同克服困难",
+      "source_turn_ids": [
+        "turn_65d2ea3aa0"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_2ade6557dd": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_2ade6557dd",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "团结互助",
+        "people": [
+          "年轻老师",
+          "老教师们"
+        ],
+        "significance": "体现了教学生涯中的团结互助精神，对教学质量的共同提高",
+        "theme_id": "THEME_23_CONTEXT_MANAGEMENT"
+      },
+      "rich_text": "在学校里，一位年轻老师因班级学生特别调皮而难以管理，老教师们主动提供帮助，包括出主意和帮忙维持秩序",
+      "source_turn_ids": [
+        "turn_f4b802def7"
+      ],
+      "theme_id": "THEME_23_CONTEXT_MANAGEMENT",
+      "updated_at": null
+    },
+    "frag_537e3e45de": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_537e3e45de",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "心里暖洋洋",
+        "people": [
+          "老李",
+          "小儿子"
+        ],
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION"
+      },
+      "rich_text": "老李参加家长会后，回到社区向老人详细描述了学校的情况，包括老人小儿子的表现和学校的新鲜事",
+      "source_turn_ids": [
+        "turn_9d23460a11"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_55760352df": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_55760352df",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "神圣和激动",
+        "location": "院子里",
+        "people": [
+          "我",
+          "邻居小孩"
+        ],
+        "significance": "体现了童年的天真和对兄弟义气的向往",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "老人回忆起童年时和邻居小孩模仿桃园三结义的游戏，包括寻找小木棍作为兵器、用泥巴和水混合作为血酒，以及在院子里跪拜并念诵台词的过程。",
+      "source_turn_ids": [
+        "turn_6a46b7abc5"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_57c92e0e91": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_57c92e0e91",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "欣慰",
+        "location": "未提及具体地点",
+        "people": [
+          "老李",
+          "小儿子"
+        ],
+        "significance": "体现了邻里间的互助精神，对老人有深刻影响",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "未提及具体时间"
+      },
+      "rich_text": "老李代替老人参加了小儿子的家长会，并回来详细汇报了学校情况和儿子的表现",
+      "source_turn_ids": [
+        "turn_7a02dad770"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_603a57cad7": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_603a57cad7",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "团结互助，乐观信心",
+        "location": "纺织厂",
+        "people": [
+          "组长大姐",
+          "我",
+          "老师傅"
+        ],
+        "significance": "克服困难，增强团队凝聚力",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "未提及具体时间"
+      },
+      "rich_text": "组长大姐带领大家修理厂里坏掉的机器，分工合作，找工具、查资料、请教老师傅，最终修好了机器",
+      "source_turn_ids": [
+        "turn_a526ef4f02"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_6360c79641": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_6360c79641",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "焦急和感激",
+        "location": "老人的老房子",
+        "people": [
+          "我",
+          "老王"
+        ],
+        "significance": "体现了邻里间的无私帮助和团结互助精神",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "多年前的一个下雨天"
+      },
+      "rich_text": "多年前的一个下雨天，老人的老房子屋顶开始漏水，导致屋内到处都是水",
+      "source_turn_ids": [
+        "turn_a48e6c56b5"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_6e7a08d087": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_6e7a08d087",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "暖洋洋的感动",
+        "location": "老人的老房子屋顶",
+        "people": [
+          "老王",
+          "老人"
+        ],
+        "significance": "体现了邻里之间的无私帮助和团结互助的精神",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "多年前的某一天"
+      },
+      "rich_text": "老王在大雨中爬上屋顶帮助修理漏水的地方",
+      "source_turn_ids": [
+        "turn_264fad4827"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_6f0c4a7c8d": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_6f0c4a7c8d",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "暖洋洋的感动",
+        "people": [
+          "老王",
+          "我"
+        ],
+        "significance": "体现了邻里间的无私帮助和深厚情谊",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION"
+      },
+      "rich_text": "老王在大雨中爬上屋顶帮助修补漏水的地方",
+      "source_turn_ids": [
+        "turn_b8332402ba"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_7014974f12": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_7014974f12",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "高兴、兴奋",
+        "location": "纺织厂",
+        "people": [
+          "我们小组的人"
+        ],
+        "significance": "增强了团队合作精神和集体荣誉感",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "回忆中未具体提及"
+      },
+      "rich_text": "纺织厂举办技能比赛，老人所在的小组下班后加班练习，最终获得第一名",
+      "source_turn_ids": [
+        "turn_7a1ad82327"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_75b01b2603": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_75b01b2603",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "激动和神圣",
+        "people": [
+          "我",
+          "邻居小孩"
+        ],
+        "significance": "加深了友谊，成为童年美好回忆",
+        "theme_id": "THEME_01_LIFE_CHAPTERS",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "听完评书《三国演义》里的‘桃园三结义’后，孩子们模仿刘备、关羽、张飞结拜，用小木棍当剑，泥巴和水假装血酒，跪地发誓",
+      "source_turn_ids": [
+        "turn_24fb7576d9"
+      ],
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "updated_at": null
+    },
+    "frag_7a35e3cd49": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_7a35e3cd49",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "欣慰和温暖",
+        "people": [
+          "老李",
+          "小儿子"
+        ],
+        "significance": "体现了邻里间的无私帮助和对小儿子教育的关心",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION"
+      },
+      "rich_text": "老李代替老人参加了小儿子的家长会，并回来详细汇报了学校的情况",
+      "source_turn_ids": [
+        "turn_8344f670fa"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_7e08881c75": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_7e08881c75",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "心里暖洋洋的",
+        "location": "纺织厂",
+        "people": [
+          "我",
+          "邻居",
+          "老王"
+        ],
+        "significance": "体现了团结互助精神在个人生活中的重要性",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "那会儿"
+      },
+      "rich_text": "在纺织厂工作期间，大家展现出的团结互助精神，让老人心里感到暖洋洋的。",
+      "source_turn_ids": [
+        "turn_24cfafe073"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_8e4815734e": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_8e4815734e",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "感动",
+        "location": "纺织厂",
+        "people": [
+          "我",
+          "工友"
+        ],
+        "significance": "体现了团结互助的精神",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION"
+      },
+      "rich_text": "纺织厂机器出现故障，大家共同想办法修复",
+      "source_turn_ids": [
+        "turn_964c2cc1ad"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_9415fb9f6d": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_9415fb9f6d",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "快乐、天真",
+        "people": [
+          "我",
+          "邻居小孩"
+        ],
+        "significance": "童年快乐回忆",
+        "theme_id": "THEME_01_LIFE_CHAPTERS",
+        "time_anchor": "小时候"
+      },
+      "rich_text": "听完评书后，老人和邻居小孩模仿桃园三结义，用小木棍当剑，泥巴和水假装血酒，争当刘备",
+      "source_turn_ids": [
+        "turn_ddf7a2f940"
+      ],
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "updated_at": null
+    },
+    "frag_9f2a551abd": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_9f2a551abd",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "开心、热血沸腾",
+        "location": "城西老茶馆",
+        "people": [
+          "我",
+          "爸爸",
+          "说书的老先生"
+        ],
+        "significance": "童年最开心的记忆之一",
+        "theme_id": "THEME_01_LIFE_CHAPTERS",
+        "time_anchor": "七八岁时"
+      },
+      "rich_text": "七八岁时和父亲去城西老茶馆听评书，老先生讲述《三国演义》中的‘桃园三结义’故事，听得入迷，回家模仿结拜",
+      "source_turn_ids": [
+        "turn_6283a077ae"
+      ],
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "updated_at": null
+    },
+    "frag_a21b671645": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_a21b671645",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "团结互助",
+        "location": "纺织厂",
+        "people": [
+          "工友",
+          "大家"
+        ],
+        "significance": "体现了工友间的深厚情谊和互助精神",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "回忆中未具体提及"
+      },
+      "rich_text": "纺织厂工友家中出现紧急情况需要资金，大家自发凑钱帮助解决燃眉之急",
+      "source_turn_ids": [
+        "turn_7a1ad82327"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_a374f6f362": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_a374f6f362",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张且兴奋",
+        "location": "成都东门纺织厂",
+        "people": [
+          "我",
+          "小组的人"
+        ],
+        "significance": "通过努力获得的成就感",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "未提及具体时间"
+      },
+      "rich_text": "老人参与的纺织厂技能比赛，小组加班加点练习，最终获得第一名",
+      "source_turn_ids": [
+        "turn_4f3fb837ba"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_a73cff0d30": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_a73cff0d30",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "有趣且温馨",
+        "people": [
+          "我",
+          "邻居小孩"
+        ],
+        "significance": "对后来的生活和性格有影响",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "童年时模仿桃园三结义的游戏，用小木棍当剑，泥巴和水假装是血酒，模仿结拜",
+      "source_turn_ids": [
+        "turn_65d2ea3aa0"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_aa9b073623": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_aa9b073623",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "暖洋洋",
+        "people": [
+          "老李",
+          "小儿子"
+        ],
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION"
+      },
+      "rich_text": "老李参加家长会后到老人家里详细汇报了学校的情况和小儿子的表现",
+      "source_turn_ids": [
+        "turn_5f212dca6d"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_ae67b89deb": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_ae67b89deb",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "团结互助，心里暖和",
+        "location": "纺织厂",
+        "people": [
+          "我",
+          "组长",
+          "老师傅"
+        ],
+        "significance": "体现了工人们团结互助的精神",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "未提及具体时间"
+      },
+      "rich_text": "纺织厂机器出现故障，工人们自发组织修理，经过一个晚上的努力最终修好机器",
+      "source_turn_ids": [
+        "turn_c16479aac8"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_b3880f99e9": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_b3880f99e9",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "暖洋洋的，感动",
+        "location": "老人的老房子",
+        "people": [
+          "我",
+          "老王"
+        ],
+        "significance": "体现了邻里间的无私帮助和团结互助的精神",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "多年前的某一天"
+      },
+      "rich_text": "在大雨中，老王帮助修理漏水的屋顶",
+      "source_turn_ids": [
+        "turn_a93cd78525"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_be8585555b": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_be8585555b",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "团结互助，心里暖和",
+        "location": "纺织厂",
+        "people": [
+          "我",
+          "工友",
+          "组长大姐"
+        ],
+        "significance": "意味着团结和坚持，对个人生活产生长远影响",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "未提及具体时间"
+      },
+      "rich_text": "在纺织厂工作时，机器坏了，工人们团结互助，共同修理机器，最终成功修复",
+      "source_turn_ids": [
+        "turn_35ce87b47c"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_c18747216d": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_c18747216d",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "辛苦但温馨",
+        "location": "成都东门纺织厂",
+        "people": [
+          "我",
+          "工友们"
+        ],
+        "significance": "体现了团结和坚持的精神",
+        "theme_id": "THEME_01_LIFE_CHAPTERS",
+        "time_anchor": "过去"
+      },
+      "rich_text": "在成都东门纺织厂工作的日子，大家一起努力干活，虽然辛苦但感觉温馨",
+      "source_turn_ids": [
+        "turn_5956725d4b"
+      ],
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "updated_at": null
+    },
+    "frag_c46d980c31": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_c46d980c31",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "团结互助",
+        "location": "学校",
+        "people": [
+          "年轻老师",
+          "老教师"
+        ],
+        "significance": "共同提高教学质量",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "教学生涯中"
+      },
+      "rich_text": "在学校里，一位年轻老师因班级学生调皮而难以管理，其他老教师主动提供帮助，包括出主意和维持秩序",
+      "source_turn_ids": [
+        "turn_5023881276"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_c536192988": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_c536192988",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "心里踏实",
+        "location": "我家",
+        "people": [
+          "我",
+          "老王"
+        ],
+        "significance": "体现了邻里间的互助精神",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION"
+      },
+      "rich_text": "老人家里房子漏水时，邻居老王主动帮忙修理，忙前忙后连口水都顾不上喝。",
+      "source_turn_ids": [
+        "turn_24cfafe073"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_c74b849ca0": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_c74b849ca0",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "暖洋洋的",
+        "location": "我家老房子的屋顶",
+        "people": [
+          "老王",
+          "我"
+        ],
+        "significance": "体现了邻里之间的无私帮助和深厚情谊",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "那天雨下得特别大时"
+      },
+      "rich_text": "老王在大雨中爬上屋顶修理漏水的地方，忙活了半天终于补好了漏水处",
+      "source_turn_ids": [
+        "turn_aff51500e8"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_cb08cbcc0e": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_cb08cbcc0e",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "开心",
+        "location": "茶馆",
+        "people": [
+          "我",
+          "大人们",
+          "说书人",
+          "小伙伴们"
+        ],
+        "significance": "简单纯粹的快乐",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "小时候"
+      },
+      "rich_text": "小时候最开心的事情之一，去茶馆听评书是奢侈的享受，茶馆里烟雾缭绕，大人们喝茶聊天，小孩子围在说书人旁边听故事",
+      "source_turn_ids": [
+        "turn_fe382b25e4"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_cbc1b07a20": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_cbc1b07a20",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "欣慰和温暖",
+        "people": [
+          "老李",
+          "小儿子"
+        ],
+        "significance": "体现了邻里间的无私帮助和老人对小儿子的期望",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION"
+      },
+      "rich_text": "老李代替老人参加了小儿子的家长会，并回来详细汇报了学校的情况，包括老师对小儿子的表扬和学校新设备等新鲜事",
+      "source_turn_ids": [
+        "turn_ef83455476"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_d09631ec6a": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_d09631ec6a",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "感激",
+        "people": [
+          "我",
+          "老李",
+          "小儿子"
+        ],
+        "significance": "体现了邻里互助精神，帮助克服困难",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION"
+      },
+      "rich_text": "老人小儿子学校开家长会时，邻居老李代替老人参加并详细汇报学校情况",
+      "source_turn_ids": [
+        "turn_59250a6250"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_ec62c4c28f": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_ec62c4c28f",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "心里特别暖和",
+        "location": "纺织厂车间",
+        "people": [
+          "我",
+          "小组的组长",
+          "工友们"
+        ],
+        "significance": "体现了团结互助的精神，对老人影响深远",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION"
+      },
+      "rich_text": "在纺织厂的一个车间里，大家分工合作修好了一台机器",
+      "source_turn_ids": [
+        "turn_864148f646"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_f793bad893": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_f793bad893",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "团结互助，心里暖和",
+        "location": "纺织厂",
+        "people": [
+          "我",
+          "组长",
+          "工友"
+        ],
+        "significance": "体现了团队合作精神和克服困难的满足感",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "未提及具体时间"
+      },
+      "rich_text": "在纺织厂工作时，机器出现故障，大家团结一致，共同修理机器直至成功运转",
+      "source_turn_ids": [
+        "turn_2308483f13"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    }
+  },
+  "session_id": "53197f9aa2e04ba2bde89d9892196035",
+  "theme_nodes": [
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_02_PEAK_EXPERIENCE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_03_LOW_POINT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_04_TURNING_POINT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_07_ADULT_MEMORY",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_08_RELIGIOUS_EXPERIENCE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_10_NEXT_CHAPTER",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_11_DREAMS_PLANS",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_12_LIFE_PROJECT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_13_LIFE_CHALLENGE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_14_HEALTH",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_15_LOSS",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_16_FAILURE_REGRET",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_17_RELIGIOUS_VALUES",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_18_POLITICAL_VALUES",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_19_VALUE_EVOLUTION",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_20_SINGLE_VALUE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_21_SESSION_SUMMARY",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_23_CONTEXT_MANAGEMENT",
+      "title": null
+    }
+  ],
+  "timestamp": "2026-05-08T07:45:59.843772",
+  "turn_count": 34
+}

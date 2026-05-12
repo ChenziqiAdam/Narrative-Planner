@@ -1,0 +1,1887 @@
+{
+  "agent": "baseline",
+  "run_index": 2,
+  "session_id": "8eaf8486dafe4b8fad9f8e65b3c037a6",
+  "status": "completed",
+  "started_at": "2026-05-08T05:23:24.973034",
+  "finished_at": "2026-05-08T05:30:30.979445",
+  "start_payload": {
+    "first_question": "您好，李秀兰老师，见到您很高兴。您出生于1944年的四川成都，能否和我分享一下您童年时的家乡是什么样的？",
+    "mode": "ai",
+    "session_id": "8eaf8486dafe4b8fad9f8e65b3c037a6"
+  },
+  "elder_info": {
+    "name": "李秀兰",
+    "birth_year": 1944,
+    "hometown": "四川成都",
+    "background": "退休中学语文教师，经历过知青下乡、恢复高考、改革开放后的城市变迁。她有一个儿子和一个女儿，晚年喜欢整理旧照片和写日记。"
+  },
+  "turns": [
+    {
+      "turn_index": 1,
+      "status": "completed",
+      "elapsed_ms": 21149.21,
+      "events": [
+        {
+          "role": "interviewee",
+          "action": "answer",
+          "text": "哎哟，说起这个我就想起我们那会儿的童年咯。1942年我出生在成都老城区，那会儿的成都啊，跟现在大不一样。街道都是石板路，房子大多是木结构的，家家户户门前都种着花花草草。我们那会儿嘛，生活条件艰苦，但邻里之间关系亲近，经常互相帮忙。那时候的成都，天很蓝，水很清，空气里都是泥土和植物的香味。不像现在，到处都是高楼大厦，车水马龙的。",
+          "memory_calls": [],
+          "timing": {
+            "interviewee_total_ms": 5334.4
+          }
+        },
+        {
+          "role": "interviewer",
+          "action": "continue",
+          "text": "听您这么描述，那个时代的成都确实有着独特的魅力和宁静。您提到了邻里之间的亲近关系，能否分享一下您童年时和邻居家孩子们一起玩耍的情景？",
+          "turn_evaluation": {
+            "turn_id": "turn_b5dcd1db30",
+            "question_quality_score": 0.395,
+            "information_gain_score": 0.1,
+            "non_redundancy_score": 1.0,
+            "emotional_alignment_score": 0.0,
+            "coverage_gain": 0.0,
+            "notes": [
+              "Low information gain this turn."
+            ],
+            "created_at": "2026-05-08T05:23:46.120247",
+            "status": "completed"
+          },
+          "debug_trace": {
+            "pipeline": "baseline"
+          },
+          "timing": {
+            "interviewer_llm_ms": 1326.1
+          }
+        },
+        {
+          "role": "done"
+        }
+      ]
+    },
+    {
+      "turn_index": 2,
+      "status": "completed",
+      "elapsed_ms": 19389.95,
+      "events": [
+        {
+          "role": "interviewee",
+          "action": "answer",
+          "text": "我们那会儿嘛，虽然家里头条件都不好，但是孩子们都玩得很开心。我记得我们经常在巷子里头捉迷藏，或者在河边捉小鱼小虾。那时候河边的水清得很，不像现在污染得厉害。我们还会一起跳皮筋、踢毽子，有时候还会跑到田里头去摘野果。哎哟，说起这个我就想起我们那会儿的笑声，真是无忧无虑的。",
+          "memory_calls": [],
+          "timing": {
+            "interviewee_total_ms": 4413.0
+          }
+        },
+        {
+          "role": "interviewer",
+          "action": "continue",
+          "text": "听您回忆这些童年的游戏和活动，感觉那个时代的童年充满了自然和纯真的乐趣。您觉得这些童年经历对您后来的生活和性格有什么样的影响吗？",
+          "turn_evaluation": {
+            "turn_id": "turn_c6b0b4fa62",
+            "question_quality_score": 0.2823,
+            "information_gain_score": 0.1,
+            "non_redundancy_score": 0.678,
+            "emotional_alignment_score": 0.0,
+            "coverage_gain": 0.0,
+            "notes": [
+              "Low information gain this turn."
+            ],
+            "created_at": "2026-05-08T05:24:05.510670",
+            "status": "completed"
+          },
+          "debug_trace": {
+            "pipeline": "baseline"
+          },
+          "timing": {
+            "interviewer_llm_ms": 1277.3
+          }
+        },
+        {
+          "role": "done"
+        }
+      ]
+    },
+    {
+      "turn_index": 3,
+      "status": "completed",
+      "elapsed_ms": 19295.01,
+      "events": [
+        {
+          "role": "interviewee",
+          "action": "answer",
+          "text": "哎哟，说起这个我就想起我们那会儿的童年咯。我们那会儿虽然条件艰苦，但是那些游戏和活动，让我学会了珍惜和感恩。跟邻居家孩子们一起玩耍，让我懂得了分享和合作。这些经历让我性格里头多了一份坚韧和乐观。现在想起来，那些日子虽然苦，但是心里头踏实，也让我学会了在困难面前不低头，要坚强。",
+          "memory_calls": [],
+          "timing": {
+            "interviewee_total_ms": 4615.7
+          }
+        },
+        {
+          "role": "interviewer",
+          "action": "continue",
+          "text": "您的经历和性格的形成确实与童年时期的经历密切相关。您提到了在困难面前不低头，要坚强，这让我想到您后来经历了知青下乡的时期。能否和我分享一下您知青下乡时的一些经历和感受？",
+          "turn_evaluation": {
+            "turn_id": "turn_d30f460d56",
+            "question_quality_score": 0.3196,
+            "information_gain_score": 0.1,
+            "non_redundancy_score": 0.7846,
+            "emotional_alignment_score": 0.0,
+            "coverage_gain": 0.0,
+            "notes": [
+              "Low information gain this turn."
+            ],
+            "created_at": "2026-05-08T05:24:24.804826",
+            "status": "completed"
+          },
+          "debug_trace": {
+            "pipeline": "baseline"
+          },
+          "timing": {
+            "interviewer_llm_ms": 1546.9
+          }
+        },
+        {
+          "role": "done"
+        }
+      ]
+    },
+    {
+      "turn_index": 4,
+      "status": "completed",
+      "elapsed_ms": 20672.76,
+      "events": [
+        {
+          "role": "interviewee",
+          "action": "answer",
+          "text": "哎哟，说起知青下乡，我们那会儿虽然我没去，但是听了不少故事。那些城里的娃儿，突然被派到农村去，生活条件和城里差远了。他们要学着干农活，啥子插秧啊、割麦子啊，都是从头学起。一开始肯定不适应，手上起泡，肩上磨破皮，但是慢慢也就习惯了。那些娃儿们，在农村里头也学到了不少东西，懂得了农民的辛苦，也体会到了生活的不易。虽然苦，但是这段经历对他们后来的人生影响很大，让他们更加珍惜现在的生活。",
+          "memory_calls": [],
+          "timing": {
+            "interviewee_total_ms": 5963.8
+          }
+        },
+        {
+          "role": "interviewer",
+          "action": "continue",
+          "text": "您虽然没有亲身经历知青下乡，但您周围人的故事让您对这段历史有了深刻的理解。您觉得这段历史对您个人或者对您周围的人有哪些长远的影响？",
+          "turn_evaluation": {
+            "turn_id": "turn_e8c754c34b",
+            "question_quality_score": 0.2923,
+            "information_gain_score": 0.1,
+            "non_redundancy_score": 0.7067,
+            "emotional_alignment_score": 0.0,
+            "coverage_gain": 0.0,
+            "notes": [
+              "Low information gain this turn."
+            ],
+            "created_at": "2026-05-08T05:24:45.478174",
+            "status": "completed"
+          },
+          "debug_trace": {
+            "pipeline": "baseline"
+          },
+          "timing": {
+            "interviewer_llm_ms": 1553.1
+          }
+        },
+        {
+          "role": "done"
+        }
+      ]
+    },
+    {
+      "turn_index": 5,
+      "status": "completed",
+      "elapsed_ms": 20078.06,
+      "events": [
+        {
+          "role": "interviewee",
+          "action": "answer",
+          "text": "哎哟，说起知青下乡对我们的影响，那可真是深远哦。我们那会儿，虽然我没去，但是听了不少身边人的故事。那些城里的娃儿，突然被派到农村去，生活条件和城里差远了。他们在农村里头，不仅学会了干农活，还学会了珍惜和感恩。这段经历让他们更加坚强，也让他们懂得了生活的不易。对我个人来说，虽然没有亲身经历，但是这些故事让我更加珍惜现在的生活，也让我懂得了不管遇到什么困难，都要坚强面对。对周围的人来说，这段经历让他们后来的人生更加丰富，也让他们更加懂得珍惜和感恩。",
+          "memory_calls": [],
+          "timing": {
+            "interviewee_total_ms": 5497.4
+          }
+        },
+        {
+          "role": "interviewer",
+          "action": "continue",
+          "text": "听您这么说，知青下乡的经历确实给人们带来了深刻的人生感悟和成长。那么，在您自己的教育生涯中，有没有哪些学生或者教学经历让您特别难忘，或者对您的教学理念产生了影响？",
+          "turn_evaluation": {
+            "turn_id": "turn_b5239e7481",
+            "question_quality_score": 0.3028,
+            "information_gain_score": 0.1,
+            "non_redundancy_score": 0.7364,
+            "emotional_alignment_score": 0.0,
+            "coverage_gain": 0.0,
+            "notes": [
+              "Low information gain this turn."
+            ],
+            "created_at": "2026-05-08T05:25:05.555795",
+            "status": "completed"
+          },
+          "debug_trace": {
+            "pipeline": "baseline"
+          },
+          "timing": {
+            "interviewer_llm_ms": 1430.2
+          }
+        },
+        {
+          "role": "done"
+        }
+      ]
+    },
+    {
+      "turn_index": 6,
+      "status": "completed",
+      "elapsed_ms": 21919.75,
+      "events": [
+        {
+          "role": "interviewee",
+          "action": "answer",
+          "text": "哎哟，说起这个我就想起我们那会儿教书的日子。我教了几十年的书，遇到过各种各样的学生，有些学生和经历真是让我印象深刻。记得有一个学生，家里条件特别困难，但是学习特别刻苦，每次看到他那么努力，我就特别感动，也让我更加坚信，教育能够改变命运。还有一次，我教的一个班，孩子们特别调皮，一开始我真是头疼得很，但是后来通过耐心引导，他们慢慢变得懂事，成绩也提高了不少。这些经历让我明白，每个孩子都有自己的特点和潜力，作为老师，我们要耐心引导，激发他们的潜力。这些教学经历，对我后来的教学理念影响很大，让我更加注重因材施教，关心每一个学生的成长。",
+          "memory_calls": [],
+          "timing": {
+            "interviewee_total_ms": 6063.5
+          }
+        },
+        {
+          "role": "interviewer",
+          "action": "continue",
+          "text": "您提到的这些教学经历确实很感人，也体现了您作为教师的责任感和爱心。您认为在教育工作中，最重要的品质是什么？",
+          "turn_evaluation": {
+            "turn_id": "turn_8f0c5fca5c",
+            "question_quality_score": 0.2991,
+            "information_gain_score": 0.1,
+            "non_redundancy_score": 0.726,
+            "emotional_alignment_score": 0.0,
+            "coverage_gain": 0.0,
+            "notes": [
+              "Low information gain this turn."
+            ],
+            "created_at": "2026-05-08T05:25:27.475252",
+            "status": "completed"
+          },
+          "debug_trace": {
+            "pipeline": "baseline"
+          },
+          "timing": {
+            "interviewer_llm_ms": 1290.2
+          }
+        },
+        {
+          "role": "done"
+        }
+      ]
+    },
+    {
+      "turn_index": 7,
+      "status": "completed",
+      "elapsed_ms": 20469.39,
+      "events": [
+        {
+          "role": "interviewee",
+          "action": "answer",
+          "text": "哎哟，说起教育工作中最重要的品质，我觉得首先是耐心。我们那会儿教书，每个学生都不一样，有的聪明，有的迟钝，但是不管啥子样的学生，都需要老师耐心去教。再一个就是爱心，老师要真心关心学生，不只是学习，还要关心他们的生活和心情。还有就是责任感，老师要对学生负责，要教给他们知识，更要教他们做人的道理。最后，我觉得老师自己也要不断学习，跟上时代，这样才能教给学生最新的知识。我们那会儿，虽然条件艰苦，但是这些品质，我觉得是做好老师的根本。",
+          "memory_calls": [],
+          "timing": {
+            "interviewee_total_ms": 4853.9
+          }
+        },
+        {
+          "role": "interviewer",
+          "action": "continue",
+          "text": "您提到的耐心、爱心、责任感和不断学习，确实是教师职业中非常重要的品质。在您的教学生涯中，有没有特别难忘的教学方法或者教育理念，是您一直坚持并认为特别有效的？",
+          "turn_evaluation": {
+            "turn_id": "turn_697958258b",
+            "question_quality_score": 0.3357,
+            "information_gain_score": 0.1,
+            "non_redundancy_score": 0.8305,
+            "emotional_alignment_score": 0.0,
+            "coverage_gain": 0.0,
+            "notes": [
+              "Low information gain this turn."
+            ],
+            "created_at": "2026-05-08T05:25:47.944255",
+            "status": "completed"
+          },
+          "debug_trace": {
+            "pipeline": "baseline"
+          },
+          "timing": {
+            "interviewer_llm_ms": 1351.6
+          }
+        },
+        {
+          "role": "done"
+        }
+      ]
+    },
+    {
+      "turn_index": 8,
+      "status": "completed",
+      "elapsed_ms": 21626.11,
+      "events": [
+        {
+          "role": "interviewee",
+          "action": "answer",
+          "text": "哎哟，说起教学方法和教育理念，我们那会儿教书可不像现在有那么多先进的工具和设备。我一直坚持的嘛，就是‘因材施教’。每个学生都是不一样的，有的聪明，有的反应慢一点，但是都有自己的长处和短处。我就会根据他们的特点来教，比如有的学生喜欢动手，我就让他们多做实验；有的学生喜欢思考，我就让他们多讨论问题。这样，每个学生都能在自己擅长的领域里头发挥出来，也能慢慢弥补自己的不足。还有一个就是‘启发式教学’，我不喜欢那种填鸭式的教法，我喜欢引导学生自己去思考问题，去探索答案。这样他们不仅能学到知识，还能培养解决问题的能力。这些方法和理念，我一直坚持，也看到它们在我学生的身上起了效果，所以我觉得特别有效。",
+          "memory_calls": [],
+          "timing": {
+            "interviewee_total_ms": 6353.8
+          }
+        },
+        {
+          "role": "interviewer",
+          "action": "continue",
+          "text": "您的“因材施教”和“启发式教学”理念真的很先进，这些方法不仅帮助学生学习知识，还培养了他们的独立思考和解决问题的能力。在您的教学生涯中，有没有哪个时刻或者事件，让您感到特别有成就感或者特别自豪？",
+          "turn_evaluation": {
+            "turn_id": "turn_a70ae72202",
+            "question_quality_score": 0.2761,
+            "information_gain_score": 0.1,
+            "non_redundancy_score": 0.6604,
+            "emotional_alignment_score": 0.0,
+            "coverage_gain": 0.0,
+            "notes": [
+              "Low information gain this turn."
+            ],
+            "created_at": "2026-05-08T05:26:09.570829",
+            "status": "completed"
+          },
+          "debug_trace": {
+            "pipeline": "baseline"
+          },
+          "timing": {
+            "interviewer_llm_ms": 1824.8
+          }
+        },
+        {
+          "role": "done"
+        }
+      ]
+    },
+    {
+      "turn_index": 9,
+      "status": "completed",
+      "elapsed_ms": 20504.15,
+      "events": [
+        {
+          "role": "interviewee",
+          "action": "answer",
+          "text": "哎哟，说起这个我就想起我们那会儿教书的日子。有一次，我带的一个班，孩子们一开始成绩都不太好，学习也不积极。我就开始用‘因材施教’的方法，根据每个孩子的特点来教他们，还用‘启发式教学’引导他们自己思考问题。过了一个学期，他们的成绩提高了很多，好几个孩子还在学校的比赛里头拿了奖。看到他们的进步，我真是打心眼里头感到自豪。还有一次，一个平时不爱说话的孩子，在我的鼓励下，开始积极发言，后来还成了班上的学习委员。这些孩子们的成长和变化，让我感到自己所有的努力和付出都是值得的，也让我感到作为一个老师，能够影响和改变孩子们的人生，是特别有成就感的事情。",
+          "memory_calls": [],
+          "timing": {
+            "interviewee_total_ms": 6023.6
+          }
+        },
+        {
+          "role": "interviewer",
+          "action": "continue",
+          "text": "您的经历真的很鼓舞人心，能够看到学生的成长和变化，确实是教师最大的幸福和成就。在您的教育生涯中，有没有遇到过什么特别的挑战或者困难，您是如何克服的？",
+          "turn_evaluation": {
+            "turn_id": "turn_c5117cc2d5",
+            "question_quality_score": 0.279,
+            "information_gain_score": 0.1,
+            "non_redundancy_score": 0.6686,
+            "emotional_alignment_score": 0.0,
+            "coverage_gain": 0.0,
+            "notes": [
+              "Low information gain this turn."
+            ],
+            "created_at": "2026-05-08T05:26:30.074815",
+            "status": "completed"
+          },
+          "debug_trace": {
+            "pipeline": "baseline"
+          },
+          "timing": {
+            "interviewer_llm_ms": 1445.5
+          }
+        },
+        {
+          "role": "done"
+        }
+      ]
+    },
+    {
+      "turn_index": 10,
+      "status": "completed",
+      "elapsed_ms": 21921.97,
+      "events": [
+        {
+          "role": "interviewee",
+          "action": "answer",
+          "text": "哎哟，说起这个我就想起我们那会儿教书的日子。确实遇到过不少挑战和困难。记得有一次，我带的班级里有几个特别调皮的学生，他们上课不专心，还经常捣乱。我当时就想，这可不行，得想个办法。我就尝试跟他们多沟通，了解他们的兴趣和想法，然后根据他们的兴趣来调整教学方法。比如说，有个学生喜欢机械，我就在物理课上多讲一些机械原理，让他参与到实验中来。慢慢地，这些孩子对学习产生了兴趣，行为也有所改善。还有一次，学校的教学资源有限，很多教学设备都老化了，我就自己动手制作一些教具，或者用生活中常见的物品来代替，这样也能让孩子们更好地理解知识点。这些经历让我明白，遇到困难不要怕，关键是要动脑筋，想办法去解决。",
+          "memory_calls": [],
+          "timing": {
+            "interviewee_total_ms": 7174.4
+          }
+        },
+        {
+          "role": "interviewer",
+          "action": "continue",
+          "text": "您面对挑战时的积极态度和解决问题的能力真的很令人敬佩。在您的教育生涯中，您认为最重要的教育理念是什么？",
+          "turn_evaluation": {
+            "turn_id": "turn_872c8ed882",
+            "question_quality_score": 0.2476,
+            "information_gain_score": 0.1,
+            "non_redundancy_score": 0.5789,
+            "emotional_alignment_score": 0.0,
+            "coverage_gain": 0.0,
+            "notes": [
+              "Low information gain this turn."
+            ],
+            "created_at": "2026-05-08T05:26:51.997134",
+            "status": "completed"
+          },
+          "debug_trace": {
+            "pipeline": "baseline"
+          },
+          "timing": {
+            "interviewer_llm_ms": 1324.0
+          }
+        },
+        {
+          "role": "done"
+        }
+      ]
+    },
+    {
+      "turn_index": 11,
+      "status": "completed",
+      "elapsed_ms": 20624.09,
+      "events": [
+        {
+          "role": "interviewee",
+          "action": "answer",
+          "text": "哎哟，说起这个我就想起我们那会儿教书的日子。在我几十年的教学生涯中，我觉得最重要的教育理念就是尊重和理解学生。每个孩子都有自己的个性和想法，我们做老师的，不能只看重分数，更要看到他们的内心世界。我记得有一次，我遇到一个特别内向的学生，他成绩不好，也不爱说话，但我没有放弃他，而是耐心地去了解他，发现他对绘画特别有兴趣。我就鼓励他多画画，结果他后来在美术方面取得了很好的成绩，人也变得自信多了。所以我觉得，尊重和理解学生，让他们发挥自己的特长，这是教育中最重要的。",
+          "memory_calls": [],
+          "timing": {
+            "interviewee_total_ms": 5790.4
+          }
+        },
+        {
+          "role": "interviewer",
+          "action": "continue",
+          "text": "您提到的尊重和理解学生，确实是教育中非常重要的一环。在您的教学生涯中，您有没有特别想要感谢的人或者事？",
+          "turn_evaluation": {
+            "turn_id": "turn_accb1422d3",
+            "question_quality_score": 0.2886,
+            "information_gain_score": 0.1,
+            "non_redundancy_score": 0.696,
+            "emotional_alignment_score": 0.0,
+            "coverage_gain": 0.0,
+            "notes": [
+              "Low information gain this turn."
+            ],
+            "created_at": "2026-05-08T05:27:12.620564",
+            "status": "completed"
+          },
+          "debug_trace": {
+            "pipeline": "baseline"
+          },
+          "timing": {
+            "interviewer_llm_ms": 1415.2
+          }
+        },
+        {
+          "role": "done"
+        }
+      ]
+    },
+    {
+      "turn_index": 12,
+      "status": "completed",
+      "elapsed_ms": 20455.9,
+      "events": [
+        {
+          "role": "interviewee",
+          "action": "answer",
+          "text": "哎哟，说起这个我就想起我们那会儿教书的日子。我特别想要感谢的，首先是我的学生们，他们给了我很多快乐和成就感。记得有个学生，家里条件特别困难，但是学习特别刻苦，每次看到他那么努力，我就特别感动，也让我更加坚信，教育能够改变命运。还有我的同事们，我们一起备课、一起讨论教学方法，他们给了我很多支持和帮助。特别是有一次，学校的教学资源有限，我们几个老师就一起动手制作教具，用生活中常见的物品来代替，这样也能让孩子们更好地理解知识点。这些经历让我明白，教育不仅仅是教书，更是人与人之间的相互支持和帮助。",
+          "memory_calls": [],
+          "timing": {
+            "interviewee_total_ms": 5460.8
+          }
+        },
+        {
+          "role": "interviewer",
+          "action": "continue",
+          "text": "您的学生们和同事们确实在您的教学生涯中扮演了非常重要的角色。您提到了教育能够改变命运，那么在您的个人生活中，有没有什么特别的经历或者转折点，对您的生活产生了重大影响？",
+          "turn_evaluation": {
+            "turn_id": "turn_2d1d3879ce",
+            "question_quality_score": 0.2382,
+            "information_gain_score": 0.1,
+            "non_redundancy_score": 0.552,
+            "emotional_alignment_score": 0.0,
+            "coverage_gain": 0.0,
+            "notes": [
+              "Low information gain this turn."
+            ],
+            "created_at": "2026-05-08T05:27:33.076994",
+            "status": "completed"
+          },
+          "debug_trace": {
+            "pipeline": "baseline"
+          },
+          "timing": {
+            "interviewer_llm_ms": 1474.7
+          }
+        },
+        {
+          "role": "done"
+        }
+      ]
+    },
+    {
+      "turn_index": 13,
+      "status": "completed",
+      "elapsed_ms": 21096.16,
+      "events": [
+        {
+          "role": "interviewee",
+          "action": "answer",
+          "text": "哎哟，说起这个我就想起我们那会儿的几个转折点。第一个就是我进纺织厂工作的时候，那时候我才18岁，从学校毕业就进了厂，开始了我35年的工作生涯。这份工作让我学会了吃苦耐劳，也让我体会到了集体的温暖。再一个转折点就是改革开放后，我们厂开始改制，很多老工人都下岗了，我也提前退休。那时候心里头挺不是滋味的，但是后来想想，这也是社会发展的必然，我们只能去适应。最后就是我老伴去世，那是我人生中最难过的时候，但也让我更加珍惜和家人在一起的时光。这些转折点，虽然当时觉得挺难的，但是现在想想，它们都让我的生活更加丰富，也让我更加坚强。",
+          "memory_calls": [],
+          "timing": {
+            "interviewee_total_ms": 5710.9
+          }
+        },
+        {
+          "role": "interviewer",
+          "action": "continue",
+          "text": "您的生活经历了许多重要的转折点，每一个都对您产生了深远的影响。您提到了改革开放后的城市变迁，您能分享一下您对成都这些年变化的感受吗？",
+          "turn_evaluation": {
+            "turn_id": "turn_4ff21e42ed",
+            "question_quality_score": 0.2696,
+            "information_gain_score": 0.1,
+            "non_redundancy_score": 0.6418,
+            "emotional_alignment_score": 0.0,
+            "coverage_gain": 0.0,
+            "notes": [
+              "Low information gain this turn."
+            ],
+            "created_at": "2026-05-08T05:27:54.172278",
+            "status": "completed"
+          },
+          "debug_trace": {
+            "pipeline": "baseline"
+          },
+          "timing": {
+            "interviewer_llm_ms": 1371.7
+          }
+        },
+        {
+          "role": "done"
+        }
+      ]
+    },
+    {
+      "turn_index": 14,
+      "status": "completed",
+      "elapsed_ms": 23226.44,
+      "events": [
+        {
+          "role": "interviewee",
+          "action": "answer",
+          "text": "哎哟，说起成都这些年的变化，真是翻天覆地哦。我们那会儿改革开放后，成都也开始慢慢变了样子。以前那些老街老巷，现在好多都变成了高楼大厦，连我这个老成都有时候都会迷路。现在安逸咯，买东西方便得很，超市里头啥子都有，不像我们那会儿，买点肉啊菜啊，都要凭票排队。交通也发达了，地铁、公交四通八达，想去哪儿都方便。但是嘛，人和人之间的关系好像没以前那么亲近了，以前邻居间经常串门，现在大家都忙忙碌碌的，门一关，谁也不认识谁。还有啊，环境问题也让人头疼，车子多了，空气也没以前那么好了。总的来说，成都的变化是好事，让我们的生活更加便利，但是有些老传统、老味道，还是让人怀念啊。",
+          "memory_calls": [],
+          "timing": {
+            "interviewee_total_ms": 6008.4
+          }
+        },
+        {
+          "role": "interviewer",
+          "action": "continue",
+          "text": "您的感受非常深刻，城市的发展确实带来了便利，但也带来了一些新的问题。在您的退休生活中，您有没有找到一些让您感到快乐和满足的活动？",
+          "turn_evaluation": {
+            "turn_id": "turn_ca33e6e53b",
+            "question_quality_score": 0.3104,
+            "information_gain_score": 0.1,
+            "non_redundancy_score": 0.7584,
+            "emotional_alignment_score": 0.0,
+            "coverage_gain": 0.0,
+            "notes": [
+              "Low information gain this turn."
+            ],
+            "created_at": "2026-05-08T05:28:17.399576",
+            "status": "completed"
+          },
+          "debug_trace": {
+            "pipeline": "baseline"
+          },
+          "timing": {
+            "interviewer_llm_ms": 1486.4
+          }
+        },
+        {
+          "role": "done"
+        }
+      ]
+    },
+    {
+      "turn_index": 15,
+      "status": "completed",
+      "elapsed_ms": 30292.29,
+      "events": [
+        {
+          "role": "interviewee",
+          "action": "answer",
+          "text": "现在安逸咯，退休生活虽然没有工作时那么忙碌，但是我还是找到了一些让自己快乐和满足的事情。比如说，我喜欢养花，尤其是茉莉，看着它们开花，闻着花香，心里头就特别舒服。还有，我喜欢听川剧，那调调儿一响起来，啥子烦恼都忘了。有时候，我也会织织毛衣，给孙子孙女们做点小东西，看到他们喜欢，我心里头也暖洋洋的。还有啊，我们小区老年活动中心每周二都有活动，和老邻居们一起聊聊天，打打牌，感觉时间过得特别快。这些活动让我的退休生活充实了不少，也让我感到快乐和满足。",
+          "memory_calls": [
+            {
+              "tool": "search_memories_by_keywords",
+              "args": {
+                "keywords": [
+                  "退休生活",
+                  "快乐",
+                  "满足"
+                ],
+                "emotion_weight": 5,
+                "limit": 5,
+                "period": "period_3"
+              },
+              "result": []
+            }
+          ],
+          "timing": {
+            "interviewee_total_ms": 12624.7
+          }
+        },
+        {
+          "role": "interviewer",
+          "action": "continue",
+          "text": "听您这么描述，您的退休生活真是丰富多彩。您提到了喜欢整理旧照片和写日记，这些习惯对您来说有什么特别的意义吗？",
+          "turn_evaluation": {
+            "turn_id": "turn_00de1e73cd",
+            "question_quality_score": 0.3093,
+            "information_gain_score": 0.1,
+            "non_redundancy_score": 0.7551,
+            "emotional_alignment_score": 0.0,
+            "coverage_gain": 0.0,
+            "notes": [
+              "Low information gain this turn."
+            ],
+            "created_at": "2026-05-08T05:28:47.691345",
+            "status": "completed"
+          },
+          "debug_trace": {
+            "pipeline": "baseline"
+          },
+          "timing": {
+            "interviewer_llm_ms": 1393.6
+          }
+        },
+        {
+          "role": "done"
+        }
+      ]
+    },
+    {
+      "turn_index": 16,
+      "status": "completed",
+      "elapsed_ms": 20170.66,
+      "events": [
+        {
+          "role": "interviewee",
+          "action": "answer",
+          "text": "哎哟，说起整理旧照片和写日记，这可是我退休生活的一大乐趣。我们那会儿不像现在，有手机随时拍照，照片都是珍贵的回忆。我经常翻看那些旧照片，每一张都能勾起我好多往事，有我年轻时的模样，有孩子们小时候的调皮样，还有我们一家人的合影。看着这些照片，就像又回到了那些美好的时光。写日记呢，是我记录生活的方式。每天发生的事情，我都喜欢记下来，不管是开心的还是不开心的，写一写，心里就舒坦了。这些日记，以后孩子们也能看看，知道他们老妈这一生是怎么过来的。",
+          "memory_calls": [],
+          "timing": {
+            "interviewee_total_ms": 4734.9
+          }
+        },
+        {
+          "role": "interviewer",
+          "action": "continue",
+          "text": "您通过整理旧照片和写日记来保存和回顾记忆，这确实是非常有意义的。您觉得这些习惯对您的家庭和孩子们有什么影响吗？",
+          "turn_evaluation": {
+            "turn_id": "turn_14fda353b6",
+            "question_quality_score": 0.3017,
+            "information_gain_score": 0.1,
+            "non_redundancy_score": 0.7333,
+            "emotional_alignment_score": 0.0,
+            "coverage_gain": 0.0,
+            "notes": [
+              "Low information gain this turn."
+            ],
+            "created_at": "2026-05-08T05:29:07.862206",
+            "status": "completed"
+          },
+          "debug_trace": {
+            "pipeline": "baseline"
+          },
+          "timing": {
+            "interviewer_llm_ms": 1309.5
+          }
+        },
+        {
+          "role": "done"
+        }
+      ]
+    },
+    {
+      "turn_index": 17,
+      "status": "completed",
+      "elapsed_ms": 21044.48,
+      "events": [
+        {
+          "role": "interviewee",
+          "action": "answer",
+          "text": "哎哟，说起整理旧照片和写日记，这确实是我退休生活的一大乐趣。对孩子们来说，这些旧照片和日记本就像是打开过去的时光机。他们能从中看到他们小时候的样子，还有我们一家人一起度过的快乐时光。有时候，他们会围坐在我身边，听我讲照片背后的故事，那感觉就像是又回到了那些日子。写日记的习惯也让孩子们了解到，生活中的点点滴滴都值得被记录和珍惜。他们现在也会时不时地写点东西，记录自己的生活。我觉得这些习惯不仅让我感到快乐和满足，也让孩子们更加了解家族的历史，懂得珍惜现在的生活。",
+          "memory_calls": [],
+          "timing": {
+            "interviewee_total_ms": 5780.9
+          }
+        },
+        {
+          "role": "interviewer",
+          "action": "continue",
+          "text": "您的这些习惯不仅丰富了您自己的生活，也为您的家庭留下了宝贵的记忆和传统。您觉得在您的一生中，最值得骄傲的事情是什么？",
+          "turn_evaluation": {
+            "turn_id": "turn_0cf62f599e",
+            "question_quality_score": 0.2537,
+            "information_gain_score": 0.1,
+            "non_redundancy_score": 0.5963,
+            "emotional_alignment_score": 0.0,
+            "coverage_gain": 0.0,
+            "notes": [
+              "Low information gain this turn."
+            ],
+            "created_at": "2026-05-08T05:29:28.906617",
+            "status": "completed"
+          },
+          "debug_trace": {
+            "pipeline": "baseline"
+          },
+          "timing": {
+            "interviewer_llm_ms": 1362.5
+          }
+        },
+        {
+          "role": "done"
+        }
+      ]
+    },
+    {
+      "turn_index": 18,
+      "status": "completed",
+      "elapsed_ms": 20591.05,
+      "events": [
+        {
+          "role": "interviewee",
+          "action": "answer",
+          "text": "哎哟，说起这个我就想起我们那会儿的辛苦和快乐。我一生中最值得骄傲的事情嘛，有两件。第一件就是我当妈的，把三个娃儿拉扯大，看他们一个个成家立业，心里头那个欣慰啊，没法说。尤其是我那个小儿子，虽然他在深圳忙得很，但是每年回来看我，给我带好多东西，还给我钱，让我别省着花，我心里头暖洋洋的。第二件就是我教书那会儿，看到我的学生一个个有出息，有的考上了大学，有的成了医生、老师，还有的出国深造，我就觉得，我这一辈子的辛苦没白费，教书育人，这是我最骄傲的事情。",
+          "memory_calls": [],
+          "timing": {
+            "interviewee_total_ms": 5582.7
+          }
+        },
+        {
+          "role": "interviewer",
+          "action": "continue",
+          "text": "您作为母亲和教师的成就感和骄傲感真的很感人。您觉得在您的一生中，有哪些事情是您觉得遗憾的，或者有哪些愿望还没有实现？",
+          "turn_evaluation": {
+            "turn_id": "turn_9edbc2c261",
+            "question_quality_score": 0.3083,
+            "information_gain_score": 0.1,
+            "non_redundancy_score": 0.7522,
+            "emotional_alignment_score": 0.0,
+            "coverage_gain": 0.0,
+            "notes": [
+              "Low information gain this turn."
+            ],
+            "created_at": "2026-05-08T05:29:49.497756",
+            "status": "completed"
+          },
+          "debug_trace": {
+            "pipeline": "baseline"
+          },
+          "timing": {
+            "interviewer_llm_ms": 1484.4
+          }
+        },
+        {
+          "role": "done"
+        }
+      ]
+    },
+    {
+      "turn_index": 19,
+      "status": "completed",
+      "elapsed_ms": 21692.07,
+      "events": [
+        {
+          "role": "interviewee",
+          "action": "answer",
+          "text": "哎哟，说起遗憾嘛，我们那会儿的人，哪有现在这么多想法哦。但是现在想想，确实有些事儿让我心里头有点儿不是滋味。比如说，我老伴走得早，我们本来计划退休后一起到处走走看看，结果这个愿望没能实现。还有啊，我那小儿子在深圳，工作忙得很，一年到头也回不来几次，心里头总是挂念他。至于愿望嘛，我倒是希望我的孙子孙女们能够多了解了解我们那时候的生活，不要忘了本。现在的年轻人啊，生活好了，但是有些老传统丢了可惜。得行得行，我也就这点遗憾和愿望了。",
+          "memory_calls": [],
+          "timing": {
+            "interviewee_total_ms": 6044.3
+          }
+        },
+        {
+          "role": "interviewer",
+          "action": "continue",
+          "text": "您的遗憾和愿望都很真实，也很感人。您希望孙子孙女们能够了解过去的生活，这体现了您对家族传承的重视。您有没有想过，通过什么方式来和他们分享您的故事和经历？",
+          "turn_evaluation": {
+            "turn_id": "turn_aad24cf0b2",
+            "question_quality_score": 0.2864,
+            "information_gain_score": 0.1,
+            "non_redundancy_score": 0.6897,
+            "emotional_alignment_score": 0.0,
+            "coverage_gain": 0.0,
+            "notes": [
+              "Low information gain this turn."
+            ],
+            "created_at": "2026-05-08T05:30:11.170676",
+            "status": "completed"
+          },
+          "debug_trace": {
+            "pipeline": "baseline"
+          },
+          "timing": {
+            "interviewer_llm_ms": 1900.9
+          }
+        },
+        {
+          "role": "done"
+        }
+      ]
+    },
+    {
+      "turn_index": 20,
+      "status": "completed",
+      "elapsed_ms": 19784.55,
+      "events": [
+        {
+          "role": "interviewee",
+          "action": "answer",
+          "text": "哎哟，说起这个我就想起我们那会儿。现在的年轻人啊，都爱看手机、电脑，我们那会儿哪有这些哦。但是我觉得，可以通过一些传统的方式，比如家庭聚会的时候，我给他们讲讲过去的故事，或者把那些旧照片、日记拿出来，一边看一边讲。这样他们能更直观地感受到过去的生活，也能更好地了解家族的历史。有时候，我还会织毛衣的时候，让孙子孙女们坐旁边，边织边给他们讲以前的事情。虽然他们不一定全能听懂，但我觉得这种方式挺温馨的，也能让他们慢慢了解我们的过去。",
+          "memory_calls": [],
+          "timing": {
+            "interviewee_total_ms": 5211.7
+          }
+        },
+        {
+          "role": "interviewer",
+          "action": "continue",
+          "text": "您用这么温馨和传统的方式与年轻一代分享您的故事，这真的很有意义。您觉得在您的一生中，哪些人对您的影响最大？",
+          "turn_evaluation": {
+            "turn_id": "turn_3e124176f6",
+            "question_quality_score": 0.3166,
+            "information_gain_score": 0.1,
+            "non_redundancy_score": 0.7761,
+            "emotional_alignment_score": 0.0,
+            "coverage_gain": 0.0,
+            "notes": [
+              "Low information gain this turn."
+            ],
+            "created_at": "2026-05-08T05:30:30.968665",
+            "status": "completed"
+          },
+          "debug_trace": {
+            "pipeline": "baseline"
+          },
+          "timing": {
+            "interviewer_llm_ms": 1453.0
+          }
+        },
+        {
+          "role": "done"
+        }
+      ]
+    }
+  ],
+  "history": [
+    {
+      "role": "interviewer",
+      "text": "您好，李秀兰老师，见到您很高兴。您出生于1944年的四川成都，能否和我分享一下您童年时的家乡是什么样的？",
+      "action": "continue"
+    },
+    {
+      "role": "interviewee",
+      "text": "哎哟，说起这个我就想起我们那会儿的童年咯。1942年我出生在成都老城区，那会儿的成都啊，跟现在大不一样。街道都是石板路，房子大多是木结构的，家家户户门前都种着花花草草。我们那会儿嘛，生活条件艰苦，但邻里之间关系亲近，经常互相帮忙。那时候的成都，天很蓝，水很清，空气里都是泥土和植物的香味。不像现在，到处都是高楼大厦，车水马龙的。"
+    },
+    {
+      "role": "interviewer",
+      "text": "听您这么描述，那个时代的成都确实有着独特的魅力和宁静。您提到了邻里之间的亲近关系，能否分享一下您童年时和邻居家孩子们一起玩耍的情景？",
+      "action": "continue"
+    },
+    {
+      "role": "interviewee",
+      "text": "我们那会儿嘛，虽然家里头条件都不好，但是孩子们都玩得很开心。我记得我们经常在巷子里头捉迷藏，或者在河边捉小鱼小虾。那时候河边的水清得很，不像现在污染得厉害。我们还会一起跳皮筋、踢毽子，有时候还会跑到田里头去摘野果。哎哟，说起这个我就想起我们那会儿的笑声，真是无忧无虑的。"
+    },
+    {
+      "role": "interviewer",
+      "text": "听您回忆这些童年的游戏和活动，感觉那个时代的童年充满了自然和纯真的乐趣。您觉得这些童年经历对您后来的生活和性格有什么样的影响吗？",
+      "action": "continue"
+    },
+    {
+      "role": "interviewee",
+      "text": "哎哟，说起这个我就想起我们那会儿的童年咯。我们那会儿虽然条件艰苦，但是那些游戏和活动，让我学会了珍惜和感恩。跟邻居家孩子们一起玩耍，让我懂得了分享和合作。这些经历让我性格里头多了一份坚韧和乐观。现在想起来，那些日子虽然苦，但是心里头踏实，也让我学会了在困难面前不低头，要坚强。"
+    },
+    {
+      "role": "interviewer",
+      "text": "您的经历和性格的形成确实与童年时期的经历密切相关。您提到了在困难面前不低头，要坚强，这让我想到您后来经历了知青下乡的时期。能否和我分享一下您知青下乡时的一些经历和感受？",
+      "action": "continue"
+    },
+    {
+      "role": "interviewee",
+      "text": "哎哟，说起知青下乡，我们那会儿虽然我没去，但是听了不少故事。那些城里的娃儿，突然被派到农村去，生活条件和城里差远了。他们要学着干农活，啥子插秧啊、割麦子啊，都是从头学起。一开始肯定不适应，手上起泡，肩上磨破皮，但是慢慢也就习惯了。那些娃儿们，在农村里头也学到了不少东西，懂得了农民的辛苦，也体会到了生活的不易。虽然苦，但是这段经历对他们后来的人生影响很大，让他们更加珍惜现在的生活。"
+    },
+    {
+      "role": "interviewer",
+      "text": "您虽然没有亲身经历知青下乡，但您周围人的故事让您对这段历史有了深刻的理解。您觉得这段历史对您个人或者对您周围的人有哪些长远的影响？",
+      "action": "continue"
+    },
+    {
+      "role": "interviewee",
+      "text": "哎哟，说起知青下乡对我们的影响，那可真是深远哦。我们那会儿，虽然我没去，但是听了不少身边人的故事。那些城里的娃儿，突然被派到农村去，生活条件和城里差远了。他们在农村里头，不仅学会了干农活，还学会了珍惜和感恩。这段经历让他们更加坚强，也让他们懂得了生活的不易。对我个人来说，虽然没有亲身经历，但是这些故事让我更加珍惜现在的生活，也让我懂得了不管遇到什么困难，都要坚强面对。对周围的人来说，这段经历让他们后来的人生更加丰富，也让他们更加懂得珍惜和感恩。"
+    },
+    {
+      "role": "interviewer",
+      "text": "听您这么说，知青下乡的经历确实给人们带来了深刻的人生感悟和成长。那么，在您自己的教育生涯中，有没有哪些学生或者教学经历让您特别难忘，或者对您的教学理念产生了影响？",
+      "action": "continue"
+    },
+    {
+      "role": "interviewee",
+      "text": "哎哟，说起这个我就想起我们那会儿教书的日子。我教了几十年的书，遇到过各种各样的学生，有些学生和经历真是让我印象深刻。记得有一个学生，家里条件特别困难，但是学习特别刻苦，每次看到他那么努力，我就特别感动，也让我更加坚信，教育能够改变命运。还有一次，我教的一个班，孩子们特别调皮，一开始我真是头疼得很，但是后来通过耐心引导，他们慢慢变得懂事，成绩也提高了不少。这些经历让我明白，每个孩子都有自己的特点和潜力，作为老师，我们要耐心引导，激发他们的潜力。这些教学经历，对我后来的教学理念影响很大，让我更加注重因材施教，关心每一个学生的成长。"
+    },
+    {
+      "role": "interviewer",
+      "text": "您提到的这些教学经历确实很感人，也体现了您作为教师的责任感和爱心。您认为在教育工作中，最重要的品质是什么？",
+      "action": "continue"
+    },
+    {
+      "role": "interviewee",
+      "text": "哎哟，说起教育工作中最重要的品质，我觉得首先是耐心。我们那会儿教书，每个学生都不一样，有的聪明，有的迟钝，但是不管啥子样的学生，都需要老师耐心去教。再一个就是爱心，老师要真心关心学生，不只是学习，还要关心他们的生活和心情。还有就是责任感，老师要对学生负责，要教给他们知识，更要教他们做人的道理。最后，我觉得老师自己也要不断学习，跟上时代，这样才能教给学生最新的知识。我们那会儿，虽然条件艰苦，但是这些品质，我觉得是做好老师的根本。"
+    },
+    {
+      "role": "interviewer",
+      "text": "您提到的耐心、爱心、责任感和不断学习，确实是教师职业中非常重要的品质。在您的教学生涯中，有没有特别难忘的教学方法或者教育理念，是您一直坚持并认为特别有效的？",
+      "action": "continue"
+    },
+    {
+      "role": "interviewee",
+      "text": "哎哟，说起教学方法和教育理念，我们那会儿教书可不像现在有那么多先进的工具和设备。我一直坚持的嘛，就是‘因材施教’。每个学生都是不一样的，有的聪明，有的反应慢一点，但是都有自己的长处和短处。我就会根据他们的特点来教，比如有的学生喜欢动手，我就让他们多做实验；有的学生喜欢思考，我就让他们多讨论问题。这样，每个学生都能在自己擅长的领域里头发挥出来，也能慢慢弥补自己的不足。还有一个就是‘启发式教学’，我不喜欢那种填鸭式的教法，我喜欢引导学生自己去思考问题，去探索答案。这样他们不仅能学到知识，还能培养解决问题的能力。这些方法和理念，我一直坚持，也看到它们在我学生的身上起了效果，所以我觉得特别有效。"
+    },
+    {
+      "role": "interviewer",
+      "text": "您的“因材施教”和“启发式教学”理念真的很先进，这些方法不仅帮助学生学习知识，还培养了他们的独立思考和解决问题的能力。在您的教学生涯中，有没有哪个时刻或者事件，让您感到特别有成就感或者特别自豪？",
+      "action": "continue"
+    },
+    {
+      "role": "interviewee",
+      "text": "哎哟，说起这个我就想起我们那会儿教书的日子。有一次，我带的一个班，孩子们一开始成绩都不太好，学习也不积极。我就开始用‘因材施教’的方法，根据每个孩子的特点来教他们，还用‘启发式教学’引导他们自己思考问题。过了一个学期，他们的成绩提高了很多，好几个孩子还在学校的比赛里头拿了奖。看到他们的进步，我真是打心眼里头感到自豪。还有一次，一个平时不爱说话的孩子，在我的鼓励下，开始积极发言，后来还成了班上的学习委员。这些孩子们的成长和变化，让我感到自己所有的努力和付出都是值得的，也让我感到作为一个老师，能够影响和改变孩子们的人生，是特别有成就感的事情。"
+    },
+    {
+      "role": "interviewer",
+      "text": "您的经历真的很鼓舞人心，能够看到学生的成长和变化，确实是教师最大的幸福和成就。在您的教育生涯中，有没有遇到过什么特别的挑战或者困难，您是如何克服的？",
+      "action": "continue"
+    },
+    {
+      "role": "interviewee",
+      "text": "哎哟，说起这个我就想起我们那会儿教书的日子。确实遇到过不少挑战和困难。记得有一次，我带的班级里有几个特别调皮的学生，他们上课不专心，还经常捣乱。我当时就想，这可不行，得想个办法。我就尝试跟他们多沟通，了解他们的兴趣和想法，然后根据他们的兴趣来调整教学方法。比如说，有个学生喜欢机械，我就在物理课上多讲一些机械原理，让他参与到实验中来。慢慢地，这些孩子对学习产生了兴趣，行为也有所改善。还有一次，学校的教学资源有限，很多教学设备都老化了，我就自己动手制作一些教具，或者用生活中常见的物品来代替，这样也能让孩子们更好地理解知识点。这些经历让我明白，遇到困难不要怕，关键是要动脑筋，想办法去解决。"
+    },
+    {
+      "role": "interviewer",
+      "text": "您面对挑战时的积极态度和解决问题的能力真的很令人敬佩。在您的教育生涯中，您认为最重要的教育理念是什么？",
+      "action": "continue"
+    },
+    {
+      "role": "interviewee",
+      "text": "哎哟，说起这个我就想起我们那会儿教书的日子。在我几十年的教学生涯中，我觉得最重要的教育理念就是尊重和理解学生。每个孩子都有自己的个性和想法，我们做老师的，不能只看重分数，更要看到他们的内心世界。我记得有一次，我遇到一个特别内向的学生，他成绩不好，也不爱说话，但我没有放弃他，而是耐心地去了解他，发现他对绘画特别有兴趣。我就鼓励他多画画，结果他后来在美术方面取得了很好的成绩，人也变得自信多了。所以我觉得，尊重和理解学生，让他们发挥自己的特长，这是教育中最重要的。"
+    },
+    {
+      "role": "interviewer",
+      "text": "您提到的尊重和理解学生，确实是教育中非常重要的一环。在您的教学生涯中，您有没有特别想要感谢的人或者事？",
+      "action": "continue"
+    },
+    {
+      "role": "interviewee",
+      "text": "哎哟，说起这个我就想起我们那会儿教书的日子。我特别想要感谢的，首先是我的学生们，他们给了我很多快乐和成就感。记得有个学生，家里条件特别困难，但是学习特别刻苦，每次看到他那么努力，我就特别感动，也让我更加坚信，教育能够改变命运。还有我的同事们，我们一起备课、一起讨论教学方法，他们给了我很多支持和帮助。特别是有一次，学校的教学资源有限，我们几个老师就一起动手制作教具，用生活中常见的物品来代替，这样也能让孩子们更好地理解知识点。这些经历让我明白，教育不仅仅是教书，更是人与人之间的相互支持和帮助。"
+    },
+    {
+      "role": "interviewer",
+      "text": "您的学生们和同事们确实在您的教学生涯中扮演了非常重要的角色。您提到了教育能够改变命运，那么在您的个人生活中，有没有什么特别的经历或者转折点，对您的生活产生了重大影响？",
+      "action": "continue"
+    },
+    {
+      "role": "interviewee",
+      "text": "哎哟，说起这个我就想起我们那会儿的几个转折点。第一个就是我进纺织厂工作的时候，那时候我才18岁，从学校毕业就进了厂，开始了我35年的工作生涯。这份工作让我学会了吃苦耐劳，也让我体会到了集体的温暖。再一个转折点就是改革开放后，我们厂开始改制，很多老工人都下岗了，我也提前退休。那时候心里头挺不是滋味的，但是后来想想，这也是社会发展的必然，我们只能去适应。最后就是我老伴去世，那是我人生中最难过的时候，但也让我更加珍惜和家人在一起的时光。这些转折点，虽然当时觉得挺难的，但是现在想想，它们都让我的生活更加丰富，也让我更加坚强。"
+    },
+    {
+      "role": "interviewer",
+      "text": "您的生活经历了许多重要的转折点，每一个都对您产生了深远的影响。您提到了改革开放后的城市变迁，您能分享一下您对成都这些年变化的感受吗？",
+      "action": "continue"
+    },
+    {
+      "role": "interviewee",
+      "text": "哎哟，说起成都这些年的变化，真是翻天覆地哦。我们那会儿改革开放后，成都也开始慢慢变了样子。以前那些老街老巷，现在好多都变成了高楼大厦，连我这个老成都有时候都会迷路。现在安逸咯，买东西方便得很，超市里头啥子都有，不像我们那会儿，买点肉啊菜啊，都要凭票排队。交通也发达了，地铁、公交四通八达，想去哪儿都方便。但是嘛，人和人之间的关系好像没以前那么亲近了，以前邻居间经常串门，现在大家都忙忙碌碌的，门一关，谁也不认识谁。还有啊，环境问题也让人头疼，车子多了，空气也没以前那么好了。总的来说，成都的变化是好事，让我们的生活更加便利，但是有些老传统、老味道，还是让人怀念啊。"
+    },
+    {
+      "role": "interviewer",
+      "text": "您的感受非常深刻，城市的发展确实带来了便利，但也带来了一些新的问题。在您的退休生活中，您有没有找到一些让您感到快乐和满足的活动？",
+      "action": "continue"
+    },
+    {
+      "role": "interviewee",
+      "text": "现在安逸咯，退休生活虽然没有工作时那么忙碌，但是我还是找到了一些让自己快乐和满足的事情。比如说，我喜欢养花，尤其是茉莉，看着它们开花，闻着花香，心里头就特别舒服。还有，我喜欢听川剧，那调调儿一响起来，啥子烦恼都忘了。有时候，我也会织织毛衣，给孙子孙女们做点小东西，看到他们喜欢，我心里头也暖洋洋的。还有啊，我们小区老年活动中心每周二都有活动，和老邻居们一起聊聊天，打打牌，感觉时间过得特别快。这些活动让我的退休生活充实了不少，也让我感到快乐和满足。"
+    },
+    {
+      "role": "interviewer",
+      "text": "听您这么描述，您的退休生活真是丰富多彩。您提到了喜欢整理旧照片和写日记，这些习惯对您来说有什么特别的意义吗？",
+      "action": "continue"
+    },
+    {
+      "role": "interviewee",
+      "text": "哎哟，说起整理旧照片和写日记，这可是我退休生活的一大乐趣。我们那会儿不像现在，有手机随时拍照，照片都是珍贵的回忆。我经常翻看那些旧照片，每一张都能勾起我好多往事，有我年轻时的模样，有孩子们小时候的调皮样，还有我们一家人的合影。看着这些照片，就像又回到了那些美好的时光。写日记呢，是我记录生活的方式。每天发生的事情，我都喜欢记下来，不管是开心的还是不开心的，写一写，心里就舒坦了。这些日记，以后孩子们也能看看，知道他们老妈这一生是怎么过来的。"
+    },
+    {
+      "role": "interviewer",
+      "text": "您通过整理旧照片和写日记来保存和回顾记忆，这确实是非常有意义的。您觉得这些习惯对您的家庭和孩子们有什么影响吗？",
+      "action": "continue"
+    },
+    {
+      "role": "interviewee",
+      "text": "哎哟，说起整理旧照片和写日记，这确实是我退休生活的一大乐趣。对孩子们来说，这些旧照片和日记本就像是打开过去的时光机。他们能从中看到他们小时候的样子，还有我们一家人一起度过的快乐时光。有时候，他们会围坐在我身边，听我讲照片背后的故事，那感觉就像是又回到了那些日子。写日记的习惯也让孩子们了解到，生活中的点点滴滴都值得被记录和珍惜。他们现在也会时不时地写点东西，记录自己的生活。我觉得这些习惯不仅让我感到快乐和满足，也让孩子们更加了解家族的历史，懂得珍惜现在的生活。"
+    },
+    {
+      "role": "interviewer",
+      "text": "您的这些习惯不仅丰富了您自己的生活，也为您的家庭留下了宝贵的记忆和传统。您觉得在您的一生中，最值得骄傲的事情是什么？",
+      "action": "continue"
+    },
+    {
+      "role": "interviewee",
+      "text": "哎哟，说起这个我就想起我们那会儿的辛苦和快乐。我一生中最值得骄傲的事情嘛，有两件。第一件就是我当妈的，把三个娃儿拉扯大，看他们一个个成家立业，心里头那个欣慰啊，没法说。尤其是我那个小儿子，虽然他在深圳忙得很，但是每年回来看我，给我带好多东西，还给我钱，让我别省着花，我心里头暖洋洋的。第二件就是我教书那会儿，看到我的学生一个个有出息，有的考上了大学，有的成了医生、老师，还有的出国深造，我就觉得，我这一辈子的辛苦没白费，教书育人，这是我最骄傲的事情。"
+    },
+    {
+      "role": "interviewer",
+      "text": "您作为母亲和教师的成就感和骄傲感真的很感人。您觉得在您的一生中，有哪些事情是您觉得遗憾的，或者有哪些愿望还没有实现？",
+      "action": "continue"
+    },
+    {
+      "role": "interviewee",
+      "text": "哎哟，说起遗憾嘛，我们那会儿的人，哪有现在这么多想法哦。但是现在想想，确实有些事儿让我心里头有点儿不是滋味。比如说，我老伴走得早，我们本来计划退休后一起到处走走看看，结果这个愿望没能实现。还有啊，我那小儿子在深圳，工作忙得很，一年到头也回不来几次，心里头总是挂念他。至于愿望嘛，我倒是希望我的孙子孙女们能够多了解了解我们那时候的生活，不要忘了本。现在的年轻人啊，生活好了，但是有些老传统丢了可惜。得行得行，我也就这点遗憾和愿望了。"
+    },
+    {
+      "role": "interviewer",
+      "text": "您的遗憾和愿望都很真实，也很感人。您希望孙子孙女们能够了解过去的生活，这体现了您对家族传承的重视。您有没有想过，通过什么方式来和他们分享您的故事和经历？",
+      "action": "continue"
+    },
+    {
+      "role": "interviewee",
+      "text": "哎哟，说起这个我就想起我们那会儿。现在的年轻人啊，都爱看手机、电脑，我们那会儿哪有这些哦。但是我觉得，可以通过一些传统的方式，比如家庭聚会的时候，我给他们讲讲过去的故事，或者把那些旧照片、日记拿出来，一边看一边讲。这样他们能更直观地感受到过去的生活，也能更好地了解家族的历史。有时候，我还会织毛衣的时候，让孙子孙女们坐旁边，边织边给他们讲以前的事情。虽然他们不一定全能听懂，但我觉得这种方式挺温馨的，也能让他们慢慢了解我们的过去。"
+    },
+    {
+      "role": "interviewer",
+      "text": "您用这么温馨和传统的方式与年轻一代分享您的故事，这真的很有意义。您觉得在您的一生中，哪些人对您的影响最大？",
+      "action": "continue"
+    }
+  ],
+  "evaluation_state": {
+    "completed_turn_count": 20,
+    "control_group": true,
+    "coverage_metrics": {
+      "overall_coverage": 0.0,
+      "overall_richness": 0.0,
+      "theme_coverage": {},
+      "theme_richness": {}
+    },
+    "latest_turn_evaluation": {
+      "coverage_gain": 0.0,
+      "created_at": "2026-05-08T05:30:30.968665",
+      "emotional_alignment_score": 0.0,
+      "information_gain_score": 0.1,
+      "non_redundancy_score": 0.7761,
+      "notes": [
+        "Low information gain this turn."
+      ],
+      "question_quality_score": 0.3166,
+      "turn_id": "turn_3e124176f6"
+    },
+    "mode": "baseline",
+    "pending_turn_ids": [],
+    "pipeline": "baseline_no_planner",
+    "session_id": "8eaf8486dafe4b8fad9f8e65b3c037a6",
+    "session_metrics": {
+      "average_information_gain": 0.1,
+      "average_non_redundancy": 0.716,
+      "average_turn_quality": 0.2956,
+      "contradiction_resolution_rate": 0.0,
+      "open_loop_closure_rate": 0.0,
+      "overall_theme_coverage": 0.0,
+      "people_coverage": 0.0
+    },
+    "turn_count": 20,
+    "turn_evaluations": {
+      "turn_00de1e73cd": {
+        "coverage_gain": 0.0,
+        "created_at": "2026-05-08T05:28:47.691345",
+        "emotional_alignment_score": 0.0,
+        "information_gain_score": 0.1,
+        "non_redundancy_score": 0.7551,
+        "notes": [
+          "Low information gain this turn."
+        ],
+        "question_quality_score": 0.3093,
+        "turn_id": "turn_00de1e73cd"
+      },
+      "turn_0cf62f599e": {
+        "coverage_gain": 0.0,
+        "created_at": "2026-05-08T05:29:28.906617",
+        "emotional_alignment_score": 0.0,
+        "information_gain_score": 0.1,
+        "non_redundancy_score": 0.5963,
+        "notes": [
+          "Low information gain this turn."
+        ],
+        "question_quality_score": 0.2537,
+        "turn_id": "turn_0cf62f599e"
+      },
+      "turn_14fda353b6": {
+        "coverage_gain": 0.0,
+        "created_at": "2026-05-08T05:29:07.862206",
+        "emotional_alignment_score": 0.0,
+        "information_gain_score": 0.1,
+        "non_redundancy_score": 0.7333,
+        "notes": [
+          "Low information gain this turn."
+        ],
+        "question_quality_score": 0.3017,
+        "turn_id": "turn_14fda353b6"
+      },
+      "turn_2d1d3879ce": {
+        "coverage_gain": 0.0,
+        "created_at": "2026-05-08T05:27:33.076994",
+        "emotional_alignment_score": 0.0,
+        "information_gain_score": 0.1,
+        "non_redundancy_score": 0.552,
+        "notes": [
+          "Low information gain this turn."
+        ],
+        "question_quality_score": 0.2382,
+        "turn_id": "turn_2d1d3879ce"
+      },
+      "turn_3e124176f6": {
+        "coverage_gain": 0.0,
+        "created_at": "2026-05-08T05:30:30.968665",
+        "emotional_alignment_score": 0.0,
+        "information_gain_score": 0.1,
+        "non_redundancy_score": 0.7761,
+        "notes": [
+          "Low information gain this turn."
+        ],
+        "question_quality_score": 0.3166,
+        "turn_id": "turn_3e124176f6"
+      },
+      "turn_4ff21e42ed": {
+        "coverage_gain": 0.0,
+        "created_at": "2026-05-08T05:27:54.172278",
+        "emotional_alignment_score": 0.0,
+        "information_gain_score": 0.1,
+        "non_redundancy_score": 0.6418,
+        "notes": [
+          "Low information gain this turn."
+        ],
+        "question_quality_score": 0.2696,
+        "turn_id": "turn_4ff21e42ed"
+      },
+      "turn_697958258b": {
+        "coverage_gain": 0.0,
+        "created_at": "2026-05-08T05:25:47.944255",
+        "emotional_alignment_score": 0.0,
+        "information_gain_score": 0.1,
+        "non_redundancy_score": 0.8305,
+        "notes": [
+          "Low information gain this turn."
+        ],
+        "question_quality_score": 0.3357,
+        "turn_id": "turn_697958258b"
+      },
+      "turn_872c8ed882": {
+        "coverage_gain": 0.0,
+        "created_at": "2026-05-08T05:26:51.997134",
+        "emotional_alignment_score": 0.0,
+        "information_gain_score": 0.1,
+        "non_redundancy_score": 0.5789,
+        "notes": [
+          "Low information gain this turn."
+        ],
+        "question_quality_score": 0.2476,
+        "turn_id": "turn_872c8ed882"
+      },
+      "turn_8f0c5fca5c": {
+        "coverage_gain": 0.0,
+        "created_at": "2026-05-08T05:25:27.475252",
+        "emotional_alignment_score": 0.0,
+        "information_gain_score": 0.1,
+        "non_redundancy_score": 0.726,
+        "notes": [
+          "Low information gain this turn."
+        ],
+        "question_quality_score": 0.2991,
+        "turn_id": "turn_8f0c5fca5c"
+      },
+      "turn_9edbc2c261": {
+        "coverage_gain": 0.0,
+        "created_at": "2026-05-08T05:29:49.497756",
+        "emotional_alignment_score": 0.0,
+        "information_gain_score": 0.1,
+        "non_redundancy_score": 0.7522,
+        "notes": [
+          "Low information gain this turn."
+        ],
+        "question_quality_score": 0.3083,
+        "turn_id": "turn_9edbc2c261"
+      },
+      "turn_a70ae72202": {
+        "coverage_gain": 0.0,
+        "created_at": "2026-05-08T05:26:09.570829",
+        "emotional_alignment_score": 0.0,
+        "information_gain_score": 0.1,
+        "non_redundancy_score": 0.6604,
+        "notes": [
+          "Low information gain this turn."
+        ],
+        "question_quality_score": 0.2761,
+        "turn_id": "turn_a70ae72202"
+      },
+      "turn_aad24cf0b2": {
+        "coverage_gain": 0.0,
+        "created_at": "2026-05-08T05:30:11.170676",
+        "emotional_alignment_score": 0.0,
+        "information_gain_score": 0.1,
+        "non_redundancy_score": 0.6897,
+        "notes": [
+          "Low information gain this turn."
+        ],
+        "question_quality_score": 0.2864,
+        "turn_id": "turn_aad24cf0b2"
+      },
+      "turn_accb1422d3": {
+        "coverage_gain": 0.0,
+        "created_at": "2026-05-08T05:27:12.620564",
+        "emotional_alignment_score": 0.0,
+        "information_gain_score": 0.1,
+        "non_redundancy_score": 0.696,
+        "notes": [
+          "Low information gain this turn."
+        ],
+        "question_quality_score": 0.2886,
+        "turn_id": "turn_accb1422d3"
+      },
+      "turn_b5239e7481": {
+        "coverage_gain": 0.0,
+        "created_at": "2026-05-08T05:25:05.555795",
+        "emotional_alignment_score": 0.0,
+        "information_gain_score": 0.1,
+        "non_redundancy_score": 0.7364,
+        "notes": [
+          "Low information gain this turn."
+        ],
+        "question_quality_score": 0.3028,
+        "turn_id": "turn_b5239e7481"
+      },
+      "turn_b5dcd1db30": {
+        "coverage_gain": 0.0,
+        "created_at": "2026-05-08T05:23:46.120247",
+        "emotional_alignment_score": 0.0,
+        "information_gain_score": 0.1,
+        "non_redundancy_score": 1.0,
+        "notes": [
+          "Low information gain this turn."
+        ],
+        "question_quality_score": 0.395,
+        "turn_id": "turn_b5dcd1db30"
+      },
+      "turn_c5117cc2d5": {
+        "coverage_gain": 0.0,
+        "created_at": "2026-05-08T05:26:30.074815",
+        "emotional_alignment_score": 0.0,
+        "information_gain_score": 0.1,
+        "non_redundancy_score": 0.6686,
+        "notes": [
+          "Low information gain this turn."
+        ],
+        "question_quality_score": 0.279,
+        "turn_id": "turn_c5117cc2d5"
+      },
+      "turn_c6b0b4fa62": {
+        "coverage_gain": 0.0,
+        "created_at": "2026-05-08T05:24:05.510670",
+        "emotional_alignment_score": 0.0,
+        "information_gain_score": 0.1,
+        "non_redundancy_score": 0.678,
+        "notes": [
+          "Low information gain this turn."
+        ],
+        "question_quality_score": 0.2823,
+        "turn_id": "turn_c6b0b4fa62"
+      },
+      "turn_ca33e6e53b": {
+        "coverage_gain": 0.0,
+        "created_at": "2026-05-08T05:28:17.399576",
+        "emotional_alignment_score": 0.0,
+        "information_gain_score": 0.1,
+        "non_redundancy_score": 0.7584,
+        "notes": [
+          "Low information gain this turn."
+        ],
+        "question_quality_score": 0.3104,
+        "turn_id": "turn_ca33e6e53b"
+      },
+      "turn_d30f460d56": {
+        "coverage_gain": 0.0,
+        "created_at": "2026-05-08T05:24:24.804826",
+        "emotional_alignment_score": 0.0,
+        "information_gain_score": 0.1,
+        "non_redundancy_score": 0.7846,
+        "notes": [
+          "Low information gain this turn."
+        ],
+        "question_quality_score": 0.3196,
+        "turn_id": "turn_d30f460d56"
+      },
+      "turn_e8c754c34b": {
+        "coverage_gain": 0.0,
+        "created_at": "2026-05-08T05:24:45.478174",
+        "emotional_alignment_score": 0.0,
+        "information_gain_score": 0.1,
+        "non_redundancy_score": 0.7067,
+        "notes": [
+          "Low information gain this turn."
+        ],
+        "question_quality_score": 0.2923,
+        "turn_id": "turn_e8c754c34b"
+      }
+    },
+    "turns": [
+      {
+        "debug_trace": {
+          "interviewer_action": "continue",
+          "pipeline": "baseline_no_planner",
+          "planner_enabled": false
+        },
+        "evaluation_status": "completed",
+        "interviewee_answer": "哎哟，说起这个我就想起我们那会儿的童年咯。1942年我出生在成都老城区，那会儿的成都啊，跟现在大不一样。街道都是石板路，房子大多是木结构的，家家户户门前都种着花花草草。我们那会儿嘛，生活条件艰苦，但邻里之间关系亲近，经常互相帮忙。那时候的成都，天很蓝，水很清，空气里都是泥土和植物的香味。不像现在，到处都是高楼大厦，车水马龙的。",
+        "interviewer_question": "您好，李秀兰老师，见到您很高兴。您出生于1944年的四川成都，能否和我分享一下您童年时的家乡是什么样的？",
+        "turn_evaluation": {
+          "coverage_gain": 0.0,
+          "created_at": "2026-05-08T05:23:46.120247",
+          "emotional_alignment_score": 0.0,
+          "information_gain_score": 0.1,
+          "non_redundancy_score": 1.0,
+          "notes": [
+            "Low information gain this turn."
+          ],
+          "question_quality_score": 0.395,
+          "turn_id": "turn_b5dcd1db30"
+        },
+        "turn_id": "turn_b5dcd1db30",
+        "turn_index": 1
+      },
+      {
+        "debug_trace": {
+          "interviewer_action": "continue",
+          "pipeline": "baseline_no_planner",
+          "planner_enabled": false
+        },
+        "evaluation_status": "completed",
+        "interviewee_answer": "我们那会儿嘛，虽然家里头条件都不好，但是孩子们都玩得很开心。我记得我们经常在巷子里头捉迷藏，或者在河边捉小鱼小虾。那时候河边的水清得很，不像现在污染得厉害。我们还会一起跳皮筋、踢毽子，有时候还会跑到田里头去摘野果。哎哟，说起这个我就想起我们那会儿的笑声，真是无忧无虑的。",
+        "interviewer_question": "听您这么描述，那个时代的成都确实有着独特的魅力和宁静。您提到了邻里之间的亲近关系，能否分享一下您童年时和邻居家孩子们一起玩耍的情景？",
+        "turn_evaluation": {
+          "coverage_gain": 0.0,
+          "created_at": "2026-05-08T05:24:05.510670",
+          "emotional_alignment_score": 0.0,
+          "information_gain_score": 0.1,
+          "non_redundancy_score": 0.678,
+          "notes": [
+            "Low information gain this turn."
+          ],
+          "question_quality_score": 0.2823,
+          "turn_id": "turn_c6b0b4fa62"
+        },
+        "turn_id": "turn_c6b0b4fa62",
+        "turn_index": 2
+      },
+      {
+        "debug_trace": {
+          "interviewer_action": "continue",
+          "pipeline": "baseline_no_planner",
+          "planner_enabled": false
+        },
+        "evaluation_status": "completed",
+        "interviewee_answer": "哎哟，说起这个我就想起我们那会儿的童年咯。我们那会儿虽然条件艰苦，但是那些游戏和活动，让我学会了珍惜和感恩。跟邻居家孩子们一起玩耍，让我懂得了分享和合作。这些经历让我性格里头多了一份坚韧和乐观。现在想起来，那些日子虽然苦，但是心里头踏实，也让我学会了在困难面前不低头，要坚强。",
+        "interviewer_question": "听您回忆这些童年的游戏和活动，感觉那个时代的童年充满了自然和纯真的乐趣。您觉得这些童年经历对您后来的生活和性格有什么样的影响吗？",
+        "turn_evaluation": {
+          "coverage_gain": 0.0,
+          "created_at": "2026-05-08T05:24:24.804826",
+          "emotional_alignment_score": 0.0,
+          "information_gain_score": 0.1,
+          "non_redundancy_score": 0.7846,
+          "notes": [
+            "Low information gain this turn."
+          ],
+          "question_quality_score": 0.3196,
+          "turn_id": "turn_d30f460d56"
+        },
+        "turn_id": "turn_d30f460d56",
+        "turn_index": 3
+      },
+      {
+        "debug_trace": {
+          "interviewer_action": "continue",
+          "pipeline": "baseline_no_planner",
+          "planner_enabled": false
+        },
+        "evaluation_status": "completed",
+        "interviewee_answer": "哎哟，说起知青下乡，我们那会儿虽然我没去，但是听了不少故事。那些城里的娃儿，突然被派到农村去，生活条件和城里差远了。他们要学着干农活，啥子插秧啊、割麦子啊，都是从头学起。一开始肯定不适应，手上起泡，肩上磨破皮，但是慢慢也就习惯了。那些娃儿们，在农村里头也学到了不少东西，懂得了农民的辛苦，也体会到了生活的不易。虽然苦，但是这段经历对他们后来的人生影响很大，让他们更加珍惜现在的生活。",
+        "interviewer_question": "您的经历和性格的形成确实与童年时期的经历密切相关。您提到了在困难面前不低头，要坚强，这让我想到您后来经历了知青下乡的时期。能否和我分享一下您知青下乡时的一些经历和感受？",
+        "turn_evaluation": {
+          "coverage_gain": 0.0,
+          "created_at": "2026-05-08T05:24:45.478174",
+          "emotional_alignment_score": 0.0,
+          "information_gain_score": 0.1,
+          "non_redundancy_score": 0.7067,
+          "notes": [
+            "Low information gain this turn."
+          ],
+          "question_quality_score": 0.2923,
+          "turn_id": "turn_e8c754c34b"
+        },
+        "turn_id": "turn_e8c754c34b",
+        "turn_index": 4
+      },
+      {
+        "debug_trace": {
+          "interviewer_action": "continue",
+          "pipeline": "baseline_no_planner",
+          "planner_enabled": false
+        },
+        "evaluation_status": "completed",
+        "interviewee_answer": "哎哟，说起知青下乡对我们的影响，那可真是深远哦。我们那会儿，虽然我没去，但是听了不少身边人的故事。那些城里的娃儿，突然被派到农村去，生活条件和城里差远了。他们在农村里头，不仅学会了干农活，还学会了珍惜和感恩。这段经历让他们更加坚强，也让他们懂得了生活的不易。对我个人来说，虽然没有亲身经历，但是这些故事让我更加珍惜现在的生活，也让我懂得了不管遇到什么困难，都要坚强面对。对周围的人来说，这段经历让他们后来的人生更加丰富，也让他们更加懂得珍惜和感恩。",
+        "interviewer_question": "您虽然没有亲身经历知青下乡，但您周围人的故事让您对这段历史有了深刻的理解。您觉得这段历史对您个人或者对您周围的人有哪些长远的影响？",
+        "turn_evaluation": {
+          "coverage_gain": 0.0,
+          "created_at": "2026-05-08T05:25:05.555795",
+          "emotional_alignment_score": 0.0,
+          "information_gain_score": 0.1,
+          "non_redundancy_score": 0.7364,
+          "notes": [
+            "Low information gain this turn."
+          ],
+          "question_quality_score": 0.3028,
+          "turn_id": "turn_b5239e7481"
+        },
+        "turn_id": "turn_b5239e7481",
+        "turn_index": 5
+      },
+      {
+        "debug_trace": {
+          "interviewer_action": "continue",
+          "pipeline": "baseline_no_planner",
+          "planner_enabled": false
+        },
+        "evaluation_status": "completed",
+        "interviewee_answer": "哎哟，说起这个我就想起我们那会儿教书的日子。我教了几十年的书，遇到过各种各样的学生，有些学生和经历真是让我印象深刻。记得有一个学生，家里条件特别困难，但是学习特别刻苦，每次看到他那么努力，我就特别感动，也让我更加坚信，教育能够改变命运。还有一次，我教的一个班，孩子们特别调皮，一开始我真是头疼得很，但是后来通过耐心引导，他们慢慢变得懂事，成绩也提高了不少。这些经历让我明白，每个孩子都有自己的特点和潜力，作为老师，我们要耐心引导，激发他们的潜力。这些教学经历，对我后来的教学理念影响很大，让我更加注重因材施教，关心每一个学生的成长。",
+        "interviewer_question": "听您这么说，知青下乡的经历确实给人们带来了深刻的人生感悟和成长。那么，在您自己的教育生涯中，有没有哪些学生或者教学经历让您特别难忘，或者对您的教学理念产生了影响？",
+        "turn_evaluation": {
+          "coverage_gain": 0.0,
+          "created_at": "2026-05-08T05:25:27.475252",
+          "emotional_alignment_score": 0.0,
+          "information_gain_score": 0.1,
+          "non_redundancy_score": 0.726,
+          "notes": [
+            "Low information gain this turn."
+          ],
+          "question_quality_score": 0.2991,
+          "turn_id": "turn_8f0c5fca5c"
+        },
+        "turn_id": "turn_8f0c5fca5c",
+        "turn_index": 6
+      },
+      {
+        "debug_trace": {
+          "interviewer_action": "continue",
+          "pipeline": "baseline_no_planner",
+          "planner_enabled": false
+        },
+        "evaluation_status": "completed",
+        "interviewee_answer": "哎哟，说起教育工作中最重要的品质，我觉得首先是耐心。我们那会儿教书，每个学生都不一样，有的聪明，有的迟钝，但是不管啥子样的学生，都需要老师耐心去教。再一个就是爱心，老师要真心关心学生，不只是学习，还要关心他们的生活和心情。还有就是责任感，老师要对学生负责，要教给他们知识，更要教他们做人的道理。最后，我觉得老师自己也要不断学习，跟上时代，这样才能教给学生最新的知识。我们那会儿，虽然条件艰苦，但是这些品质，我觉得是做好老师的根本。",
+        "interviewer_question": "您提到的这些教学经历确实很感人，也体现了您作为教师的责任感和爱心。您认为在教育工作中，最重要的品质是什么？",
+        "turn_evaluation": {
+          "coverage_gain": 0.0,
+          "created_at": "2026-05-08T05:25:47.944255",
+          "emotional_alignment_score": 0.0,
+          "information_gain_score": 0.1,
+          "non_redundancy_score": 0.8305,
+          "notes": [
+            "Low information gain this turn."
+          ],
+          "question_quality_score": 0.3357,
+          "turn_id": "turn_697958258b"
+        },
+        "turn_id": "turn_697958258b",
+        "turn_index": 7
+      },
+      {
+        "debug_trace": {
+          "interviewer_action": "continue",
+          "pipeline": "baseline_no_planner",
+          "planner_enabled": false
+        },
+        "evaluation_status": "completed",
+        "interviewee_answer": "哎哟，说起教学方法和教育理念，我们那会儿教书可不像现在有那么多先进的工具和设备。我一直坚持的嘛，就是‘因材施教’。每个学生都是不一样的，有的聪明，有的反应慢一点，但是都有自己的长处和短处。我就会根据他们的特点来教，比如有的学生喜欢动手，我就让他们多做实验；有的学生喜欢思考，我就让他们多讨论问题。这样，每个学生都能在自己擅长的领域里头发挥出来，也能慢慢弥补自己的不足。还有一个就是‘启发式教学’，我不喜欢那种填鸭式的教法，我喜欢引导学生自己去思考问题，去探索答案。这样他们不仅能学到知识，还能培养解决问题的能力。这些方法和理念，我一直坚持，也看到它们在我学生的身上起了效果，所以我觉得特别有效。",
+        "interviewer_question": "您提到的耐心、爱心、责任感和不断学习，确实是教师职业中非常重要的品质。在您的教学生涯中，有没有特别难忘的教学方法或者教育理念，是您一直坚持并认为特别有效的？",
+        "turn_evaluation": {
+          "coverage_gain": 0.0,
+          "created_at": "2026-05-08T05:26:09.570829",
+          "emotional_alignment_score": 0.0,
+          "information_gain_score": 0.1,
+          "non_redundancy_score": 0.6604,
+          "notes": [
+            "Low information gain this turn."
+          ],
+          "question_quality_score": 0.2761,
+          "turn_id": "turn_a70ae72202"
+        },
+        "turn_id": "turn_a70ae72202",
+        "turn_index": 8
+      },
+      {
+        "debug_trace": {
+          "interviewer_action": "continue",
+          "pipeline": "baseline_no_planner",
+          "planner_enabled": false
+        },
+        "evaluation_status": "completed",
+        "interviewee_answer": "哎哟，说起这个我就想起我们那会儿教书的日子。有一次，我带的一个班，孩子们一开始成绩都不太好，学习也不积极。我就开始用‘因材施教’的方法，根据每个孩子的特点来教他们，还用‘启发式教学’引导他们自己思考问题。过了一个学期，他们的成绩提高了很多，好几个孩子还在学校的比赛里头拿了奖。看到他们的进步，我真是打心眼里头感到自豪。还有一次，一个平时不爱说话的孩子，在我的鼓励下，开始积极发言，后来还成了班上的学习委员。这些孩子们的成长和变化，让我感到自己所有的努力和付出都是值得的，也让我感到作为一个老师，能够影响和改变孩子们的人生，是特别有成就感的事情。",
+        "interviewer_question": "您的“因材施教”和“启发式教学”理念真的很先进，这些方法不仅帮助学生学习知识，还培养了他们的独立思考和解决问题的能力。在您的教学生涯中，有没有哪个时刻或者事件，让您感到特别有成就感或者特别自豪？",
+        "turn_evaluation": {
+          "coverage_gain": 0.0,
+          "created_at": "2026-05-08T05:26:30.074815",
+          "emotional_alignment_score": 0.0,
+          "information_gain_score": 0.1,
+          "non_redundancy_score": 0.6686,
+          "notes": [
+            "Low information gain this turn."
+          ],
+          "question_quality_score": 0.279,
+          "turn_id": "turn_c5117cc2d5"
+        },
+        "turn_id": "turn_c5117cc2d5",
+        "turn_index": 9
+      },
+      {
+        "debug_trace": {
+          "interviewer_action": "continue",
+          "pipeline": "baseline_no_planner",
+          "planner_enabled": false
+        },
+        "evaluation_status": "completed",
+        "interviewee_answer": "哎哟，说起这个我就想起我们那会儿教书的日子。确实遇到过不少挑战和困难。记得有一次，我带的班级里有几个特别调皮的学生，他们上课不专心，还经常捣乱。我当时就想，这可不行，得想个办法。我就尝试跟他们多沟通，了解他们的兴趣和想法，然后根据他们的兴趣来调整教学方法。比如说，有个学生喜欢机械，我就在物理课上多讲一些机械原理，让他参与到实验中来。慢慢地，这些孩子对学习产生了兴趣，行为也有所改善。还有一次，学校的教学资源有限，很多教学设备都老化了，我就自己动手制作一些教具，或者用生活中常见的物品来代替，这样也能让孩子们更好地理解知识点。这些经历让我明白，遇到困难不要怕，关键是要动脑筋，想办法去解决。",
+        "interviewer_question": "您的经历真的很鼓舞人心，能够看到学生的成长和变化，确实是教师最大的幸福和成就。在您的教育生涯中，有没有遇到过什么特别的挑战或者困难，您是如何克服的？",
+        "turn_evaluation": {
+          "coverage_gain": 0.0,
+          "created_at": "2026-05-08T05:26:51.997134",
+          "emotional_alignment_score": 0.0,
+          "information_gain_score": 0.1,
+          "non_redundancy_score": 0.5789,
+          "notes": [
+            "Low information gain this turn."
+          ],
+          "question_quality_score": 0.2476,
+          "turn_id": "turn_872c8ed882"
+        },
+        "turn_id": "turn_872c8ed882",
+        "turn_index": 10
+      },
+      {
+        "debug_trace": {
+          "interviewer_action": "continue",
+          "pipeline": "baseline_no_planner",
+          "planner_enabled": false
+        },
+        "evaluation_status": "completed",
+        "interviewee_answer": "哎哟，说起这个我就想起我们那会儿教书的日子。在我几十年的教学生涯中，我觉得最重要的教育理念就是尊重和理解学生。每个孩子都有自己的个性和想法，我们做老师的，不能只看重分数，更要看到他们的内心世界。我记得有一次，我遇到一个特别内向的学生，他成绩不好，也不爱说话，但我没有放弃他，而是耐心地去了解他，发现他对绘画特别有兴趣。我就鼓励他多画画，结果他后来在美术方面取得了很好的成绩，人也变得自信多了。所以我觉得，尊重和理解学生，让他们发挥自己的特长，这是教育中最重要的。",
+        "interviewer_question": "您面对挑战时的积极态度和解决问题的能力真的很令人敬佩。在您的教育生涯中，您认为最重要的教育理念是什么？",
+        "turn_evaluation": {
+          "coverage_gain": 0.0,
+          "created_at": "2026-05-08T05:27:12.620564",
+          "emotional_alignment_score": 0.0,
+          "information_gain_score": 0.1,
+          "non_redundancy_score": 0.696,
+          "notes": [
+            "Low information gain this turn."
+          ],
+          "question_quality_score": 0.2886,
+          "turn_id": "turn_accb1422d3"
+        },
+        "turn_id": "turn_accb1422d3",
+        "turn_index": 11
+      },
+      {
+        "debug_trace": {
+          "interviewer_action": "continue",
+          "pipeline": "baseline_no_planner",
+          "planner_enabled": false
+        },
+        "evaluation_status": "completed",
+        "interviewee_answer": "哎哟，说起这个我就想起我们那会儿教书的日子。我特别想要感谢的，首先是我的学生们，他们给了我很多快乐和成就感。记得有个学生，家里条件特别困难，但是学习特别刻苦，每次看到他那么努力，我就特别感动，也让我更加坚信，教育能够改变命运。还有我的同事们，我们一起备课、一起讨论教学方法，他们给了我很多支持和帮助。特别是有一次，学校的教学资源有限，我们几个老师就一起动手制作教具，用生活中常见的物品来代替，这样也能让孩子们更好地理解知识点。这些经历让我明白，教育不仅仅是教书，更是人与人之间的相互支持和帮助。",
+        "interviewer_question": "您提到的尊重和理解学生，确实是教育中非常重要的一环。在您的教学生涯中，您有没有特别想要感谢的人或者事？",
+        "turn_evaluation": {
+          "coverage_gain": 0.0,
+          "created_at": "2026-05-08T05:27:33.076994",
+          "emotional_alignment_score": 0.0,
+          "information_gain_score": 0.1,
+          "non_redundancy_score": 0.552,
+          "notes": [
+            "Low information gain this turn."
+          ],
+          "question_quality_score": 0.2382,
+          "turn_id": "turn_2d1d3879ce"
+        },
+        "turn_id": "turn_2d1d3879ce",
+        "turn_index": 12
+      },
+      {
+        "debug_trace": {
+          "interviewer_action": "continue",
+          "pipeline": "baseline_no_planner",
+          "planner_enabled": false
+        },
+        "evaluation_status": "completed",
+        "interviewee_answer": "哎哟，说起这个我就想起我们那会儿的几个转折点。第一个就是我进纺织厂工作的时候，那时候我才18岁，从学校毕业就进了厂，开始了我35年的工作生涯。这份工作让我学会了吃苦耐劳，也让我体会到了集体的温暖。再一个转折点就是改革开放后，我们厂开始改制，很多老工人都下岗了，我也提前退休。那时候心里头挺不是滋味的，但是后来想想，这也是社会发展的必然，我们只能去适应。最后就是我老伴去世，那是我人生中最难过的时候，但也让我更加珍惜和家人在一起的时光。这些转折点，虽然当时觉得挺难的，但是现在想想，它们都让我的生活更加丰富，也让我更加坚强。",
+        "interviewer_question": "您的学生们和同事们确实在您的教学生涯中扮演了非常重要的角色。您提到了教育能够改变命运，那么在您的个人生活中，有没有什么特别的经历或者转折点，对您的生活产生了重大影响？",
+        "turn_evaluation": {
+          "coverage_gain": 0.0,
+          "created_at": "2026-05-08T05:27:54.172278",
+          "emotional_alignment_score": 0.0,
+          "information_gain_score": 0.1,
+          "non_redundancy_score": 0.6418,
+          "notes": [
+            "Low information gain this turn."
+          ],
+          "question_quality_score": 0.2696,
+          "turn_id": "turn_4ff21e42ed"
+        },
+        "turn_id": "turn_4ff21e42ed",
+        "turn_index": 13
+      },
+      {
+        "debug_trace": {
+          "interviewer_action": "continue",
+          "pipeline": "baseline_no_planner",
+          "planner_enabled": false
+        },
+        "evaluation_status": "completed",
+        "interviewee_answer": "哎哟，说起成都这些年的变化，真是翻天覆地哦。我们那会儿改革开放后，成都也开始慢慢变了样子。以前那些老街老巷，现在好多都变成了高楼大厦，连我这个老成都有时候都会迷路。现在安逸咯，买东西方便得很，超市里头啥子都有，不像我们那会儿，买点肉啊菜啊，都要凭票排队。交通也发达了，地铁、公交四通八达，想去哪儿都方便。但是嘛，人和人之间的关系好像没以前那么亲近了，以前邻居间经常串门，现在大家都忙忙碌碌的，门一关，谁也不认识谁。还有啊，环境问题也让人头疼，车子多了，空气也没以前那么好了。总的来说，成都的变化是好事，让我们的生活更加便利，但是有些老传统、老味道，还是让人怀念啊。",
+        "interviewer_question": "您的生活经历了许多重要的转折点，每一个都对您产生了深远的影响。您提到了改革开放后的城市变迁，您能分享一下您对成都这些年变化的感受吗？",
+        "turn_evaluation": {
+          "coverage_gain": 0.0,
+          "created_at": "2026-05-08T05:28:17.399576",
+          "emotional_alignment_score": 0.0,
+          "information_gain_score": 0.1,
+          "non_redundancy_score": 0.7584,
+          "notes": [
+            "Low information gain this turn."
+          ],
+          "question_quality_score": 0.3104,
+          "turn_id": "turn_ca33e6e53b"
+        },
+        "turn_id": "turn_ca33e6e53b",
+        "turn_index": 14
+      },
+      {
+        "debug_trace": {
+          "interviewer_action": "continue",
+          "pipeline": "baseline_no_planner",
+          "planner_enabled": false
+        },
+        "evaluation_status": "completed",
+        "interviewee_answer": "现在安逸咯，退休生活虽然没有工作时那么忙碌，但是我还是找到了一些让自己快乐和满足的事情。比如说，我喜欢养花，尤其是茉莉，看着它们开花，闻着花香，心里头就特别舒服。还有，我喜欢听川剧，那调调儿一响起来，啥子烦恼都忘了。有时候，我也会织织毛衣，给孙子孙女们做点小东西，看到他们喜欢，我心里头也暖洋洋的。还有啊，我们小区老年活动中心每周二都有活动，和老邻居们一起聊聊天，打打牌，感觉时间过得特别快。这些活动让我的退休生活充实了不少，也让我感到快乐和满足。",
+        "interviewer_question": "您的感受非常深刻，城市的发展确实带来了便利，但也带来了一些新的问题。在您的退休生活中，您有没有找到一些让您感到快乐和满足的活动？",
+        "turn_evaluation": {
+          "coverage_gain": 0.0,
+          "created_at": "2026-05-08T05:28:47.691345",
+          "emotional_alignment_score": 0.0,
+          "information_gain_score": 0.1,
+          "non_redundancy_score": 0.7551,
+          "notes": [
+            "Low information gain this turn."
+          ],
+          "question_quality_score": 0.3093,
+          "turn_id": "turn_00de1e73cd"
+        },
+        "turn_id": "turn_00de1e73cd",
+        "turn_index": 15
+      },
+      {
+        "debug_trace": {
+          "interviewer_action": "continue",
+          "pipeline": "baseline_no_planner",
+          "planner_enabled": false
+        },
+        "evaluation_status": "completed",
+        "interviewee_answer": "哎哟，说起整理旧照片和写日记，这可是我退休生活的一大乐趣。我们那会儿不像现在，有手机随时拍照，照片都是珍贵的回忆。我经常翻看那些旧照片，每一张都能勾起我好多往事，有我年轻时的模样，有孩子们小时候的调皮样，还有我们一家人的合影。看着这些照片，就像又回到了那些美好的时光。写日记呢，是我记录生活的方式。每天发生的事情，我都喜欢记下来，不管是开心的还是不开心的，写一写，心里就舒坦了。这些日记，以后孩子们也能看看，知道他们老妈这一生是怎么过来的。",
+        "interviewer_question": "听您这么描述，您的退休生活真是丰富多彩。您提到了喜欢整理旧照片和写日记，这些习惯对您来说有什么特别的意义吗？",
+        "turn_evaluation": {
+          "coverage_gain": 0.0,
+          "created_at": "2026-05-08T05:29:07.862206",
+          "emotional_alignment_score": 0.0,
+          "information_gain_score": 0.1,
+          "non_redundancy_score": 0.7333,
+          "notes": [
+            "Low information gain this turn."
+          ],
+          "question_quality_score": 0.3017,
+          "turn_id": "turn_14fda353b6"
+        },
+        "turn_id": "turn_14fda353b6",
+        "turn_index": 16
+      },
+      {
+        "debug_trace": {
+          "interviewer_action": "continue",
+          "pipeline": "baseline_no_planner",
+          "planner_enabled": false
+        },
+        "evaluation_status": "completed",
+        "interviewee_answer": "哎哟，说起整理旧照片和写日记，这确实是我退休生活的一大乐趣。对孩子们来说，这些旧照片和日记本就像是打开过去的时光机。他们能从中看到他们小时候的样子，还有我们一家人一起度过的快乐时光。有时候，他们会围坐在我身边，听我讲照片背后的故事，那感觉就像是又回到了那些日子。写日记的习惯也让孩子们了解到，生活中的点点滴滴都值得被记录和珍惜。他们现在也会时不时地写点东西，记录自己的生活。我觉得这些习惯不仅让我感到快乐和满足，也让孩子们更加了解家族的历史，懂得珍惜现在的生活。",
+        "interviewer_question": "您通过整理旧照片和写日记来保存和回顾记忆，这确实是非常有意义的。您觉得这些习惯对您的家庭和孩子们有什么影响吗？",
+        "turn_evaluation": {
+          "coverage_gain": 0.0,
+          "created_at": "2026-05-08T05:29:28.906617",
+          "emotional_alignment_score": 0.0,
+          "information_gain_score": 0.1,
+          "non_redundancy_score": 0.5963,
+          "notes": [
+            "Low information gain this turn."
+          ],
+          "question_quality_score": 0.2537,
+          "turn_id": "turn_0cf62f599e"
+        },
+        "turn_id": "turn_0cf62f599e",
+        "turn_index": 17
+      },
+      {
+        "debug_trace": {
+          "interviewer_action": "continue",
+          "pipeline": "baseline_no_planner",
+          "planner_enabled": false
+        },
+        "evaluation_status": "completed",
+        "interviewee_answer": "哎哟，说起这个我就想起我们那会儿的辛苦和快乐。我一生中最值得骄傲的事情嘛，有两件。第一件就是我当妈的，把三个娃儿拉扯大，看他们一个个成家立业，心里头那个欣慰啊，没法说。尤其是我那个小儿子，虽然他在深圳忙得很，但是每年回来看我，给我带好多东西，还给我钱，让我别省着花，我心里头暖洋洋的。第二件就是我教书那会儿，看到我的学生一个个有出息，有的考上了大学，有的成了医生、老师，还有的出国深造，我就觉得，我这一辈子的辛苦没白费，教书育人，这是我最骄傲的事情。",
+        "interviewer_question": "您的这些习惯不仅丰富了您自己的生活，也为您的家庭留下了宝贵的记忆和传统。您觉得在您的一生中，最值得骄傲的事情是什么？",
+        "turn_evaluation": {
+          "coverage_gain": 0.0,
+          "created_at": "2026-05-08T05:29:49.497756",
+          "emotional_alignment_score": 0.0,
+          "information_gain_score": 0.1,
+          "non_redundancy_score": 0.7522,
+          "notes": [
+            "Low information gain this turn."
+          ],
+          "question_quality_score": 0.3083,
+          "turn_id": "turn_9edbc2c261"
+        },
+        "turn_id": "turn_9edbc2c261",
+        "turn_index": 18
+      },
+      {
+        "debug_trace": {
+          "interviewer_action": "continue",
+          "pipeline": "baseline_no_planner",
+          "planner_enabled": false
+        },
+        "evaluation_status": "completed",
+        "interviewee_answer": "哎哟，说起遗憾嘛，我们那会儿的人，哪有现在这么多想法哦。但是现在想想，确实有些事儿让我心里头有点儿不是滋味。比如说，我老伴走得早，我们本来计划退休后一起到处走走看看，结果这个愿望没能实现。还有啊，我那小儿子在深圳，工作忙得很，一年到头也回不来几次，心里头总是挂念他。至于愿望嘛，我倒是希望我的孙子孙女们能够多了解了解我们那时候的生活，不要忘了本。现在的年轻人啊，生活好了，但是有些老传统丢了可惜。得行得行，我也就这点遗憾和愿望了。",
+        "interviewer_question": "您作为母亲和教师的成就感和骄傲感真的很感人。您觉得在您的一生中，有哪些事情是您觉得遗憾的，或者有哪些愿望还没有实现？",
+        "turn_evaluation": {
+          "coverage_gain": 0.0,
+          "created_at": "2026-05-08T05:30:11.170676",
+          "emotional_alignment_score": 0.0,
+          "information_gain_score": 0.1,
+          "non_redundancy_score": 0.6897,
+          "notes": [
+            "Low information gain this turn."
+          ],
+          "question_quality_score": 0.2864,
+          "turn_id": "turn_aad24cf0b2"
+        },
+        "turn_id": "turn_aad24cf0b2",
+        "turn_index": 19
+      },
+      {
+        "debug_trace": {
+          "interviewer_action": "continue",
+          "pipeline": "baseline_no_planner",
+          "planner_enabled": false
+        },
+        "evaluation_status": "completed",
+        "interviewee_answer": "哎哟，说起这个我就想起我们那会儿。现在的年轻人啊，都爱看手机、电脑，我们那会儿哪有这些哦。但是我觉得，可以通过一些传统的方式，比如家庭聚会的时候，我给他们讲讲过去的故事，或者把那些旧照片、日记拿出来，一边看一边讲。这样他们能更直观地感受到过去的生活，也能更好地了解家族的历史。有时候，我还会织毛衣的时候，让孙子孙女们坐旁边，边织边给他们讲以前的事情。虽然他们不一定全能听懂，但我觉得这种方式挺温馨的，也能让他们慢慢了解我们的过去。",
+        "interviewer_question": "您的遗憾和愿望都很真实，也很感人。您希望孙子孙女们能够了解过去的生活，这体现了您对家族传承的重视。您有没有想过，通过什么方式来和他们分享您的故事和经历？",
+        "turn_evaluation": {
+          "coverage_gain": 0.0,
+          "created_at": "2026-05-08T05:30:30.968665",
+          "emotional_alignment_score": 0.0,
+          "information_gain_score": 0.1,
+          "non_redundancy_score": 0.7761,
+          "notes": [
+            "Low information gain this turn."
+          ],
+          "question_quality_score": 0.3166,
+          "turn_id": "turn_3e124176f6"
+        },
+        "turn_id": "turn_3e124176f6",
+        "turn_index": 20
+      }
+    ]
+  },
+  "planner_report": {},
+  "graph_state": {},
+  "metrics": {
+    "agent": "baseline",
+    "target_turns": 20,
+    "completed_turns": 20,
+    "completion_rate": 1.0,
+    "error_count": 0,
+    "avg_question_quality": 0.2956,
+    "avg_information_gain": 0.1,
+    "avg_non_redundancy": 0.716,
+    "low_gain_ratio": 0.0,
+    "final_coverage": 0.0,
+    "action_continue_ratio": 1.0,
+    "action_next_phase_ratio": 0.0,
+    "action_end_ratio": 0.0,
+    "avg_interviewer_ms": 1451.08,
+    "graph_rag": {}
+  },
+  "score": {
+    "overall_score": 0.35,
+    "deterministic_score": 0.35,
+    "llm_score": null,
+    "llm_weight": 0.0,
+    "deterministic": {
+      "deterministic_score": 0.35,
+      "components": {
+        "question_quality": 0.2956,
+        "information_gain": 0.1,
+        "non_redundancy": 0.716,
+        "coverage": 0.0,
+        "completion": 1.0
+      },
+      "weights": {
+        "question_quality": 0.28,
+        "information_gain": 0.24,
+        "non_redundancy": 0.2,
+        "coverage": 0.18,
+        "completion": 0.1
+      },
+      "graph_observability_score": null
+    },
+    "llm_result": null
+  }
+}

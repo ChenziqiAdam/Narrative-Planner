@@ -1,0 +1,200 @@
+{
+  "agent": "baseline",
+  "run_index": 1,
+  "session_id": "5b8936b055e1437fa39a4009a8741dd0",
+  "status": "completed",
+  "started_at": "2026-05-08T12:16:33.053799",
+  "finished_at": "2026-05-08T12:16:59.614706",
+  "start_payload": {
+    "first_question": "您好，李秀兰老师，见到您很高兴。您出生于1944年的四川成都，能否和我分享一下您童年时的家乡是什么样的？",
+    "mode": "ai",
+    "session_id": "5b8936b055e1437fa39a4009a8741dd0"
+  },
+  "elder_info": {
+    "name": "李秀兰",
+    "birth_year": 1944,
+    "hometown": "四川成都",
+    "background": "退休中学语文教师，经历过知青下乡、恢复高考、改革开放后的城市变迁。她有一个儿子和一个女儿，晚年喜欢整理旧照片和写日记。"
+  },
+  "turns": [
+    {
+      "turn_index": 1,
+      "status": "completed",
+      "elapsed_ms": 26559.22,
+      "events": [
+        {
+          "role": "interviewee",
+          "action": "answer",
+          "text": "哎哟，说起这个我就想起我们那会儿的童年。我出生在1942年，比李秀兰老师早两年，也是在成都长大的。我们那会儿的成都啊，跟现在可大不一样，那时候城市还没得这么大，到处都是小巷子和老房子。我记得我们家门口就有条小河沟，夏天的时候，我们一群小孩子就在河沟里耍水，捉小鱼小虾。那时候的生活虽然穷，但是邻里之间关系好得很，大家互相帮衬，哪家有好吃的都会分给邻居一些。现在想想，那时候的日子虽然苦，但是心里头踏实，人情味浓得很。",
+          "memory_calls": [],
+          "timing": {
+            "interviewee_total_ms": 6341.7
+          }
+        },
+        {
+          "role": "interviewer",
+          "action": "continue",
+          "text": "听您这么一说，那个时代的邻里关系和生活方式确实让人感到温馨。您提到了小时候在河沟里玩耍的情景，这让我很好奇，您还记得有哪些特别的游戏或者活动是您和小伙伴们经常一起做的吗？",
+          "turn_evaluation": {
+            "turn_id": "turn_82f4499db1",
+            "question_quality_score": 0.395,
+            "information_gain_score": 0.1,
+            "non_redundancy_score": 1.0,
+            "emotional_alignment_score": 0.0,
+            "coverage_gain": 0.0,
+            "notes": [
+              "Low information gain this turn."
+            ],
+            "created_at": "2026-05-08T12:16:59.610109",
+            "status": "completed"
+          },
+          "debug_trace": {
+            "pipeline": "baseline"
+          },
+          "timing": {
+            "interviewer_llm_ms": 1995.0
+          }
+        },
+        {
+          "role": "done"
+        }
+      ]
+    }
+  ],
+  "history": [
+    {
+      "role": "interviewer",
+      "text": "您好，李秀兰老师，见到您很高兴。您出生于1944年的四川成都，能否和我分享一下您童年时的家乡是什么样的？",
+      "action": "continue"
+    },
+    {
+      "role": "interviewee",
+      "text": "哎哟，说起这个我就想起我们那会儿的童年。我出生在1942年，比李秀兰老师早两年，也是在成都长大的。我们那会儿的成都啊，跟现在可大不一样，那时候城市还没得这么大，到处都是小巷子和老房子。我记得我们家门口就有条小河沟，夏天的时候，我们一群小孩子就在河沟里耍水，捉小鱼小虾。那时候的生活虽然穷，但是邻里之间关系好得很，大家互相帮衬，哪家有好吃的都会分给邻居一些。现在想想，那时候的日子虽然苦，但是心里头踏实，人情味浓得很。"
+    },
+    {
+      "role": "interviewer",
+      "text": "听您这么一说，那个时代的邻里关系和生活方式确实让人感到温馨。您提到了小时候在河沟里玩耍的情景，这让我很好奇，您还记得有哪些特别的游戏或者活动是您和小伙伴们经常一起做的吗？",
+      "action": "continue"
+    }
+  ],
+  "evaluation_state": {
+    "completed_turn_count": 1,
+    "control_group": true,
+    "coverage_metrics": {
+      "overall_coverage": 0.0,
+      "overall_richness": 0.0,
+      "theme_coverage": {},
+      "theme_richness": {}
+    },
+    "latest_turn_evaluation": {
+      "coverage_gain": 0.0,
+      "created_at": "2026-05-08T12:16:59.610109",
+      "emotional_alignment_score": 0.0,
+      "information_gain_score": 0.1,
+      "non_redundancy_score": 1.0,
+      "notes": [
+        "Low information gain this turn."
+      ],
+      "question_quality_score": 0.395,
+      "turn_id": "turn_82f4499db1"
+    },
+    "mode": "baseline",
+    "pending_turn_ids": [],
+    "pipeline": "baseline_no_planner",
+    "session_id": "5b8936b055e1437fa39a4009a8741dd0",
+    "session_metrics": {
+      "average_information_gain": 0.1,
+      "average_non_redundancy": 1.0,
+      "average_turn_quality": 0.395,
+      "contradiction_resolution_rate": 0.0,
+      "open_loop_closure_rate": 0.0,
+      "overall_theme_coverage": 0.0,
+      "people_coverage": 0.0
+    },
+    "turn_count": 1,
+    "turn_evaluations": {
+      "turn_82f4499db1": {
+        "coverage_gain": 0.0,
+        "created_at": "2026-05-08T12:16:59.610109",
+        "emotional_alignment_score": 0.0,
+        "information_gain_score": 0.1,
+        "non_redundancy_score": 1.0,
+        "notes": [
+          "Low information gain this turn."
+        ],
+        "question_quality_score": 0.395,
+        "turn_id": "turn_82f4499db1"
+      }
+    },
+    "turns": [
+      {
+        "debug_trace": {
+          "interviewer_action": "continue",
+          "pipeline": "baseline_no_planner",
+          "planner_enabled": false
+        },
+        "evaluation_status": "completed",
+        "interviewee_answer": "哎哟，说起这个我就想起我们那会儿的童年。我出生在1942年，比李秀兰老师早两年，也是在成都长大的。我们那会儿的成都啊，跟现在可大不一样，那时候城市还没得这么大，到处都是小巷子和老房子。我记得我们家门口就有条小河沟，夏天的时候，我们一群小孩子就在河沟里耍水，捉小鱼小虾。那时候的生活虽然穷，但是邻里之间关系好得很，大家互相帮衬，哪家有好吃的都会分给邻居一些。现在想想，那时候的日子虽然苦，但是心里头踏实，人情味浓得很。",
+        "interviewer_question": "您好，李秀兰老师，见到您很高兴。您出生于1944年的四川成都，能否和我分享一下您童年时的家乡是什么样的？",
+        "turn_evaluation": {
+          "coverage_gain": 0.0,
+          "created_at": "2026-05-08T12:16:59.610109",
+          "emotional_alignment_score": 0.0,
+          "information_gain_score": 0.1,
+          "non_redundancy_score": 1.0,
+          "notes": [
+            "Low information gain this turn."
+          ],
+          "question_quality_score": 0.395,
+          "turn_id": "turn_82f4499db1"
+        },
+        "turn_id": "turn_82f4499db1",
+        "turn_index": 1
+      }
+    ]
+  },
+  "planner_report": {},
+  "graph_state": {},
+  "metrics": {
+    "agent": "baseline",
+    "target_turns": 1,
+    "completed_turns": 1,
+    "completion_rate": 1.0,
+    "error_count": 0,
+    "avg_question_quality": 0.395,
+    "avg_information_gain": 0.1,
+    "avg_non_redundancy": 1.0,
+    "low_gain_ratio": 0.0,
+    "final_coverage": 0.0,
+    "action_continue_ratio": 1.0,
+    "action_next_phase_ratio": 0.0,
+    "action_end_ratio": 0.0,
+    "avg_interviewer_ms": 1995.0,
+    "graph_rag": {}
+  },
+  "score": {
+    "overall_score": 0.4346,
+    "deterministic_score": 0.4346,
+    "llm_score": null,
+    "llm_weight": 0.0,
+    "deterministic": {
+      "deterministic_score": 0.4346,
+      "components": {
+        "question_quality": 0.395,
+        "information_gain": 0.1,
+        "non_redundancy": 1.0,
+        "coverage": 0.0,
+        "completion": 1.0
+      },
+      "weights": {
+        "question_quality": 0.28,
+        "information_gain": 0.24,
+        "non_redundancy": 0.2,
+        "coverage": 0.18,
+        "completion": 0.1
+      },
+      "graph_observability_score": null
+    },
+    "llm_result": null
+  }
+}

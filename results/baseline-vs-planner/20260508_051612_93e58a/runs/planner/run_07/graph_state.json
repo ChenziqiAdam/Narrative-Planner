@@ -1,0 +1,1383 @@
+{
+  "coverage_metrics": {
+    "overall_richness": 0.0,
+    "theme_richness": {
+      "THEME_01_LIFE_CHAPTERS": 0.0,
+      "THEME_02_PEAK_EXPERIENCE": 0.0,
+      "THEME_03_LOW_POINT": 0.0,
+      "THEME_04_TURNING_POINT": 0.0,
+      "THEME_05_CHILDHOOD_POSITIVE": 0.0,
+      "THEME_06_CHILDHOOD_NEGATIVE": 0.0,
+      "THEME_07_ADULT_MEMORY": 0.0,
+      "THEME_08_RELIGIOUS_EXPERIENCE": 0.0,
+      "THEME_09_WISDOM_EVENT": 0.0,
+      "THEME_10_NEXT_CHAPTER": 0.0,
+      "THEME_11_DREAMS_PLANS": 0.0,
+      "THEME_12_LIFE_PROJECT": 0.0,
+      "THEME_13_LIFE_CHALLENGE": 0.0,
+      "THEME_14_HEALTH": 0.0,
+      "THEME_15_LOSS": 0.0,
+      "THEME_16_FAILURE_REGRET": 0.0,
+      "THEME_17_RELIGIOUS_VALUES": 0.0,
+      "THEME_18_POLITICAL_VALUES": 0.0,
+      "THEME_19_VALUE_EVOLUTION": 0.0,
+      "THEME_20_SINGLE_VALUE": 0.0,
+      "THEME_21_SESSION_SUMMARY": 0.0,
+      "THEME_22_INFORMATION_INTEGRATION": 0.0,
+      "THEME_23_CONTEXT_MANAGEMENT": 0.0
+    }
+  },
+  "dynamic_profile": {
+    "last_updated_turn_id": "turn_5b98d864a0",
+    "planner_guidance": [
+      "Family profile is still thin; when the story naturally allows it, ask about spouse, children, siblings, or grandchildren.",
+      "Current-life profile is undercovered; consider a gentle bridge to daily routines, hobbies, social activity, or health concerns.",
+      "Adapt question shape to speaking style: brief replies; use short, concrete prompts and avoid stacking multiple questions."
+    ],
+    "profile_quality": {
+      "core_identity_and_personality": 0.6667,
+      "current_life_status": 0.3333,
+      "family_situation": 0.0,
+      "life_views_and_attitudes": 0.0,
+      "overall": 0.25
+    },
+    "schema_version": "dynamic_elder_profile_v1",
+    "sections": {
+      "core_identity_and_personality": {
+        "common_expressions": {
+          "confidence": 0.35,
+          "value": [
+            "现在想起来，那时候真是又害怕又好笑",
+            "哎哟，说起偷摘李子那件事，对我影响可大了",
+            "他听了我的话，后来还得到了老师的表扬",
+            "现在想起来，那时候真是调皮又快乐",
+            "这个问题我得再想想"
+          ]
+        },
+        "identity_background": {
+          "confidence": 0.9,
+          "value": "name=李秀兰; birth_year=1944; age=82; hometown=四川成都; background=退休中学语文教师，经历过知青下乡、恢复高考、改革开放后的城市变迁。她有一个儿子和一个女儿，晚年喜欢整理旧照片和写日记。"
+        },
+        "life_overview": {
+          "confidence": 0.75,
+          "value": [
+            "退休中学语文教师，经历过知青下乡、恢复高考、改革开放后的城市变迁。她有一个儿子和一个女儿，晚年喜欢整理旧照片和写日记。"
+          ]
+        },
+        "speaking_style": {
+          "confidence": 0.45,
+          "value": "brief replies; use short, concrete prompts and avoid stacking multiple questions"
+        }
+      },
+      "current_life_status": {
+        "health_status_current_concerns": {
+          "confidence": 0.45,
+          "value": [
+            "哎哟，说起备考教师资格考试的时候，我印象最深的是有一次，我为了准备考试，连续几个晚上都没怎么睡觉。那时候家里头没有电，只能点煤油灯看书，眼睛看久了就疼得很。有天晚上，我看着看着就打",
+            "哎哟，说起备考教师资格考试那会儿，真是让我成长了不少。我记得有一次，我为了准备考试，连续几个晚上都没怎么睡觉，眼睛看久了就疼得很。有天晚上，我看着看着就打起瞌睡，头一歪，差点把煤油"
+          ]
+        }
+      }
+    },
+    "update_count": 7
+  },
+  "narrative_fragments": {
+    "frag_0969c1bd89": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_0969c1bd89",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "正面积极的教育结果",
+        "significance": "体现了秀兰奶奶教育价值观的实际影响",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION"
+      },
+      "rich_text": "秀兰奶奶的大儿子在学校捡到一支笔并拿回家，后被秀兰奶奶教育归还给老师并得到表扬",
+      "source_turn_ids": [
+        "turn_078e86517c"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_25062748f8": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_25062748f8",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "快乐",
+        "people": [
+          "秀兰奶奶",
+          "小伙伴"
+        ],
+        "significance": "童年快乐时光",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "七八岁时的夏天"
+      },
+      "rich_text": "秀兰奶奶七八岁时夏天和小伙伴在河边捉鱼的趣事",
+      "source_turn_ids": [
+        "turn_360d90b4c2"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_2ae7a81539": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_2ae7a81539",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "既害怕又好笑",
+        "location": "果园",
+        "people": [
+          "秀兰奶奶",
+          "小王",
+          "小李",
+          "小张"
+        ],
+        "significance": "童年调皮的回忆",
+        "theme_id": "THEME_09_WISDOM_EVENT",
+        "time_anchor": "夏天"
+      },
+      "rich_text": "夏天时，秀兰奶奶和小伙伴们计划趁中午大人休息时偷溜进果园摘李子，分工合作，最终被果园主人发现",
+      "source_turn_ids": [
+        "turn_10ee042f25"
+      ],
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "updated_at": null
+    },
+    "frag_2d734d0f8a": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_2d734d0f8a",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "既尴尬又快乐",
+        "location": "河边",
+        "people": [
+          "我",
+          "小张"
+        ],
+        "significance": "体现了年轻时的调皮和快乐",
+        "theme_id": "THEME_01_LIFE_CHAPTERS",
+        "time_anchor": "过去"
+      },
+      "rich_text": "小张带书去游泳，结果书一沾水就烂了，大家笑他了好久，他自己也不好意思地笑了",
+      "source_turn_ids": [
+        "turn_2e8452d8ea"
+      ],
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "updated_at": null
+    },
+    "frag_334f9cdc76": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_334f9cdc76",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "辛苦但值得",
+        "location": "家中",
+        "people": [
+          "秀兰奶奶",
+          "妈妈"
+        ],
+        "significance": "实现个人价值和梦想的重要过程",
+        "theme_id": "THEME_01_LIFE_CHAPTERS",
+        "time_anchor": "恢复高考后不久"
+      },
+      "rich_text": "秀兰奶奶为了成为老师，决心参加教师资格考试，白天在工厂上班，晚上点煤油灯看书学习",
+      "source_turn_ids": [
+        "turn_b5ba776e14"
+      ],
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "updated_at": null
+    },
+    "frag_33554915c7": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_33554915c7",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "调皮又快乐",
+        "location": "河里",
+        "people": [
+          "小张",
+          "我们几个"
+        ],
+        "significance": "体现了儿时的调皮和快乐",
+        "theme_id": "THEME_01_LIFE_CHAPTERS",
+        "time_anchor": "那天天气热得很"
+      },
+      "rich_text": "小张在炎热的天气里提出游泳时也可以看书，结果书一沾水就烂了，大家笑他，他自己也笑了",
+      "source_turn_ids": [
+        "turn_9d74dd888b"
+      ],
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "updated_at": null
+    },
+    "frag_3885088ceb": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_3885088ceb",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "辛苦但坚持",
+        "location": "家中",
+        "people": [
+          "秀兰奶奶"
+        ],
+        "significance": "深刻体会到只要有决心，肯吃苦，就没有克服不了的困难",
+        "theme_id": "THEME_01_LIFE_CHAPTERS",
+        "time_anchor": "备考教师资格考试时"
+      },
+      "rich_text": "秀兰奶奶为了准备教师资格考试，连续几个晚上没怎么睡觉，点煤油灯看书，眼睛疼痛，差点打翻煤油灯",
+      "source_turn_ids": [
+        "turn_d85f0a123c"
+      ],
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "updated_at": null
+    },
+    "frag_393a2a15ec": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_393a2a15ec",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "快乐",
+        "location": "河边",
+        "people": [
+          "秀兰奶奶",
+          "小伙伴"
+        ],
+        "significance": "童年的快乐时光",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "七八岁时的夏天"
+      },
+      "rich_text": "秀兰奶奶七八岁时夏天与小伙伴在河边捉鱼的趣事",
+      "source_turn_ids": [
+        "turn_d058d3a3aa"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_4c0fa04c41": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_4c0fa04c41",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "调皮又快乐",
+        "location": "河里",
+        "people": [
+          "小张",
+          "秀兰奶奶",
+          "小王",
+          "小李"
+        ],
+        "significance": "体现了童年的无忧无虑和对知识的渴望",
+        "theme_id": "THEME_01_LIFE_CHAPTERS",
+        "time_anchor": "未提及具体时间"
+      },
+      "rich_text": "小张因爱学习而想到带书去河里游泳，结果书被水泡烂",
+      "source_turn_ids": [
+        "turn_0cac4b55a0"
+      ],
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "updated_at": null
+    },
+    "frag_4ca974bf12": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_4ca974bf12",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张又兴奋",
+        "people": [
+          "秀兰奶奶",
+          "小王",
+          "小李",
+          "小张"
+        ],
+        "significance": "学会了尊重和珍惜，影响了后来的生活和教育孩子的方式",
+        "theme_id": "THEME_09_WISDOM_EVENT",
+        "time_anchor": "小时候"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们计划并实施了偷摘李子的行为，最终被果园主人发现但未受严厉惩罚，反而得到了尊重和珍惜的教育",
+      "source_turn_ids": [
+        "turn_8fa7cf4ddd"
+      ],
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "updated_at": null
+    },
+    "frag_4cc7f3ca60": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_4cc7f3ca60",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "快乐",
+        "people": [
+          "我",
+          "小伙伴们"
+        ],
+        "significance": "简单快乐的童年回忆",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年"
+      },
+      "rich_text": "童年时与小伙伴们去山上摘野果，一边摘一边吃，最后吃得肚子圆滚滚",
+      "source_turn_ids": [
+        "turn_5f7bf19487"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_4ef83f3ba2": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_4ef83f3ba2",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张后转为轻松愉快",
+        "location": "村头的空地",
+        "people": [
+          "秀兰奶奶",
+          "小王",
+          "小李",
+          "小张"
+        ],
+        "significance": "童年的调皮和快乐时光",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们在村头空地上玩丢沙包，沙包飞向老李家的牛，擦着牛角飞过，牛被吓了一跳，孩子们松了一口气后笑成一团",
+      "source_turn_ids": [
+        "turn_88eccff487"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_6adb5ad78d": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_6adb5ad78d",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "无奈中带着希望",
+        "location": "河边",
+        "people": [
+          "我",
+          "小张"
+        ],
+        "significance": "体现了友情和对知识的尊重",
+        "theme_id": "THEME_01_LIFE_CHAPTERS",
+        "time_anchor": "过去"
+      },
+      "rich_text": "书被水泡烂后，大家坐在河边把书页一张张摊开晒，尽力挽救",
+      "source_turn_ids": [
+        "turn_2e8452d8ea"
+      ],
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "updated_at": null
+    },
+    "frag_7013a3c8fc": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_7013a3c8fc",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "快乐",
+        "location": "院子",
+        "people": [
+          "秀兰奶奶",
+          "院子里的大人小孩"
+        ],
+        "significance": "童年的快乐时光",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "九岁时"
+      },
+      "rich_text": "秀兰奶奶九岁时在院子里玩捉迷藏，躲在木箱子里睡着的趣事",
+      "source_turn_ids": [
+        "turn_d058d3a3aa"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_741dcce92d": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_741dcce92d",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "快乐",
+        "location": "小山村",
+        "people": [
+          "秀兰奶奶",
+          "小王",
+          "小李",
+          "小张"
+        ],
+        "significance": "童年的快乐时光",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们在小山村里一起上山摘野果的活动",
+      "source_turn_ids": [
+        "turn_cc6187bc00"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_8074a02d25": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_8074a02d25",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "有趣",
+        "people": [
+          "我",
+          "几个小孩儿"
+        ],
+        "significance": "童年趣事",
+        "theme_id": "THEME_11_DREAMS_PLANS",
+        "time_anchor": "过年的时候"
+      },
+      "rich_text": "过年时与小孩儿们偷偷放鞭炮，不小心吓飞了邻居家的鸡",
+      "source_turn_ids": [
+        "turn_5f7bf19487"
+      ],
+      "theme_id": "THEME_11_DREAMS_PLANS",
+      "updated_at": null
+    },
+    "frag_83ebbc963b": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_83ebbc963b",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "实现价值",
+        "people": [
+          "秀兰奶奶"
+        ],
+        "significance": "教书育人",
+        "theme_id": "THEME_01_LIFE_CHAPTERS",
+        "time_anchor": "后来"
+      },
+      "rich_text": "虽然秀兰奶奶没有成为医生，但她后来成为了一名老师，在教书育人上实现了自己的价值",
+      "source_turn_ids": [
+        "turn_2c856e4467"
+      ],
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "updated_at": null
+    },
+    "frag_8953f54531": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_8953f54531",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张又兴奋",
+        "location": "果园",
+        "people": [
+          "秀兰奶奶",
+          "小王",
+          "小李",
+          "小张"
+        ],
+        "significance": "童年调皮而快乐的回忆",
+        "theme_id": "THEME_09_WISDOM_EVENT",
+        "time_anchor": "夏天中午"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们计划并实施了偷摘李子的行动，他们观察果园主人的行动规律，趁中午无人看管时行动，分工合作，最终被果园主人发现",
+      "source_turn_ids": [
+        "turn_eaa19d4c1a"
+      ],
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "updated_at": null
+    },
+    "frag_8ab4d11126": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_8ab4d11126",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "惊险后的决心",
+        "significance": "让秀兰奶奶更加坚定要考上教师资格",
+        "theme_id": "THEME_09_WISDOM_EVENT",
+        "time_anchor": "备考期间的一个晚上"
+      },
+      "rich_text": "秀兰奶奶因连续熬夜备考，打瞌睡差点打翻煤油灯，幸好及时醒来避免出事",
+      "source_turn_ids": [
+        "turn_2c3b9e6b6c"
+      ],
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "updated_at": null
+    },
+    "frag_8ad617d9ac": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_8ad617d9ac",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "辛苦但充实",
+        "location": "家中",
+        "people": [
+          "秀兰奶奶",
+          "妈妈"
+        ],
+        "significance": "为了成为一名老师而努力",
+        "theme_id": "THEME_01_LIFE_CHAPTERS",
+        "time_anchor": "恢复高考后不久"
+      },
+      "rich_text": "秀兰奶奶白天在工厂上班，晚上点煤油灯看书学习，准备教师资格考试的过程",
+      "source_turn_ids": [
+        "turn_e83e6b91c8"
+      ],
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "updated_at": null
+    },
+    "frag_8f32debe73": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_8f32debe73",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "快乐又让人担心",
+        "location": "家隔壁的院子",
+        "people": [
+          "小王",
+          "小李",
+          "小张",
+          "秀兰奶奶"
+        ],
+        "significance": "印象深刻的童年趣事",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和邻居家的小孩儿在院子玩捉迷藏，其中一个小孩儿躲在破旧木箱子里睡着了，直到天黑才被家人找到",
+      "source_turn_ids": [
+        "turn_9eb7f7eb17"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_9839e9df29": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_9839e9df29",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "快乐",
+        "location": "村头空地",
+        "people": [
+          "秀兰奶奶",
+          "小王",
+          "小李",
+          "小张"
+        ],
+        "significance": "学会了做事不能冲动，要考虑后果",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "小时候"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们在村头空地上玩丢沙包的游戏",
+      "source_turn_ids": [
+        "turn_0364fe1346"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_9b456a778d": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_9b456a778d",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "惊险后怕",
+        "significance": "深刻体会到坚持的重要性，安全总是第一位",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION"
+      },
+      "rich_text": "秀兰奶奶因连续熬夜备考而极度疲劳，差点打翻煤油灯，意识到安全的重要性",
+      "source_turn_ids": [
+        "turn_fd85cec0cf"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_a17be00d1e": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_a17be00d1e",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "严肃",
+        "people": [
+          "秀兰奶奶",
+          "大儿子"
+        ],
+        "significance": "传递诚实和尊重的重要性",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION"
+      },
+      "rich_text": "秀兰奶奶用偷摘李子的故事教育自己的孩子要诚实，不要贪图小便宜，尊重别人的劳动成果",
+      "source_turn_ids": [
+        "turn_8fa7cf4ddd"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_a3458161ca": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_a3458161ca",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "惊险后怕",
+        "significance": "深刻体会到坚持和安全的重要性",
+        "theme_id": "THEME_09_WISDOM_EVENT"
+      },
+      "rich_text": "秀兰奶奶备考时因为极度疲劳差点打翻煤油灯，幸好及时醒过来避免事故发生。",
+      "source_turn_ids": [
+        "turn_29b327032e"
+      ],
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "updated_at": null
+    },
+    "frag_a39d241f22": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_a39d241f22",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "既惊险又有趣",
+        "location": "村头的空地",
+        "people": [
+          "秀兰奶奶",
+          "小王",
+          "小李",
+          "小张"
+        ],
+        "significance": "体现了童年的调皮和快乐",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "那时候"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们在村头空地上玩丢沙包时，沙包飞得很高差点砸到老李家的牛",
+      "source_turn_ids": [
+        "turn_480b7e52f2"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_a605647ad0": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_a605647ad0",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "辛苦但坚持",
+        "significance": "让秀兰奶奶成长，对生活有了新的认识",
+        "theme_id": "THEME_01_LIFE_CHAPTERS",
+        "time_anchor": "备考教师资格考试时"
+      },
+      "rich_text": "秀兰奶奶为了准备教师资格考试，连续几个晚上没怎么睡觉，眼睛看久了就疼得很。",
+      "source_turn_ids": [
+        "turn_29b327032e"
+      ],
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "updated_at": null
+    },
+    "frag_a66f6de64c": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_a66f6de64c",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张又兴奋",
+        "location": "果园",
+        "people": [
+          "秀兰奶奶",
+          "小王",
+          "小李",
+          "小张",
+          "果园主人"
+        ],
+        "significance": "教训：不能随便拿别人的东西，要懂得尊重和珍惜",
+        "theme_id": "THEME_09_WISDOM_EVENT",
+        "time_anchor": "夏天"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们偷摘李子时被果园主人发现，果园主人是个和善的老头，没有责怪他们，而是笑着摇摇头，告诉他们李子还没熟透，摘了也是浪费，并教育他们要尊重别人的劳动成果。",
+      "source_turn_ids": [
+        "turn_aaca548265"
+      ],
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "updated_at": null
+    },
+    "frag_a68375577f": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_a68375577f",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "欢乐",
+        "people": [
+          "小王",
+          "小李",
+          "小张",
+          "秀兰奶奶"
+        ],
+        "significance": "有趣的童年回忆",
+        "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "小王带着秀兰奶奶和其他小伙伴去掏鸟窝，结果被鸟妈妈追得满村跑",
+      "source_turn_ids": [
+        "turn_1006b79fff"
+      ],
+      "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+      "updated_at": null
+    },
+    "frag_a8bdca9648": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_a8bdca9648",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "辛苦但充实",
+        "significance": "深刻体会到坚持和努力的重要性，影响后来的教学和生活态度",
+        "theme_id": "THEME_07_ADULT_MEMORY",
+        "time_anchor": "备考教师资格考试那会儿"
+      },
+      "rich_text": "秀兰奶奶为了成为老师，白天在工厂工作，晚上点煤油灯学习，经历了极度辛苦的备考过程",
+      "source_turn_ids": [
+        "turn_2c3b9e6b6c"
+      ],
+      "theme_id": "THEME_07_ADULT_MEMORY",
+      "updated_at": null
+    },
+    "frag_aac1dd8570": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_aac1dd8570",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "既紧张又兴奋",
+        "location": "果园",
+        "people": [
+          "秀兰奶奶",
+          "小王",
+          "小李",
+          "小张"
+        ],
+        "significance": "调皮的童年趣事",
+        "theme_id": "THEME_09_WISDOM_EVENT",
+        "time_anchor": "夏天"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们计划偷摘李子，分工合作，小王望风，小李和小张爬树摘李子，秀兰奶奶在下面接果子，最后被果园主人发现",
+      "source_turn_ids": [
+        "turn_ce88a51c7b"
+      ],
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "updated_at": null
+    },
+    "frag_ab73c6a381": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_ab73c6a381",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "希望和憧憬",
+        "people": [
+          "秀兰奶奶"
+        ],
+        "significance": "帮助他人，减轻病痛",
+        "theme_id": "THEME_11_DREAMS_PLANS",
+        "time_anchor": "过去"
+      },
+      "rich_text": "秀兰奶奶在艰苦的条件下，亲眼见过许多乡亲因病痛受苦，因此产生了成为医生的梦想，希望能够减轻他们的痛苦",
+      "source_turn_ids": [
+        "turn_2c856e4467"
+      ],
+      "theme_id": "THEME_11_DREAMS_PLANS",
+      "updated_at": null
+    },
+    "frag_b097cd3e61": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_b097cd3e61",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "快乐",
+        "location": "小山村",
+        "people": [
+          "秀兰奶奶",
+          "小王",
+          "小李",
+          "小张"
+        ],
+        "significance": "童年的快乐时光",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们在小山村里一起下河摸鱼的活动",
+      "source_turn_ids": [
+        "turn_cc6187bc00"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_b3733356b8": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_b3733356b8",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "好笑又让人担心",
+        "location": "院子",
+        "people": [
+          "秀兰奶奶",
+          "小孩儿"
+        ],
+        "significance": "印象深刻的童年趣事",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶童年时和小孩儿在院子里玩捉迷藏，躲在破旧木箱子里睡着，天黑后家人找了半天才找到",
+      "source_turn_ids": [
+        "turn_cb72eb37d7"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_b6c0c74a92": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_b6c0c74a92",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "值得",
+        "location": "乡村学校",
+        "people": [
+          "秀兰奶奶",
+          "孩子们"
+        ],
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION"
+      },
+      "rich_text": "秀兰奶奶在乡村学校教书，看到孩子们渴望知识的眼神，觉得辛苦都值得",
+      "source_turn_ids": [
+        "turn_d7e87c9a07"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_b90f557d7c": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_b90f557d7c",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张又快乐",
+        "location": "村头的空地",
+        "people": [
+          "秀兰奶奶",
+          "小王",
+          "小李",
+          "小张"
+        ],
+        "significance": "童年的趣事，体现了当时的快乐和无忧无虑",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们在村头空地上玩丢沙包的游戏，因为简单又好玩，不需要太多玩具",
+      "source_turn_ids": [
+        "turn_057d22de99"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_badff6bd5e": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_badff6bd5e",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "辛苦但充实",
+        "location": "工厂",
+        "theme_id": "THEME_01_LIFE_CHAPTERS"
+      },
+      "rich_text": "秀兰奶奶在工厂上班，晚上点煤油灯看书学习，准备考试",
+      "source_turn_ids": [
+        "turn_d7e87c9a07"
+      ],
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "updated_at": null
+    },
+    "frag_c2c0b1d733": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_c2c0b1d733",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "辛苦但充实",
+        "people": [
+          "秀兰奶奶",
+          "妈妈"
+        ],
+        "significance": "为了成为一名老师而努力",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "备考时期"
+      },
+      "rich_text": "秀兰奶奶白天在工厂工作，晚上点煤油灯学习，妈妈陪伴并提供支持",
+      "source_turn_ids": [
+        "turn_adfccbf6aa"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_c5e6f536da": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_c5e6f536da",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "满怀希望和憧憬",
+        "location": "河边",
+        "people": [
+          "秀兰奶奶",
+          "小王",
+          "小李",
+          "小张"
+        ],
+        "significance": "回忆起年轻时的简单快乐和梦想",
+        "theme_id": "THEME_11_DREAMS_PLANS",
+        "time_anchor": "过去"
+      },
+      "rich_text": "秀兰奶奶和朋友们坐在河边晒书页时聊起了各自的梦想和未来打算",
+      "source_turn_ids": [
+        "turn_5df680d602"
+      ],
+      "theme_id": "THEME_11_DREAMS_PLANS",
+      "updated_at": null
+    },
+    "frag_ca7db6b52e": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_ca7db6b52e",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "后怕",
+        "location": "家中",
+        "people": [
+          "秀兰奶奶",
+          "妈妈"
+        ],
+        "significance": "深刻体会到了坚持的重要性，明白了安全总是第一位",
+        "theme_id": "THEME_01_LIFE_CHAPTERS",
+        "time_anchor": "备考教师资格考试时"
+      },
+      "rich_text": "秀兰奶奶在备考教师资格考试时，因为熬夜看书困得不行，头一歪差点打翻煤油灯，妈妈在旁边陪伴并照顾她",
+      "source_turn_ids": [
+        "turn_525da4834a"
+      ],
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "updated_at": null
+    },
+    "frag_d002194998": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_d002194998",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "激烈竞争",
+        "theme_id": "THEME_07_ADULT_MEMORY",
+        "time_anchor": "恢复高考后不久"
+      },
+      "rich_text": "恢复高考后不久，秀兰奶奶参加了教师资格考试，竞争激烈",
+      "source_turn_ids": [
+        "turn_d7e87c9a07"
+      ],
+      "theme_id": "THEME_07_ADULT_MEMORY",
+      "updated_at": null
+    },
+    "frag_d308c82a91": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_d308c82a91",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "快乐",
+        "location": "河边",
+        "people": [
+          "秀兰奶奶",
+          "小伙伴"
+        ],
+        "significance": "印象深刻的童年趣事",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶童年时和小伙伴去河边捉鱼，河水清澈，鱼多，光着脚丫子在水里摸鱼时滑倒，全身湿透",
+      "source_turn_ids": [
+        "turn_cb72eb37d7"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_d428b91ce8": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_d428b91ce8",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "满怀希望和憧憬",
+        "location": "河边",
+        "people": [
+          "我",
+          "小张"
+        ],
+        "significance": "体现了年轻时的梦想和对未来的期待",
+        "theme_id": "THEME_11_DREAMS_PLANS",
+        "time_anchor": "过去"
+      },
+      "rich_text": "晒书的时候，大家开始聊起天来，说起以后的梦想和打算",
+      "source_turn_ids": [
+        "turn_2e8452d8ea"
+      ],
+      "theme_id": "THEME_11_DREAMS_PLANS",
+      "updated_at": null
+    },
+    "frag_d5dbb555bb": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_d5dbb555bb",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "虽然艰苦但心里暖暖的",
+        "location": "成都老城区",
+        "people": [
+          "我",
+          "妈妈"
+        ],
+        "significance": "童年艰苦但温馨的家庭生活",
+        "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+        "time_anchor": "1940年代末至1950年代初"
+      },
+      "rich_text": "李秀兰奶奶回忆起童年时家里条件艰苦，住在成都老城区的破旧小屋里，母亲忙于照顾孩子和做手工活补贴家用",
+      "source_turn_ids": [
+        "turn_53baae2c40"
+      ],
+      "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+      "updated_at": null
+    },
+    "frag_db53e86039": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_db53e86039",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "辛苦而充实",
+        "location": "家中",
+        "people": [
+          "秀兰奶奶",
+          "妈妈"
+        ],
+        "significance": "深刻体会到坚持和努力的重要性，影响后来的教学理念",
+        "theme_id": "THEME_07_ADULT_MEMORY",
+        "time_anchor": "备考时期"
+      },
+      "rich_text": "秀兰奶奶在工厂工作的同时，晚上点煤油灯学习备考教师资格考试，妈妈在旁边陪伴并提供支持",
+      "source_turn_ids": [
+        "turn_ab4f715ab5"
+      ],
+      "theme_id": "THEME_07_ADULT_MEMORY",
+      "updated_at": null
+    },
+    "frag_dbfe89ea6d": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_dbfe89ea6d",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张兴奋",
+        "significance": "深刻影响了秀兰奶奶的价值观和教育方式",
+        "theme_id": "THEME_09_WISDOM_EVENT",
+        "time_anchor": "小时候"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们计划并实施了偷摘李子的行为，被果园主人发现后得到了教育，从而学会了诚实和尊重他人劳动成果的道理",
+      "source_turn_ids": [
+        "turn_078e86517c"
+      ],
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "updated_at": null
+    },
+    "frag_de8d108035": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_de8d108035",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "好笑又让人担心",
+        "people": [
+          "秀兰奶奶",
+          "院子里的大人小孩"
+        ],
+        "significance": "童年快乐时光",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "九岁时"
+      },
+      "rich_text": "秀兰奶奶九岁时在院子里玩捉迷藏，躲在木箱子里睡着的趣事",
+      "source_turn_ids": [
+        "turn_360d90b4c2"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_f845fde061": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_f845fde061",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "欢乐",
+        "people": [
+          "小张",
+          "秀兰奶奶",
+          "小王",
+          "小李"
+        ],
+        "significance": "有趣的童年回忆",
+        "theme_id": "THEME_01_LIFE_CHAPTERS",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "小张带着书去河里游泳，结果书被水泡烂了",
+      "source_turn_ids": [
+        "turn_1006b79fff"
+      ],
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "updated_at": null
+    },
+    "frag_fa4d1250cc": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_fa4d1250cc",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "辛苦但充实",
+        "significance": "深刻体会到坚持和努力的重要性",
+        "theme_id": "THEME_07_ADULT_MEMORY",
+        "time_anchor": "备考时期"
+      },
+      "rich_text": "秀兰奶奶在工厂工作的同时，晚上点煤油灯备考教师资格考试，经历了辛苦和家庭的支持",
+      "source_turn_ids": [
+        "turn_fd85cec0cf"
+      ],
+      "theme_id": "THEME_07_ADULT_MEMORY",
+      "updated_at": null
+    },
+    "frag_fab9d14a39": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_fab9d14a39",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "激动又紧张",
+        "theme_id": "THEME_01_LIFE_CHAPTERS"
+      },
+      "rich_text": "秀兰奶奶经过努力考上了教师资格，心情激动又紧张",
+      "source_turn_ids": [
+        "turn_d7e87c9a07"
+      ],
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "updated_at": null
+    }
+  },
+  "session_id": "70856a756eb547e9bc7d9edfb3d04d47",
+  "theme_nodes": [
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_02_PEAK_EXPERIENCE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_03_LOW_POINT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_04_TURNING_POINT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_07_ADULT_MEMORY",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_08_RELIGIOUS_EXPERIENCE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_10_NEXT_CHAPTER",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_11_DREAMS_PLANS",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_12_LIFE_PROJECT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_13_LIFE_CHALLENGE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_14_HEALTH",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_15_LOSS",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_16_FAILURE_REGRET",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_17_RELIGIOUS_VALUES",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_18_POLITICAL_VALUES",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_19_VALUE_EVOLUTION",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_20_SINGLE_VALUE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_21_SESSION_SUMMARY",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_23_CONTEXT_MANAGEMENT",
+      "title": null
+    }
+  ],
+  "timestamp": "2026-05-08T09:39:10.757500",
+  "turn_count": 35
+}

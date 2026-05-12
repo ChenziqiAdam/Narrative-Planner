@@ -1,0 +1,3 @@
+agent,run_index,session_id,status,overall_score,deterministic_score,llm_score,completed_turns,avg_question_quality,avg_information_gain,avg_non_redundancy,final_coverage,graph_retrieval_nonempty_rate,graph_total_new_entities,graph_total_relationships_written,run_dir
+baseline,1,5b8936b055e1437fa39a4009a8741dd0,completed,0.4346,0.4346,,1,0.395,0.1,1.0,0.0,,,,/Users/oier/Downloads/Narrative-Planner/results/baseline-vs-planner/smoke_token_optimized/runs/baseline/run_01
+planner,1,a7b7359172f64f2b8bd67dfaf66692d1,completed,0.6725,0.6725,,1,0.6875,0.75,1.0,0.0,0.0,5,4,/Users/oier/Downloads/Narrative-Planner/results/baseline-vs-planner/smoke_token_optimized/runs/planner/run_01

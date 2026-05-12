@@ -1,0 +1,17 @@
+{
+  "agent": "baseline",
+  "target_turns": 20,
+  "completed_turns": 20,
+  "completion_rate": 1.0,
+  "error_count": 0,
+  "avg_question_quality": 0.2894,
+  "avg_information_gain": 0.1,
+  "avg_non_redundancy": 0.6982,
+  "low_gain_ratio": 0.0,
+  "final_coverage": 0.0,
+  "action_continue_ratio": 1.0,
+  "action_next_phase_ratio": 0.0,
+  "action_end_ratio": 0.0,
+  "avg_interviewer_ms": 2605.22,
+  "graph_rag": {}
+}

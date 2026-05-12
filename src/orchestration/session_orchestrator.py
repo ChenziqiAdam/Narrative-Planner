@@ -267,6 +267,7 @@ class SessionOrchestrator:
             "new_entities": write_result.new_entity_count if write_result else 0,
             "relationships": write_result.relationship_count if write_result else 0,
         }
+        extraction_prompt_stats = getattr(self._graph_extraction_agent, "last_input_chars", {}) or {}
 
         # ── Append turn and update state ──
         state.transcript.append(turn_record)
@@ -340,8 +341,9 @@ class SessionOrchestrator:
         turn_debug_trace = {
             "extraction_ms": _extraction_ms,
             "write_ms": _write_ms,
-            "retrieval_ms": graph_rag_retrieval.latency_ms,            
+            "retrieval_ms": graph_rag_retrieval.latency_ms if graph_rag_retrieval else 0.0,
             "interviewer_llm_ms": _interviewer_llm_ms,
+            "extraction_prompt": extraction_prompt_stats,
             "pipeline": "graph_rag",
             "graph_changes": graph_changes,
             "decision_ctx": {

@@ -32,6 +32,23 @@ class Config:
         "1", "true", "yes", "on",
     }
 
+    # Automated interviewee simulation prompt controls.
+    # The compare experiment can run many turns, so only recent dialogue should
+    # be sent back to the simulated respondent on each call.
+    INTERVIEWEE_HISTORY_MAX_TURNS = int(os.getenv("INTERVIEWEE_HISTORY_MAX_TURNS", "8"))
+    INTERVIEWEE_HISTORY_MAX_CHARS = int(os.getenv("INTERVIEWEE_HISTORY_MAX_CHARS", "6000"))
+    INTERVIEWEE_REPLY_MAX_TOKENS = int(os.getenv("INTERVIEWEE_REPLY_MAX_TOKENS", "900"))
+
+    # Graph extraction prompt controls.  The full markdown prompt is useful for
+    # development, but batch experiments need a compact extraction contract.
+    GRAPH_EXTRACTION_COMPACT_PROMPT = os.getenv("GRAPH_EXTRACTION_COMPACT_PROMPT", "true").lower() in {
+        "1", "true", "yes", "on",
+    }
+    GRAPH_EXTRACTION_CONTEXT_TURNS = int(os.getenv("GRAPH_EXTRACTION_CONTEXT_TURNS", "1"))
+    GRAPH_EXTRACTION_MAX_TURN_CHARS = int(os.getenv("GRAPH_EXTRACTION_MAX_TURN_CHARS", "1200"))
+    GRAPH_EXTRACTION_MAX_GRAPH_CONTEXT_CHARS = int(os.getenv("GRAPH_EXTRACTION_MAX_GRAPH_CONTEXT_CHARS", "1500"))
+    GRAPH_EXTRACTION_MAX_OUTPUT_TOKENS = int(os.getenv("GRAPH_EXTRACTION_MAX_OUTPUT_TOKENS", "1200"))
+
     # App settings
     LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
     MAX_RETRIES = int(os.getenv("MAX_RETRIES", 3))

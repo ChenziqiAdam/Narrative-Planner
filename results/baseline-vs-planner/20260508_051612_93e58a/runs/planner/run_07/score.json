@@ -1,0 +1,25 @@
+{
+  "overall_score": 0.484,
+  "deterministic_score": 0.484,
+  "llm_score": null,
+  "llm_weight": 0.0,
+  "deterministic": {
+    "deterministic_score": 0.484,
+    "components": {
+      "question_quality": 0.4995,
+      "information_gain": 0.6571,
+      "non_redundancy": 0.5822,
+      "coverage": 0.0,
+      "completion": 0.7
+    },
+    "weights": {
+      "question_quality": 0.28,
+      "information_gain": 0.24,
+      "non_redundancy": 0.2,
+      "coverage": 0.18,
+      "completion": 0.1
+    },
+    "graph_observability_score": 0.65
+  },
+  "llm_result": null
+}

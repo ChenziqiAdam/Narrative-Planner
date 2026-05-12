@@ -1,0 +1,1151 @@
+{
+  "coverage_metrics": {
+    "overall_richness": 0.0,
+    "theme_richness": {
+      "THEME_01_LIFE_CHAPTERS": 0.0,
+      "THEME_02_PEAK_EXPERIENCE": 0.0,
+      "THEME_03_LOW_POINT": 0.0,
+      "THEME_04_TURNING_POINT": 0.0,
+      "THEME_05_CHILDHOOD_POSITIVE": 0.0,
+      "THEME_06_CHILDHOOD_NEGATIVE": 0.0,
+      "THEME_07_ADULT_MEMORY": 0.0,
+      "THEME_08_RELIGIOUS_EXPERIENCE": 0.0,
+      "THEME_09_WISDOM_EVENT": 0.0,
+      "THEME_10_NEXT_CHAPTER": 0.0,
+      "THEME_11_DREAMS_PLANS": 0.0,
+      "THEME_12_LIFE_PROJECT": 0.0,
+      "THEME_13_LIFE_CHALLENGE": 0.0,
+      "THEME_14_HEALTH": 0.0,
+      "THEME_15_LOSS": 0.0,
+      "THEME_16_FAILURE_REGRET": 0.0,
+      "THEME_17_RELIGIOUS_VALUES": 0.0,
+      "THEME_18_POLITICAL_VALUES": 0.0,
+      "THEME_19_VALUE_EVOLUTION": 0.0,
+      "THEME_20_SINGLE_VALUE": 0.0,
+      "THEME_21_SESSION_SUMMARY": 0.0,
+      "THEME_22_INFORMATION_INTEGRATION": 0.0,
+      "THEME_23_CONTEXT_MANAGEMENT": 0.0
+    }
+  },
+  "dynamic_profile": {
+    "last_updated_turn_id": "turn_5b5e03b7e7",
+    "planner_guidance": [
+      "Family profile is still thin; when the story naturally allows it, ask about spouse, children, siblings, or grandchildren.",
+      "Current-life profile is undercovered; consider a gentle bridge to daily routines, hobbies, social activity, or health concerns.",
+      "Adapt question shape to speaking style: moderate detail; one focused follow-up works best."
+    ],
+    "profile_quality": {
+      "core_identity_and_personality": 0.6667,
+      "current_life_status": 0.3333,
+      "family_situation": 0.0,
+      "life_views_and_attitudes": 0.0,
+      "overall": 0.25
+    },
+    "schema_version": "dynamic_elder_profile_v1",
+    "sections": {
+      "core_identity_and_personality": {
+        "common_expressions": {
+          "confidence": 0.35,
+          "value": [
+            "他的观点很有见地，让我们都对他刮目相看",
+            "这种变化，对我来说，是教学中特别珍贵的时刻"
+          ]
+        },
+        "identity_background": {
+          "confidence": 0.9,
+          "value": "name=李秀兰; birth_year=1944; age=82; hometown=四川成都; background=退休中学语文教师，经历过知青下乡、恢复高考、改革开放后的城市变迁。她有一个儿子和一个女儿，晚年喜欢整理旧照片和写日记。"
+        },
+        "life_overview": {
+          "confidence": 0.75,
+          "value": [
+            "退休中学语文教师，经历过知青下乡、恢复高考、改革开放后的城市变迁。她有一个儿子和一个女儿，晚年喜欢整理旧照片和写日记。"
+          ]
+        },
+        "speaking_style": {
+          "confidence": 0.45,
+          "value": "moderate detail; one focused follow-up works best"
+        }
+      },
+      "current_life_status": {
+        "interests_hobbies_social": {
+          "confidence": 0.45,
+          "value": [
+            "哎哟，说起这个我就想起我们那会儿嘛，有个特别的记忆让我到现在都还记得。那是一个夏天的傍晚，我们几个小孩儿在河边打水漂，看谁的石头跳得远。那时候河边的石头多得很，我们比谁的石头能在水"
+          ]
+        }
+      }
+    },
+    "update_count": 6
+  },
+  "narrative_fragments": {
+    "frag_0b52399175": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_0b52399175",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "欣慰和成就感",
+        "location": "未明确提及",
+        "people": [
+          "小林"
+        ],
+        "significance": "小林的成长代表了学生在成都历史项目中的进步和变化",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "未明确提及"
+      },
+      "rich_text": "小林在成都历史项目中从一个不敢发言的内向学生逐渐变得自信，最终能在全班面前大胆发言并提出有见地的观点",
+      "source_turn_ids": [
+        "turn_ab3e088b89"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_1534a53b01": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_1534a53b01",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "积极正面",
+        "people": [
+          "小林"
+        ],
+        "significance": "对秀兰奶奶来说，这是教学中特别珍贵的时刻",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE"
+      },
+      "rich_text": "小林从一个内向的孩子逐渐变得自信，最终能在全班面前大胆表达自己的观点",
+      "source_turn_ids": [
+        "turn_5b5e03b7e7"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_2298b7069e": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_2298b7069e",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "秀兰奶奶感到非常珍贵和欣慰",
+        "location": "教室和图书馆",
+        "people": [
+          "小林",
+          "秀兰奶奶"
+        ],
+        "significance": "教学中特别珍贵的时刻",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "未提及具体时间"
+      },
+      "rich_text": "小林从一个内向的孩子逐渐变得自信，并在全班面前大胆发言，提出了对成都老城区变化的有见地的观点",
+      "source_turn_ids": [
+        "turn_8a72da3f8b"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_22c1df257c": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_22c1df257c",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "快乐、合作、分享",
+        "people": [
+          "秀兰奶奶",
+          "兄弟姐妹",
+          "邻居孩子们"
+        ],
+        "significance": "塑造性格、学会与人相处、锻炼勇气和冒险精神",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶童年时参与的游戏，如捉迷藏、打水漂、爬树摘果子等",
+      "source_turn_ids": [
+        "turn_d673e1f2cf"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_269ca54fbd": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_269ca54fbd",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "欢乐和成就感",
+        "location": "河边",
+        "people": [
+          "我",
+          "弟弟",
+          "其他小孩"
+        ],
+        "significance": "纯真的快乐，宝贵的记忆",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年"
+      },
+      "rich_text": "秀兰奶奶童年时与弟弟和其他小孩在河边玩打水漂的游戏，看谁的石头能在水面上跳的次数多",
+      "source_turn_ids": [
+        "turn_211f03d2b8"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_3315ecb2f6": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_3315ecb2f6",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "积极正面",
+        "people": [
+          "学生们",
+          "内向的学生",
+          "学习成绩一般的女孩子",
+          "调皮捣蛋的男娃儿"
+        ],
+        "significance": "促进学生从不懂到懂，从不会到会，从不敢说到敢于说的成长",
+        "theme_id": "THEME_12_LIFE_PROJECT",
+        "time_anchor": "未明确提及具体年份"
+      },
+      "rich_text": "一个让学生分组进行的成都历史研究项目，要求学生自己查资料、讨论并共同完成报告",
+      "source_turn_ids": [
+        "turn_79e8588947"
+      ],
+      "theme_id": "THEME_12_LIFE_PROJECT",
+      "updated_at": null
+    },
+    "frag_35f2a85a43": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_35f2a85a43",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "快乐",
+        "location": "树",
+        "people": [
+          "秀兰奶奶",
+          "孩子们"
+        ],
+        "significance": "童年无忧无虑的回忆",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和孩子们一起爬树摘果子，尽管有时会被大人骂",
+      "source_turn_ids": [
+        "turn_cb2e4f1901"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_37c9adba1c": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_37c9adba1c",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "快乐和成就感",
+        "location": "家乡的树",
+        "people": [
+          "我",
+          "其他小孩"
+        ],
+        "significance": "简单的游戏带来的快乐和满足",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年"
+      },
+      "rich_text": "秀兰奶奶童年时与孩子们爬树摘果子，尽管有时会被大人骂，但自己劳动得到的成果吃起来特别甜",
+      "source_turn_ids": [
+        "turn_211f03d2b8"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_3985bf8056": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_3985bf8056",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "欢乐和成就感",
+        "location": "河边",
+        "people": [
+          "秀兰奶奶",
+          "弟弟",
+          "邻居的小孩"
+        ],
+        "significance": "纯真的快乐和宝贵的记忆",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "夏天的傍晚"
+      },
+      "rich_text": "秀兰奶奶和弟弟以及其他小孩在河边打水漂，看谁的石头能在水面上跳的次数多",
+      "source_turn_ids": [
+        "turn_ccd85feaa5"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_437cf0935a": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_437cf0935a",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "欢乐和成就感",
+        "location": "河边",
+        "people": [
+          "秀兰奶奶",
+          "几个小孩儿",
+          "弟弟"
+        ],
+        "significance": "留下了特别的情感记忆，成为宝贵的回忆",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "一个夏天的傍晚"
+      },
+      "rich_text": "秀兰奶奶和几个小孩儿在河边打水漂，寻找扁扁的石头并尝试让石头在水面上跳的次数多，最终弟弟的石头跳了七八下，大家感到神奇和开心",
+      "source_turn_ids": [
+        "turn_2ed6d54a21"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_4dba299928": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_4dba299928",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "正面",
+        "location": "成都",
+        "people": [
+          "小林"
+        ],
+        "significance": "小林观点很有见地，让人刮目相看",
+        "theme_id": "THEME_07_ADULT_MEMORY",
+        "time_anchor": "未明确提及"
+      },
+      "rich_text": "小林在讨论成都老城区变化时突然站起来，大胆地讲出了他的看法，让在场的人吃了一惊",
+      "source_turn_ids": [
+        "turn_8e8726e41f"
+      ],
+      "theme_id": "THEME_07_ADULT_MEMORY",
+      "updated_at": null
+    },
+    "frag_4f914e9d60": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_4f914e9d60",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "积极正面",
+        "people": [
+          "女娃儿",
+          "男娃儿"
+        ],
+        "significance": "学生通过项目学习，不仅学到了知识，还发现了自己的潜力",
+        "theme_id": "THEME_01_LIFE_CHAPTERS"
+      },
+      "rich_text": "一个要求学生自己查资料、互相讨论并一起做一个报告的项目",
+      "source_turn_ids": [
+        "turn_a5f4e9d0e7"
+      ],
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "updated_at": null
+    },
+    "frag_55a4fd76f5": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_55a4fd76f5",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "快乐和纯真",
+        "people": [
+          "秀兰奶奶",
+          "弟弟",
+          "邻居的小孩"
+        ],
+        "significance": "对秀兰奶奶后来的生活和性格有重要影响",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶童年时参与的游戏，包括捉迷藏、打水漂、爬树摘果子等",
+      "source_turn_ids": [
+        "turn_c0fcf84e01"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_62e2761df4": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_62e2761df4",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "欣慰",
+        "location": "成都历史项目讨论",
+        "people": [
+          "小林",
+          "秀兰奶奶"
+        ],
+        "significance": "教学中特别珍贵的时刻",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "未明确提及"
+      },
+      "rich_text": "小林从一个内向的孩子逐渐变得自信，从不敢发言到能在全班面前讲出自己的想法",
+      "source_turn_ids": [
+        "turn_2740e63225"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_6af35dd48a": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_6af35dd48a",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "正面",
+        "location": "未明确提及",
+        "people": [
+          "学生们",
+          "内向的孩子",
+          "学习成绩一般的女孩子",
+          "调皮捣蛋的男娃儿"
+        ],
+        "significance": "见证了学生从不懂到懂，从不会到会，从不敢说到敢于说的成长过程",
+        "theme_id": "THEME_07_ADULT_MEMORY",
+        "time_anchor": "未明确提及"
+      },
+      "rich_text": "一个让学生分组查资料、讨论并共同完成报告的项目，旨在培养学生合作、分享信息和解决问题的能力",
+      "source_turn_ids": [
+        "turn_7a28cf3d80"
+      ],
+      "theme_id": "THEME_07_ADULT_MEMORY",
+      "updated_at": null
+    },
+    "frag_6c42a97b6a": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_6c42a97b6a",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "惊讶和认可",
+        "location": "教室",
+        "people": [
+          "小林"
+        ],
+        "significance": "让秀兰奶奶感到非常珍贵和有成就感",
+        "theme_id": "THEME_07_ADULT_MEMORY",
+        "time_anchor": "未明确提及具体时间"
+      },
+      "rich_text": "小林在成都历史项目中的一次讨论中突然站起来，大胆地讲出了他的看法",
+      "source_turn_ids": [
+        "turn_36eb243545"
+      ],
+      "theme_id": "THEME_07_ADULT_MEMORY",
+      "updated_at": null
+    },
+    "frag_6fece419d1": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_6fece419d1",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "自信",
+        "people": [
+          "小林"
+        ],
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE"
+      },
+      "rich_text": "小林在成都历史项目中，从小组发言到能在全班面前讲出自己的想法",
+      "source_turn_ids": [
+        "turn_a8886d57d0"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_8032198e89": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_8032198e89",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "积极",
+        "people": [
+          "孩子们"
+        ],
+        "significance": "培养面对困难的勇气",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE"
+      },
+      "rich_text": "秀兰奶奶教导孩子们遇到难题不要害怕，要勇敢面对，就像童年爬树摘果子一样",
+      "source_turn_ids": [
+        "turn_0bdff2afd5"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_83d7b072a5": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_83d7b072a5",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "积极正面",
+        "people": [
+          "学生们",
+          "内向的学生"
+        ],
+        "significance": "促进学生合作与自信",
+        "theme_id": "THEME_12_LIFE_PROJECT"
+      },
+      "rich_text": "秀兰奶奶让学生们分组做一个关于成都历史的项目，要求学生们自己查资料、互相讨论并一起做一个报告",
+      "source_turn_ids": [
+        "turn_4dd674ebba"
+      ],
+      "theme_id": "THEME_12_LIFE_PROJECT",
+      "updated_at": null
+    },
+    "frag_8aba6806eb": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_8aba6806eb",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "积极",
+        "people": [
+          "孩子们"
+        ],
+        "significance": "培养合作精神",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION"
+      },
+      "rich_text": "秀兰奶奶在教学过程中让孩子们分组做项目，以培养他们的合作精神",
+      "source_turn_ids": [
+        "turn_0bdff2afd5"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_8c712ab825": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_8c712ab825",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "积极正面",
+        "location": "教室和图书馆",
+        "people": [
+          "小林"
+        ],
+        "significance": "对秀兰奶奶来说，小林的变化是教学中特别珍贵的时刻",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "未明确提及具体时间"
+      },
+      "rich_text": "小林从内向的孩子逐渐变得自信，特别是在成都历史项目中的变化过程",
+      "source_turn_ids": [
+        "turn_36eb243545"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_8f7894b34c": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_8f7894b34c",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "积极正面",
+        "location": "成都历史项目",
+        "people": [
+          "小林"
+        ],
+        "significance": "对教学来说特别珍贵的时刻",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "未提及具体时间"
+      },
+      "rich_text": "小林从一个内向的孩子逐渐变得自信，特别是在成都历史项目中，他大胆地表达了自己对成都老城区变化的看法，让在场的人刮目相看。",
+      "source_turn_ids": [
+        "turn_0da12206e3"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_934676e6df": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_934676e6df",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "正面",
+        "location": "成都",
+        "people": [
+          "小林",
+          "秀兰奶奶"
+        ],
+        "significance": "对秀兰奶奶来说，是教学中特别珍贵的时刻",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "未明确提及"
+      },
+      "rich_text": "小林在成都历史项目中从内向到自信，最终能在全班面前大胆表达自己观点的过程",
+      "source_turn_ids": [
+        "turn_8e8726e41f"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_9ac87b3906": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_9ac87b3906",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "意外和惊喜",
+        "location": "讨论现场",
+        "people": [
+          "小林"
+        ],
+        "significance": "小林展示出内心有货，但缺少自信",
+        "theme_id": "THEME_04_TURNING_POINT",
+        "time_anchor": "成都历史项目期间"
+      },
+      "rich_text": "在成都历史项目讨论中，小林突然提出了一个大家都没想到的观点，让在场的人吃了一惊",
+      "source_turn_ids": [
+        "turn_1bb710e27d"
+      ],
+      "theme_id": "THEME_04_TURNING_POINT",
+      "updated_at": null
+    },
+    "frag_9cc6687505": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_9cc6687505",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "积极",
+        "people": [
+          "孩子们"
+        ],
+        "significance": "促进分享精神",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE"
+      },
+      "rich_text": "秀兰奶奶在课堂上鼓励孩子们分享自己的想法，以促进分享精神",
+      "source_turn_ids": [
+        "turn_0bdff2afd5"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_a8afc3661e": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_a8afc3661e",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "people": [
+          "小林"
+        ],
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE"
+      },
+      "rich_text": "一个教育项目，小林在此项目中逐渐变得自信",
+      "source_turn_ids": [
+        "turn_a8886d57d0"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_a9900fb3dd": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_a9900fb3dd",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "惊讶",
+        "location": "未明确提及",
+        "people": [
+          "小林"
+        ],
+        "significance": "让在场的人刮目相看",
+        "theme_id": "THEME_07_ADULT_MEMORY",
+        "time_anchor": "未明确提及"
+      },
+      "rich_text": "在讨论成都老城区变化时，小林突然站起来，大胆地讲出了他的看法",
+      "source_turn_ids": [
+        "turn_f205fe88e1"
+      ],
+      "theme_id": "THEME_07_ADULT_MEMORY",
+      "updated_at": null
+    },
+    "frag_aaa8be9f0f": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_aaa8be9f0f",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "惊喜",
+        "location": "成都历史项目讨论地点",
+        "people": [
+          "小林"
+        ],
+        "significance": "小林展现出了平时不为人知的能力",
+        "theme_id": "THEME_04_TURNING_POINT",
+        "time_anchor": "成都历史项目讨论时"
+      },
+      "rich_text": "在成都历史项目讨论中，小林突然提出了一个大家都没想到的观点，让在场的人吃了一惊",
+      "source_turn_ids": [
+        "turn_b7ba5fa2e6"
+      ],
+      "theme_id": "THEME_04_TURNING_POINT",
+      "updated_at": null
+    },
+    "frag_ae9b43b4bd": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_ae9b43b4bd",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "高兴和成就感",
+        "people": [
+          "学生们",
+          "平时不起眼的学生",
+          "内向的学生",
+          "平时学习成绩一般的女孩子",
+          "平时调皮捣蛋的男娃儿"
+        ],
+        "significance": "老师最大的快乐",
+        "theme_id": "THEME_07_ADULT_MEMORY"
+      },
+      "rich_text": "学生们从不懂到学会，再到能够自己解决问题的过程",
+      "source_turn_ids": [
+        "turn_84695ce35a"
+      ],
+      "theme_id": "THEME_07_ADULT_MEMORY",
+      "updated_at": null
+    },
+    "frag_c80a56dc36": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_c80a56dc36",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "积极正面",
+        "location": "未明确提及具体地点",
+        "people": [
+          "小林",
+          "秀兰奶奶"
+        ],
+        "significance": "对秀兰奶奶来说，是教学中特别珍贵的时刻",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "未明确提及具体时间"
+      },
+      "rich_text": "小林在成都历史项目中从一个内向的孩子逐渐变得自信，最终能在全班面前大胆发言",
+      "source_turn_ids": [
+        "turn_9a505e9409"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_cb8597c7e3": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_cb8597c7e3",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "积极变化",
+        "location": "教室或图书馆",
+        "people": [
+          "小林"
+        ],
+        "significance": "对小林自信心的建立和表达能力的提升有重要作用",
+        "theme_id": "THEME_07_ADULT_MEMORY",
+        "time_anchor": "未具体提及"
+      },
+      "rich_text": "小林在成都历史项目中参与讨论并在全班面前发言，开始时不好意思，后来胆子变大，提出意想不到的观点让大家刮目相看",
+      "source_turn_ids": [
+        "turn_180a26880f"
+      ],
+      "theme_id": "THEME_07_ADULT_MEMORY",
+      "updated_at": null
+    },
+    "frag_cd07ddc238": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_cd07ddc238",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "高兴和欣慰",
+        "people": [
+          "学生们"
+        ],
+        "significance": "见证了学生的成长和变化",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE"
+      },
+      "rich_text": "秀兰奶奶看到学生们在成都历史项目中从内向变得自信，感到非常高兴和欣慰",
+      "source_turn_ids": [
+        "turn_a51bb64333"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_d1ff61ec6a": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_d1ff61ec6a",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "自信提升",
+        "location": "教室",
+        "people": [
+          "小林"
+        ],
+        "significance": "小林观点让大家刮目相看，增强自信",
+        "theme_id": "THEME_11_DREAMS_PLANS",
+        "time_anchor": "未提及具体时间"
+      },
+      "rich_text": "小林在成都历史项目中被鼓励在全班面前发言，提出意想不到的观点，让大家刮目相看",
+      "source_turn_ids": [
+        "turn_1107fcf8da"
+      ],
+      "theme_id": "THEME_11_DREAMS_PLANS",
+      "updated_at": null
+    },
+    "frag_d244214aac": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_d244214aac",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "积极变化",
+        "location": "成都",
+        "people": [
+          "小林"
+        ],
+        "significance": "对小林自信心提升有重要作用",
+        "theme_id": "THEME_07_ADULT_MEMORY"
+      },
+      "rich_text": "在成都历史项目中，小林参与讨论并大胆发言的活动",
+      "source_turn_ids": [
+        "turn_858a00f8be"
+      ],
+      "theme_id": "THEME_07_ADULT_MEMORY",
+      "updated_at": null
+    },
+    "frag_e7df47ae53": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_e7df47ae53",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "快乐",
+        "location": "河边",
+        "people": [
+          "秀兰奶奶",
+          "孩子们"
+        ],
+        "significance": "童年无忧无虑的回忆",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和孩子们在河边捡石头打水漂，比较谁的石头跳得远",
+      "source_turn_ids": [
+        "turn_cb2e4f1901"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_ea0718f032": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_ea0718f032",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "温馨而辛苦",
+        "location": "成都老城区的家",
+        "people": [
+          "我",
+          "妈妈",
+          "爸爸"
+        ],
+        "significance": "童年的家庭生活，对李秀兰奶奶来说意义重大",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "1940年代末"
+      },
+      "rich_text": "李秀兰奶奶最早的记忆是成都老城区的家，家里条件不好但很温馨，母亲在院子里种了许多茉莉花，父亲是个忙碌的手艺人。",
+      "source_turn_ids": [
+        "turn_cb988d05e8"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_f3300e099a": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_f3300e099a",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "积极正面",
+        "location": "未明确提及",
+        "people": [
+          "小林",
+          "秀兰奶奶"
+        ],
+        "significance": "对秀兰奶奶来说，这是教学中特别珍贵的时刻",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "未明确提及"
+      },
+      "rich_text": "小林从一个内向的孩子逐渐变得自信，能够大胆在全班面前表达自己的观点",
+      "source_turn_ids": [
+        "turn_f205fe88e1"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_f40e42f717": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_f40e42f717",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "快乐",
+        "location": "巷子",
+        "people": [
+          "秀兰奶奶",
+          "弟弟",
+          "邻居小孩"
+        ],
+        "significance": "童年无忧无虑的回忆",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和弟弟以及邻居小孩在巷子里玩捉迷藏，一玩就是一个下午",
+      "source_turn_ids": [
+        "turn_cb2e4f1901"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_faa3c9fcbd": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_faa3c9fcbd",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "积极变化",
+        "location": "成都",
+        "people": [
+          "小林"
+        ],
+        "significance": "小林自信提升的关键事件",
+        "theme_id": "THEME_06_CHILDHOOD_NEGATIVE"
+      },
+      "rich_text": "在成都历史项目中讨论老城区变化的活动，小林在其中大胆表达了自己的观点",
+      "source_turn_ids": [
+        "turn_e895ebaece"
+      ],
+      "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+      "updated_at": null
+    },
+    "frag_fdbe47b3c5": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_fdbe47b3c5",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "积极变化",
+        "location": "教室、图书馆",
+        "people": [
+          "小林"
+        ],
+        "significance": "帮助小林建立自信，敢于表达",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "未提及具体时间"
+      },
+      "rich_text": "小林在成都历史项目中参与讨论，开始时不好意思，后来胆子变大，敢于表达自己",
+      "source_turn_ids": [
+        "turn_1107fcf8da"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    }
+  },
+  "session_id": "370807a246fa4462a70708138639560e",
+  "theme_nodes": [
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_02_PEAK_EXPERIENCE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_03_LOW_POINT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_04_TURNING_POINT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_07_ADULT_MEMORY",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_08_RELIGIOUS_EXPERIENCE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_10_NEXT_CHAPTER",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_11_DREAMS_PLANS",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_12_LIFE_PROJECT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_13_LIFE_CHALLENGE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_14_HEALTH",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_15_LOSS",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_16_FAILURE_REGRET",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_17_RELIGIOUS_VALUES",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_18_POLITICAL_VALUES",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_19_VALUE_EVOLUTION",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_20_SINGLE_VALUE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_21_SESSION_SUMMARY",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_23_CONTEXT_MANAGEMENT",
+      "title": null
+    }
+  ],
+  "timestamp": "2026-05-08T06:58:32.662989",
+  "turn_count": 34
+}

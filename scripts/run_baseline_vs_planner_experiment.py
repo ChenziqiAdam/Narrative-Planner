@@ -2,7 +2,7 @@
 """Run a baseline-vs-planner interview quality experiment.
 
 Default experiment:
-    baseline: 10 independent AI interviews, 50 turns each
+    baseline: 10 independent AI interviews, 20 turns each
     planner:  10 independent AI interviews, 50 turns each
 
 Outputs are written under results/baseline-vs-planner/<experiment_id>/.
@@ -326,7 +326,8 @@ def final_score(
 @dataclass
 class ExperimentArgs:
     runs_per_agent: int
-    turns: int
+    baseline_turns: int
+    planner_turns: int
     output_dir: Path
     experiment_id: str
     use_llm_scorer: bool
@@ -347,6 +348,9 @@ class CompareExperimentRunner:
         self.charts_dir = self.experiment_dir / "charts"
         self.docs_dir = self.experiment_dir / "docs"
         self.client = None
+
+    def target_turns(self, agent_type: str) -> int:
+        return self.args.planner_turns if agent_type == "planner" else self.args.baseline_turns
 
     def configure_runtime(self) -> None:
         if self.args.model:
@@ -425,8 +429,9 @@ class CompareExperimentRunner:
         turns: List[Dict[str, Any]] = []
         status = "completed"
         started_at = datetime.now().isoformat()
+        target_turns = self.target_turns(agent_type)
 
-        for turn_index in range(1, self.args.turns + 1):
+        for turn_index in range(1, target_turns + 1):
             t0 = time.perf_counter()
             try:
                 events = self.run_single_turn(agent_type, session_id)
@@ -460,7 +465,7 @@ class CompareExperimentRunner:
                     break
 
             if turn_index % 5 == 0:
-                print(f"[{agent_type}] run {run_index:02d}: {turn_index}/{self.args.turns} turns")
+                print(f"[{agent_type}] run {run_index:02d}: {turn_index}/{target_turns} turns")
 
         session = self.app_module._compare_sessions.get(session_id, {})
         history = list(session.get("history", []))
@@ -469,7 +474,7 @@ class CompareExperimentRunner:
         planner_report = self.fetch_json(f"/api/planner/report/{session_id}") if agent_type == "planner" else {}
         graph_state = self.fetch_json(f"/api/planner/graph/{session_id}") if agent_type == "planner" else {}
 
-        metrics = extract_common_metrics(agent_type, turns, evaluation_state, self.args.turns)
+        metrics = extract_common_metrics(agent_type, turns, evaluation_state, target_turns)
         deterministic = deterministic_score(metrics)
         llm_result = score_with_llm(
             transcript,
@@ -606,7 +611,8 @@ class CompareExperimentRunner:
             "created_at": datetime.now().isoformat(),
             "config": {
                 "runs_per_agent": self.args.runs_per_agent,
-                "turns": self.args.turns,
+                "baseline_turns": self.args.baseline_turns,
+                "planner_turns": self.args.planner_turns,
                 "use_llm_scorer": self.args.use_llm_scorer,
                 "llm_weight": self.args.llm_weight,
                 "variance_penalty_weight": self.args.variance_penalty_weight,
@@ -740,7 +746,8 @@ This experiment compares the control-group `baseline` interviewer against the Gr
 ## Default Design
 - Agents: `baseline`, `planner`
 - Runs per agent: {self.args.runs_per_agent}
-- Turns per run: {self.args.turns}
+- Baseline turns per run: {self.args.baseline_turns}
+- Planner turns per run: {self.args.planner_turns}
 - Interview mode: AI interviewee through the same `/api/<agent>/auto?single_turn=1` route used by the 9999 compare UI
 - Graph reset: once before the experiment, preserving Topic nodes, when Neo4j is enabled
 - Planner tools enabled: {self.args.enable_planner_tools}
@@ -812,7 +819,7 @@ Experiment ID: `{self.args.experiment_id}`
 
 ## Reproduce
 ```bash
-python scripts/run_baseline_vs_planner_experiment.py --runs-per-agent {self.args.runs_per_agent} --turns {self.args.turns}
+python scripts/run_baseline_vs_planner_experiment.py --runs-per-agent {self.args.runs_per_agent} --baseline-turns {self.args.baseline_turns} --planner-turns {self.args.planner_turns}
 ```
 """
         (self.docs_dir / "METHODS.md").write_text(methods, encoding="utf-8")
@@ -831,7 +838,14 @@ def load_elder_info(path: Optional[str]) -> Dict[str, Any]:
 def parse_args() -> ExperimentArgs:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--runs-per-agent", type=int, default=10)
-    parser.add_argument("--turns", type=int, default=50)
+    parser.add_argument(
+        "--turns",
+        type=int,
+        default=None,
+        help="Optional shortcut to set both --baseline-turns and --planner-turns.",
+    )
+    parser.add_argument("--baseline-turns", type=int, default=20)
+    parser.add_argument("--planner-turns", type=int, default=50)
     parser.add_argument("--output-dir", default=str(PROJECT_ROOT / "results" / "baseline-vs-planner"))
     parser.add_argument("--experiment-id", default="")
     parser.add_argument("--elder-info-json", default="")
@@ -849,9 +863,12 @@ def parse_args() -> ExperimentArgs:
     ns = parser.parse_args()
 
     experiment_id = ns.experiment_id or f"{datetime.now().strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:6]}"
+    baseline_turns = ns.turns if ns.turns is not None else ns.baseline_turns
+    planner_turns = ns.turns if ns.turns is not None else ns.planner_turns
     return ExperimentArgs(
         runs_per_agent=max(1, ns.runs_per_agent),
-        turns=max(1, ns.turns),
+        baseline_turns=max(1, int(baseline_turns)),
+        planner_turns=max(1, int(planner_turns)),
         output_dir=Path(ns.output_dir),
         experiment_id=experiment_id,
         use_llm_scorer=bool(ns.use_llm_scorer),

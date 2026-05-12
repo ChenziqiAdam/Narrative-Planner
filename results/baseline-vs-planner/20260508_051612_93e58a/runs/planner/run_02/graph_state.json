@@ -1,0 +1,1330 @@
+{
+  "coverage_metrics": {
+    "overall_richness": 0.0,
+    "theme_richness": {
+      "THEME_01_LIFE_CHAPTERS": 0.0,
+      "THEME_02_PEAK_EXPERIENCE": 0.0,
+      "THEME_03_LOW_POINT": 0.0,
+      "THEME_04_TURNING_POINT": 0.0,
+      "THEME_05_CHILDHOOD_POSITIVE": 0.0,
+      "THEME_06_CHILDHOOD_NEGATIVE": 0.0,
+      "THEME_07_ADULT_MEMORY": 0.0,
+      "THEME_08_RELIGIOUS_EXPERIENCE": 0.0,
+      "THEME_09_WISDOM_EVENT": 0.0,
+      "THEME_10_NEXT_CHAPTER": 0.0,
+      "THEME_11_DREAMS_PLANS": 0.0,
+      "THEME_12_LIFE_PROJECT": 0.0,
+      "THEME_13_LIFE_CHALLENGE": 0.0,
+      "THEME_14_HEALTH": 0.0,
+      "THEME_15_LOSS": 0.0,
+      "THEME_16_FAILURE_REGRET": 0.0,
+      "THEME_17_RELIGIOUS_VALUES": 0.0,
+      "THEME_18_POLITICAL_VALUES": 0.0,
+      "THEME_19_VALUE_EVOLUTION": 0.0,
+      "THEME_20_SINGLE_VALUE": 0.0,
+      "THEME_21_SESSION_SUMMARY": 0.0,
+      "THEME_22_INFORMATION_INTEGRATION": 0.0,
+      "THEME_23_CONTEXT_MANAGEMENT": 0.0
+    }
+  },
+  "dynamic_profile": {
+    "last_updated_turn_id": "turn_603b6ed99f",
+    "planner_guidance": [
+      "Family profile is still thin; when the story naturally allows it, ask about spouse, children, siblings, or grandchildren.",
+      "Current-life profile is undercovered; consider a gentle bridge to daily routines, hobbies, social activity, or health concerns.",
+      "Adapt question shape to speaking style: brief replies; use short, concrete prompts and avoid stacking multiple questions."
+    ],
+    "profile_quality": {
+      "core_identity_and_personality": 0.6667,
+      "current_life_status": 0.0,
+      "family_situation": 0.0,
+      "life_views_and_attitudes": 0.0,
+      "overall": 0.1667
+    },
+    "schema_version": "dynamic_elder_profile_v1",
+    "sections": {
+      "core_identity_and_personality": {
+        "common_expressions": {
+          "confidence": 0.35,
+          "value": [
+            "这个教训在我后来当老师的时候体现得特别明显",
+            "哎哟，那时候我一边跑一边心里头慌得很嘛",
+            "这个问题我得再想想"
+          ]
+        },
+        "identity_background": {
+          "confidence": 0.9,
+          "value": "name=李秀兰; birth_year=1944; age=82; hometown=四川成都; background=退休中学语文教师，经历过知青下乡、恢复高考、改革开放后的城市变迁。她有一个儿子和一个女儿，晚年喜欢整理旧照片和写日记。"
+        },
+        "life_overview": {
+          "confidence": 0.75,
+          "value": [
+            "退休中学语文教师，经历过知青下乡、恢复高考、改革开放后的城市变迁。她有一个儿子和一个女儿，晚年喜欢整理旧照片和写日记。"
+          ]
+        },
+        "speaking_style": {
+          "confidence": 0.45,
+          "value": "brief replies; use short, concrete prompts and avoid stacking multiple questions"
+        }
+      }
+    },
+    "update_count": 6
+  },
+  "narrative_fragments": {
+    "frag_00a62c746a": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_00a62c746a",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "既害怕又好笑",
+        "location": "村头老李家的果园",
+        "people": [
+          "秀兰奶奶",
+          "阿强",
+          "小花"
+        ],
+        "significance": "体现了童年的快乐和无忧无虑",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和阿强、小花一起在村头老李家的果园偷摘李子，被大黄狗发现后吓得到处跑，最后李子没吃着，还弄得一身狼狈",
+      "source_turn_ids": [
+        "turn_c924a02dad"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_01f2db3206": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_01f2db3206",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "正直",
+        "location": "菜市场",
+        "people": [
+          "秀兰奶奶",
+          "小贩"
+        ],
+        "significance": "日常生活中的诚实守信和尊重劳动的体现",
+        "theme_id": "THEME_09_WISDOM_EVENT"
+      },
+      "rich_text": "秀兰奶奶在菜市场买菜时规规矩矩地付钱，不占小贩便宜，体现了她从偷摘李子事件中学到的诚实守信和尊重劳动的价值观",
+      "source_turn_ids": [
+        "turn_76ac4d6a89"
+      ],
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "updated_at": null
+    },
+    "frag_07c74833f0": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_07c74833f0",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张刺激",
+        "people": [
+          "我",
+          "阿强",
+          "小花"
+        ],
+        "significance": "让胆子变大，懂得团队合作的重要性",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和伙伴们计划偷摘老李家的李子，却被狗发现并追赶，最终没有吃到李子，但获得了紧张刺激的体验",
+      "source_turn_ids": [
+        "turn_3291260141"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_0bdcec1126": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_0bdcec1126",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "学会谨慎",
+        "significance": "影响教育工作方法，强调学习要一步一个脚印",
+        "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶小时候河边捉鱼时滑倒在水里，回家被母亲责备的经历",
+      "source_turn_ids": [
+        "turn_28e4173b9a"
+      ],
+      "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+      "updated_at": null
+    },
+    "frag_161c5b1c2a": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_161c5b1c2a",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "害怕又好笑",
+        "location": "村里",
+        "people": [
+          "我",
+          "小伙伴"
+        ],
+        "significance": "童年趣事",
+        "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "偷摘李子时被邻居家的大黄狗发现，被追得满村跑",
+      "source_turn_ids": [
+        "turn_b98b967a77"
+      ],
+      "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+      "updated_at": null
+    },
+    "frag_174a86e76a": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_174a86e76a",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "又好气又好笑",
+        "location": "家院子",
+        "people": [
+          "我",
+          "妈妈"
+        ],
+        "significance": "童年记忆中的温馨与乐趣",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "四五岁时"
+      },
+      "rich_text": "老人四五岁时，穿上母亲做的新布鞋在院子里跑动，不慎踩入泥坑，鞋子沾满泥巴",
+      "source_turn_ids": [
+        "turn_02c1f0feb0"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_184f2c2402": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_184f2c2402",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "教训",
+        "significance": "深刻影响了秀兰奶奶的人生观和价值观",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION"
+      },
+      "rich_text": "秀兰奶奶偷摘李子后被母亲教训，告知不能随便拿别人的东西，要尊重别人的劳动成果",
+      "source_turn_ids": [
+        "turn_9b519a23e3"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_1acda325cb": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_1acda325cb",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张刺激后转为好笑",
+        "significance": "学会了做事要谨慎，不能太冒失",
+        "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "小时候去河边捉鱼时滑倒在水里，全身湿透，回家被母亲责备",
+      "source_turn_ids": [
+        "turn_ed13c26c55"
+      ],
+      "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+      "updated_at": null
+    },
+    "frag_1e91eba150": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_1e91eba150",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "快乐",
+        "location": "河边",
+        "people": [
+          "我",
+          "小伙伴"
+        ],
+        "significance": "童年趣事",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "童年时和小伙伴去河边捉鱼，河水清澈，鱼多，用竹篓子捞鱼",
+      "source_turn_ids": [
+        "turn_b98b967a77"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_25d16bab75": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_25d16bab75",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张刺激",
+        "location": "老李家的果园",
+        "people": [
+          "秀兰奶奶",
+          "阿强",
+          "小花"
+        ],
+        "significance": "童年冒险经历，学会了团队合作和谨慎行事",
+        "theme_id": "THEME_09_WISDOM_EVENT",
+        "time_anchor": "大中午"
+      },
+      "rich_text": "秀兰奶奶和阿强、小花一起计划在大中午去老李家的果园偷摘李子，阿强负责爬树摘李子，秀兰奶奶和小花在下面捡。",
+      "source_turn_ids": [
+        "turn_24765e395b"
+      ],
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "updated_at": null
+    },
+    "frag_27837b9cb8": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_27837b9cb8",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "既害怕又好笑",
+        "location": "老李家的果园",
+        "people": [
+          "秀兰奶奶",
+          "阿强",
+          "小花"
+        ],
+        "significance": "教训了秀兰奶奶做人要本本分分，不能贪小便宜",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "大中午"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们计划并实施了一次偷摘老李家李子的行动",
+      "source_turn_ids": [
+        "turn_b4198dc15f"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_435b15e65a": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_435b15e65a",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张刺激后的反思",
+        "significance": "胆子变大，懂得团队合作",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和伙伴们偷摘李子时被狗追，虽然没有吃到李子，但经历了紧张刺激，学会了团队合作",
+      "source_turn_ids": [
+        "turn_4d89a2c714"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_450df33bfc": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_450df33bfc",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "被责备后学会谨慎",
+        "people": [
+          "我",
+          "母亲"
+        ],
+        "significance": "学会了做事要谨慎，不能太冒失",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶小时候去河边捉鱼时滑倒在水里，被母亲责备，学会了做事要谨慎",
+      "source_turn_ids": [
+        "turn_14be39da37"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_5089c20fec": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_5089c20fec",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "被责备后的反思",
+        "significance": "学会了做事要谨慎",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶小时候去河边捉鱼时滑倒在水里，被母亲责备，学会了做事要谨慎",
+      "source_turn_ids": [
+        "turn_4d89a2c714"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_5f8dc719cb": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_5f8dc719cb",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张刺激",
+        "location": "村头老李家的果园",
+        "people": [
+          "秀兰奶奶",
+          "阿强",
+          "小花"
+        ],
+        "significance": "胆子变大，懂得团队合作",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和阿强、小花一起偷摘李子被狗追，虽然没有吃到李子，但是这次经历让她胆子变大，懂得了团队合作的重要性",
+      "source_turn_ids": [
+        "turn_8369a33fdd"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_65a40c9024": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_65a40c9024",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "被责备后的反思",
+        "significance": "学会了做事要谨慎",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶小时候去河边捉鱼时滑倒在水里，回家被母亲责备，学会了做事要谨慎",
+      "source_turn_ids": [
+        "turn_bad9bb9cc9"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_6b037e0717": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_6b037e0717",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张刺激",
+        "significance": "胆子变大，懂得了团队合作的重要性",
+        "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "童年时和小伙伴偷摘邻居家的李子，被大黄狗发现后被追得满村跑",
+      "source_turn_ids": [
+        "turn_ed13c26c55"
+      ],
+      "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+      "updated_at": null
+    },
+    "frag_71f99b781f": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_71f99b781f",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "既害怕又好笑",
+        "location": "老李家的果园",
+        "people": [
+          "秀兰奶奶",
+          "阿强",
+          "小花"
+        ],
+        "significance": "让秀兰奶奶学到了做人要诚实守信",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "大中午"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们计划在大中午去老李家的果园偷摘李子，阿强负责爬树摘李子，秀兰奶奶和小花在下面捡，过程中被老李家的大黄狗发现，三人吓得逃跑，李子没吃着，还弄得一身狼狈。",
+      "source_turn_ids": [
+        "turn_603b6ed99f"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_7b6ab2ea20": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_7b6ab2ea20",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "既害怕又好笑",
+        "significance": "让秀兰奶奶学会了尊重别人的劳动成果",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶童年时与小伙伴偷摘李子，被老李家的大黄狗发现后狼狈逃跑的经历",
+      "source_turn_ids": [
+        "turn_9b519a23e3"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_7e1e382a53": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_7e1e382a53",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "刺激",
+        "location": "邻居家",
+        "people": [
+          "我",
+          "小伙伴"
+        ],
+        "significance": "童年趣事",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "和小伙伴去偷摘邻居家的李子，李子很甜",
+      "source_turn_ids": [
+        "turn_b98b967a77"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_7e91e230ae": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_7e91e230ae",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "教育和引导",
+        "people": [
+          "秀兰奶奶",
+          "学生们"
+        ],
+        "significance": "体现了秀兰奶奶从童年经历中学到的教训",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION"
+      },
+      "rich_text": "秀兰奶奶在教学过程中，总是告诉学生们学习没有捷径，要一步一个脚印，踏踏实实地学，做人也要诚实守信，尊重别人的劳动成果",
+      "source_turn_ids": [
+        "turn_9b519a23e3"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_80fb77166c": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_80fb77166c",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "害怕和后悔",
+        "location": "村头老李家的果园",
+        "people": [
+          "秀兰奶奶",
+          "母亲"
+        ],
+        "significance": "教训影响了秀兰奶奶的人生观和教育工作",
+        "theme_id": "THEME_09_WISDOM_EVENT",
+        "time_anchor": "小时候"
+      },
+      "rich_text": "秀兰奶奶小时候在村头老李家的果园偷摘李子，被母亲发现并受到教训",
+      "source_turn_ids": [
+        "turn_115135dcf7"
+      ],
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "updated_at": null
+    },
+    "frag_93ac0db2e7": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_93ac0db2e7",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "又害怕又好笑",
+        "location": "老李家的果园",
+        "people": [
+          "秀兰奶奶",
+          "阿强",
+          "小花"
+        ],
+        "significance": "让秀兰奶奶学会了尊重别人的劳动成果",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "大中午"
+      },
+      "rich_text": "秀兰奶奶和几个小孩子商量去老李家的果园偷摘李子，阿强负责爬树摘李子，秀兰和小花在下面捡，被老李家的大黄狗发现后逃跑，没有吃到李子还弄得一身狼狈",
+      "source_turn_ids": [
+        "turn_7023db152e"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_97641a7828": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_97641a7828",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "调皮捣蛋",
+        "people": [
+          "我",
+          "阿强",
+          "小花"
+        ],
+        "significance": "体现了童年的无忧无虑和冒险精神",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "小时候"
+      },
+      "rich_text": "秀兰奶奶和童年玩伴一起做的调皮捣蛋的事情之一，包括阿强和小花",
+      "source_turn_ids": [
+        "turn_19d1bdc664"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_97d49009f0": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_97d49009f0",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "谨慎",
+        "significance": "学会了做事要谨慎，不能太冒失",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶小时候河边捉鱼时滑倒的事情",
+      "source_turn_ids": [
+        "turn_068c53df9b"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_9c78ac6a56": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_9c78ac6a56",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "被责备后的反思",
+        "significance": "学会了做事要谨慎",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶小时候去河边捉鱼时滑倒在水里，回家被母亲责备，让她学会了做事要谨慎",
+      "source_turn_ids": [
+        "turn_8369a33fdd"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_a207c2d9b0": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_a207c2d9b0",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "既害怕又好笑",
+        "location": "老李家的果园",
+        "people": [
+          "秀兰奶奶",
+          "阿强",
+          "小花"
+        ],
+        "significance": "童年冒险的乐园，也是童年记忆的一部分",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "大中午"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们计划在大中午去老李家的果园偷摘李子，阿强负责爬树摘李子，秀兰奶奶和小花在下面捡，过程中被老李家的大黄狗发现，三人吓得逃跑，最终李子没吃着，还弄得一身狼狈。",
+      "source_turn_ids": [
+        "turn_b7a8841d93"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_a4161f9797": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_a4161f9797",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "胆子变大，懂得团队合作",
+        "significance": "影响家庭相处方式，懂得互相支持共同面对困难",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶童年偷摘李子时被狗追赶的紧张刺激经历",
+      "source_turn_ids": [
+        "turn_28e4173b9a"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_a4394e109f": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_a4394e109f",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "正面教育",
+        "people": [
+          "秀兰奶奶",
+          "学生们"
+        ],
+        "significance": "体现了秀兰奶奶从偷摘李子事件中学到的教训",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION"
+      },
+      "rich_text": "秀兰奶奶在当老师时教育学生要一步一个脚印，踏踏实实地学习，强调诚实守信的重要性",
+      "source_turn_ids": [
+        "turn_da8affe553"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_acf1d7a90b": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_acf1d7a90b",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张刺激又好笑",
+        "location": "老李家的果园",
+        "people": [
+          "秀兰奶奶",
+          "阿强",
+          "小花"
+        ],
+        "significance": "童年的冒险经历，影响了秀兰奶奶的性格和生活态度",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "大中午"
+      },
+      "rich_text": "秀兰奶奶和阿强、小花一起在老李家的果园偷摘李子，阿强负责爬树摘李子，秀兰和小花在下面捡，被老李家的大黄狗发现后逃跑",
+      "source_turn_ids": [
+        "turn_c0e3a3c556"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_af8a0c1317": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_af8a0c1317",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张刺激后被教训",
+        "people": [
+          "秀兰奶奶",
+          "阿强",
+          "小花",
+          "母亲"
+        ],
+        "significance": "学会了尊重他人劳动，不贪小便宜",
+        "theme_id": "THEME_09_WISDOM_EVENT",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们偷摘李子后被大人发现，母亲发现她身上泥点子后教训她不能随便拿别人的东西，要尊重别人的劳动成果",
+      "source_turn_ids": [
+        "turn_7454b2851a"
+      ],
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "updated_at": null
+    },
+    "frag_b03df75813": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_b03df75813",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "诚实守信",
+        "location": "菜市场",
+        "significance": "体现了秀兰奶奶尊重别人劳动成果的生活实践",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION"
+      },
+      "rich_text": "秀兰奶奶在日常生活中，比如在菜市场买菜时，规规矩矩地付钱，从不占小贩便宜，找零多了也会主动还回去",
+      "source_turn_ids": [
+        "turn_9b519a23e3"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_b1da75532f": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_b1da75532f",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "既刺激又好笑",
+        "significance": "对后来的生活产生了积极影响，学会了坚韧和珍惜",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶童年时的冒险经历，包括河边捉鱼滑倒、偷摘李子被狗追等，这些经历让她学会了吃苦耐劳、与人为善、谨慎行事和团队合作",
+      "source_turn_ids": [
+        "turn_8369a33fdd"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_b2fe575154": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_b2fe575154",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张刺激",
+        "location": "老李家的果园",
+        "people": [
+          "我",
+          "阿强",
+          "小花"
+        ],
+        "significance": "胆子变大，懂得团队合作的重要性",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶与阿强、小花一起偷摘李子被狗追，虽然没有吃到李子，但这次经历让她胆子变大，懂得团队合作的重要性",
+      "source_turn_ids": [
+        "turn_14be39da37"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_c34bc866bb": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_c34bc866bb",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "学会谨慎",
+        "people": [
+          "我",
+          "母亲"
+        ],
+        "significance": "学会了做事要谨慎，不能太冒失",
+        "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶小时候去河边捉鱼时滑倒在水里，回家被母亲责备的经历",
+      "source_turn_ids": [
+        "turn_3291260141"
+      ],
+      "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+      "updated_at": null
+    },
+    "frag_c73289c41a": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_c73289c41a",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "诚实守信",
+        "location": "菜市场",
+        "significance": "反映了秀兰奶奶的生活哲学和行为准则",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION"
+      },
+      "rich_text": "秀兰奶奶在日常生活中的一个小片段，她在菜市场买菜时规规矩矩地付钱，不占小贩便宜，体现了她的诚实守信",
+      "source_turn_ids": [
+        "turn_da8affe553"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_cfdcc63f77": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_cfdcc63f77",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "刺激又好笑",
+        "location": "村头老李家的果园",
+        "people": [
+          "秀兰奶奶",
+          "阿强",
+          "小花"
+        ],
+        "significance": "童年趣事，体现了冒险精神和团队合作",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "大中午"
+      },
+      "rich_text": "秀兰奶奶和阿强、小花一起计划偷摘老李家的李子",
+      "source_turn_ids": [
+        "turn_b3b64364ef"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_d2fb3d1bd3": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_d2fb3d1bd3",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张又好笑",
+        "significance": "学会了尊重别人的劳动成果，影响深远",
+        "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "童年时与小伙伴一起偷摘李子，被狗发现后逃跑，最终李子没吃着，还弄得一身狼狈",
+      "source_turn_ids": [
+        "turn_f4b12c1c05"
+      ],
+      "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+      "updated_at": null
+    },
+    "frag_daa4cf33cb": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_daa4cf33cb",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "认真严肃",
+        "significance": "将童年教训融入教学和生活，培养守规矩、懂尊重的人",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "当老师的时候"
+      },
+      "rich_text": "在教学过程中强调学习没有捷径，要一步一个脚印，强调诚实守信和尊重他人劳动成果",
+      "source_turn_ids": [
+        "turn_f4b12c1c05"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_dc43b68b20": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_dc43b68b20",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "既害怕又好笑",
+        "significance": "让秀兰奶奶学到了做人要诚实守信，影响深远",
+        "theme_id": "THEME_09_WISDOM_EVENT",
+        "time_anchor": "小时候"
+      },
+      "rich_text": "秀兰奶奶小时候与小伙伴们计划并实施的一次偷摘李子的行为，最终被老李家的大黄狗发现而失败",
+      "source_turn_ids": [
+        "turn_da8affe553"
+      ],
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "updated_at": null
+    },
+    "frag_de99d478d9": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_de99d478d9",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "既害怕又好笑",
+        "location": "老李家的果园",
+        "people": [
+          "秀兰奶奶",
+          "阿强",
+          "小花"
+        ],
+        "significance": "让秀兰奶奶学到了做人要本本分分，不能贪小便宜",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "大中午"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们计划在大中午去老李家的果园偷摘李子，阿强负责爬树摘李子，秀兰奶奶和小花在下面捡，最终被老李家的大黄狗发现，三人逃跑，李子没吃着，还弄得一身狼狈。",
+      "source_turn_ids": [
+        "turn_d523a9f853"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_dee1d1c2b5": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_dee1d1c2b5",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张刺激",
+        "location": "老李家的果园",
+        "people": [
+          "秀兰奶奶",
+          "阿强",
+          "小花"
+        ],
+        "significance": "让秀兰奶奶胆子变大，懂得团队合作的重要性",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "大中午"
+      },
+      "rich_text": "秀兰奶奶和几个小孩子计划在大中午去老李家的果园偷摘李子解馋，阿强负责爬树摘李子，秀兰奶奶和小花在下面捡。",
+      "source_turn_ids": [
+        "turn_f2c1c9bd5f"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_e0123da044": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_e0123da044",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "教训后的反思",
+        "significance": "对秀兰奶奶的人生影响深远",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "小时候"
+      },
+      "rich_text": "秀兰奶奶小时候偷摘李子被母亲发现并受到教训，学会了尊重和诚实",
+      "source_turn_ids": [
+        "turn_76ac4d6a89"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_ed3bd6c83d": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_ed3bd6c83d",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "既害怕又好笑",
+        "location": "老李家的果园",
+        "people": [
+          "秀兰奶奶",
+          "阿强",
+          "小花"
+        ],
+        "significance": "童年冒险经历，影响了秀兰奶奶的性格和生活态度",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "大中午"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们计划在大中午大人午休时去老李家的果园偷摘李子，由阿强爬树摘李子，秀兰奶奶和小花在下面捡，结果被老李家的大黄狗发现，三人吓得逃跑，最终没有吃到李子，还弄得一身狼狈。",
+      "source_turn_ids": [
+        "turn_a4d2ba8a2f"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_effcd3188a": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_effcd3188a",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张刺激后的反思",
+        "location": "老李家的果园",
+        "people": [
+          "秀兰奶奶",
+          "阿强",
+          "小花"
+        ],
+        "significance": "胆子变大，懂得团队合作",
+        "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们计划偷摘老李家的李子，结果被狗发现，大家吓得逃跑，没有吃到李子",
+      "source_turn_ids": [
+        "turn_bad9bb9cc9"
+      ],
+      "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+      "updated_at": null
+    },
+    "frag_f5933009a0": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_f5933009a0",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "既害怕又好笑",
+        "location": "老李家果园",
+        "people": [
+          "秀兰奶奶",
+          "阿强",
+          "小花"
+        ],
+        "significance": "让秀兰奶奶学到了做人要本本分分，不能贪小便宜",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "小时候"
+      },
+      "rich_text": "秀兰奶奶小时候和小伙伴们计划偷摘老李家果园的李子，被大黄狗发现后逃跑，李子没吃着，还弄得一身狼狈",
+      "source_turn_ids": [
+        "turn_958fbd21f9"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_f892832092": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_f892832092",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张刺激",
+        "significance": "胆子变大，懂得了团队合作的重要性",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶童年时偷摘李子被狗追的冒险经历",
+      "source_turn_ids": [
+        "turn_068c53df9b"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_fba8669782": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_fba8669782",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "尴尬",
+        "location": "河边",
+        "people": [
+          "我"
+        ],
+        "significance": "童年趣事",
+        "theme_id": "THEME_01_LIFE_CHAPTERS",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "在河边捉鱼时不小心滑倒，全身湿透",
+      "source_turn_ids": [
+        "turn_b98b967a77"
+      ],
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "updated_at": null
+    },
+    "frag_fbbb5c9112": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_fbbb5c9112",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张刺激又害怕",
+        "location": "老李家的果园",
+        "people": [
+          "秀兰奶奶",
+          "阿强",
+          "小花"
+        ],
+        "significance": "童年的一次冒险经历",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "小时候"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们在偷摘李子后被老李家的大黄狗发现，吓得四处逃跑的经历",
+      "source_turn_ids": [
+        "turn_17d1d38f0c"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_ff87570bea": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_ff87570bea",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "认真负责",
+        "people": [
+          "秀兰奶奶",
+          "学生们"
+        ],
+        "significance": "将诚实守信和尊重劳动的价值观传授给下一代",
+        "theme_id": "THEME_09_WISDOM_EVENT",
+        "time_anchor": "成年后"
+      },
+      "rich_text": "秀兰奶奶在当老师的时候，总是告诉学生们学习没有捷径，要一步一个脚印，踏踏实实地学，体现了偷摘李子事件中学到的教训",
+      "source_turn_ids": [
+        "turn_76ac4d6a89"
+      ],
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "updated_at": null
+    }
+  },
+  "session_id": "11cbc9e6dbad429788985a1d54f758ce",
+  "theme_nodes": [
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_02_PEAK_EXPERIENCE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_03_LOW_POINT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_04_TURNING_POINT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_07_ADULT_MEMORY",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_08_RELIGIOUS_EXPERIENCE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_10_NEXT_CHAPTER",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_11_DREAMS_PLANS",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_12_LIFE_PROJECT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_13_LIFE_CHALLENGE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_14_HEALTH",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_15_LOSS",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_16_FAILURE_REGRET",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_17_RELIGIOUS_VALUES",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_18_POLITICAL_VALUES",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_19_VALUE_EVOLUTION",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_20_SINGLE_VALUE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_21_SESSION_SUMMARY",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_23_CONTEXT_MANAGEMENT",
+      "title": null
+    }
+  ],
+  "timestamp": "2026-05-08T07:21:15.946282",
+  "turn_count": 32
+}

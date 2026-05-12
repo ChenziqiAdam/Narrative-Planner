@@ -118,9 +118,53 @@ def extract_reply(raw: str) -> str:
 
 def _build_compare_interviewee(session_data: dict) -> IntervieweeAgent:
     """Create a compare-mode interviewee instance for one session only."""
+    cached = session_data.get("_interviewee_agent")
+    if cached is not None:
+        return cached
+
     interviewee = IntervieweeAgent(profile_path=PROFILE_PATH)
     interviewee.initialize_conversation(session_data.get("elder_info", {}))
+    session_data["_interviewee_agent"] = interviewee
+    session_data["_interviewee_restored_pairs"] = 0
     return interviewee
+
+
+def _restore_compare_interviewee_history(session_data: dict, interviewee: IntervieweeAgent) -> None:
+    """Replay only dialogue pairs that the cached interviewee has not seen."""
+    restored_pairs = int(session_data.get("_interviewee_restored_pairs", 0) or 0)
+    seen_pairs = 0
+
+    for index in range(len(session_data.get("history", [])) - 1):
+        current = session_data["history"][index]
+        following = session_data["history"][index + 1]
+        if current.get("role") != "interviewer" or following.get("role") != "interviewee":
+            continue
+
+        seen_pairs += 1
+        if seen_pairs <= restored_pairs:
+            continue
+
+        # This is restoration from the app session, not a newly generated turn;
+        # avoid triggering summarization LLM calls while catching up.
+        interviewee.record_turn(
+            current.get("text", ""),
+            following.get("text", ""),
+            allow_compression=False,
+        )
+
+    session_data["_interviewee_restored_pairs"] = seen_pairs
+
+
+def _count_compare_interviewee_pairs(session_data: dict) -> int:
+    count = 0
+    history = session_data.get("history", [])
+    for index in range(len(history) - 1):
+        if (
+            history[index].get("role") == "interviewer"
+            and history[index + 1].get("role") == "interviewee"
+        ):
+            count += 1
+    return count
 
 
 def _run_compare_interviewee_turn(interviewee: IntervieweeAgent, question: str) -> tuple[str, list[dict], dict]:
@@ -1053,11 +1097,7 @@ def baseline_auto():
         agent = session["agent"]
         scorer = session["scorer"]
         interviewee = _build_compare_interviewee(session)
-        for index in range(len(session["history"]) - 1):
-            current = session["history"][index]
-            following = session["history"][index + 1]
-            if current.get("role") == "interviewer" and following.get("role") == "interviewee":
-                interviewee.record_turn(current.get("text", ""), following.get("text", ""))
+        _restore_compare_interviewee_history(session, interviewee)
 
         # single_turn模式下只运行一轮
         max_turns = 1 if single_turn else 20
@@ -1070,6 +1110,7 @@ def baseline_auto():
             answer, memory_calls, interviewee_timing = _run_compare_interviewee_turn(interviewee, last_question)
 
             session["history"].append({"role": "interviewee", "text": answer})
+            session["_interviewee_restored_pairs"] = _count_compare_interviewee_pairs(session)
             yield f"data: {json.dumps({'role': 'interviewee', 'action': 'answer', 'text': answer, 'memory_calls': memory_calls, 'timing': interviewee_timing}, ensure_ascii=False)}\n\n"
 
             # 访谈者提问
@@ -1321,11 +1362,7 @@ def planner_auto():
             interviewee = _build_compare_interviewee(session)
 
             # 从已有会话恢复访谈历史，避免多轮自动/单轮调试时丢上下文
-            for index in range(len(session["history"]) - 1):
-                current = session["history"][index]
-                following = session["history"][index + 1]
-                if current.get("role") == "interviewer" and following.get("role") == "interviewee":
-                    interviewee.record_turn(current.get("text", ""), following.get("text", ""))
+            _restore_compare_interviewee_history(session, interviewee)
 
             # single_turn模式下只运行一轮
             max_turns = 1 if single_turn else 20
@@ -1338,6 +1375,7 @@ def planner_auto():
                 answer, memory_calls, interviewee_timing = _run_compare_interviewee_turn(interviewee, last_question)
 
                 session["history"].append({"role": "interviewee", "text": answer})
+                session["_interviewee_restored_pairs"] = _count_compare_interviewee_pairs(session)
                 yield f"data: {json.dumps({'role': 'interviewee', 'text': answer, 'extracted_events': [], 'graph_delta': {}, 'memory_calls': memory_calls, 'timing': interviewee_timing}, ensure_ascii=False)}\n\n"
 
                 # 获取下一个问题（包含事件提取）
