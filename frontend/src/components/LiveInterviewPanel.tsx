@@ -17,6 +17,7 @@ import {
   NarrativeFragmentData,
 } from '../types/websocket'
 import { GraphState } from '../types'
+import { PersonIcon, RobotIcon, SendIcon, SpinnerIcon, ClipboardIcon } from './icons'
 import './LiveInterviewPanel.css'
 
 /** 组件属性 */
@@ -135,7 +136,7 @@ const FragmentTag: React.FC<{ fragment: NarrativeFragmentData }> = ({ fragment }
         className="fragment-tag-header"
         onClick={() => setExpanded(!expanded)}
       >
-        <span className="fragment-tag-icon">✦</span>
+        <svg className="fragment-tag-icon" width="10" height="10" viewBox="0 0 10 10" fill="currentColor"><path d="M5 0l1.2 3.8H10L6.9 6.2l1.2 3.8L5 7.6l-3.1 2.4L3.1 6.2 0 3.8h3.8z"/></svg>
         <span className="fragment-tag-text">
           {truncateText(fragment.rich_text)}
         </span>
@@ -146,7 +147,7 @@ const FragmentTag: React.FC<{ fragment: NarrativeFragmentData }> = ({ fragment }
           {Math.round(fragment.confidence * 100)}%
         </span>
         <span className={`fragment-tag-expand ${expanded ? 'expanded' : ''}`}>
-          ▼
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6"/></svg>
         </span>
       </div>
       {expanded && (
@@ -195,7 +196,7 @@ const MessageItem: React.FC<{ message: ChatMessage }> = ({ message }) => {
       }`}
     >
       <div className="message-avatar">
-        {isUser ? '👤' : isSystem ? '🔔' : '🤖'}
+        {isUser ? <PersonIcon size={18} /> : isSystem ? <span style={{fontSize:14}}>i</span> : <RobotIcon size={18} />}
       </div>
       <div className="message-content-wrapper">
         <div className="message-header">
@@ -232,7 +233,7 @@ const MessageItem: React.FC<{ message: ChatMessage }> = ({ message }) => {
 const TypingIndicator: React.FC = () => {
   return (
     <div className="message-item message-ai typing-indicator">
-      <div className="message-avatar">🤖</div>
+      <div className="message-avatar"><RobotIcon size={18} /></div>
       <div className="message-content-wrapper">
         <div className="message-header">
           <span className="message-sender">AI助手</span>
@@ -253,7 +254,7 @@ const TypingIndicator: React.FC = () => {
 const StreamingMessage: React.FC<{ content: string }> = ({ content }) => {
   return (
     <div className="message-item message-ai streaming-message">
-      <div className="message-avatar">🤖</div>
+      <div className="message-avatar"><RobotIcon size={18} /></div>
       <div className="message-content-wrapper">
         <div className="message-header">
           <span className="message-sender">AI助手</span>
@@ -372,7 +373,7 @@ const LiveInterviewPanel: React.FC<LiveInterviewPanelProps> = ({
       {/* 面板头部 - 连接状态 */}
       <div className="panel-header">
         <div className="panel-title">
-          <span className="title-icon">💬</span>
+          <svg className="title-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
           <span>实时对话</span>
         </div>
         <div className="connection-status-wrapper">
@@ -409,7 +410,7 @@ const LiveInterviewPanel: React.FC<LiveInterviewPanelProps> = ({
       >
         {messages.length === 0 && !isStreaming ? (
           <div className="empty-state">
-            <div className="empty-icon">📝</div>
+            <ClipboardIcon size={40} color="#9CA3AF" className="empty-icon" />
             <p>开始您的叙事之旅</p>
             <p className="empty-hint">
               与AI助手对话，分享您的故事和回忆
@@ -464,9 +465,9 @@ const LiveInterviewPanel: React.FC<LiveInterviewPanelProps> = ({
             title="发送消息"
           >
             {isStreaming ? (
-              <span className="send-icon spinning">⏳</span>
+              <SpinnerIcon size={16} className="send-icon" />
             ) : (
-              <span className="send-icon">➤</span>
+              <SendIcon size={16} className="send-icon" />
             )}
           </button>
         </div>

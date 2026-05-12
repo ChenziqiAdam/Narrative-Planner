@@ -17,6 +17,10 @@ class TurnEvaluation:
     coverage_gain: float = 0.0
     notes: List[str] = field(default_factory=list)
     created_at: datetime = field(default_factory=datetime.now)
+    # legacy pipeline fields
+    slot_targeting_score: float = 0.0
+    planner_alignment_score: float = 0.0
+    targeted_slots: List[str] = field(default_factory=list)
 
     def to_dict(self) -> Dict[str, object]:
         return serialize_value(self)

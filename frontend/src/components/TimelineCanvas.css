@@ -26,8 +26,10 @@
 }
 
 .timeline-empty .empty-icon {
-  font-size: 48px;
+  display: flex;
+  align-items: center;
   margin-bottom: 16px;
+  opacity: 0.6;
 }
 
 /* 时间轴事件 */

@@ -1,0 +1,1486 @@
+{
+  "agent": "planner",
+  "run_index": 1,
+  "session_id": "a7b7359172f64f2b8bd67dfaf66692d1",
+  "status": "completed",
+  "started_at": "2026-05-08T12:16:59.825614",
+  "finished_at": "2026-05-08T12:17:51.526390",
+  "start_payload": {
+    "debug_trace": {
+      "planning": {
+        "candidate_actions": [
+          {
+            "action": "continue_life_overview",
+            "reason_summary": "开场阶段应先帮助老人铺开人生脉络。",
+            "score": 0.9
+          },
+          {
+            "action": "deep_dive_event",
+            "reason_summary": "尚无明确事件，不适合立即深挖。",
+            "score": 0.2
+          }
+        ],
+        "emotion_energy": 0.5,
+        "emotion_valence": "neutral",
+        "event_completeness_score": 0.0,
+        "focus": {
+          "label": "四川成都的早年记忆",
+          "type": "life_period"
+        },
+        "missing_dimensions": [
+          "time",
+          "location",
+          "people",
+          "sequence",
+          "feeling",
+          "reflection"
+        ],
+        "next_action": "continue",
+        "question_intent": "邀请老人从最早、最清楚的记忆开始讲述。",
+        "selected_action": "continue_life_overview",
+        "selected_slot_or_angle": "life_timeline",
+        "stage": "life_overview"
+      }
+    },
+    "decision_weight_payload": {
+      "applied_to": "graph_rag_context",
+      "decision_weights": {},
+      "legacy_mode": "planner",
+      "mode": "graph_rag"
+    },
+    "first_question": "李秀兰奶奶，您是1944年出生的，又和四川成都有很深的缘分。如果从人生最早的一段清楚记忆说起，您最先想到的是哪里、什么人，或者哪一幕场景？",
+    "initial_graph": {
+      "coverage_metrics": {
+        "overall_richness": 0.0,
+        "theme_richness": {
+          "THEME_01_LIFE_CHAPTERS": 0.0,
+          "THEME_02_PEAK_EXPERIENCE": 0.0,
+          "THEME_03_LOW_POINT": 0.0,
+          "THEME_04_TURNING_POINT": 0.0,
+          "THEME_05_CHILDHOOD_POSITIVE": 0.0,
+          "THEME_06_CHILDHOOD_NEGATIVE": 0.0,
+          "THEME_07_ADULT_MEMORY": 0.0,
+          "THEME_08_RELIGIOUS_EXPERIENCE": 0.0,
+          "THEME_09_WISDOM_EVENT": 0.0,
+          "THEME_10_NEXT_CHAPTER": 0.0,
+          "THEME_11_DREAMS_PLANS": 0.0,
+          "THEME_12_LIFE_PROJECT": 0.0,
+          "THEME_13_LIFE_CHALLENGE": 0.0,
+          "THEME_14_HEALTH": 0.0,
+          "THEME_15_LOSS": 0.0,
+          "THEME_16_FAILURE_REGRET": 0.0,
+          "THEME_17_RELIGIOUS_VALUES": 0.0,
+          "THEME_18_POLITICAL_VALUES": 0.0,
+          "THEME_19_VALUE_EVOLUTION": 0.0,
+          "THEME_20_SINGLE_VALUE": 0.0,
+          "THEME_21_SESSION_SUMMARY": 0.0,
+          "THEME_22_INFORMATION_INTEGRATION": 0.0,
+          "THEME_23_CONTEXT_MANAGEMENT": 0.0
+        }
+      },
+      "dynamic_profile": {
+        "last_updated_turn_id": null,
+        "planner_guidance": [
+          "Family profile is still thin; when the story naturally allows it, ask about spouse, children, siblings, or grandchildren."
+        ],
+        "profile_quality": {
+          "core_identity_and_personality": 0.3333,
+          "current_life_status": 0.0,
+          "family_situation": 0.0,
+          "life_views_and_attitudes": 0.0,
+          "overall": 0.0833
+        },
+        "schema_version": "dynamic_elder_profile_v1",
+        "sections": {
+          "core_identity_and_personality": {
+            "identity_background": {
+              "confidence": 0.9,
+              "value": "name=李秀兰; birth_year=1944; age=82; hometown=四川成都; background=退休中学语文教师，经历过知青下乡、恢复高考、改革开放后的城市变迁。她有一个儿子和一个女儿，晚年喜欢整理旧照片和写日记。"
+            },
+            "life_overview": {
+              "confidence": 0.75,
+              "value": [
+                "退休中学语文教师，经历过知青下乡、恢复高考、改革开放后的城市变迁。她有一个儿子和一个女儿，晚年喜欢整理旧照片和写日记。"
+              ]
+            }
+          }
+        },
+        "update_count": 0
+      },
+      "narrative_fragments": {},
+      "session_id": "a7b7359172f64f2b8bd67dfaf66692d1",
+      "theme_nodes": [
+        {
+          "narrative_richness": 0.0,
+          "status": "pending",
+          "theme_id": "THEME_01_LIFE_CHAPTERS",
+          "title": null
+        },
+        {
+          "narrative_richness": 0.0,
+          "status": "pending",
+          "theme_id": "THEME_02_PEAK_EXPERIENCE",
+          "title": null
+        },
+        {
+          "narrative_richness": 0.0,
+          "status": "pending",
+          "theme_id": "THEME_03_LOW_POINT",
+          "title": null
+        },
+        {
+          "narrative_richness": 0.0,
+          "status": "pending",
+          "theme_id": "THEME_04_TURNING_POINT",
+          "title": null
+        },
+        {
+          "narrative_richness": 0.0,
+          "status": "pending",
+          "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+          "title": null
+        },
+        {
+          "narrative_richness": 0.0,
+          "status": "pending",
+          "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+          "title": null
+        },
+        {
+          "narrative_richness": 0.0,
+          "status": "pending",
+          "theme_id": "THEME_07_ADULT_MEMORY",
+          "title": null
+        },
+        {
+          "narrative_richness": 0.0,
+          "status": "pending",
+          "theme_id": "THEME_08_RELIGIOUS_EXPERIENCE",
+          "title": null
+        },
+        {
+          "narrative_richness": 0.0,
+          "status": "pending",
+          "theme_id": "THEME_09_WISDOM_EVENT",
+          "title": null
+        },
+        {
+          "narrative_richness": 0.0,
+          "status": "pending",
+          "theme_id": "THEME_10_NEXT_CHAPTER",
+          "title": null
+        },
+        {
+          "narrative_richness": 0.0,
+          "status": "pending",
+          "theme_id": "THEME_11_DREAMS_PLANS",
+          "title": null
+        },
+        {
+          "narrative_richness": 0.0,
+          "status": "pending",
+          "theme_id": "THEME_12_LIFE_PROJECT",
+          "title": null
+        },
+        {
+          "narrative_richness": 0.0,
+          "status": "pending",
+          "theme_id": "THEME_13_LIFE_CHALLENGE",
+          "title": null
+        },
+        {
+          "narrative_richness": 0.0,
+          "status": "pending",
+          "theme_id": "THEME_14_HEALTH",
+          "title": null
+        },
+        {
+          "narrative_richness": 0.0,
+          "status": "pending",
+          "theme_id": "THEME_15_LOSS",
+          "title": null
+        },
+        {
+          "narrative_richness": 0.0,
+          "status": "pending",
+          "theme_id": "THEME_16_FAILURE_REGRET",
+          "title": null
+        },
+        {
+          "narrative_richness": 0.0,
+          "status": "pending",
+          "theme_id": "THEME_17_RELIGIOUS_VALUES",
+          "title": null
+        },
+        {
+          "narrative_richness": 0.0,
+          "status": "pending",
+          "theme_id": "THEME_18_POLITICAL_VALUES",
+          "title": null
+        },
+        {
+          "narrative_richness": 0.0,
+          "status": "pending",
+          "theme_id": "THEME_19_VALUE_EVOLUTION",
+          "title": null
+        },
+        {
+          "narrative_richness": 0.0,
+          "status": "pending",
+          "theme_id": "THEME_20_SINGLE_VALUE",
+          "title": null
+        },
+        {
+          "narrative_richness": 0.0,
+          "status": "pending",
+          "theme_id": "THEME_21_SESSION_SUMMARY",
+          "title": null
+        },
+        {
+          "narrative_richness": 0.0,
+          "status": "pending",
+          "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+          "title": null
+        },
+        {
+          "narrative_richness": 0.0,
+          "status": "pending",
+          "theme_id": "THEME_23_CONTEXT_MANAGEMENT",
+          "title": null
+        }
+      ],
+      "timestamp": "2026-05-08T12:16:59.824758",
+      "turn_count": 0
+    },
+    "mode": "ai",
+    "planner_plan": {
+      "candidate_actions": [
+        {
+          "action": "continue_life_overview",
+          "reason_summary": "开场阶段应先帮助老人铺开人生脉络。",
+          "score": 0.9
+        },
+        {
+          "action": "deep_dive_event",
+          "reason_summary": "尚无明确事件，不适合立即深挖。",
+          "score": 0.2
+        }
+      ],
+      "emotion_signal": {
+        "energy": 0.5,
+        "support_needed": false,
+        "valence": "neutral"
+      },
+      "event_completeness": {
+        "missing_dimensions": [
+          "time",
+          "location",
+          "people",
+          "sequence",
+          "feeling",
+          "reflection"
+        ],
+        "reason_summary": "访谈刚开始，尚未形成具体事件。",
+        "score": 0.0
+      },
+      "focus": {
+        "label": "四川成都的早年记忆",
+        "type": "life_period"
+      },
+      "question_intent": "邀请老人从最早、最清楚的记忆开始讲述。",
+      "selected_action": "continue_life_overview",
+      "selected_slot_or_angle": "life_timeline",
+      "stage": "life_overview",
+      "tone": "respectful_warm"
+    },
+    "session_id": "a7b7359172f64f2b8bd67dfaf66692d1"
+  },
+  "elder_info": {
+    "name": "李秀兰",
+    "birth_year": 1944,
+    "hometown": "四川成都",
+    "background": "退休中学语文教师，经历过知青下乡、恢复高考、改革开放后的城市变迁。她有一个儿子和一个女儿，晚年喜欢整理旧照片和写日记。"
+  },
+  "turns": [
+    {
+      "turn_index": 1,
+      "status": "completed",
+      "elapsed_ms": 51654.61,
+      "events": [
+        {
+          "role": "interviewee",
+          "text": "哎哟，说起最早的记忆嘛，我们那会儿条件艰苦，我记得我小时候家里头条件不好，住在成都老城区的一个破旧小院里。那时候，我记得最清楚的就是我妈妈，她总是忙前忙后的，为了我们几个孩子操碎了心。我还记得，那时候院子里头有棵老槐树，夏天的时候，我们几个小孩儿就在树底下乘凉玩耍。那时候的日子虽然苦，但是邻里之间关系好得很，大家互相帮衬，那种温暖我现在还记得。",
+          "extracted_events": [],
+          "graph_delta": {},
+          "memory_calls": [],
+          "timing": {
+            "interviewee_total_ms": 7632.3
+          }
+        },
+        {
+          "role": "interviewer",
+          "action": "continue",
+          "text": "李秀兰奶奶，您刚才提到了童年时的邻里关系和老槐树，听起来那时候的生活虽然艰苦，但也有很多温馨的时刻。能再给我讲讲您和邻居们之间发生的一些特别的事情吗？",
+          "extracted_events": [
+            {
+              "entity_type": "Event",
+              "name": "童年艰苦生活",
+              "description": "李秀兰奶奶回忆童年时家里条件不好，住在成都老城区的破旧小院。",
+              "properties": {
+                "time_anchor": "1944年左右",
+                "location": "成都老城区",
+                "people": [
+                  "李秀兰奶奶",
+                  "妈妈"
+                ],
+                "emotional_tone": "怀念",
+                "significance": "童年记忆",
+                "theme_id": "THEME_06_CHILDHOOD_NEGATIVE"
+              }
+            },
+            {
+              "entity_type": "Person",
+              "name": "妈妈",
+              "description": "李秀兰奶奶的母亲，为了孩子们操碎了心。",
+              "properties": {
+                "relation": "FAMILY_OF",
+                "people": [
+                  "李秀兰奶奶"
+                ]
+              }
+            },
+            {
+              "entity_type": "Location",
+              "name": "成都老城区",
+              "description": "李秀兰奶奶童年居住的地方。",
+              "properties": {
+                "location": "成都"
+              }
+            },
+            {
+              "entity_type": "Emotion",
+              "name": "怀念",
+              "description": "李秀兰奶奶对童年艰苦生活和邻里关系的怀念。",
+              "properties": {
+                "emotional_tone": "温暖"
+              }
+            },
+            {
+              "entity_type": "Insight",
+              "name": "邻里互助",
+              "description": "李秀兰奶奶回忆童年时邻里之间互相帮衬的温暖。",
+              "properties": {
+                "significance": "人生感悟"
+              }
+            }
+          ],
+          "graph_delta": {
+            "new_entities": 5,
+            "relationships": 4
+          },
+          "turn_evaluation": {
+            "turn_id": "turn_2fc423f375",
+            "question_quality_score": 0.6875,
+            "information_gain_score": 0.75,
+            "non_redundancy_score": 1.0,
+            "emotional_alignment_score": 0.0,
+            "coverage_gain": 0.0,
+            "notes": [],
+            "created_at": "2026-05-08T12:17:51.472076",
+            "status": "completed"
+          },
+          "session_metrics": {
+            "overall_theme_coverage": 0.0,
+            "average_turn_quality": 0.0,
+            "average_information_gain": 0.0
+          },
+          "planner_plan": {
+            "stage": "life_overview",
+            "selected_action": "continue_life_overview",
+            "focus": {
+              "type": "event",
+              "label": "童年记忆"
+            },
+            "event_completeness": {
+              "score": 0.5,
+              "missing_dimensions": [
+                "sequence",
+                "cause",
+                "result",
+                "feeling",
+                "reflection"
+              ],
+              "reason_summary": "已提及童年背景和人物，但缺少具体事件细节和个人感受"
+            },
+            "emotion_signal": {
+              "energy": 0.7,
+              "valence": "positive",
+              "support_needed": false
+            },
+            "candidate_actions": [
+              {
+                "action": "continue_life_overview",
+                "score": 0.8,
+                "reason_summary": "继续梳理李秀兰奶奶的童年记忆，为后续深入打下基础"
+              },
+              {
+                "action": "deep_dive_event",
+                "score": 0.3,
+                "reason_summary": "当前阶段更适合继续梳理人生脉络，而非深入单个事件"
+              }
+            ],
+            "selected_slot_or_angle": "event",
+            "tone": "curious_gentle",
+            "question_intent": "引导李秀兰奶奶分享更多童年时期的故事和感受"
+          },
+          "debug_trace": {
+            "extraction_ms": 14728.352374979295,
+            "write_ms": 2869.0070000011474,
+            "retrieval_ms": 514.9967920733616,
+            "extraction_prompt": {
+              "prompt_chars": 1530,
+              "template_chars": 1174,
+              "input_json_chars": 334,
+              "current_question_chars": 69,
+              "current_answer_chars": 173,
+              "context_turns": 0,
+              "graph_context_chars": 0
+            },
+            "pipeline": "graph_rag",
+            "graph_changes": {
+              "new_entities": 5,
+              "relationships": 4
+            },
+            "decision_ctx": {
+              "overall_coverage": 0.0,
+              "low_info_streak": 0,
+              "explorable_angles_count": 0
+            },
+            "planning": {
+              "next_action": "continue",
+              "selected_action": "continue_life_overview",
+              "stage": "life_overview",
+              "focus": {
+                "type": "event",
+                "label": "童年记忆"
+              },
+              "selected_slot_or_angle": "event",
+              "event_completeness_score": 0.5,
+              "missing_dimensions": [
+                "sequence",
+                "cause",
+                "result",
+                "feeling",
+                "reflection"
+              ],
+              "emotion_energy": 0.7,
+              "emotion_valence": "positive",
+              "candidate_actions": [
+                {
+                  "action": "continue_life_overview",
+                  "score": 0.8,
+                  "reason_summary": "继续梳理李秀兰奶奶的童年记忆，为后续深入打下基础"
+                },
+                {
+                  "action": "deep_dive_event",
+                  "score": 0.3,
+                  "reason_summary": "当前阶段更适合继续梳理人生脉络，而非深入单个事件"
+                }
+              ],
+              "question_intent": "引导李秀兰奶奶分享更多童年时期的故事和感受"
+            },
+            "planner_plan": {
+              "stage": "life_overview",
+              "selected_action": "continue_life_overview",
+              "focus": {
+                "type": "event",
+                "label": "童年记忆"
+              },
+              "event_completeness": {
+                "score": 0.5,
+                "missing_dimensions": [
+                  "sequence",
+                  "cause",
+                  "result",
+                  "feeling",
+                  "reflection"
+                ],
+                "reason_summary": "已提及童年背景和人物，但缺少具体事件细节和个人感受"
+              },
+              "emotion_signal": {
+                "energy": 0.7,
+                "valence": "positive",
+                "support_needed": false
+              },
+              "candidate_actions": [
+                {
+                  "action": "continue_life_overview",
+                  "score": 0.8,
+                  "reason_summary": "继续梳理李秀兰奶奶的童年记忆，为后续深入打下基础"
+                },
+                {
+                  "action": "deep_dive_event",
+                  "score": 0.3,
+                  "reason_summary": "当前阶段更适合继续梳理人生脉络，而非深入单个事件"
+                }
+              ],
+              "selected_slot_or_angle": "event",
+              "tone": "curious_gentle",
+              "question_intent": "引导李秀兰奶奶分享更多童年时期的故事和感受"
+            },
+            "graph_rag_metrics": {
+              "extraction": {
+                "latency_ms": 14728.4,
+                "has_content": true,
+                "entity_count": 5,
+                "event_count": 1,
+                "person_count": 1,
+                "location_count": 1,
+                "emotion_count": 1,
+                "insight_count": 1,
+                "relationship_count": 5,
+                "open_loops_count": 1,
+                "confidence": 0.9,
+                "narrative_summary_length": 28,
+                "entity_type_counts": {
+                  "Event": 1,
+                  "Person": 1,
+                  "Location": 1,
+                  "Emotion": 1,
+                  "Insight": 1
+                },
+                "empty_extraction": false
+              },
+              "write": {
+                "latency_ms": 2869.0,
+                "entity_ids_count": 5,
+                "new_entity_count": 5,
+                "updated_entity_count": 0,
+                "deduplicated_count": 0,
+                "relationship_count": 4,
+                "write_empty": false
+              },
+              "planner_retrieval": {
+                "latency_ms": 515.0,
+                "ranked_entity_count": 7,
+                "token_count": 121,
+                "context_empty": false,
+                "context_length": 243,
+                "channel_counts": {
+                  "vector": 5,
+                  "graph": 4,
+                  "fulltext": 4,
+                  "ranked": 7
+                },
+                "channel_errors": {},
+                "top_entities": [
+                  {
+                    "entity_id": "person_6421aae7a598",
+                    "entity_type": "Person",
+                    "name": "妈妈",
+                    "combined_score": 0.015757,
+                    "sources": [
+                      "fulltext",
+                      "graph",
+                      "vector"
+                    ]
+                  },
+                  {
+                    "entity_id": "location_cd7f25659748",
+                    "entity_type": "Location",
+                    "name": "成都老城区",
+                    "combined_score": 0.015699,
+                    "sources": [
+                      "fulltext",
+                      "graph",
+                      "vector"
+                    ]
+                  },
+                  {
+                    "entity_id": "event_3d14e53c6051",
+                    "entity_type": "Event",
+                    "name": "童年艰苦生活",
+                    "combined_score": 0.011475,
+                    "sources": [
+                      "fulltext",
+                      "vector"
+                    ]
+                  },
+                  {
+                    "entity_id": "emotion_71ff1438349e",
+                    "entity_type": "Emotion",
+                    "name": "怀念",
+                    "combined_score": 0.011239,
+                    "sources": [
+                      "fulltext",
+                      "vector"
+                    ]
+                  },
+                  {
+                    "entity_id": "insight_7919c8ee0c94",
+                    "entity_type": "Insight",
+                    "name": "邻里互助",
+                    "combined_score": 0.007937,
+                    "sources": [
+                      "vector"
+                    ]
+                  }
+                ]
+              },
+              "decision_context": {
+                "overall_coverage": 0.0,
+                "theme_count": 23,
+                "undercovered_theme_count": 23,
+                "exhausted_theme_count": 0,
+                "current_focus_theme_id": null,
+                "focus_entity_id": "frag_9a59c880ee",
+                "has_focus_rich_text": true,
+                "connected_people_count": 2,
+                "connected_locations_count": 1,
+                "explorable_angles_count": 0,
+                "low_info_streak": 0,
+                "graph_rag_context_empty": false,
+                "emotion_energy": 0.961,
+                "cognitive_energy": 1.0,
+                "emotion_valence": 0.333
+              }
+            },
+            "tool_trace": []
+          },
+          "timing": {
+            "retrieval_ms": 514.9967920733616,
+            "extraction_ms": 14728.352374979295,
+            "write_ms": 2869.0070000011474
+          }
+        },
+        {
+          "role": "done"
+        }
+      ]
+    }
+  ],
+  "history": [
+    {
+      "role": "interviewer",
+      "text": "李秀兰奶奶，您是1944年出生的，又和四川成都有很深的缘分。如果从人生最早的一段清楚记忆说起，您最先想到的是哪里、什么人，或者哪一幕场景？",
+      "action": "continue"
+    },
+    {
+      "role": "interviewee",
+      "text": "哎哟，说起最早的记忆嘛，我们那会儿条件艰苦，我记得我小时候家里头条件不好，住在成都老城区的一个破旧小院里。那时候，我记得最清楚的就是我妈妈，她总是忙前忙后的，为了我们几个孩子操碎了心。我还记得，那时候院子里头有棵老槐树，夏天的时候，我们几个小孩儿就在树底下乘凉玩耍。那时候的日子虽然苦，但是邻里之间关系好得很，大家互相帮衬，那种温暖我现在还记得。"
+    },
+    {
+      "role": "interviewer",
+      "text": "李秀兰奶奶，您刚才提到了童年时的邻里关系和老槐树，听起来那时候的生活虽然艰苦，但也有很多温馨的时刻。能再给我讲讲您和邻居们之间发生的一些特别的事情吗？",
+      "action": "continue"
+    }
+  ],
+  "evaluation_state": {
+    "completed_turn_count": 1,
+    "dynamic_profile": {
+      "last_updated_turn_id": null,
+      "planner_guidance": [
+        "Family profile is still thin; when the story naturally allows it, ask about spouse, children, siblings, or grandchildren."
+      ],
+      "profile_quality": {
+        "core_identity_and_personality": 0.3333,
+        "current_life_status": 0.0,
+        "family_situation": 0.0,
+        "life_views_and_attitudes": 0.0,
+        "overall": 0.0833
+      },
+      "schema_version": "dynamic_elder_profile_v1",
+      "sections": {
+        "core_identity_and_personality": {
+          "identity_background": {
+            "confidence": 0.9,
+            "value": "name=李秀兰; birth_year=1944; age=82; hometown=四川成都; background=退休中学语文教师，经历过知青下乡、恢复高考、改革开放后的城市变迁。她有一个儿子和一个女儿，晚年喜欢整理旧照片和写日记。"
+          },
+          "life_overview": {
+            "confidence": 0.75,
+            "value": [
+              "退休中学语文教师，经历过知青下乡、恢复高考、改革开放后的城市变迁。她有一个儿子和一个女儿，晚年喜欢整理旧照片和写日记。"
+            ]
+          }
+        }
+      },
+      "update_count": 0
+    },
+    "latest_turn_evaluation": {
+      "coverage_gain": 0.0,
+      "created_at": "2026-05-08T12:17:51.472076",
+      "emotional_alignment_score": 0.0,
+      "information_gain_score": 0.75,
+      "non_redundancy_score": 1.0,
+      "notes": [],
+      "question_quality_score": 0.6875,
+      "turn_id": "turn_2fc423f375"
+    },
+    "session_id": "a7b7359172f64f2b8bd67dfaf66692d1",
+    "session_metrics": {
+      "average_information_gain": 0.0,
+      "average_turn_quality": 0.0,
+      "overall_theme_coverage": 0.0
+    },
+    "turn_count": 1,
+    "turn_evaluations": {
+      "turn_2fc423f375": {
+        "coverage_gain": 0.0,
+        "created_at": "2026-05-08T12:17:51.472076",
+        "emotional_alignment_score": 0.0,
+        "information_gain_score": 0.75,
+        "non_redundancy_score": 1.0,
+        "notes": [],
+        "question_quality_score": 0.6875,
+        "turn_id": "turn_2fc423f375"
+      }
+    },
+    "turns": [
+      {
+        "debug_trace": {
+          "decision_ctx": {
+            "explorable_angles_count": 0,
+            "low_info_streak": 0,
+            "overall_coverage": 0.0
+          },
+          "extraction_ms": 14728.352374979295,
+          "extraction_prompt": {
+            "context_turns": 0,
+            "current_answer_chars": 173,
+            "current_question_chars": 69,
+            "graph_context_chars": 0,
+            "input_json_chars": 334,
+            "prompt_chars": 1530,
+            "template_chars": 1174
+          },
+          "graph_changes": {
+            "new_entities": 5,
+            "relationships": 4
+          },
+          "graph_rag_metrics": {
+            "decision_context": {
+              "cognitive_energy": 1.0,
+              "connected_locations_count": 1,
+              "connected_people_count": 2,
+              "current_focus_theme_id": null,
+              "emotion_energy": 0.961,
+              "emotion_valence": 0.333,
+              "exhausted_theme_count": 0,
+              "explorable_angles_count": 0,
+              "focus_entity_id": "frag_9a59c880ee",
+              "graph_rag_context_empty": false,
+              "has_focus_rich_text": true,
+              "low_info_streak": 0,
+              "overall_coverage": 0.0,
+              "theme_count": 23,
+              "undercovered_theme_count": 23
+            },
+            "extraction": {
+              "confidence": 0.9,
+              "emotion_count": 1,
+              "empty_extraction": false,
+              "entity_count": 5,
+              "entity_type_counts": {
+                "Emotion": 1,
+                "Event": 1,
+                "Insight": 1,
+                "Location": 1,
+                "Person": 1
+              },
+              "event_count": 1,
+              "has_content": true,
+              "insight_count": 1,
+              "latency_ms": 14728.4,
+              "location_count": 1,
+              "narrative_summary_length": 28,
+              "open_loops_count": 1,
+              "person_count": 1,
+              "relationship_count": 5
+            },
+            "planner_retrieval": {
+              "channel_counts": {
+                "fulltext": 4,
+                "graph": 4,
+                "ranked": 7,
+                "vector": 5
+              },
+              "channel_errors": {},
+              "context_empty": false,
+              "context_length": 243,
+              "latency_ms": 515.0,
+              "ranked_entity_count": 7,
+              "token_count": 121,
+              "top_entities": [
+                {
+                  "combined_score": 0.015757,
+                  "entity_id": "person_6421aae7a598",
+                  "entity_type": "Person",
+                  "name": "妈妈",
+                  "sources": [
+                    "fulltext",
+                    "graph",
+                    "vector"
+                  ]
+                },
+                {
+                  "combined_score": 0.015699,
+                  "entity_id": "location_cd7f25659748",
+                  "entity_type": "Location",
+                  "name": "成都老城区",
+                  "sources": [
+                    "fulltext",
+                    "graph",
+                    "vector"
+                  ]
+                },
+                {
+                  "combined_score": 0.011475,
+                  "entity_id": "event_3d14e53c6051",
+                  "entity_type": "Event",
+                  "name": "童年艰苦生活",
+                  "sources": [
+                    "fulltext",
+                    "vector"
+                  ]
+                },
+                {
+                  "combined_score": 0.011239,
+                  "entity_id": "emotion_71ff1438349e",
+                  "entity_type": "Emotion",
+                  "name": "怀念",
+                  "sources": [
+                    "fulltext",
+                    "vector"
+                  ]
+                },
+                {
+                  "combined_score": 0.007937,
+                  "entity_id": "insight_7919c8ee0c94",
+                  "entity_type": "Insight",
+                  "name": "邻里互助",
+                  "sources": [
+                    "vector"
+                  ]
+                }
+              ]
+            },
+            "write": {
+              "deduplicated_count": 0,
+              "entity_ids_count": 5,
+              "latency_ms": 2869.0,
+              "new_entity_count": 5,
+              "relationship_count": 4,
+              "updated_entity_count": 0,
+              "write_empty": false
+            }
+          },
+          "pipeline": "graph_rag",
+          "planner_plan": {
+            "candidate_actions": [
+              {
+                "action": "continue_life_overview",
+                "reason_summary": "继续梳理李秀兰奶奶的童年记忆，为后续深入打下基础",
+                "score": 0.8
+              },
+              {
+                "action": "deep_dive_event",
+                "reason_summary": "当前阶段更适合继续梳理人生脉络，而非深入单个事件",
+                "score": 0.3
+              }
+            ],
+            "emotion_signal": {
+              "energy": 0.7,
+              "support_needed": false,
+              "valence": "positive"
+            },
+            "event_completeness": {
+              "missing_dimensions": [
+                "sequence",
+                "cause",
+                "result",
+                "feeling",
+                "reflection"
+              ],
+              "reason_summary": "已提及童年背景和人物，但缺少具体事件细节和个人感受",
+              "score": 0.5
+            },
+            "focus": {
+              "label": "童年记忆",
+              "type": "event"
+            },
+            "question_intent": "引导李秀兰奶奶分享更多童年时期的故事和感受",
+            "selected_action": "continue_life_overview",
+            "selected_slot_or_angle": "event",
+            "stage": "life_overview",
+            "tone": "curious_gentle"
+          },
+          "planning": {
+            "candidate_actions": [
+              {
+                "action": "continue_life_overview",
+                "reason_summary": "继续梳理李秀兰奶奶的童年记忆，为后续深入打下基础",
+                "score": 0.8
+              },
+              {
+                "action": "deep_dive_event",
+                "reason_summary": "当前阶段更适合继续梳理人生脉络，而非深入单个事件",
+                "score": 0.3
+              }
+            ],
+            "emotion_energy": 0.7,
+            "emotion_valence": "positive",
+            "event_completeness_score": 0.5,
+            "focus": {
+              "label": "童年记忆",
+              "type": "event"
+            },
+            "missing_dimensions": [
+              "sequence",
+              "cause",
+              "result",
+              "feeling",
+              "reflection"
+            ],
+            "next_action": "continue",
+            "question_intent": "引导李秀兰奶奶分享更多童年时期的故事和感受",
+            "selected_action": "continue_life_overview",
+            "selected_slot_or_angle": "event",
+            "stage": "life_overview"
+          },
+          "retrieval_ms": 514.9967920733616,
+          "tool_trace": [],
+          "write_ms": 2869.0070000011474
+        },
+        "evaluation_status": "completed",
+        "interviewee_answer": "哎哟，说起最早的记忆嘛，我们那会儿条件艰苦，我记得我小时候家里头条件不好，住在成都老城区的一个破旧小院里。那时候，我记得最清楚的就是我妈妈，她总是忙前忙后的，为了我们几个孩子操碎了心。我还记得，那时候院子里头有棵老槐树，夏天的时候，我们几个小孩儿就在树底下乘凉玩耍。那时候的日子虽然苦，但是邻里之间关系好得很，大家互相帮衬，那种温暖我现在还记得。",
+        "interviewer_question": "李秀兰奶奶，您是1944年出生的，又和四川成都有很深的缘分。如果从人生最早的一段清楚记忆说起，您最先想到的是哪里、什么人，或者哪一幕场景？",
+        "turn_evaluation": {
+          "coverage_gain": 0.0,
+          "created_at": "2026-05-08T12:17:51.472076",
+          "emotional_alignment_score": 0.0,
+          "information_gain_score": 0.75,
+          "non_redundancy_score": 1.0,
+          "notes": [],
+          "question_quality_score": 0.6875,
+          "turn_id": "turn_2fc423f375"
+        },
+        "turn_id": "turn_2fc423f375",
+        "turn_index": 1
+      }
+    ]
+  },
+  "planner_report": {
+    "coverage": {
+      "overall_richness": 0.0,
+      "theme_richness": {
+        "THEME_01_LIFE_CHAPTERS": 0.0,
+        "THEME_02_PEAK_EXPERIENCE": 0.0,
+        "THEME_03_LOW_POINT": 0.0,
+        "THEME_04_TURNING_POINT": 0.0,
+        "THEME_05_CHILDHOOD_POSITIVE": 0.0,
+        "THEME_06_CHILDHOOD_NEGATIVE": 0.0,
+        "THEME_07_ADULT_MEMORY": 0.0,
+        "THEME_08_RELIGIOUS_EXPERIENCE": 0.0,
+        "THEME_09_WISDOM_EVENT": 0.0,
+        "THEME_10_NEXT_CHAPTER": 0.0,
+        "THEME_11_DREAMS_PLANS": 0.0,
+        "THEME_12_LIFE_PROJECT": 0.0,
+        "THEME_13_LIFE_CHALLENGE": 0.0,
+        "THEME_14_HEALTH": 0.0,
+        "THEME_15_LOSS": 0.0,
+        "THEME_16_FAILURE_REGRET": 0.0,
+        "THEME_17_RELIGIOUS_VALUES": 0.0,
+        "THEME_18_POLITICAL_VALUES": 0.0,
+        "THEME_19_VALUE_EVOLUTION": 0.0,
+        "THEME_20_SINGLE_VALUE": 0.0,
+        "THEME_21_SESSION_SUMMARY": 0.0,
+        "THEME_22_INFORMATION_INTEGRATION": 0.0,
+        "THEME_23_CONTEXT_MANAGEMENT": 0.0
+      }
+    },
+    "embedding": {
+      "dimension": 2048,
+      "fallback_active": false,
+      "fallback_reason": null,
+      "provider": "openai"
+    },
+    "mode": "ai",
+    "neo4j": {
+      "nodes": [
+        {
+          "count": 23,
+          "type": "Topic"
+        },
+        {
+          "count": 1,
+          "type": "Event"
+        },
+        {
+          "count": 1,
+          "type": "Person"
+        },
+        {
+          "count": 1,
+          "type": "Location"
+        },
+        {
+          "count": 1,
+          "type": "Emotion"
+        },
+        {
+          "count": 1,
+          "type": "Insight"
+        }
+      ],
+      "relationships": [
+        {
+          "count": 11,
+          "type": "DEPENDS_ON"
+        },
+        {
+          "count": 1,
+          "type": "INCLUDES"
+        },
+        {
+          "count": 1,
+          "type": "PARTicipates_in"
+        },
+        {
+          "count": 1,
+          "type": "LOCATED_AT"
+        },
+        {
+          "count": 1,
+          "type": "RELATES_TO"
+        },
+        {
+          "count": 1,
+          "type": "TRIGGERS"
+        }
+      ],
+      "themes": [
+        {
+          "event_count": 0,
+          "id": "THEME_01_LIFE_CHAPTERS",
+          "name": "人生篇章概览",
+          "status": "pending"
+        },
+        {
+          "event_count": 0,
+          "id": "THEME_02_PEAK_EXPERIENCE",
+          "name": "高潮",
+          "status": "pending"
+        },
+        {
+          "event_count": 0,
+          "id": "THEME_03_LOW_POINT",
+          "name": "低谷",
+          "status": "pending"
+        },
+        {
+          "event_count": 0,
+          "id": "THEME_04_TURNING_POINT",
+          "name": "转折点",
+          "status": "pending"
+        },
+        {
+          "event_count": 0,
+          "id": "THEME_05_CHILDHOOD_POSITIVE",
+          "name": "童年积极回忆",
+          "status": "pending"
+        },
+        {
+          "event_count": 1,
+          "id": "THEME_06_CHILDHOOD_NEGATIVE",
+          "name": "童年消极回忆",
+          "status": "mentioned"
+        },
+        {
+          "event_count": 0,
+          "id": "THEME_07_ADULT_MEMORY",
+          "name": "生动的成人记忆",
+          "status": "pending"
+        },
+        {
+          "event_count": 0,
+          "id": "THEME_08_RELIGIOUS_EXPERIENCE",
+          "name": "宗教、精神或神秘体验",
+          "status": "pending"
+        },
+        {
+          "event_count": 0,
+          "id": "THEME_09_WISDOM_EVENT",
+          "name": "智慧事件",
+          "status": "pending"
+        },
+        {
+          "event_count": 0,
+          "id": "THEME_10_NEXT_CHAPTER",
+          "name": "下一章",
+          "status": "pending"
+        },
+        {
+          "event_count": 0,
+          "id": "THEME_11_DREAMS_PLANS",
+          "name": "梦想、希望和未来计划",
+          "status": "pending"
+        },
+        {
+          "event_count": 0,
+          "id": "THEME_12_LIFE_PROJECT",
+          "name": "人生项目",
+          "status": "pending"
+        },
+        {
+          "event_count": 0,
+          "id": "THEME_13_LIFE_CHALLENGE",
+          "name": "人生挑战",
+          "status": "pending"
+        },
+        {
+          "event_count": 0,
+          "id": "THEME_14_HEALTH",
+          "name": "健康",
+          "status": "pending"
+        },
+        {
+          "event_count": 0,
+          "id": "THEME_15_LOSS",
+          "name": "失落",
+          "status": "pending"
+        },
+        {
+          "event_count": 0,
+          "id": "THEME_16_FAILURE_REGRET",
+          "name": "失败的遗憾",
+          "status": "pending"
+        },
+        {
+          "event_count": 0,
+          "id": "THEME_17_RELIGIOUS_VALUES",
+          "name": "宗教/伦理价值观",
+          "status": "pending"
+        },
+        {
+          "event_count": 0,
+          "id": "THEME_18_POLITICAL_VALUES",
+          "name": "政治/社会价值观",
+          "status": "pending"
+        },
+        {
+          "event_count": 0,
+          "id": "THEME_19_VALUE_EVOLUTION",
+          "name": "宗教和政治观点转变和发展",
+          "status": "pending"
+        },
+        {
+          "event_count": 0,
+          "id": "THEME_20_SINGLE_VALUE",
+          "name": "单一价值观",
+          "status": "pending"
+        },
+        {
+          "event_count": 0,
+          "id": "THEME_21_SESSION_SUMMARY",
+          "name": "会话摘要",
+          "status": "pending"
+        },
+        {
+          "event_count": 0,
+          "id": "THEME_22_INFORMATION_INTEGRATION",
+          "name": "信息整合",
+          "status": "pending"
+        },
+        {
+          "event_count": 0,
+          "id": "THEME_23_CONTEXT_MANAGEMENT",
+          "name": "上下文管理",
+          "status": "pending"
+        }
+      ]
+    },
+    "session_id": "a7b7359172f64f2b8bd67dfaf66692d1",
+    "start_time": "2026-05-08T12:16:59.825280",
+    "turn_count": 1,
+    "turn_timings": []
+  },
+  "graph_state": {
+    "coverage_metrics": {
+      "overall_richness": 0.0,
+      "theme_richness": {
+        "THEME_01_LIFE_CHAPTERS": 0.0,
+        "THEME_02_PEAK_EXPERIENCE": 0.0,
+        "THEME_03_LOW_POINT": 0.0,
+        "THEME_04_TURNING_POINT": 0.0,
+        "THEME_05_CHILDHOOD_POSITIVE": 0.0,
+        "THEME_06_CHILDHOOD_NEGATIVE": 0.0,
+        "THEME_07_ADULT_MEMORY": 0.0,
+        "THEME_08_RELIGIOUS_EXPERIENCE": 0.0,
+        "THEME_09_WISDOM_EVENT": 0.0,
+        "THEME_10_NEXT_CHAPTER": 0.0,
+        "THEME_11_DREAMS_PLANS": 0.0,
+        "THEME_12_LIFE_PROJECT": 0.0,
+        "THEME_13_LIFE_CHALLENGE": 0.0,
+        "THEME_14_HEALTH": 0.0,
+        "THEME_15_LOSS": 0.0,
+        "THEME_16_FAILURE_REGRET": 0.0,
+        "THEME_17_RELIGIOUS_VALUES": 0.0,
+        "THEME_18_POLITICAL_VALUES": 0.0,
+        "THEME_19_VALUE_EVOLUTION": 0.0,
+        "THEME_20_SINGLE_VALUE": 0.0,
+        "THEME_21_SESSION_SUMMARY": 0.0,
+        "THEME_22_INFORMATION_INTEGRATION": 0.0,
+        "THEME_23_CONTEXT_MANAGEMENT": 0.0
+      }
+    },
+    "dynamic_profile": {
+      "last_updated_turn_id": null,
+      "planner_guidance": [
+        "Family profile is still thin; when the story naturally allows it, ask about spouse, children, siblings, or grandchildren."
+      ],
+      "profile_quality": {
+        "core_identity_and_personality": 0.3333,
+        "current_life_status": 0.0,
+        "family_situation": 0.0,
+        "life_views_and_attitudes": 0.0,
+        "overall": 0.0833
+      },
+      "schema_version": "dynamic_elder_profile_v1",
+      "sections": {
+        "core_identity_and_personality": {
+          "identity_background": {
+            "confidence": 0.9,
+            "value": "name=李秀兰; birth_year=1944; age=82; hometown=四川成都; background=退休中学语文教师，经历过知青下乡、恢复高考、改革开放后的城市变迁。她有一个儿子和一个女儿，晚年喜欢整理旧照片和写日记。"
+          },
+          "life_overview": {
+            "confidence": 0.75,
+            "value": [
+              "退休中学语文教师，经历过知青下乡、恢复高考、改革开放后的城市变迁。她有一个儿子和一个女儿，晚年喜欢整理旧照片和写日记。"
+            ]
+          }
+        }
+      },
+      "update_count": 0
+    },
+    "narrative_fragments": {
+      "frag_9a59c880ee": {
+        "confidence": 0.9,
+        "created_at": null,
+        "fragment_id": "frag_9a59c880ee",
+        "merge_status": "new",
+        "narrative_richness": 0.0,
+        "properties": {
+          "emotional_tone": "怀念",
+          "location": "成都老城区",
+          "people": [
+            "李秀兰奶奶",
+            "妈妈"
+          ],
+          "significance": "童年记忆",
+          "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+          "time_anchor": "1944年左右"
+        },
+        "rich_text": "李秀兰奶奶回忆童年时家里条件不好，住在成都老城区的破旧小院。",
+        "source_turn_ids": [
+          "turn_2fc423f375"
+        ],
+        "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+        "updated_at": null
+      }
+    },
+    "session_id": "a7b7359172f64f2b8bd67dfaf66692d1",
+    "theme_nodes": [
+      {
+        "narrative_richness": 0.0,
+        "status": "pending",
+        "theme_id": "THEME_01_LIFE_CHAPTERS",
+        "title": null
+      },
+      {
+        "narrative_richness": 0.0,
+        "status": "pending",
+        "theme_id": "THEME_02_PEAK_EXPERIENCE",
+        "title": null
+      },
+      {
+        "narrative_richness": 0.0,
+        "status": "pending",
+        "theme_id": "THEME_03_LOW_POINT",
+        "title": null
+      },
+      {
+        "narrative_richness": 0.0,
+        "status": "pending",
+        "theme_id": "THEME_04_TURNING_POINT",
+        "title": null
+      },
+      {
+        "narrative_richness": 0.0,
+        "status": "pending",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "title": null
+      },
+      {
+        "narrative_richness": 0.0,
+        "status": "mentioned",
+        "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+        "title": null
+      },
+      {
+        "narrative_richness": 0.0,
+        "status": "pending",
+        "theme_id": "THEME_07_ADULT_MEMORY",
+        "title": null
+      },
+      {
+        "narrative_richness": 0.0,
+        "status": "pending",
+        "theme_id": "THEME_08_RELIGIOUS_EXPERIENCE",
+        "title": null
+      },
+      {
+        "narrative_richness": 0.0,
+        "status": "pending",
+        "theme_id": "THEME_09_WISDOM_EVENT",
+        "title": null
+      },
+      {
+        "narrative_richness": 0.0,
+        "status": "pending",
+        "theme_id": "THEME_10_NEXT_CHAPTER",
+        "title": null
+      },
+      {
+        "narrative_richness": 0.0,
+        "status": "pending",
+        "theme_id": "THEME_11_DREAMS_PLANS",
+        "title": null
+      },
+      {
+        "narrative_richness": 0.0,
+        "status": "pending",
+        "theme_id": "THEME_12_LIFE_PROJECT",
+        "title": null
+      },
+      {
+        "narrative_richness": 0.0,
+        "status": "pending",
+        "theme_id": "THEME_13_LIFE_CHALLENGE",
+        "title": null
+      },
+      {
+        "narrative_richness": 0.0,
+        "status": "pending",
+        "theme_id": "THEME_14_HEALTH",
+        "title": null
+      },
+      {
+        "narrative_richness": 0.0,
+        "status": "pending",
+        "theme_id": "THEME_15_LOSS",
+        "title": null
+      },
+      {
+        "narrative_richness": 0.0,
+        "status": "pending",
+        "theme_id": "THEME_16_FAILURE_REGRET",
+        "title": null
+      },
+      {
+        "narrative_richness": 0.0,
+        "status": "pending",
+        "theme_id": "THEME_17_RELIGIOUS_VALUES",
+        "title": null
+      },
+      {
+        "narrative_richness": 0.0,
+        "status": "pending",
+        "theme_id": "THEME_18_POLITICAL_VALUES",
+        "title": null
+      },
+      {
+        "narrative_richness": 0.0,
+        "status": "pending",
+        "theme_id": "THEME_19_VALUE_EVOLUTION",
+        "title": null
+      },
+      {
+        "narrative_richness": 0.0,
+        "status": "pending",
+        "theme_id": "THEME_20_SINGLE_VALUE",
+        "title": null
+      },
+      {
+        "narrative_richness": 0.0,
+        "status": "pending",
+        "theme_id": "THEME_21_SESSION_SUMMARY",
+        "title": null
+      },
+      {
+        "narrative_richness": 0.0,
+        "status": "pending",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "title": null
+      },
+      {
+        "narrative_richness": 0.0,
+        "status": "pending",
+        "theme_id": "THEME_23_CONTEXT_MANAGEMENT",
+        "title": null
+      }
+    ],
+    "timestamp": "2026-05-08T12:17:51.526091",
+    "turn_count": 1
+  },
+  "metrics": {
+    "agent": "planner",
+    "target_turns": 1,
+    "completed_turns": 1,
+    "completion_rate": 1.0,
+    "error_count": 0,
+    "avg_question_quality": 0.6875,
+    "avg_information_gain": 0.75,
+    "avg_non_redundancy": 1.0,
+    "low_gain_ratio": 0.0,
+    "final_coverage": 0.0,
+    "action_continue_ratio": 1.0,
+    "action_next_phase_ratio": 0.0,
+    "action_end_ratio": 0.0,
+    "avg_interviewer_ms": 515.0,
+    "graph_rag": {
+      "turns_with_graph_metrics": 1,
+      "retrieval_nonempty_rate": 0.0,
+      "avg_ranked_entities": 7.0,
+      "avg_context_chars": 0.0,
+      "total_new_entities": 5,
+      "total_updated_entities": 0,
+      "total_relationships_written": 4,
+      "total_extracted_events": 1
+    }
+  },
+  "score": {
+    "overall_score": 0.6725,
+    "deterministic_score": 0.6725,
+    "llm_score": null,
+    "llm_weight": 0.0,
+    "deterministic": {
+      "deterministic_score": 0.6725,
+      "components": {
+        "question_quality": 0.6875,
+        "information_gain": 0.75,
+        "non_redundancy": 1.0,
+        "coverage": 0.0,
+        "completion": 1.0
+      },
+      "weights": {
+        "question_quality": 0.28,
+        "information_gain": 0.24,
+        "non_redundancy": 0.2,
+        "coverage": 0.18,
+        "completion": 0.1
+      },
+      "graph_observability_score": 0.6188
+    },
+    "llm_result": null
+  }
+}

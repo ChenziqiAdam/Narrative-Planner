@@ -88,6 +88,8 @@ class ExtractionMetadata:
 class GraphDelta:
     fragment_candidates: List[Any] = field(default_factory=list)
     graph_extraction: Optional[Any] = None
+    # legacy pipeline field
+    event_candidates: List[Any] = field(default_factory=list)
 
     def to_dict(self) -> Dict[str, Any]:
         return serialize_value(self)
@@ -114,6 +116,8 @@ class TurnRecord:
     extraction_result: Optional[ExtractionResult] = None
     turn_evaluation: Optional["TurnEvaluation"] = None
     debug_trace: Dict[str, Any] = field(default_factory=dict)
+    # legacy pipeline field
+    planner_plan: Optional[Any] = None
 
     def to_dict(self) -> Dict[str, Any]:
         return serialize_value(self)
@@ -124,6 +128,11 @@ class SessionMetrics:
     overall_theme_coverage: float = 0.0
     average_turn_quality: float = 0.0
     average_information_gain: float = 0.0
+    # legacy pipeline fields
+    overall_slot_coverage: Dict[str, float] = field(default_factory=dict)
+    people_coverage: float = 0.0
+    open_loop_closure_rate: float = 0.0
+    contradiction_resolution_rate: float = 0.0
 
     def to_dict(self) -> Dict[str, Any]:
         return serialize_value(self)
@@ -147,6 +156,7 @@ class DynamicProfileField:
     confidence: float = 0.0
     evidence_turn_ids: List[str] = field(default_factory=list)
     evidence_fragment_ids: List[str] = field(default_factory=list)
+    evidence_event_ids: List[str] = field(default_factory=list)
     updated_at: Optional[datetime] = None
 
     def to_dict(self) -> Dict[str, Any]:

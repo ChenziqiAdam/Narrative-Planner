@@ -34,7 +34,7 @@ cd narrative-planner
 OPENAI_API_KEY=your-moonshot-api-key
 OPENAI_BASE_URL=https://api.moonshot.cn/v1
 MODEL_NAME=kimi-k2.5
-CHAT_MODEL_NAME=kimi-latest
+CHAT_MODEL_NAME=moonshot-v1-8k
 STRUCTURED_MODEL_NAME=moonshot-v1-8k
 
 # 嵌入模型（智谱 Embedding-3）

@@ -46,9 +46,10 @@ class EvaluatorAgent:
         if not extraction:
             return 0.0
         graph_delta = extraction.graph_delta
-        fragment_count = len(graph_delta.fragment_candidates) if graph_delta else 0
-        if graph_delta and graph_delta.graph_extraction:
-            entity_count = len(graph_delta.graph_extraction.entities)
+        fragment_count = len(getattr(graph_delta, "fragment_candidates", None) or getattr(graph_delta, "event_candidates", None) or []) if graph_delta else 0
+        graph_extraction = getattr(graph_delta, "graph_extraction", None) if graph_delta else None
+        if graph_extraction:
+            entity_count = len(graph_extraction.entities)
             return min(entity_count * 0.15, 1.0)
         return min(fragment_count * 0.1, 1.0)
 

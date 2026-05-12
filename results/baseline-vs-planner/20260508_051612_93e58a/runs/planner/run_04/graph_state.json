@@ -1,0 +1,1233 @@
+{
+  "coverage_metrics": {
+    "overall_richness": 0.0,
+    "theme_richness": {
+      "THEME_01_LIFE_CHAPTERS": 0.0,
+      "THEME_02_PEAK_EXPERIENCE": 0.0,
+      "THEME_03_LOW_POINT": 0.0,
+      "THEME_04_TURNING_POINT": 0.0,
+      "THEME_05_CHILDHOOD_POSITIVE": 0.0,
+      "THEME_06_CHILDHOOD_NEGATIVE": 0.0,
+      "THEME_07_ADULT_MEMORY": 0.0,
+      "THEME_08_RELIGIOUS_EXPERIENCE": 0.0,
+      "THEME_09_WISDOM_EVENT": 0.0,
+      "THEME_10_NEXT_CHAPTER": 0.0,
+      "THEME_11_DREAMS_PLANS": 0.0,
+      "THEME_12_LIFE_PROJECT": 0.0,
+      "THEME_13_LIFE_CHALLENGE": 0.0,
+      "THEME_14_HEALTH": 0.0,
+      "THEME_15_LOSS": 0.0,
+      "THEME_16_FAILURE_REGRET": 0.0,
+      "THEME_17_RELIGIOUS_VALUES": 0.0,
+      "THEME_18_POLITICAL_VALUES": 0.0,
+      "THEME_19_VALUE_EVOLUTION": 0.0,
+      "THEME_20_SINGLE_VALUE": 0.0,
+      "THEME_21_SESSION_SUMMARY": 0.0,
+      "THEME_22_INFORMATION_INTEGRATION": 0.0,
+      "THEME_23_CONTEXT_MANAGEMENT": 0.0
+    }
+  },
+  "dynamic_profile": {
+    "last_updated_turn_id": "turn_6315c70682",
+    "planner_guidance": [
+      "Family profile is still thin; when the story naturally allows it, ask about spouse, children, siblings, or grandchildren.",
+      "Current-life profile is undercovered; consider a gentle bridge to daily routines, hobbies, social activity, or health concerns.",
+      "Adapt question shape to speaking style: story-rich replies; allow narrative space, then follow up on one concrete detail."
+    ],
+    "profile_quality": {
+      "core_identity_and_personality": 0.6667,
+      "current_life_status": 0.0,
+      "family_situation": 0.0,
+      "life_views_and_attitudes": 0.0,
+      "overall": 0.1667
+    },
+    "schema_version": "dynamic_elder_profile_v1",
+    "sections": {
+      "core_identity_and_personality": {
+        "common_expressions": {
+          "confidence": 0.35,
+          "value": [
+            "那时候心里的感觉啊，就是开心，无忧无虑的",
+            "我们几个就偷偷溜进去，摘了几个",
+            "那时候心里头那个紧张哦，生怕被大人发现要挨骂",
+            "我们跑过去蹲下，就开始分那些李子了",
+            "那时候的我们，真是又调皮又快乐"
+          ]
+        },
+        "identity_background": {
+          "confidence": 0.9,
+          "value": "name=李秀兰; birth_year=1944; age=82; hometown=四川成都; background=退休中学语文教师，经历过知青下乡、恢复高考、改革开放后的城市变迁。她有一个儿子和一个女儿，晚年喜欢整理旧照片和写日记。"
+        },
+        "life_overview": {
+          "confidence": 0.75,
+          "value": [
+            "退休中学语文教师，经历过知青下乡、恢复高考、改革开放后的城市变迁。她有一个儿子和一个女儿，晚年喜欢整理旧照片和写日记。"
+          ]
+        },
+        "speaking_style": {
+          "confidence": 0.45,
+          "value": "story-rich replies; allow narrative space, then follow up on one concrete detail"
+        }
+      }
+    },
+    "update_count": 6
+  },
+  "narrative_fragments": {
+    "frag_068690178b": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_068690178b",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张又快乐",
+        "location": "成都老城区一个巷子里的院子",
+        "people": [
+          "秀兰奶奶",
+          "小伙伴们"
+        ],
+        "significance": "童年调皮又刺激的经历，成为珍贵的记忆",
+        "theme_id": "THEME_09_WISDOM_EVENT",
+        "time_anchor": "夏天的一个下午"
+      },
+      "rich_text": "夏天的一个下午，秀兰奶奶和小伙伴们商量去摘李子解馋，偷偷溜进成都老城区一个巷子里的院子，摘了几个李子后赶紧离开",
+      "source_turn_ids": [
+        "turn_aa8d4868aa"
+      ],
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "updated_at": null
+    },
+    "frag_077c69b20b": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_077c69b20b",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "有趣",
+        "location": "院子",
+        "people": [
+          "我",
+          "小孩儿",
+          "妈妈"
+        ],
+        "significance": "童年趣事",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "童年时和小孩儿在院子里玩捉迷藏，躲在破旧木箱子里，大家找不到，自己睡着了，最后被妈妈叫醒",
+      "source_turn_ids": [
+        "turn_6a41a59853"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_082977ecd6": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_082977ecd6",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张、兴奋、害怕、内疚",
+        "significance": "让秀兰奶奶学会了做事要考虑后果，影响深远",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶童年时与小伙伴们偷摘李子并分吃的行为",
+      "source_turn_ids": [
+        "turn_dfd550cb33"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_0b1855a3ff": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_0b1855a3ff",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张又兴奋",
+        "location": "院子后面的隐蔽角落",
+        "people": [
+          "秀兰奶奶",
+          "小猴子",
+          "胆子小的小伙伴"
+        ],
+        "significance": "童年的美好回忆",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们在偷摘李子后，选择了一个隐蔽的角落来分吃李子，这个地方位于他们所住院子的后面，被破墙围着，安静且不易被人发现",
+      "source_turn_ids": [
+        "turn_fee66d8133"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_0d7e812ac7": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_0d7e812ac7",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "心里暖暖的，简单的快乐和幸福",
+        "people": [
+          "我",
+          "小伙伴们"
+        ],
+        "significance": "童年友谊和快乐的象征，学会了珍惜和享受生活中的小确幸",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶回忆童年时与小伙伴们一起玩耍的游戏和活动，包括捉迷藏和捉鱼等，这些活动让她感到心里暖暖的，简单的快乐和幸福",
+      "source_turn_ids": [
+        "turn_f2ad4fa077"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_0eae8bdcaa": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_0eae8bdcaa",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张兴奋",
+        "people": [
+          "秀兰奶奶",
+          "小伙伴们",
+          "小猴子"
+        ],
+        "significance": "教训了秀兰奶奶做事要三思而后行",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "不详"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们在一个炎热的下午偷摘李子的经历，过程中感到既紧张又兴奋",
+      "source_turn_ids": [
+        "turn_93e82ae0b8"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_10b2e53bda": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_10b2e53bda",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "开心",
+        "location": "河边",
+        "people": [
+          "我",
+          "小伙伴"
+        ],
+        "significance": "童年快乐记忆",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "童年时和小伙伴一起去河边捉鱼，河水清澈，鱼多，光着脚丫子在水里摸鱼，虽然没捉到几条，但过程非常开心",
+      "source_turn_ids": [
+        "turn_6a41a59853"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_153a654399": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_153a654399",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "快乐",
+        "significance": "对性格和生活态度有积极影响",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶回忆起童年时虽然没有现代玩具和电子游戏，但通过与小伙伴们一起玩耍找到了简单的快乐，学会了珍惜生活中的小确幸",
+      "source_turn_ids": [
+        "turn_25ae7fb9c6"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_1739bc5523": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_1739bc5523",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "开心",
+        "location": "家附近的小河沟",
+        "people": [
+          "秀兰奶奶",
+          "小伙伴"
+        ],
+        "significance": "教会珍惜简单的快乐",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年"
+      },
+      "rich_text": "秀兰奶奶和小伙伴在河边捉鱼的趣事，河水清澈，鱼多，光着脚丫子在水里摸鱼，虽然没捉到几条，但过程非常开心",
+      "source_turn_ids": [
+        "turn_50994e1829"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_20e167b9e4": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_20e167b9e4",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "开心",
+        "location": "住的院子",
+        "people": [
+          "秀兰奶奶",
+          "小孩们",
+          "妈妈"
+        ],
+        "significance": "教会珍惜简单的快乐",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年"
+      },
+      "rich_text": "秀兰奶奶和小孩们在院子里玩捉迷藏，她躲在破旧的木箱子里，最后自己睡着，被妈妈叫醒",
+      "source_turn_ids": [
+        "turn_50994e1829"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_23e69964ee": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_23e69964ee",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "开心、无忧无虑",
+        "location": "家附近的小河沟",
+        "people": [
+          "秀兰奶奶",
+          "几个小伙伴"
+        ],
+        "significance": "童年简单快乐的回忆",
+        "theme_id": "THEME_01_LIFE_CHAPTERS",
+        "time_anchor": "夏天的一个下午"
+      },
+      "rich_text": "夏天的一个下午，秀兰奶奶和几个小伙伴去河边捉鱼，河水清澈，鱼多，他们光着脚丫子下水",
+      "source_turn_ids": [
+        "turn_b60b923b86"
+      ],
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "updated_at": null
+    },
+    "frag_24f05f8281": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_24f05f8281",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张和兴奋",
+        "significance": "教训了秀兰奶奶做事要三思而后行，影响深远",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "大热天的下午"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们在一个炎热的下午偷摘李子，感到既紧张又兴奋",
+      "source_turn_ids": [
+        "turn_a1fc7fe89c"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_28d4cbcf53": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_28d4cbcf53",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "开心",
+        "location": "家附近的小河沟",
+        "people": [
+          "秀兰奶奶",
+          "小伙伴们"
+        ],
+        "significance": "教会了珍惜简单的快乐",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们在河边捉鱼，河水清凉，光着脚丫子在水里摸鱼，虽然没有捉到几条，但过程非常开心",
+      "source_turn_ids": [
+        "turn_b20bf2dac3"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_2bea3b20db": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_2bea3b20db",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "开心",
+        "location": "住的院子",
+        "people": [
+          "秀兰奶奶",
+          "几个小孩儿"
+        ],
+        "significance": "学会了珍惜和享受生活中的小确幸",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年"
+      },
+      "rich_text": "秀兰奶奶和几个小孩在院子里玩捉迷藏，她躲在一个破旧的木箱子里，最后自己睡着了，妈妈叫醒她",
+      "source_turn_ids": [
+        "turn_e7569d4bf3"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_2f07d9898a": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_2f07d9898a",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "开心，无忧无虑",
+        "people": [
+          "我",
+          "小伙伴们"
+        ],
+        "significance": "学会了珍惜和享受生活中的小确幸，培养了乐于助人、热情待人的性格",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶童年时期与小伙伴们一起玩耍、捉鱼和捉迷藏的简单快乐时光",
+      "source_turn_ids": [
+        "turn_48475171b4"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_341a40fd8d": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_341a40fd8d",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张又兴奋",
+        "location": "安静的角落",
+        "people": [
+          "我",
+          "小伙伴们"
+        ],
+        "significance": "纯真的快乐，温馨的记忆",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE"
+      },
+      "rich_text": "在安静的角落里和小伙伴们一起蹲着吃刚摘的李子，脸上带着紧张又兴奋的表情，一边吃一边小声笑，生怕被人听见",
+      "source_turn_ids": [
+        "turn_810044140e"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_37bcb52224": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_37bcb52224",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "开心",
+        "location": "成都家附近的小河沟",
+        "people": [
+          "秀兰奶奶",
+          "小伙伴们"
+        ],
+        "significance": "童年友谊和快乐的象征",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们在成都家附近的小河沟捉鱼，河水清澈，虽然没捉到几条鱼，但过程非常开心",
+      "source_turn_ids": [
+        "turn_52c1c066cb"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_401f9d7dd6": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_401f9d7dd6",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "团结互助",
+        "significance": "影响了秀兰奶奶乐于助人、热情待人的性格",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶童年时邻里之间关系融洽，大家互相帮助，这种团结互助的精神影响了她，让她长大后也喜欢帮助别人，对人热情",
+      "source_turn_ids": [
+        "turn_d6e1ff629f"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_46392899a7": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_46392899a7",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张又兴奋",
+        "location": "成都老城区的巷子里",
+        "people": [
+          "秀兰奶奶",
+          "小猴子",
+          "胆子小的小伙伴"
+        ],
+        "significance": "童年调皮行为，学会考虑后果",
+        "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们偷摘李子后，因为担心被大人发现，紧张地跑到一个没人的角落分吃李子",
+      "source_turn_ids": [
+        "turn_a525af140c"
+      ],
+      "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+      "updated_at": null
+    },
+    "frag_51f997fff7": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_51f997fff7",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张刺激又快乐",
+        "location": "邻居的院子和安静的角落",
+        "people": [
+          "秀兰奶奶",
+          "小猴子",
+          "其他小伙伴"
+        ],
+        "significance": "让秀兰奶奶学会了做事要三思而后行，不做让人不高兴的事",
+        "theme_id": "THEME_09_WISDOM_EVENT",
+        "time_anchor": "一个大热天的下午"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们在一个炎热的下午，因为无聊而决定偷摘邻居院子的李子，最终成功摘得并分享食用的趣事",
+      "source_turn_ids": [
+        "turn_6315c70682"
+      ],
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "updated_at": null
+    },
+    "frag_567cd6e70f": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_567cd6e70f",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "开心",
+        "location": "老院子",
+        "people": [
+          "秀兰奶奶",
+          "小伙伴们"
+        ],
+        "significance": "学会了珍惜和享受生活中的小确幸",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "周末的傍晚"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们在成都老院子里捉迷藏的趣事",
+      "source_turn_ids": [
+        "turn_2dda18c13a"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_5c08273848": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_5c08273848",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "开心、不想回家",
+        "location": "住的院子",
+        "people": [
+          "秀兰奶奶",
+          "小伙伴们"
+        ],
+        "significance": "童年简单快乐的回忆",
+        "theme_id": "THEME_01_LIFE_CHAPTERS",
+        "time_anchor": "周末的傍晚"
+      },
+      "rich_text": "周末傍晚，秀兰奶奶和小伙伴们在院子里玩捉迷藏，天色暗下来，大家玩累了各自回家",
+      "source_turn_ids": [
+        "turn_b60b923b86"
+      ],
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "updated_at": null
+    },
+    "frag_5f3e83bb60": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_5f3e83bb60",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张又兴奋",
+        "location": "院子后面的隐蔽角落",
+        "people": [
+          "秀兰奶奶",
+          "小伙伴们"
+        ],
+        "significance": "让秀兰奶奶学到了做事要考虑后果",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶童年时与小伙伴们偷摘李子并分吃的经历",
+      "source_turn_ids": [
+        "turn_9e9b92dc2f"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_615e2056f6": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_615e2056f6",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "温暖",
+        "significance": "培养了乐于助人和热情的性格",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶提到童年时期邻里之间关系融洽，大家互相帮助，这种团结互助的精神影响了她，让她长大后也喜欢帮助别人，对人热情",
+      "source_turn_ids": [
+        "turn_25ae7fb9c6"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_61dcffff58": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_61dcffff58",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "开心",
+        "location": "家附近的小河沟",
+        "people": [
+          "秀兰奶奶",
+          "小伙伴们"
+        ],
+        "significance": "学会了珍惜和享受生活中的小确幸",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "夏天的一个下午"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们在成都家附近的小河沟捉鱼的趣事",
+      "source_turn_ids": [
+        "turn_2dda18c13a"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_64d4bb4992": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_64d4bb4992",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "开心",
+        "location": "成都住的老院子",
+        "people": [
+          "秀兰奶奶",
+          "小伙伴们"
+        ],
+        "significance": "简单快乐的童年时光",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们在成都住的老院子玩捉迷藏，有很多躲藏的地方，秀兰奶奶曾躲在破旧木箱子里睡着",
+      "source_turn_ids": [
+        "turn_2b901fc6c4"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_69f2f09cc4": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_69f2f09cc4",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张又兴奋",
+        "location": "隐蔽角落",
+        "people": [
+          "秀兰奶奶",
+          "小伙伴们"
+        ],
+        "significance": "童年纯真快乐的记忆",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们在一个隐蔽角落里分吃刚摘的李子，脸上带着紧张又兴奋的表情，小声笑着，衣服上有泥巴，头发乱糟糟",
+      "source_turn_ids": [
+        "turn_e13af17e74"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_79d3a21b44": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_79d3a21b44",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张又兴奋",
+        "location": "院子后面的安静角落",
+        "people": [
+          "秀兰奶奶",
+          "小伙伴们",
+          "小猴子"
+        ],
+        "significance": "教训和回忆",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "一个大热天的下午"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们在一个炎热的下午偷摘李子，并在院子后面的安静角落分吃",
+      "source_turn_ids": [
+        "turn_74ddc85ed0"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_7a081726f5": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_7a081726f5",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "开心",
+        "location": "家附近的小河沟",
+        "people": [
+          "秀兰奶奶",
+          "小伙伴们"
+        ],
+        "significance": "学会了珍惜和享受生活中的小确幸",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们一起去河边捉鱼，河水清澈，鱼多，光着脚丫子在水里摸鱼，虽然没捉到几条，但过程非常开心",
+      "source_turn_ids": [
+        "turn_e7569d4bf3"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_80314c9210": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_80314c9210",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "害怕和内疚",
+        "location": "院子后面的角落",
+        "people": [
+          "小猴子",
+          "阿芳",
+          "小胖",
+          "秀兰奶奶"
+        ],
+        "significance": "让秀兰奶奶学会了考虑后果，影响了她后来的生活和教育方式",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们一起偷摘李子并分吃的经历",
+      "source_turn_ids": [
+        "turn_27f8844a45"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_8d1579a057": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_8d1579a057",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张又快乐",
+        "location": "成都老城区的一个巷子",
+        "people": [
+          "秀兰奶奶",
+          "小伙伴们"
+        ],
+        "significance": "童年调皮又可爱的经历，刺激和快乐的童年记忆",
+        "theme_id": "THEME_09_WISDOM_EVENT",
+        "time_anchor": "夏天"
+      },
+      "rich_text": "在成都老城区的一个巷子里，有户人家的院子里种了一棵好大的李子树，夏天的时候，李子结得满树都是，秀兰奶奶和小伙伴们偷偷溜进去摘了几个李子",
+      "source_turn_ids": [
+        "turn_5207263d36"
+      ],
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "updated_at": null
+    },
+    "frag_a64db43824": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_a64db43824",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "简单快乐",
+        "significance": "学会了珍惜和享受生活中的小确幸",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶回忆童年时没有现代玩具和电子游戏，但通过与小伙伴一起玩耍找到了简单的快乐，学会了珍惜生活中的小确幸",
+      "source_turn_ids": [
+        "turn_d6e1ff629f"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_b55f144ea8": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_b55f144ea8",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "兴奋和满足",
+        "location": "无人角落",
+        "people": [
+          "秀兰奶奶",
+          "小猴子",
+          "胆子小的小伙伴"
+        ],
+        "significance": "童年的快乐记忆",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们在一个没人的角落里分吃偷摘的李子，味道酸酸甜甜",
+      "source_turn_ids": [
+        "turn_a525af140c"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_b56483d521": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_b56483d521",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "开心",
+        "location": "成都住的老院子",
+        "people": [
+          "秀兰奶奶",
+          "小伙伴们"
+        ],
+        "significance": "童年友谊和快乐的象征",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们在成都住的老院子玩捉迷藏，院子有很多躲藏的地方，有一次甚至在木箱子里睡着了",
+      "source_turn_ids": [
+        "turn_52c1c066cb"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_b87efedd3d": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_b87efedd3d",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "调皮又可爱",
+        "location": "成都老城区的一个巷子",
+        "people": [
+          "秀兰奶奶",
+          "小猴子",
+          "胆子小的小伙伴"
+        ],
+        "significance": "童年的刺激和快乐",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "夏天的一个下午"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们在成都老城区的一个巷子里偷摘李子的趣事",
+      "source_turn_ids": [
+        "turn_7b4c91a1aa"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_b8ebc567df": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_b8ebc567df",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "艰苦但邻里关系融洽",
+        "location": "成都老城区",
+        "people": [
+          "我",
+          "妈妈"
+        ],
+        "significance": "童年时期的生活记忆",
+        "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+        "time_anchor": "1940年代末至1950年代初"
+      },
+      "rich_text": "李秀兰奶奶回忆起童年时家中的贫困状况，住在成都老城区的破旧小屋，母亲忙于照顾孩子和外出工作",
+      "source_turn_ids": [
+        "turn_83a6117aca"
+      ],
+      "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+      "updated_at": null
+    },
+    "frag_b913177157": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_b913177157",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张刺激又兴奋",
+        "location": "院子后面安静的角落",
+        "people": [
+          "秀兰奶奶",
+          "小猴子",
+          "阿芳",
+          "小胖"
+        ],
+        "significance": "让秀兰奶奶学会了考虑后果，影响后来的行为",
+        "theme_id": "THEME_09_WISDOM_EVENT",
+        "time_anchor": "一个大热天的下午"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们在一个炎热的下午决定偷摘李子，小猴子提出建议，大家同意后偷偷溜进院子，小猴子爬上树摘李子，其他人在下面接果子，最后在安静的角落分着吃了",
+      "source_turn_ids": [
+        "turn_14e781b731"
+      ],
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "updated_at": null
+    },
+    "frag_ba27853aef": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_ba27853aef",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张又兴奋",
+        "location": "院子后面有堵破墙围着的角落",
+        "people": [
+          "秀兰奶奶",
+          "小猴子",
+          "阿芳",
+          "隔壁的小胖"
+        ],
+        "significance": "童年调皮又快乐的回忆",
+        "theme_id": "THEME_09_WISDOM_EVENT",
+        "time_anchor": "一个大热天的下午"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们在一个炎热的下午偷摘了院子的李子，并在院子后面的角落里分吃",
+      "source_turn_ids": [
+        "turn_96a3665a06"
+      ],
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "updated_at": null
+    },
+    "frag_cc11bdaf74": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_cc11bdaf74",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张又快乐",
+        "location": "成都老城区一个巷子里的院子",
+        "people": [
+          "秀兰奶奶",
+          "几个小伙伴"
+        ],
+        "significance": "童年调皮又刺激的经历，成为快乐回忆的一部分",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "夏天的一个下午"
+      },
+      "rich_text": "夏天的一个下午，秀兰奶奶和几个小伙伴商量去摘李子解馋，找到了成都老城区一个巷子里的院子，院子里有一棵结满李子的大李子树，他们偷偷溜进去摘了几个李子，心里紧张害怕被发现，但还是小心翼翼地摘了一些后跑开。",
+      "source_turn_ids": [
+        "turn_5245c6d6b4"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_d149174ea5": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_d149174ea5",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张又兴奋",
+        "location": "住的院子",
+        "people": [
+          "秀兰奶奶",
+          "几个小孩"
+        ],
+        "significance": "教会了珍惜简单的快乐",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年"
+      },
+      "rich_text": "秀兰奶奶和几个小孩在院子里捉迷藏，跑来跑去，躲躲藏藏，有时候躲在角落里，有时候藏在大人们的身后，感到紧张又兴奋",
+      "source_turn_ids": [
+        "turn_b20bf2dac3"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_f2fb5c4ab9": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_f2fb5c4ab9",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "开心",
+        "location": "成都家附近的小河沟",
+        "people": [
+          "秀兰奶奶",
+          "小伙伴们"
+        ],
+        "significance": "简单快乐的童年时光",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们在成都家附近的小河沟捉鱼，河水清澈，虽然没捉到几条鱼，但过程非常开心",
+      "source_turn_ids": [
+        "turn_2b901fc6c4"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_f885bbf7f1": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_f885bbf7f1",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张又兴奋",
+        "people": [
+          "秀兰奶奶",
+          "小伙伴们"
+        ],
+        "significance": "让秀兰奶奶学会了考虑后果",
+        "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们偷摘李子并分吃，之后因害怕被发现而感到内疚",
+      "source_turn_ids": [
+        "turn_7ccd9726c6"
+      ],
+      "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+      "updated_at": null
+    },
+    "frag_feeda6955d": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_feeda6955d",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张刺激又兴奋快乐",
+        "location": "邻居院子和安静的角落",
+        "people": [
+          "秀兰奶奶",
+          "小猴子",
+          "阿芳",
+          "小胖"
+        ],
+        "significance": "童年调皮快乐的记忆",
+        "theme_id": "THEME_09_WISDOM_EVENT",
+        "time_anchor": "一个大热天的下午"
+      },
+      "rich_text": "在一个炎热的下午，秀兰奶奶和小伙伴们因为无聊而决定去偷摘邻居院子的李子，小猴子爬上树摘李子，其他人在下面接果子，之后他们跑到一个安静的角落分着吃了。",
+      "source_turn_ids": [
+        "turn_ee214a7ae2"
+      ],
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "updated_at": null
+    }
+  },
+  "session_id": "6530cf15d5fb49a0b866a65e6fe44538",
+  "theme_nodes": [
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_02_PEAK_EXPERIENCE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_03_LOW_POINT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_04_TURNING_POINT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_07_ADULT_MEMORY",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_08_RELIGIOUS_EXPERIENCE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_10_NEXT_CHAPTER",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_11_DREAMS_PLANS",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_12_LIFE_PROJECT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_13_LIFE_CHALLENGE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_14_HEALTH",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_15_LOSS",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_16_FAILURE_REGRET",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_17_RELIGIOUS_VALUES",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_18_POLITICAL_VALUES",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_19_VALUE_EVOLUTION",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_20_SINGLE_VALUE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_21_SESSION_SUMMARY",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_23_CONTEXT_MANAGEMENT",
+      "title": null
+    }
+  ],
+  "timestamp": "2026-05-08T08:13:26.444877",
+  "turn_count": 34
+}

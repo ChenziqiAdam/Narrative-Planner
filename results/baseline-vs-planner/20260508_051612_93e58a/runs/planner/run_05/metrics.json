@@ -1,0 +1,26 @@
+{
+  "agent": "planner",
+  "target_turns": 50,
+  "completed_turns": 36,
+  "completion_rate": 0.72,
+  "error_count": 1,
+  "avg_question_quality": 0.4561,
+  "avg_information_gain": 0.5236,
+  "avg_non_redundancy": 0.6299,
+  "low_gain_ratio": 0.0833,
+  "final_coverage": 0.0,
+  "action_continue_ratio": 1.0,
+  "action_next_phase_ratio": 0.0,
+  "action_end_ratio": 0.0,
+  "avg_interviewer_ms": 376.32,
+  "graph_rag": {
+    "turns_with_graph_metrics": 36,
+    "retrieval_nonempty_rate": 0.0,
+    "avg_ranked_entities": 63.25,
+    "avg_context_chars": 0.0,
+    "total_new_entities": 62,
+    "total_updated_entities": 66,
+    "total_relationships_written": 95,
+    "total_extracted_events": 56
+  }
+}

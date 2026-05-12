@@ -1,0 +1,228 @@
+{
+  "coverage_metrics": {
+    "overall_richness": 0.0,
+    "theme_richness": {
+      "THEME_01_LIFE_CHAPTERS": 0.0,
+      "THEME_02_PEAK_EXPERIENCE": 0.0,
+      "THEME_03_LOW_POINT": 0.0,
+      "THEME_04_TURNING_POINT": 0.0,
+      "THEME_05_CHILDHOOD_POSITIVE": 0.0,
+      "THEME_06_CHILDHOOD_NEGATIVE": 0.0,
+      "THEME_07_ADULT_MEMORY": 0.0,
+      "THEME_08_RELIGIOUS_EXPERIENCE": 0.0,
+      "THEME_09_WISDOM_EVENT": 0.0,
+      "THEME_10_NEXT_CHAPTER": 0.0,
+      "THEME_11_DREAMS_PLANS": 0.0,
+      "THEME_12_LIFE_PROJECT": 0.0,
+      "THEME_13_LIFE_CHALLENGE": 0.0,
+      "THEME_14_HEALTH": 0.0,
+      "THEME_15_LOSS": 0.0,
+      "THEME_16_FAILURE_REGRET": 0.0,
+      "THEME_17_RELIGIOUS_VALUES": 0.0,
+      "THEME_18_POLITICAL_VALUES": 0.0,
+      "THEME_19_VALUE_EVOLUTION": 0.0,
+      "THEME_20_SINGLE_VALUE": 0.0,
+      "THEME_21_SESSION_SUMMARY": 0.0,
+      "THEME_22_INFORMATION_INTEGRATION": 0.0,
+      "THEME_23_CONTEXT_MANAGEMENT": 0.0
+    }
+  },
+  "dynamic_profile": {
+    "last_updated_turn_id": null,
+    "planner_guidance": [
+      "Family profile is still thin; when the story naturally allows it, ask about spouse, children, siblings, or grandchildren."
+    ],
+    "profile_quality": {
+      "core_identity_and_personality": 0.3333,
+      "current_life_status": 0.0,
+      "family_situation": 0.0,
+      "life_views_and_attitudes": 0.0,
+      "overall": 0.0833
+    },
+    "schema_version": "dynamic_elder_profile_v1",
+    "sections": {
+      "core_identity_and_personality": {
+        "identity_background": {
+          "confidence": 0.9,
+          "value": "name=李秀兰; birth_year=1944; age=82; hometown=四川成都; background=退休中学语文教师，经历过知青下乡、恢复高考、改革开放后的城市变迁。她有一个儿子和一个女儿，晚年喜欢整理旧照片和写日记。"
+        },
+        "life_overview": {
+          "confidence": 0.75,
+          "value": [
+            "退休中学语文教师，经历过知青下乡、恢复高考、改革开放后的城市变迁。她有一个儿子和一个女儿，晚年喜欢整理旧照片和写日记。"
+          ]
+        }
+      }
+    },
+    "update_count": 0
+  },
+  "narrative_fragments": {
+    "frag_9a59c880ee": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_9a59c880ee",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "怀念",
+        "location": "成都老城区",
+        "people": [
+          "李秀兰奶奶",
+          "妈妈"
+        ],
+        "significance": "童年记忆",
+        "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+        "time_anchor": "1944年左右"
+      },
+      "rich_text": "李秀兰奶奶回忆童年时家里条件不好，住在成都老城区的破旧小院。",
+      "source_turn_ids": [
+        "turn_2fc423f375"
+      ],
+      "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+      "updated_at": null
+    }
+  },
+  "session_id": "a7b7359172f64f2b8bd67dfaf66692d1",
+  "theme_nodes": [
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_02_PEAK_EXPERIENCE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_03_LOW_POINT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_04_TURNING_POINT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_07_ADULT_MEMORY",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_08_RELIGIOUS_EXPERIENCE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_10_NEXT_CHAPTER",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_11_DREAMS_PLANS",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_12_LIFE_PROJECT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_13_LIFE_CHALLENGE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_14_HEALTH",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_15_LOSS",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_16_FAILURE_REGRET",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_17_RELIGIOUS_VALUES",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_18_POLITICAL_VALUES",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_19_VALUE_EVOLUTION",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_20_SINGLE_VALUE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_21_SESSION_SUMMARY",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_23_CONTEXT_MANAGEMENT",
+      "title": null
+    }
+  ],
+  "timestamp": "2026-05-08T12:17:51.526091",
+  "turn_count": 1
+}

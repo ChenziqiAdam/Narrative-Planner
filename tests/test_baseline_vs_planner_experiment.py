@@ -1,5 +1,10 @@
 import math
+from datetime import datetime
+from unittest.mock import patch
 
+from src.agents.graph_extraction_agent import GraphExtractionAgent
+from src.agents.interviewee_agent import IntervieweeAgent
+from src.state import SessionState, TurnRecord
 from scripts.run_baseline_vs_planner_experiment import (
     CompareExperimentRunner,
     ExperimentArgs,
@@ -88,7 +93,8 @@ def test_extract_common_metrics_and_score_are_comparable_without_graph_fields():
 def test_summary_uses_mean_minus_population_variance_penalty(tmp_path):
     args = ExperimentArgs(
         runs_per_agent=2,
-        turns=1,
+        baseline_turns=1,
+        planner_turns=1,
         output_dir=tmp_path,
         experiment_id="test",
         use_llm_scorer=False,
@@ -136,3 +142,57 @@ def test_summary_uses_mean_minus_population_variance_penalty(tmp_path):
     assert summary["agents"]["baseline"]["mean_score"] == 0.7
     assert math.isclose(summary["agents"]["baseline"]["variance"], 0.01)
     assert summary["agents"]["baseline"]["mean_minus_variance_penalty"] == 0.69
+
+
+def test_interviewee_step_prompt_keeps_recent_history_bounded():
+    with patch.object(IntervieweeAgent, "_load_sys_prompt", lambda self, basic_info=None: setattr(self, "sys_prompt", "")), \
+        patch.object(IntervieweeAgent, "_load_tools", lambda self: None), \
+        patch.object(IntervieweeAgent, "_init_client", lambda self: None), \
+        patch("src.prompts.roles.elderly_promot.ElderPromptGenerator.load_elder_profile", return_value={}):
+        agent = IntervieweeAgent("unused.json")
+
+    agent.initialize_conversation({"name": "测试老人"})
+    for idx in range(20):
+        agent.record_turn(f"问题{idx}" + "很长" * 40, f"回答{idx}" + "也很长" * 40)
+
+    with patch("src.agents.interviewee_agent.Config.INTERVIEWEE_HISTORY_MAX_TURNS", 3), \
+        patch("src.agents.interviewee_agent.Config.INTERVIEWEE_HISTORY_MAX_CHARS", 1200):
+        prompt = agent._load_step_prompt(agent.history, "当前问题")
+
+    assert "前面还有 17 轮对话已省略" in prompt
+    assert "问题19" in prompt
+    assert "问题0" not in prompt
+    assert len(prompt) <= 1300
+
+
+def test_graph_extraction_compact_prompt_records_size_stats():
+    agent = GraphExtractionAgent()
+    state = SessionState(session_id="s1")
+    state.transcript.append(
+        TurnRecord(
+            turn_id="t0",
+            turn_index=1,
+            timestamp=datetime.now(),
+            interviewer_question="上一轮问题" * 80,
+            interviewee_answer="上一轮回答" * 80,
+        )
+    )
+    turn = TurnRecord(
+        turn_id="t1",
+        turn_index=2,
+        timestamp=datetime.now(),
+        interviewer_question="当前问题" * 200,
+        interviewee_answer="当前回答" * 200,
+    )
+
+    with patch("src.agents.graph_extraction_agent.Config.GRAPH_EXTRACTION_COMPACT_PROMPT", True), \
+        patch("src.agents.graph_extraction_agent.Config.GRAPH_EXTRACTION_CONTEXT_TURNS", 1), \
+        patch("src.agents.graph_extraction_agent.Config.GRAPH_EXTRACTION_MAX_TURN_CHARS", 100), \
+        patch("src.agents.graph_extraction_agent.Config.GRAPH_EXTRACTION_MAX_GRAPH_CONTEXT_CHARS", 50):
+        prompt = agent._build_prompt(state, turn, graph_context="图谱上下文" * 100)
+
+    assert "叙事图谱提取器" in prompt
+    assert agent.last_input_chars["template_chars"] < 3500
+    assert agent.last_input_chars["current_question_chars"] <= 303
+    assert agent.last_input_chars["current_answer_chars"] <= 303
+    assert agent.last_input_chars["graph_context_chars"] <= 53

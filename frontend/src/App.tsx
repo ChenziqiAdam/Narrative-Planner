@@ -12,6 +12,7 @@ import NodeDetailPanel from './components/NodeDetailPanel'
 import GraphCanvas from './components/GraphCanvas'
 import { useGraphWebSocket } from './hooks/useGraphWebSocket'
 import { GraphState, NodeStatus } from './types'
+import { BookIcon, WarningIcon, GraphIcon, TreeIcon, ClockIcon, ChevronLeftIcon, ChevronRightIcon } from './components/icons'
 import './styles/App.css'
 
 type ViewMode = 'graph' | 'theme' | 'timeline'
@@ -72,7 +73,7 @@ const App: React.FC = () => {
     return (
       <div className="app-error">
         <div className="error-content">
-          <span className="error-icon">⚠️</span>
+          <WarningIcon size={40} color="#EF4444" className="error-icon" />
           <p>无法加载图谱数据</p>
           <button onClick={() => window.location.reload()}>重新加载</button>
         </div>
@@ -95,7 +96,7 @@ const App: React.FC = () => {
       <header className="app-header">
         <div className="header-left">
           <h1 className="app-title">
-            <span className="title-icon">◈</span>
+            <BookIcon size={22} className="title-icon" />
             叙事导航者
           </h1>
           {graphState.elder_info && (
@@ -111,21 +112,21 @@ const App: React.FC = () => {
               className={`tab-btn ${viewMode === 'graph' ? 'active' : ''}`}
               onClick={() => setViewMode('graph')}
             >
-              <span className="tab-icon">🔗</span>
+              <GraphIcon size={16} className="tab-icon" />
               图谱视图
             </button>
             <button
               className={`tab-btn ${viewMode === 'theme' ? 'active' : ''}`}
               onClick={() => setViewMode('theme')}
             >
-              <span className="tab-icon">🌳</span>
+              <TreeIcon size={16} className="tab-icon" />
               主题视图
             </button>
             <button
               className={`tab-btn ${viewMode === 'timeline' ? 'active' : ''}`}
               onClick={() => setViewMode('timeline')}
             >
-              <span className="tab-icon">⏱</span>
+              <ClockIcon size={16} className="tab-icon" />
               时间轴
             </button>
           </div>
@@ -171,7 +172,7 @@ const App: React.FC = () => {
             className="sidebar-toggle"
             onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
           >
-            {sidebarCollapsed ? '◀' : '▶'}
+            {sidebarCollapsed ? <ChevronLeftIcon size={16} /> : <ChevronRightIcon size={16} />}
           </button>
           {!sidebarCollapsed && (
             <>

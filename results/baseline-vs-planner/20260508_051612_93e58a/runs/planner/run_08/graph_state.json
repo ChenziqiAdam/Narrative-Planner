@@ -1,0 +1,1158 @@
+{
+  "coverage_metrics": {
+    "overall_richness": 0.0,
+    "theme_richness": {
+      "THEME_01_LIFE_CHAPTERS": 0.0,
+      "THEME_02_PEAK_EXPERIENCE": 0.0,
+      "THEME_03_LOW_POINT": 0.0,
+      "THEME_04_TURNING_POINT": 0.0,
+      "THEME_05_CHILDHOOD_POSITIVE": 0.0,
+      "THEME_06_CHILDHOOD_NEGATIVE": 0.0,
+      "THEME_07_ADULT_MEMORY": 0.0,
+      "THEME_08_RELIGIOUS_EXPERIENCE": 0.0,
+      "THEME_09_WISDOM_EVENT": 0.0,
+      "THEME_10_NEXT_CHAPTER": 0.0,
+      "THEME_11_DREAMS_PLANS": 0.0,
+      "THEME_12_LIFE_PROJECT": 0.0,
+      "THEME_13_LIFE_CHALLENGE": 0.0,
+      "THEME_14_HEALTH": 0.0,
+      "THEME_15_LOSS": 0.0,
+      "THEME_16_FAILURE_REGRET": 0.0,
+      "THEME_17_RELIGIOUS_VALUES": 0.0,
+      "THEME_18_POLITICAL_VALUES": 0.0,
+      "THEME_19_VALUE_EVOLUTION": 0.0,
+      "THEME_20_SINGLE_VALUE": 0.0,
+      "THEME_21_SESSION_SUMMARY": 0.0,
+      "THEME_22_INFORMATION_INTEGRATION": 0.0,
+      "THEME_23_CONTEXT_MANAGEMENT": 0.0
+    }
+  },
+  "dynamic_profile": {
+    "last_updated_turn_id": "turn_b4689604f8",
+    "planner_guidance": [
+      "Family profile is still thin; when the story naturally allows it, ask about spouse, children, siblings, or grandchildren.",
+      "Current-life profile is undercovered; consider a gentle bridge to daily routines, hobbies, social activity, or health concerns.",
+      "Adapt question shape to speaking style: story-rich replies; allow narrative space, then follow up on one concrete detail."
+    ],
+    "profile_quality": {
+      "core_identity_and_personality": 0.6667,
+      "current_life_status": 0.3333,
+      "family_situation": 0.0,
+      "life_views_and_attitudes": 0.0,
+      "overall": 0.25
+    },
+    "schema_version": "dynamic_elder_profile_v1",
+    "sections": {
+      "core_identity_and_personality": {
+        "common_expressions": {
+          "confidence": 0.35,
+          "value": [
+            "那时候也没个啥子社区组织，就是邻居们自己商量",
+            "张家大哥说，‘大家都出点力，能帮就帮一把",
+            "’就这样，大家你五毛我一块地凑了起来",
+            "’大家听了都点头，觉得得做点什么",
+            "’然后大家就开始你一言我一语地商量，怎么凑钱"
+          ]
+        },
+        "identity_background": {
+          "confidence": 0.9,
+          "value": "name=李秀兰; birth_year=1944; age=82; hometown=四川成都; background=退休中学语文教师，经历过知青下乡、恢复高考、改革开放后的城市变迁。她有一个儿子和一个女儿，晚年喜欢整理旧照片和写日记。"
+        },
+        "life_overview": {
+          "confidence": 0.75,
+          "value": [
+            "退休中学语文教师，经历过知青下乡、恢复高考、改革开放后的城市变迁。她有一个儿子和一个女儿，晚年喜欢整理旧照片和写日记。"
+          ]
+        },
+        "speaking_style": {
+          "confidence": 0.45,
+          "value": "story-rich replies; allow narrative space, then follow up on one concrete detail"
+        }
+      },
+      "current_life_status": {
+        "health_status_current_concerns": {
+          "confidence": 0.45,
+          "value": [
+            "哎哟，说起这个我就想起我们那会儿嘛，邻里之间真的是亲如一家。记得我们隔壁的老王家，他们家男人生病了，做不了重活，那时候又没得啥子社会福利，全靠大家帮忙。我们这些邻居啊，就轮流去他们",
+            "哎哟，说起这个我就想起我们那会儿嘛，老王家男人生病了，大家都挺着急的。那时候也没个啥子社区组织，就是邻居们自己商量。我记得是在一个下午，大家都在院子里乘凉，老王家的媳妇儿就哭着跟我",
+            "哎哟，说起这个我就想起我们那会儿嘛，老王家男人生病了，我们这些邻居真的是没日没夜地帮忙。记得是张家大哥先提出来的，他说，‘老王家现在这么困难，咱们得帮帮他们。’大家听了都点头，觉得"
+          ]
+        }
+      }
+    },
+    "update_count": 5
+  },
+  "narrative_fragments": {
+    "frag_00b0da37f6": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_00b0da37f6",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "温暖和信任",
+        "people": [
+          "老王家",
+          "邻居们",
+          "秀兰奶奶"
+        ],
+        "significance": "体现了人与人之间的真情和信任",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE"
+      },
+      "rich_text": "秀兰奶奶回忆起邻里间亲如一家的互助，包括轮流帮忙挑水、劈柴，凑钱看病，分享美食等",
+      "source_turn_ids": [
+        "turn_004d5ca79a"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_075b7b18d4": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_075b7b18d4",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "同情和支持",
+        "people": [
+          "老王家男人",
+          "邻居们"
+        ],
+        "significance": "加深了邻里间的情感联系",
+        "theme_id": "THEME_10_NEXT_CHAPTER"
+      },
+      "rich_text": "邻居们一起凑钱帮助老王家男人看病",
+      "source_turn_ids": [
+        "turn_17c89d744f"
+      ],
+      "theme_id": "THEME_10_NEXT_CHAPTER",
+      "updated_at": null
+    },
+    "frag_0a8b8a4ac5": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_0a8b8a4ac5",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "同情和关心",
+        "location": "未明确提及",
+        "people": [
+          "老王家男人",
+          "邻居们"
+        ],
+        "significance": "邻里互助的起点",
+        "theme_id": "THEME_01_LIFE_CHAPTERS",
+        "time_anchor": "未明确提及"
+      },
+      "rich_text": "老王家男人突然病倒，无法做重活",
+      "source_turn_ids": [
+        "turn_005193ffb1"
+      ],
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "updated_at": null
+    },
+    "frag_13916a5c97": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_13916a5c97",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "温暖、团结",
+        "location": "成都老城区",
+        "people": [
+          "老王家男人",
+          "邻居们"
+        ],
+        "significance": "体现了邻里间的真情和互助精神",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "1940年代末至1950年代初"
+      },
+      "rich_text": "老王家男人生病，邻居们轮流帮忙挑水、劈柴，凑钱看病",
+      "source_turn_ids": [
+        "turn_f534c75abb"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_1fc92aa193": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_1fc92aa193",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "温暖、感动",
+        "people": [
+          "张家大哥",
+          "李家大婶"
+        ],
+        "significance": "体现了邻里之间的真情和信任",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION"
+      },
+      "rich_text": "邻居们共同凑钱帮助老王家度过男人生病的困难时期",
+      "source_turn_ids": [
+        "turn_bae4d988e9"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_2e77f2ae81": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_2e77f2ae81",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "喜悦",
+        "people": [
+          "邻居们"
+        ],
+        "significance": "展现了邻里间共同庆祝和分享喜悦的传统",
+        "theme_id": "THEME_01_LIFE_CHAPTERS",
+        "time_anchor": "1940年代"
+      },
+      "rich_text": "哪家孩子考上学了，要请整条街的邻居都来吃一顿",
+      "source_turn_ids": [
+        "turn_e7344a3974"
+      ],
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "updated_at": null
+    },
+    "frag_3b75a9eaf8": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_3b75a9eaf8",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "热闹和快乐",
+        "location": "各家各户",
+        "people": [
+          "邻居们"
+        ],
+        "significance": "体现了邻里间的亲密和温暖",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "过年时"
+      },
+      "rich_text": "每到过年，邻居们会聚在一起包饺子、做汤圆，家家户户拿出拿手好菜，共享热闹和快乐",
+      "source_turn_ids": [
+        "turn_11e9544621"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_3bd2bc87b2": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_3bd2bc87b2",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧急和团结",
+        "people": [
+          "老李家的孩子",
+          "邻居们"
+        ],
+        "significance": "体现了邻里间的互助精神",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "过去"
+      },
+      "rich_text": "邻居老李家的孩子发高烧，邻居们轮流背着孩子跑到医院去，一路上换着背，担心耽误病情",
+      "source_turn_ids": [
+        "turn_11e9544621"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_4609520ec2": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_4609520ec2",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "温暖而踏实",
+        "location": "成都老城区的家",
+        "people": [
+          "我",
+          "妈妈",
+          "爸爸"
+        ],
+        "significance": "童年时期家庭生活的温馨记忆",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "1940年代末"
+      },
+      "rich_text": "李秀兰奶奶在成都老城区的家中，与家人挤在狭小的房子里，尽管条件艰苦，但感到温暖。",
+      "source_turn_ids": [
+        "turn_5990f1c357"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_48e12a96c4": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_48e12a96c4",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "困难",
+        "people": [
+          "老王家男人"
+        ],
+        "significance": "导致邻居们开始帮助老王家",
+        "theme_id": "THEME_01_LIFE_CHAPTERS",
+        "time_anchor": "未具体提及，但在老王家凑钱事件的开始"
+      },
+      "rich_text": "老王家男人突然病倒，无法做重活",
+      "source_turn_ids": [
+        "turn_62f927bbda"
+      ],
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "updated_at": null
+    },
+    "frag_4932f9c82e": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_4932f9c82e",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "同情和团结",
+        "people": [
+          "老王家男人",
+          "邻居们"
+        ],
+        "significance": "体现了邻里间的互助精神",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION"
+      },
+      "rich_text": "老王家男人生病时邻居们轮流去他们家帮忙挑水、劈柴",
+      "source_turn_ids": [
+        "turn_17c89d744f"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_4a24ef5c46": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_4a24ef5c46",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "温暖和感动",
+        "people": [
+          "老王家男人",
+          "张家大哥",
+          "李家大婶",
+          "老王家的媳妇儿"
+        ],
+        "significance": "体现了邻里之间的真情和信任",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "过去"
+      },
+      "rich_text": "老王家男人生病时，邻居们通过各种方式凑钱帮助他们家",
+      "source_turn_ids": [
+        "turn_9c2a5a870a"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_54f3b6b756": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_54f3b6b756",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "温暖和感动",
+        "people": [
+          "张家大哥",
+          "李家大婶",
+          "老王家媳妇儿"
+        ],
+        "significance": "体现了邻里间的真情和信任",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION"
+      },
+      "rich_text": "邻居们在老王家男人生病时凑钱帮助他们家",
+      "source_turn_ids": [
+        "turn_f75d61c1a9"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_56da244d65": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_56da244d65",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "温暖",
+        "people": [
+          "老王家",
+          "邻居们"
+        ],
+        "significance": "体现了邻里间的深厚情谊和互助精神",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "1940年代"
+      },
+      "rich_text": "老王家男人生病时，邻居们轮流帮忙挑水、劈柴，凑钱看病",
+      "source_turn_ids": [
+        "turn_e7344a3974"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_5da159ea88": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_5da159ea88",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "感动和温暖",
+        "location": "未明确提及",
+        "people": [
+          "邻居们",
+          "老王家媳妇"
+        ],
+        "significance": "加深了邻里间的情感联系",
+        "theme_id": "THEME_01_LIFE_CHAPTERS",
+        "time_anchor": "老王家男人生病后"
+      },
+      "rich_text": "邻居们一起凑钱给老王家男人看病",
+      "source_turn_ids": [
+        "turn_005193ffb1"
+      ],
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "updated_at": null
+    },
+    "frag_61d1a7e572": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_61d1a7e572",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "团结和慷慨",
+        "people": [
+          "老李家的孩子",
+          "邻居们"
+        ],
+        "significance": "展现了邻里间的深厚情谊",
+        "theme_id": "THEME_11_DREAMS_PLANS",
+        "time_anchor": "过去"
+      },
+      "rich_text": "邻居们一起凑钱给老李家孩子看病，尽管都不富裕，但心意珍贵",
+      "source_turn_ids": [
+        "turn_11e9544621"
+      ],
+      "theme_id": "THEME_11_DREAMS_PLANS",
+      "updated_at": null
+    },
+    "frag_6363019718": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_6363019718",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "温馨",
+        "people": [
+          "邻居们"
+        ],
+        "significance": "反映了邻里间的亲密无间和分享精神",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "1940年代"
+      },
+      "rich_text": "哪家做了好吃的，都会给邻居送点去",
+      "source_turn_ids": [
+        "turn_e7344a3974"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_6416e6e48a": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_6416e6e48a",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "热闹和快乐",
+        "location": "邻里各家",
+        "people": [
+          "张家媳妇儿",
+          "李家大哥",
+          "我"
+        ],
+        "significance": "体现了邻里间的温情和互助",
+        "theme_id": "THEME_11_DREAMS_PLANS",
+        "time_anchor": "过年"
+      },
+      "rich_text": "每到过年，家家户户提前准备，邻里之间互相帮忙包饺子和做汤圆，分工合作，气氛热闹",
+      "source_turn_ids": [
+        "turn_736c4e8890"
+      ],
+      "theme_id": "THEME_11_DREAMS_PLANS",
+      "updated_at": null
+    },
+    "frag_6a6678c0f4": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_6a6678c0f4",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "热闹和快乐",
+        "significance": "体现了邻里间的真情和温暖",
+        "theme_id": "THEME_11_DREAMS_PLANS",
+        "time_anchor": "过年时"
+      },
+      "rich_text": "每到过年，邻居们会聚在一起包饺子、做汤圆，家家户户拿出自己的拿手好菜，摆上一大桌子，大家边吃边聊，那份热闹和快乐",
+      "source_turn_ids": [
+        "turn_7f5b2aad46"
+      ],
+      "theme_id": "THEME_11_DREAMS_PLANS",
+      "updated_at": null
+    },
+    "frag_6ad6448c3d": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_6ad6448c3d",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "温暖和信任",
+        "location": "老巷子的大槐树下",
+        "people": [
+          "秀兰奶奶",
+          "邻居们"
+        ],
+        "significance": "体现了邻里间的真情和信任",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION"
+      },
+      "rich_text": "秀兰奶奶和邻居们在老巷子的大槐树下聚集，商量事情和分享食物",
+      "source_turn_ids": [
+        "turn_084780611e"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_70376df6a2": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_70376df6a2",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "真情和信任",
+        "people": [
+          "老王家男人",
+          "邻居们"
+        ],
+        "significance": "体现了邻里间的真情和信任，以及面对困难时的团结互助",
+        "theme_id": "THEME_01_LIFE_CHAPTERS",
+        "time_anchor": "过去"
+      },
+      "rich_text": "老王家男人生病，邻居们没日没夜地帮忙，最后决定一起凑钱给他看病",
+      "source_turn_ids": [
+        "turn_f39b181acb"
+      ],
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "updated_at": null
+    },
+    "frag_74581e2b1c": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_74581e2b1c",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "温情和互助",
+        "location": "邻里各家",
+        "people": [
+          "大家"
+        ],
+        "significance": "体现了邻里间的关怀和温暖",
+        "theme_id": "THEME_01_LIFE_CHAPTERS",
+        "time_anchor": "过年后"
+      },
+      "rich_text": "包完饺子后，大家会一起煮，然后挨家挨户送给年纪大的或身体不好的邻居，让他们也能尝到热腾腾的饺子",
+      "source_turn_ids": [
+        "turn_736c4e8890"
+      ],
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "updated_at": null
+    },
+    "frag_8012b35c21": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_8012b35c21",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "温暖和感动",
+        "people": [
+          "老王家",
+          "邻居们"
+        ],
+        "significance": "体现了邻里间的真情和信任",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "过去"
+      },
+      "rich_text": "老王家男人生病后，邻居们轮流帮忙挑水、劈柴，并凑钱给他看病",
+      "source_turn_ids": [
+        "turn_6234c83391"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_8391a7de5b": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_8391a7de5b",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "邻里间的真情和信任",
+        "location": "院子里",
+        "people": [
+          "老王家的媳妇儿",
+          "张家大哥",
+          "李家大婶",
+          "我"
+        ],
+        "significance": "体现了邻里间的互助精神和深厚的人情味",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "一个下午"
+      },
+      "rich_text": "在一个下午，邻居们在院子里乘凉时，老王家的媳妇儿哭着向大家说明了她男人的病情和家中无钱看病的困境，邻居们你一言我一语地商量后决定凑钱帮助，最终凑够了看病的钱。",
+      "source_turn_ids": [
+        "turn_c340ef3321"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_85c5f1ca80": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_85c5f1ca80",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "感慨万千，心里暖洋洋的",
+        "significance": "体现了人与人之间的真情和信任是最宝贵的",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "过去"
+      },
+      "rich_text": "秀兰奶奶回忆起过去邻里间的真情和温暖，包括过年时一起包饺子、做汤圆的热闹和快乐，以及大家共同凑钱帮助老王家看病的感人事迹",
+      "source_turn_ids": [
+        "turn_b4689604f8"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_8b4afccbc2": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_8b4afccbc2",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "亲如一家的温馨",
+        "location": "邻居家的院子",
+        "people": [
+          "邻居们"
+        ],
+        "significance": "体现了邻里间的真情和信任",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "过去"
+      },
+      "rich_text": "邻居们做了好吃的，会在院子里摆上桌子，大家一起吃",
+      "source_turn_ids": [
+        "turn_ace82a52bc"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_922627d9d8": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_922627d9d8",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "团结互助",
+        "people": [
+          "邻居们",
+          "老王家男人"
+        ],
+        "significance": "体现了邻里间的真情和信任",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION"
+      },
+      "rich_text": "邻居们轮流去老王家帮忙挑水、劈柴",
+      "source_turn_ids": [
+        "turn_0455b05b1f"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_969387d7fa": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_969387d7fa",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "团结互助",
+        "location": "老王家",
+        "people": [
+          "邻居们"
+        ],
+        "significance": "体现了邻里间的真情和信任",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "老王家男人生病后"
+      },
+      "rich_text": "邻居们轮流去老王家帮忙挑水、劈柴",
+      "source_turn_ids": [
+        "turn_62f927bbda"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_aa98c4bcfd": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_aa98c4bcfd",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "温暖和感动",
+        "location": "院子",
+        "people": [
+          "老王家男人",
+          "老王家的媳妇儿",
+          "邻居们"
+        ],
+        "significance": "体现了邻里间的真情和信任，让秀兰奶奶深刻感受到团结互助的力量",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "未明确提及具体时间"
+      },
+      "rich_text": "老王家男人突然病倒，邻居们在院子里聚集商量，最终决定一起凑钱帮助老王家看病",
+      "source_turn_ids": [
+        "turn_c8af221b2f"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_aeaca1f0d2": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_aeaca1f0d2",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "温暖和感动",
+        "location": "老王家",
+        "people": [
+          "邻居们",
+          "老王家男人",
+          "老王家媳妇"
+        ],
+        "significance": "体现了邻里间的真情和互助精神",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "过去"
+      },
+      "rich_text": "邻居们轮流帮助老王家挑水、劈柴，并凑钱给老王家男人看病",
+      "source_turn_ids": [
+        "turn_4b80529ced"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_b1ad8f18ea": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_b1ad8f18ea",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "温情和互助",
+        "people": [
+          "老王家的男人",
+          "邻居们"
+        ],
+        "significance": "体现了邻里间的真情和信任",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION"
+      },
+      "rich_text": "邻居们一起凑钱给老王家男人看病",
+      "source_turn_ids": [
+        "turn_b49611a6fe"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_b7f3495ee5": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_b7f3495ee5",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "感动和温暖",
+        "location": "院子",
+        "people": [
+          "老王家媳妇儿",
+          "张家大哥",
+          "李家大婶",
+          "我"
+        ],
+        "significance": "体现了邻里间的真情和信任",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "过去某个时间点"
+      },
+      "rich_text": "老王家男人生病，邻居们在院子里商量凑钱帮助，最终成功凑齐看病费用",
+      "source_turn_ids": [
+        "turn_2dfc257d8f"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_bf7d3341ca": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_bf7d3341ca",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "同情和支持",
+        "people": [
+          "张家大哥",
+          "李家大婶",
+          "邻居们",
+          "老王家"
+        ],
+        "significance": "加深了邻里间的情感联系",
+        "theme_id": "THEME_01_LIFE_CHAPTERS"
+      },
+      "rich_text": "邻居们一起凑钱给老王家男人看病",
+      "source_turn_ids": [
+        "turn_0455b05b1f"
+      ],
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "updated_at": null
+    },
+    "frag_de4dae5b97": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_de4dae5b97",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "温情和互助",
+        "people": [
+          "老王家的男人",
+          "邻居们"
+        ],
+        "significance": "体现了邻里间的真情和信任",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION"
+      },
+      "rich_text": "邻居老王家男人生病时，邻居们轮流去帮忙挑水、劈柴",
+      "source_turn_ids": [
+        "turn_b49611a6fe"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_e128c6895e": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_e128c6895e",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "温情、团结",
+        "people": [
+          "张家大哥",
+          "李家大婶",
+          "邻居们"
+        ],
+        "significance": "成功凑齐看病资金，加深了邻里间的情感联系",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "在轮流帮忙后"
+      },
+      "rich_text": "邻居们一起凑钱帮助老王家看病",
+      "source_turn_ids": [
+        "turn_62f927bbda"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_e169539bbc": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_e169539bbc",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "困难中的团结",
+        "location": "老王家院子",
+        "people": [
+          "老王家男人",
+          "邻居们"
+        ],
+        "significance": "体现了邻里间的真情和信任",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "过去"
+      },
+      "rich_text": "老王家男人生病时，邻居们在老王家院子里一起商量凑钱给他看病",
+      "source_turn_ids": [
+        "turn_ace82a52bc"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_e222e0f0fe": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_e222e0f0fe",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "欢乐",
+        "location": "邻里聚集地",
+        "people": [
+          "老赵家小子"
+        ],
+        "significance": "增添了过年的欢乐气氛",
+        "theme_id": "THEME_01_LIFE_CHAPTERS",
+        "time_anchor": "某年过年"
+      },
+      "rich_text": "老赵家的小子在包饺子时把面粉抹得满脸都是，像个小花猫，引得大家哈哈大笑",
+      "source_turn_ids": [
+        "turn_736c4e8890"
+      ],
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "updated_at": null
+    },
+    "frag_e44ca940bf": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_e44ca940bf",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "温暖和感动",
+        "people": [
+          "张家大哥",
+          "李家大婶",
+          "老王家男人",
+          "老王家媳妇儿"
+        ],
+        "significance": "体现了邻里之间的真情和信任",
+        "theme_id": "THEME_10_NEXT_CHAPTER"
+      },
+      "rich_text": "老王家男人生病后，邻居们决定凑钱帮助他们看病",
+      "source_turn_ids": [
+        "turn_7797e033bf"
+      ],
+      "theme_id": "THEME_10_NEXT_CHAPTER",
+      "updated_at": null
+    },
+    "frag_fc453fdc8d": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_fc453fdc8d",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "团结互助",
+        "location": "老王家",
+        "people": [
+          "邻居们"
+        ],
+        "significance": "体现了邻里间的真情和信任",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "老王家男人生病后"
+      },
+      "rich_text": "邻居们轮流去老王家挑水、劈柴",
+      "source_turn_ids": [
+        "turn_005193ffb1"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_fe0ecd90d4": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_fe0ecd90d4",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "温暖和信任",
+        "location": "老王家门口、秀兰奶奶家、隔壁张家",
+        "people": [
+          "老王家男人",
+          "秀兰奶奶",
+          "邻居们"
+        ],
+        "significance": "体现了邻里间的真情和信任",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "过去"
+      },
+      "rich_text": "秀兰奶奶回忆起邻里间的互助，包括在老王家门口、秀兰奶奶家或隔壁张家发生的各种互助行为，如凑钱给老王家男人看病和共享美食等",
+      "source_turn_ids": [
+        "turn_ace82a52bc"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    }
+  },
+  "session_id": "136cca4e84744d04a20aea6643db172b",
+  "theme_nodes": [
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_02_PEAK_EXPERIENCE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_03_LOW_POINT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_04_TURNING_POINT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_07_ADULT_MEMORY",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_08_RELIGIOUS_EXPERIENCE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_10_NEXT_CHAPTER",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_11_DREAMS_PLANS",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_12_LIFE_PROJECT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_13_LIFE_CHALLENGE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_14_HEALTH",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_15_LOSS",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_16_FAILURE_REGRET",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_17_RELIGIOUS_VALUES",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_18_POLITICAL_VALUES",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_19_VALUE_EVOLUTION",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_20_SINGLE_VALUE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_21_SESSION_SUMMARY",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_23_CONTEXT_MANAGEMENT",
+      "title": null
+    }
+  ],
+  "timestamp": "2026-05-08T10:09:58.211276",
+  "turn_count": 26
+}

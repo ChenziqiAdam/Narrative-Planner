@@ -1,0 +1,1480 @@
+{
+  "coverage_metrics": {
+    "overall_richness": 0.0,
+    "theme_richness": {
+      "THEME_01_LIFE_CHAPTERS": 0.0,
+      "THEME_02_PEAK_EXPERIENCE": 0.0,
+      "THEME_03_LOW_POINT": 0.0,
+      "THEME_04_TURNING_POINT": 0.0,
+      "THEME_05_CHILDHOOD_POSITIVE": 0.0,
+      "THEME_06_CHILDHOOD_NEGATIVE": 0.0,
+      "THEME_07_ADULT_MEMORY": 0.0,
+      "THEME_08_RELIGIOUS_EXPERIENCE": 0.0,
+      "THEME_09_WISDOM_EVENT": 0.0,
+      "THEME_10_NEXT_CHAPTER": 0.0,
+      "THEME_11_DREAMS_PLANS": 0.0,
+      "THEME_12_LIFE_PROJECT": 0.0,
+      "THEME_13_LIFE_CHALLENGE": 0.0,
+      "THEME_14_HEALTH": 0.0,
+      "THEME_15_LOSS": 0.0,
+      "THEME_16_FAILURE_REGRET": 0.0,
+      "THEME_17_RELIGIOUS_VALUES": 0.0,
+      "THEME_18_POLITICAL_VALUES": 0.0,
+      "THEME_19_VALUE_EVOLUTION": 0.0,
+      "THEME_20_SINGLE_VALUE": 0.0,
+      "THEME_21_SESSION_SUMMARY": 0.0,
+      "THEME_22_INFORMATION_INTEGRATION": 0.0,
+      "THEME_23_CONTEXT_MANAGEMENT": 0.0
+    }
+  },
+  "dynamic_profile": {
+    "last_updated_turn_id": "turn_50f424a0a8",
+    "planner_guidance": [
+      "Family profile is still thin; when the story naturally allows it, ask about spouse, children, siblings, or grandchildren.",
+      "Current-life profile is undercovered; consider a gentle bridge to daily routines, hobbies, social activity, or health concerns.",
+      "Adapt question shape to speaking style: brief replies; use short, concrete prompts and avoid stacking multiple questions."
+    ],
+    "profile_quality": {
+      "core_identity_and_personality": 0.6667,
+      "current_life_status": 0.3333,
+      "family_situation": 0.0,
+      "life_views_and_attitudes": 0.0,
+      "overall": 0.25
+    },
+    "schema_version": "dynamic_elder_profile_v1",
+    "sections": {
+      "core_identity_and_personality": {
+        "common_expressions": {
+          "confidence": 0.35,
+          "value": [
+            "那时候，我带学生们去郊游，组织了一个拔河比赛",
+            "孩子们一个个都兴奋得很，争先恐后地要参加",
+            "我看着他们那么团结，那么努力，心里头暖洋洋的",
+            "现在想起来，那些日子虽然简单，但是真的很宝贵",
+            "这个问题我得再想想"
+          ]
+        },
+        "identity_background": {
+          "confidence": 0.9,
+          "value": "name=李秀兰; birth_year=1944; age=82; hometown=四川成都; background=退休中学语文教师，经历过知青下乡、恢复高考、改革开放后的城市变迁。她有一个儿子和一个女儿，晚年喜欢整理旧照片和写日记。"
+        },
+        "life_overview": {
+          "confidence": 0.75,
+          "value": [
+            "退休中学语文教师，经历过知青下乡、恢复高考、改革开放后的城市变迁。她有一个儿子和一个女儿，晚年喜欢整理旧照片和写日记。"
+          ]
+        },
+        "speaking_style": {
+          "confidence": 0.45,
+          "value": "brief replies; use short, concrete prompts and avoid stacking multiple questions"
+        }
+      },
+      "current_life_status": {
+        "interests_hobbies_social": {
+          "confidence": 0.45,
+          "value": [
+            "哎哟，说起童年的游戏和活动嘛，我们那会儿确实有很多难忘的经历。比如我们经常玩的捉迷藏，这个游戏教会了我要有耐心，也锻炼了我的观察力。还有跳皮筋，这个活动让我学会了协调和节奏感，这些"
+          ]
+        }
+      }
+    },
+    "update_count": 7
+  },
+  "narrative_fragments": {
+    "frag_0af812cdc8": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_0af812cdc8",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "简单快乐",
+        "location": "成都老城区边上的小河沟",
+        "people": [
+          "老人",
+          "老人的小伙伴们"
+        ],
+        "significance": "培养了耐心、团队合作和分享帮助他人的性格",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "老人童年时在河边随意进行的捉鱼和翻螃蟹活动，没有固定顺序，根据鱼和螃蟹的多少来决定先做什么，活动包括下水摸鱼和翻石头找螃蟹，有时会进行比赛",
+      "source_turn_ids": [
+        "turn_930e07f73f"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_0e1927cd79": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_0e1927cd79",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "宝贵且充满教育意义",
+        "significance": "培养了耐心和团队合作等性格和习惯",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "童年时期在河边捉鱼的活动，教会了耐心和等待的重要性",
+      "source_turn_ids": [
+        "turn_e87fd0f5b6"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_0eb85c350a": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_0eb85c350a",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "暖洋洋",
+        "people": [
+          "孩子们"
+        ],
+        "significance": "孩子们将来会成为社会的栋梁",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE"
+      },
+      "rich_text": "老人回忆孩子们在拔河比赛中展现出的团结和努力，感到心里暖洋洋",
+      "source_turn_ids": [
+        "turn_bca5cb0d72"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_138915a375": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_138915a375",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "乐趣和无忧无虑",
+        "significance": "培养了耐心、团队合作、分享和帮助他人的性格和习惯",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "童年时在河边捉鱼的活动，条件艰苦但充满乐趣，教会了耐心和团队合作",
+      "source_turn_ids": [
+        "turn_0f7d0da4f4"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_1c90c6e6a5": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_1c90c6e6a5",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "真的很开心",
+        "location": "院子里",
+        "people": [
+          "我",
+          "几个女孩子"
+        ],
+        "significance": "童年的趣事之一",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年"
+      },
+      "rich_text": "童年时和几个女孩子在院子里跳皮筋，是她们的最爱，一边跳一边唱着歌谣，即使满头大汗也不肯停下来",
+      "source_turn_ids": [
+        "turn_afa0eee724"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_2597e21658": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_2597e21658",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "乐趣多得很",
+        "location": "河边",
+        "people": [
+          "我",
+          "小伙伴们"
+        ],
+        "significance": "童年的趣事之一",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年"
+      },
+      "rich_text": "童年时和小伙伴们一起去河边捉鱼，河水清澈，鱼多，光着脚丫子在水里摸鱼，有时会被螃蟹夹到脚指头",
+      "source_turn_ids": [
+        "turn_afa0eee724"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_27b4d50b85": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_27b4d50b85",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "快乐",
+        "location": "老城区破旧瓦房的院子",
+        "people": [
+          "我",
+          "妈妈"
+        ],
+        "significance": "童年简单而纯粹的快乐",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "小时候"
+      },
+      "rich_text": "李秀兰奶奶小时候穿上妈妈做的新布鞋，在院子里跑来跑去的快乐场景",
+      "source_turn_ids": [
+        "turn_45d4ccfde4"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_2e7c4bacfd": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_2e7c4bacfd",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "无忧无虑",
+        "location": "老城区的巷子",
+        "people": [
+          "我",
+          "小伙伴"
+        ],
+        "significance": "童年的无忧无虑和简单快乐",
+        "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "童年时在老城区的巷子里和小伙伴玩捉迷藏，藏在废弃木桶里睡着，家人天黑后找到",
+      "source_turn_ids": [
+        "turn_881fa3c898"
+      ],
+      "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+      "updated_at": null
+    },
+    "frag_34163661c5": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_34163661c5",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "快乐和简单的快乐",
+        "location": "成都老城区边上的小河沟",
+        "people": [
+          "老人",
+          "隔壁老王家的大娃",
+          "对门老李家的二丫头"
+        ],
+        "significance": "培养了耐心、观察力和团队合作等品质",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "老人和小伙伴们在河边捉鱼的活动，包括追逐鸭子和翻石头找螃蟹",
+      "source_turn_ids": [
+        "turn_f0fa09f18f"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_3d2fead20d": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_3d2fead20d",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "快乐",
+        "location": "成都老城区边上的小河沟",
+        "people": [
+          "老人",
+          "隔壁老王家的大娃",
+          "对门老李家的二丫头"
+        ],
+        "significance": "培养了耐心、团队合作和分享帮助他人的性格",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "老人童年时在成都老城区边上的小河沟玩耍的趣事，包括捉鱼、追鸭子等活动",
+      "source_turn_ids": [
+        "turn_7d9705cc36"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_3f78e3a08b": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_3f78e3a08b",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "简单又快乐",
+        "location": "成都老城区边上的小河沟",
+        "people": [
+          "我",
+          "几个小伙伴"
+        ],
+        "significance": "培养了耐心、团队合作和分享帮助他人的性格",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "夏天"
+      },
+      "rich_text": "老人童年时在成都老城区边上的小河沟捉鱼的活动，通常是夏天进行，孩子们在河边玩水、捉鱼，直到被家长喊回家吃饭",
+      "source_turn_ids": [
+        "turn_fbe2464d09"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_438e463172": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_438e463172",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "回忆和教育",
+        "location": "郊游地点的河边",
+        "people": [
+          "我",
+          "学生们"
+        ],
+        "significance": "将童年河边活动的经验传授给学生",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "教书时期"
+      },
+      "rich_text": "带学生去郊游时看到孩子们在河边玩耍，教他们观察水流和耐心等待鱼儿上钩",
+      "source_turn_ids": [
+        "turn_0202d15bfb"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_46f66e72a5": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_46f66e72a5",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "开心、兴奋",
+        "location": "河边",
+        "people": [
+          "我",
+          "小伙伴们"
+        ],
+        "significance": "童年的简单快乐和与自然的亲密接触",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "老人和小伙伴们在河边光着脚丫子玩水摸鱼，有时候能摸到滑溜溜的小鱼，有时候还会被螃蟹夹到脚指头，痛得哇哇叫",
+      "source_turn_ids": [
+        "turn_be1a8fe642"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_471f03d5fc": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_471f03d5fc",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "快乐、好笑",
+        "location": "成都老城区边上的小河沟",
+        "people": [
+          "我",
+          "隔壁老王家的大娃",
+          "对门老李家的二丫头"
+        ],
+        "significance": "童年简单快乐的回忆",
+        "theme_id": "THEME_01_LIFE_CHAPTERS",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "小伙伴在河边追逐鸭子时滑倒，全身湿透掉入水中，大家笑了很久",
+      "source_turn_ids": [
+        "turn_d393e6a728"
+      ],
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "updated_at": null
+    },
+    "frag_55ef24952b": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_55ef24952b",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "积极",
+        "people": [
+          "我",
+          "学生们"
+        ],
+        "significance": "体现了童年河边活动对团队合作和分享精神的影响",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE"
+      },
+      "rich_text": "老人组织学生进行团队比赛，意识到童年团队合作和分享精神对后来组织活动的帮助",
+      "source_turn_ids": [
+        "turn_7380cb112d"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_5d6a3df696": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_5d6a3df696",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "积极影响",
+        "people": [
+          "孩子们"
+        ],
+        "significance": "对孩子们成长为社会栋梁至关重要",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE"
+      },
+      "rich_text": "老人认为团队活动能教会孩子们合作、责任感、尊重和自信心，对孩子们未来成为社会栋梁有积极影响",
+      "source_turn_ids": [
+        "turn_8ee76f5869"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_611df7d32e": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_611df7d32e",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "积极",
+        "people": [
+          "我",
+          "学生们"
+        ],
+        "significance": "体现了童年河边活动对组织活动的影响",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "教学生涯期间"
+      },
+      "rich_text": "老人在教学生涯中组织学生进行团队比赛，体现了团队合作和分享精神",
+      "source_turn_ids": [
+        "turn_b4856cf6db"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_6867fa1c55": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_6867fa1c55",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "快乐",
+        "location": "成都老城区边上的小河沟",
+        "people": [
+          "我",
+          "隔壁老王家的大娃",
+          "对门老李家的二丫头"
+        ],
+        "significance": "童年趣事之一",
+        "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "小伙伴追逐河边的鸭子不慎滑倒掉入水中",
+      "source_turn_ids": [
+        "turn_d0d7dee1c8"
+      ],
+      "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+      "updated_at": null
+    },
+    "frag_6b7070111a": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_6b7070111a",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "团队合作和分享",
+        "people": [
+          "我",
+          "学生们"
+        ],
+        "significance": "体现了童年河边活动的影响",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "教书时期"
+      },
+      "rich_text": "组织学生进行团队比赛时意识到童年团队合作和分享精神对后来组织活动的帮助",
+      "source_turn_ids": [
+        "turn_0202d15bfb"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_6df4b35fbd": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_6df4b35fbd",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "乐趣和开心",
+        "location": "成都老城区边上的小河沟",
+        "people": [
+          "老人",
+          "几个小伙伴"
+        ],
+        "significance": "简单的乐趣，对老人来说意义重大",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "老人童年时在河边进行的活动，包括玩水、捉鱼、翻石头找螃蟹等，活动安排随意，没有固定顺序",
+      "source_turn_ids": [
+        "turn_ba2d9132dc"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_6e2bec22c6": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_6e2bec22c6",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "积极",
+        "people": [
+          "我",
+          "学生们"
+        ],
+        "significance": "体现了童年河边活动对耐心和观察力的影响",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION"
+      },
+      "rich_text": "老人作为老师时带学生去郊游，并在河边教孩子们观察水流和耐心等待鱼儿上钩",
+      "source_turn_ids": [
+        "turn_7380cb112d"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_7141d9a256": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_7141d9a256",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "简单又快乐",
+        "location": "河边",
+        "people": [
+          "我",
+          "小伙伴们"
+        ],
+        "significance": "童年的宝贵财富，学会了和自然和谐相处",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "夏天"
+      },
+      "rich_text": "老人和小伙伴们在河边捉鱼的活动，夏天热了大家自然而然地往河边跑，有的挽起裤脚下水，有的在河边找石头翻螃蟹",
+      "source_turn_ids": [
+        "turn_e5e4e7316a"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_738a99c50d": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_738a99c50d",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "惊吓后转为团队互助的温暖",
+        "location": "成都老城区边上的小河沟",
+        "people": [
+          "我",
+          "隔壁老王家的大娃",
+          "对门老李家的二丫头"
+        ],
+        "significance": "童年趣事之一，学会团队合作",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "小伙伴误将水蛇当作黄鳝抓起，受到惊吓",
+      "source_turn_ids": [
+        "turn_d0d7dee1c8"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_76bfdb20bf": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_76bfdb20bf",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "快乐和教训",
+        "significance": "培养了耐心和团队合作精神，影响了后来的生活和教学",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "童年时期在河边捉鱼的活动，需要耐心等待，培养了耐心和团队合作精神",
+      "source_turn_ids": [
+        "turn_6d341a59cb"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_8322284673": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_8322284673",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "无忧无虑",
+        "location": "老城区的巷子",
+        "people": [
+          "我",
+          "小伙伴"
+        ],
+        "significance": "童年的趣事，体现了童年的简单快乐",
+        "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "在老城区的巷子里和小伙伴一起玩捉迷藏，房子挨得很近，巷子窄且深，难以找到藏身之处",
+      "source_turn_ids": [
+        "turn_f478eaa312"
+      ],
+      "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+      "updated_at": null
+    },
+    "frag_842b0b3365": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_842b0b3365",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "快乐、充满活力",
+        "location": "院子",
+        "people": [
+          "我",
+          "几个女孩子"
+        ],
+        "significance": "童年的游戏和活动，培养了协调和节奏感",
+        "theme_id": "THEME_01_LIFE_CHAPTERS",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "老人和几个女孩子在院子里跳皮筋，一边跳一边唱着歌谣，即使满头大汗也不肯停下来",
+      "source_turn_ids": [
+        "turn_be1a8fe642"
+      ],
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "updated_at": null
+    },
+    "frag_8f254519b3": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_8f254519b3",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "乐趣与学习",
+        "significance": "对后来教孩子们跳舞有帮助",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "童年时期跳皮筋活动，学会了协调和节奏感",
+      "source_turn_ids": [
+        "turn_90b177e610"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_90ff93da38": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_90ff93da38",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "好笑",
+        "significance": "教训：做事不能太冒失，要稳重",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "小时候"
+      },
+      "rich_text": "一个小孩在河边追逐鸭子时不慎滑倒掉入水中，成为落汤鸡，引得大家大笑",
+      "source_turn_ids": [
+        "turn_eec03a97f0"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_9462025dbc": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_9462025dbc",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "正面影响",
+        "people": [
+          "我",
+          "学生们"
+        ],
+        "significance": "教学生涯中的宝贵财富",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE"
+      },
+      "rich_text": "将童年河边趣事中学到的教训应用到教学中，教导学生要有耐心、仔细观察，不能急于求成",
+      "source_turn_ids": [
+        "turn_7db5e830b8"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_9b9d1782f0": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_9b9d1782f0",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "快乐、简单",
+        "significance": "培养了耐心和观察力，影响了个人成长和教学方式",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "童年时期在河边捉鱼的活动，需要耐心等待，培养了耐心和观察力",
+      "source_turn_ids": [
+        "turn_a012c9d3a5"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_9cc0a305cc": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_9cc0a305cc",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "惊吓",
+        "significance": "教训：做事前要看清楚，不能冒失",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "小时候"
+      },
+      "rich_text": "一个小孩在河边翻石头找螃蟹时误将水蛇当作黄鳝抓起，结果被咬，引发惊吓",
+      "source_turn_ids": [
+        "turn_eec03a97f0"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_9d371de94c": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_9d371de94c",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "快乐和好笑",
+        "significance": "教会了谨慎行事的重要性",
+        "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "童年时在河边追逐鸭子和误抓水蛇的趣事，包括追逐鸭子时滑倒落水和误将水蛇当作黄鳝而被咬的经历",
+      "source_turn_ids": [
+        "turn_7db5e830b8"
+      ],
+      "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+      "updated_at": null
+    },
+    "frag_a10d83ebc5": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_a10d83ebc5",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "惊吓、好笑",
+        "significance": "体现了童年的简单快乐和小伙伴间的互助",
+        "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "童年河边翻石头找螃蟹时误将水蛇当作黄鳝抓起的惊险经历",
+      "source_turn_ids": [
+        "turn_a012c9d3a5"
+      ],
+      "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+      "updated_at": null
+    },
+    "frag_a13787c66c": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_a13787c66c",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "快乐",
+        "location": "成都老城区边上的小河沟",
+        "people": [
+          "我",
+          "隔壁老王家的大娃",
+          "对门老李家的二丫头"
+        ],
+        "significance": "教会了耐心、观察力和团队合作等重要品质",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "在成都老城区边上的小河沟玩水、捉鱼的童年趣事",
+      "source_turn_ids": [
+        "turn_d2d17aa02d"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_ab488bb1b4": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_ab488bb1b4",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "兴奋、团结、暖洋洋",
+        "location": "郊游地点",
+        "people": [
+          "学生们"
+        ],
+        "significance": "体现了团队合作和分享精神的传承",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "不详"
+      },
+      "rich_text": "老人在郊游时组织学生进行拔河比赛，学生们兴奋参与，比赛时全力以赴，比赛结束后无论输赢都互相击掌庆祝",
+      "source_turn_ids": [
+        "turn_07b98ed1a4"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_ac50520f1f": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_ac50520f1f",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "惊吓后的快乐回忆",
+        "location": "成都老城区边的小河沟",
+        "people": [
+          "我",
+          "几个小伙伴"
+        ],
+        "significance": "童年简单快乐的象征",
+        "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "小伙伴在翻石头找螃蟹时误将水蛇当作黄鳝抓起，结果被咬，大家被吓到赶紧带他回家",
+      "source_turn_ids": [
+        "turn_0359ca7338"
+      ],
+      "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+      "updated_at": null
+    },
+    "frag_ae9550494d": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_ae9550494d",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "快乐、好笑",
+        "significance": "学到了做事要谨慎，不能太冒失",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "童年时在河边追逐鸭子导致滑倒落水，以及误将水蛇当作黄鳝抓起的趣事",
+      "source_turn_ids": [
+        "turn_61f8518468"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_b09960d7c3": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_b09960d7c3",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "乐趣与学习",
+        "significance": "对价值观形成有影响",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "童年时期河边捉鱼活动，学会了和自然和谐相处，懂得了珍惜",
+      "source_turn_ids": [
+        "turn_90b177e610"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_b0d9b1d2e1": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_b0d9b1d2e1",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "乐趣和宝贵",
+        "location": "成都老城区边的小河沟",
+        "people": [
+          "我",
+          "几个小伙伴"
+        ],
+        "significance": "培养了耐心、观察力、团队合作和分享精神",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "童年时期在成都老城区边的小河沟捉鱼的活动，教会了耐心和团队合作",
+      "source_turn_ids": [
+        "turn_0202d15bfb"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_b28b035523": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_b28b035523",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "积极",
+        "people": [
+          "我",
+          "学生们"
+        ],
+        "significance": "体现了童年河边活动对教学的影响",
+        "theme_id": "THEME_07_ADULT_MEMORY",
+        "time_anchor": "教学生涯期间"
+      },
+      "rich_text": "老人在教学生涯中带学生去郊游，教他们观察水流和耐心等待鱼儿上钩，体现了耐心和观察力",
+      "source_turn_ids": [
+        "turn_b4856cf6db"
+      ],
+      "theme_id": "THEME_07_ADULT_MEMORY",
+      "updated_at": null
+    },
+    "frag_b6071ee734": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_b6071ee734",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "快乐",
+        "location": "成都老城区边上的小河沟",
+        "people": [
+          "我",
+          "其他小孩子"
+        ],
+        "significance": "童年简单而快乐的时光",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "夏天"
+      },
+      "rich_text": "老人童年时在成都老城区边上的小河沟玩水和捉鱼的活动",
+      "source_turn_ids": [
+        "turn_ae4ea2d0c8"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_b8aa8f3d92": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_b8aa8f3d92",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "乐趣与教育意义并存",
+        "location": "成都老城区边上的小河沟",
+        "people": [
+          "我",
+          "隔壁老王家的大娃",
+          "对门老李家的二丫头"
+        ],
+        "significance": "培养了耐心、观察力和团队合作等品质",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "童年时期在河边捉鱼、翻石头找螃蟹等活动",
+      "source_turn_ids": [
+        "turn_cb454ffdbc"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_c2bd991e10": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_c2bd991e10",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "简单但充满教训",
+        "significance": "影响了后来的教学方式和对待学生的态度",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "童年时河边玩耍的经历，包括追逐鸭子和误抓水蛇等趣事，教会了谨慎和观察的重要性",
+      "source_turn_ids": [
+        "turn_e87fd0f5b6"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_c2e7171d36": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_c2e7171d36",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "好笑、快乐",
+        "significance": "体现了童年的简单快乐和小伙伴间的互助",
+        "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "童年时河边追逐鸭子导致滑倒落入水中的趣事",
+      "source_turn_ids": [
+        "turn_a012c9d3a5"
+      ],
+      "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+      "updated_at": null
+    },
+    "frag_c7786f98b2": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_c7786f98b2",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "乐趣与学习",
+        "significance": "对后来生活有积极影响",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "童年时期经常玩的捉迷藏游戏，教会了要有耐心和锻炼了观察力",
+      "source_turn_ids": [
+        "turn_90b177e610"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_c7d916374d": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_c7d916374d",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "简单又快乐",
+        "location": "河边",
+        "people": [
+          "我",
+          "小伙伴们"
+        ],
+        "significance": "童年的宝贵财富",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "夏天"
+      },
+      "rich_text": "老人童年时与小伙伴们在河边捉鱼的活动，大家自发地聚在一起，挽起裤脚下水捉鱼或翻石头捉螃蟹",
+      "source_turn_ids": [
+        "turn_70646df9c1"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_d5b5ac0f23": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_d5b5ac0f23",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "惊吓后觉得好笑",
+        "significance": "简单快乐的回忆",
+        "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "童年河边趣事之一，小伙伴误将水蛇当作黄鳝抓起而被咬",
+      "source_turn_ids": [
+        "turn_6d341a59cb"
+      ],
+      "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+      "updated_at": null
+    },
+    "frag_d8aa03e2d6": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_d8aa03e2d6",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "惊吓、紧张",
+        "location": "成都老城区边上的小河沟",
+        "people": [
+          "我",
+          "隔壁老王家的大娃",
+          "对门老李家的二丫头"
+        ],
+        "significance": "童年简单快乐的回忆",
+        "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "小伙伴在翻石头找螃蟹时误将水蛇当作黄鳝抓起，结果被水蛇咬了一口，大家吓得赶紧带他回家",
+      "source_turn_ids": [
+        "turn_d393e6a728"
+      ],
+      "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+      "updated_at": null
+    },
+    "frag_db79db206e": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_db79db206e",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "好笑",
+        "location": "成都老城区边上的小河沟",
+        "people": [
+          "调皮的娃儿"
+        ],
+        "significance": "趣事一桩",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "一个小伙伴在河边追逐鸭子时不慎滑倒，掉入河中成为落汤鸡",
+      "source_turn_ids": [
+        "turn_f0fa09f18f"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_db9a673704": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_db9a673704",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "耐心",
+        "people": [
+          "我",
+          "学生"
+        ],
+        "significance": "体现了童年河边活动的影响",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "教书时期"
+      },
+      "rich_text": "在教书时需要耐心等待学生慢慢理解，体现了河边捉鱼时学会的耐心",
+      "source_turn_ids": [
+        "turn_0202d15bfb"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_de84ae0bbe": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_de84ae0bbe",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "惊吓",
+        "location": "成都老城区边上的小河沟",
+        "people": [
+          "误抓水蛇的小伙伴"
+        ],
+        "significance": "趣事一桩",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "一个小伙伴在翻石头找螃蟹时误将水蛇当作黄鳝抓起，结果被水蛇咬了一口",
+      "source_turn_ids": [
+        "turn_f0fa09f18f"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_df176914dc": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_df176914dc",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "好笑",
+        "significance": "简单快乐的回忆",
+        "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "童年河边趣事之一，小伙伴追逐鸭子时不慎滑倒落入水中",
+      "source_turn_ids": [
+        "turn_6d341a59cb"
+      ],
+      "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+      "updated_at": null
+    },
+    "frag_f25956b7d4": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_f25956b7d4",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "好笑",
+        "location": "成都老城区边上的小河沟",
+        "people": [
+          "我",
+          "小伙伴"
+        ],
+        "significance": "随意玩耍中的意外乐趣",
+        "theme_id": "THEME_01_LIFE_CHAPTERS"
+      },
+      "rich_text": "小伙伴在河边捉鱼时追逐鸭子不慎滑倒，整个人掉进河里成为落汤鸡，引得大家大笑",
+      "source_turn_ids": [
+        "turn_94685e9115"
+      ],
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "updated_at": null
+    },
+    "frag_f2e24d67fd": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_f2e24d67fd",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "惊吓",
+        "location": "成都老城区边上的小河沟",
+        "people": [
+          "我",
+          "小伙伴"
+        ],
+        "significance": "随意玩耍中的意外插曲",
+        "theme_id": "THEME_06_CHILDHOOD_NEGATIVE"
+      },
+      "rich_text": "小伙伴在河边翻石头找螃蟹时误将水蛇当作黄鳝抓起，结果被蛇咬伤，大家赶紧带他回家",
+      "source_turn_ids": [
+        "turn_94685e9115"
+      ],
+      "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+      "updated_at": null
+    },
+    "frag_f9ff00a34a": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_f9ff00a34a",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "快乐",
+        "location": "成都老城区边的小河沟",
+        "people": [
+          "我",
+          "几个小伙伴"
+        ],
+        "significance": "简单快乐的童年记忆",
+        "theme_id": "THEME_01_LIFE_CHAPTERS",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "小伙伴在河边追逐鸭子时滑倒，整个人掉入水中，引得大家大笑",
+      "source_turn_ids": [
+        "turn_0359ca7338"
+      ],
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "updated_at": null
+    },
+    "frag_ff67ee6399": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_ff67ee6399",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "快乐",
+        "location": "成都老城区边上的小河沟",
+        "people": [
+          "我",
+          "隔壁老王家的大娃",
+          "对门老李家的二丫头"
+        ],
+        "significance": "童年简单快乐的回忆",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "在成都老城区边上的小河沟玩水、捉鱼",
+      "source_turn_ids": [
+        "turn_d0d7dee1c8"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    }
+  },
+  "session_id": "53612cc6e0fe4a82b71cd300e0ef1426",
+  "theme_nodes": [
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_02_PEAK_EXPERIENCE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_03_LOW_POINT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_04_TURNING_POINT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_07_ADULT_MEMORY",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_08_RELIGIOUS_EXPERIENCE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_10_NEXT_CHAPTER",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_11_DREAMS_PLANS",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_12_LIFE_PROJECT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_13_LIFE_CHALLENGE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_14_HEALTH",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_15_LOSS",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_16_FAILURE_REGRET",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_17_RELIGIOUS_VALUES",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_18_POLITICAL_VALUES",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_19_VALUE_EVOLUTION",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_20_SINGLE_VALUE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_21_SESSION_SUMMARY",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_23_CONTEXT_MANAGEMENT",
+      "title": null
+    }
+  ],
+  "timestamp": "2026-05-08T08:42:35.237328",
+  "turn_count": 36
+}

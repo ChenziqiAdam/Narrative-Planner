@@ -81,6 +81,13 @@ def extract_interviewee_reply(raw: str) -> str:
     return cleaned
 
 
+def _clip_text(text: str, max_chars: int) -> str:
+    text = text or ""
+    if max_chars <= 0 or len(text) <= max_chars:
+        return text
+    return text[-max_chars:]
+
+
 class IntervieweeAgent:
     def __init__(self, profile_path, save_path=None):
         self.profile_path = profile_path
@@ -99,7 +106,8 @@ class IntervieweeAgent:
         self._load_sys_prompt()
         self._load_tools()
         self._init_client()
-        self._compressor = HistoryCompressor(self.client, self.model_candidates)
+        client = getattr(self, "client", None)
+        self._compressor = HistoryCompressor(client, self.model_candidates) if client else None
 
     def initialize_conversation(self, basic_info: str | dict[str, Any] = ""):
         self.basic_info = self._stringify_basic_info(basic_info)
@@ -120,22 +128,37 @@ class IntervieweeAgent:
             profile_data = self._apply_basic_info_overrides(profile_data, basic_info)
         self.sys_prompt = self._prompt_generator.generate_prompt(profile_data)
 
-    def _load_step_prompt(self, history, question):
+    def _load_step_prompt(self, history, question):  # noqa: ARG002 - history kept for compatibility
         self._wait_for_compression()
-        max_recent = Config.HISTORY_COMPRESS_MAX_RECENT_TURNS
-        recent_turns = self._history_turns[-max_recent:]
+        max_recent = max(1, int(getattr(Config, "INTERVIEWEE_HISTORY_MAX_TURNS", Config.HISTORY_COMPRESS_MAX_RECENT_TURNS)))
+        all_turns = list(getattr(self, "_history_turns", []) or [])
+        recent_turns = all_turns[-max_recent:]
+        omitted_turns = max(0, len(all_turns) - len(recent_turns))
         recent_text = "\n".join(
             f"Q: {t['question']}\nA: {t['answer']}" for t in recent_turns
         )
-        if self._history_summary:
-            return (
-                f"访谈历史摘要：{self._history_summary}\n\n"
-                f"近期对话：\n{recent_text}\n"
-                f"访谈问题：{question}"
-            )
+
+        sections = []
+        basic_info = getattr(self, "basic_info", "")
+        history_summary = getattr(self, "_history_summary", "")
+        if basic_info:
+            sections.append(f"受访者基本信息：{basic_info}")
+        if history_summary:
+            sections.append(f"访谈历史摘要：{history_summary}")
+        if omitted_turns > 0:
+            sections.append(f"（前面还有 {omitted_turns} 轮对话已省略，请保持人物设定和叙事连续性。）")
         if recent_text:
-            return f"访谈历史：\n{recent_text}\n访谈问题：{question}"
-        return f"访谈问题：{question}"
+            sections.append(f"近期对话：\n{recent_text}")
+        sections.append(f"访谈问题：{question}")
+        return self._clip_step_prompt("\n\n".join(sections))
+
+    def _clip_step_prompt(self, prompt: str) -> str:
+        """Keep interviewee simulation context bounded for long batch runs."""
+        max_chars = max(500, int(getattr(Config, "INTERVIEWEE_HISTORY_MAX_CHARS", 6000)))
+        if len(prompt) <= max_chars:
+            return prompt
+        prefix = "（较早对话已省略，请保持人物设定和叙事连续性。）\n"
+        return prefix + _clip_text(prompt, max_chars - len(prefix))
 
     def _init_client(self):
         self.client = OpenAI(**Config.get_openai_client_kwargs())
@@ -200,13 +223,14 @@ class IntervieweeAgent:
     def _normalize_reply(self, raw: str) -> str:
         return extract_interviewee_reply(raw)
 
-    def record_turn(self, question: str, answer: str):
+    def record_turn(self, question: str, answer: str, *, allow_compression: bool = True):
         question = (question or "").strip()
         answer = (answer or "").strip()
         if question or answer:
             self.history += f"Q: {question}\nA: {answer}\n"
             self._history_turns.append({"question": question, "answer": answer})
-            self._maybe_compress_history()
+            if allow_compression:
+                self._maybe_compress_history()
 
     def _maybe_compress_history(self):
         max_recent = Config.HISTORY_COMPRESS_MAX_RECENT_TURNS
@@ -217,12 +241,14 @@ class IntervieweeAgent:
         total_chars = sum(len(t["question"]) + len(t["answer"]) for t in old_turns)
         if total_chars < Config.HISTORY_COMPRESS_MAX_CHAR_THRESHOLD // 3:
             return
-        # Wait for any previous compression to finish before starting a new one
+        compressor = getattr(self, "_compressor", None)
+        if compressor is None:
+            return
         self._wait_for_compression()
 
         def _compress():
             try:
-                new_summary = self._compressor.compress_qa_pairs(
+                new_summary = compressor.compress_qa_pairs(
                     old_turns, self._history_summary,
                 )
                 if new_summary:
@@ -230,7 +256,7 @@ class IntervieweeAgent:
                         self._history_summary = new_summary
                         self._history_turns = self._history_turns[split:]
                     logger.info(
-                        "Interviewee history compressed: %d old turns → %d-char summary",
+                        "Interviewee history compressed: %d old turns -> %d-char summary",
                         split, len(new_summary),
                     )
             except Exception as exc:
@@ -324,6 +350,7 @@ class IntervieweeAgent:
                         messages=messages,
                         tools=self.tools,
                         tool_choice="auto",
+                        max_tokens=max(200, int(getattr(Config, "INTERVIEWEE_REPLY_MAX_TOKENS", 900))),
                     )
                     self.model = model_name
                     return response

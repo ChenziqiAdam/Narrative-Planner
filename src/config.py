@@ -20,7 +20,7 @@ class Config:
     MOONSHOT_BASE_URL = os.getenv("MOONSHOT_BASE_URL") or OPENAI_BASE_URL
     MODEL_NAME = os.getenv("MODEL_NAME", "moonshot-v1-8k")
     STRUCTURED_MODEL_NAME = os.getenv("STRUCTURED_MODEL_NAME", "moonshot-v1-8k")
-    CHAT_MODEL_NAME = os.getenv("CHAT_MODEL_NAME", "kimi-latest")
+    CHAT_MODEL_NAME = os.getenv("CHAT_MODEL_NAME", "moonshot-v1-8k")
     INTERVIEWER_MODEL_NAME = os.getenv("INTERVIEWER_MODEL_NAME") or CHAT_MODEL_NAME
     BASELINE_MODEL_NAME = os.getenv("BASELINE_MODEL_NAME") or INTERVIEWER_MODEL_NAME
     INTERVIEWEE_MODEL_NAME = os.getenv("INTERVIEWEE_MODEL_NAME") or CHAT_MODEL_NAME
@@ -31,6 +31,23 @@ class Config:
     ENABLE_RELATION_LLM_FALLBACK = os.getenv("ENABLE_RELATION_LLM_FALLBACK", "false").lower() in {
         "1", "true", "yes", "on",
     }
+
+    # Automated interviewee simulation prompt controls.
+    # The compare experiment can run many turns, so only recent dialogue should
+    # be sent back to the simulated respondent on each call.
+    INTERVIEWEE_HISTORY_MAX_TURNS = int(os.getenv("INTERVIEWEE_HISTORY_MAX_TURNS", "8"))
+    INTERVIEWEE_HISTORY_MAX_CHARS = int(os.getenv("INTERVIEWEE_HISTORY_MAX_CHARS", "6000"))
+    INTERVIEWEE_REPLY_MAX_TOKENS = int(os.getenv("INTERVIEWEE_REPLY_MAX_TOKENS", "900"))
+
+    # Graph extraction prompt controls.  The full markdown prompt is useful for
+    # development, but batch experiments need a compact extraction contract.
+    GRAPH_EXTRACTION_COMPACT_PROMPT = os.getenv("GRAPH_EXTRACTION_COMPACT_PROMPT", "true").lower() in {
+        "1", "true", "yes", "on",
+    }
+    GRAPH_EXTRACTION_CONTEXT_TURNS = int(os.getenv("GRAPH_EXTRACTION_CONTEXT_TURNS", "1"))
+    GRAPH_EXTRACTION_MAX_TURN_CHARS = int(os.getenv("GRAPH_EXTRACTION_MAX_TURN_CHARS", "1200"))
+    GRAPH_EXTRACTION_MAX_GRAPH_CONTEXT_CHARS = int(os.getenv("GRAPH_EXTRACTION_MAX_GRAPH_CONTEXT_CHARS", "1500"))
+    GRAPH_EXTRACTION_MAX_OUTPUT_TOKENS = int(os.getenv("GRAPH_EXTRACTION_MAX_OUTPUT_TOKENS", "1200"))
 
     # App settings
     LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
@@ -85,6 +102,18 @@ class Config:
     }
     PLANNER_MAX_TOOL_ROUNDS = int(os.getenv("PLANNER_MAX_TOOL_ROUNDS", "2"))
     PLANNER_MAX_TOOLS_PER_ROUND = int(os.getenv("PLANNER_MAX_TOOLS_PER_ROUND", "2"))
+
+    # Legacy planner decision weights (used by pre-GraphRAG pipeline)
+    PLANNER_NEW_INFO_WEIGHT = float(os.getenv("PLANNER_NEW_INFO_WEIGHT", "1.0"))
+    PLANNER_MISSING_SLOT_WEIGHT = float(os.getenv("PLANNER_MISSING_SLOT_WEIGHT", "1.15"))
+    PLANNER_THEME_COVERAGE_WEIGHT = float(os.getenv("PLANNER_THEME_COVERAGE_WEIGHT", "1.0"))
+    PLANNER_EMOTION_ENERGY_WEIGHT = float(os.getenv("PLANNER_EMOTION_ENERGY_WEIGHT", "0.9"))
+    PLANNER_MEMORY_STABILITY_WEIGHT = float(os.getenv("PLANNER_MEMORY_STABILITY_WEIGHT", "0.85"))
+    PLANNER_CONFLICT_CLARIFICATION_WEIGHT = float(os.getenv("PLANNER_CONFLICT_CLARIFICATION_WEIGHT", "1.0"))
+    PLANNER_INFORMATION_QUALITY_WEIGHT = float(os.getenv("PLANNER_INFORMATION_QUALITY_WEIGHT", "0.95"))
+    PLANNER_LOW_GAIN_PENALTY = float(os.getenv("PLANNER_LOW_GAIN_PENALTY", "1.1"))
+    PLANNER_REFLECTION_SLOT_WEIGHT = float(os.getenv("PLANNER_REFLECTION_SLOT_WEIGHT", "0.75"))
+    PLANNER_FACTUAL_SLOT_WEIGHT = float(os.getenv("PLANNER_FACTUAL_SLOT_WEIGHT", "1.0"))
 
     # History compression — summarise old turns to stay within token limits
     SUMMARIZER_MODEL_NAME = os.getenv("SUMMARIZER_MODEL_NAME") or CHAT_MODEL_NAME

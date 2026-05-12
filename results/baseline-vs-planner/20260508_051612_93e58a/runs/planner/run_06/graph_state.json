@@ -1,0 +1,1167 @@
+{
+  "coverage_metrics": {
+    "overall_richness": 0.0,
+    "theme_richness": {
+      "THEME_01_LIFE_CHAPTERS": 0.0,
+      "THEME_02_PEAK_EXPERIENCE": 0.0,
+      "THEME_03_LOW_POINT": 0.0,
+      "THEME_04_TURNING_POINT": 0.0,
+      "THEME_05_CHILDHOOD_POSITIVE": 0.0,
+      "THEME_06_CHILDHOOD_NEGATIVE": 0.0,
+      "THEME_07_ADULT_MEMORY": 0.0,
+      "THEME_08_RELIGIOUS_EXPERIENCE": 0.0,
+      "THEME_09_WISDOM_EVENT": 0.0,
+      "THEME_10_NEXT_CHAPTER": 0.0,
+      "THEME_11_DREAMS_PLANS": 0.0,
+      "THEME_12_LIFE_PROJECT": 0.0,
+      "THEME_13_LIFE_CHALLENGE": 0.0,
+      "THEME_14_HEALTH": 0.0,
+      "THEME_15_LOSS": 0.0,
+      "THEME_16_FAILURE_REGRET": 0.0,
+      "THEME_17_RELIGIOUS_VALUES": 0.0,
+      "THEME_18_POLITICAL_VALUES": 0.0,
+      "THEME_19_VALUE_EVOLUTION": 0.0,
+      "THEME_20_SINGLE_VALUE": 0.0,
+      "THEME_21_SESSION_SUMMARY": 0.0,
+      "THEME_22_INFORMATION_INTEGRATION": 0.0,
+      "THEME_23_CONTEXT_MANAGEMENT": 0.0
+    }
+  },
+  "dynamic_profile": {
+    "last_updated_turn_id": "turn_b5ec8fadfc",
+    "planner_guidance": [
+      "Family profile is still thin; when the story naturally allows it, ask about spouse, children, siblings, or grandchildren.",
+      "Current-life profile is undercovered; consider a gentle bridge to daily routines, hobbies, social activity, or health concerns.",
+      "Adapt question shape to speaking style: story-rich replies; allow narrative space, then follow up on one concrete detail."
+    ],
+    "profile_quality": {
+      "core_identity_and_personality": 0.6667,
+      "current_life_status": 0.3333,
+      "family_situation": 0.0,
+      "life_views_and_attitudes": 0.0,
+      "overall": 0.25
+    },
+    "schema_version": "dynamic_elder_profile_v1",
+    "sections": {
+      "core_identity_and_personality": {
+        "common_expressions": {
+          "confidence": 0.35,
+          "value": [
+            "哎哟，说起跳皮筋和丢沙包，我可有的说了",
+            "我们动作迅速，摘了李子就赶紧跑",
+            "我们那会儿虽然小，但也晓得做了点不太好的事情"
+          ]
+        },
+        "identity_background": {
+          "confidence": 0.9,
+          "value": "name=李秀兰; birth_year=1944; age=82; hometown=四川成都; background=退休中学语文教师，经历过知青下乡、恢复高考、改革开放后的城市变迁。她有一个儿子和一个女儿，晚年喜欢整理旧照片和写日记。"
+        },
+        "life_overview": {
+          "confidence": 0.75,
+          "value": [
+            "退休中学语文教师，经历过知青下乡、恢复高考、改革开放后的城市变迁。她有一个儿子和一个女儿，晚年喜欢整理旧照片和写日记。"
+          ]
+        },
+        "speaking_style": {
+          "confidence": 0.45,
+          "value": "story-rich replies; allow narrative space, then follow up on one concrete detail"
+        }
+      },
+      "current_life_status": {
+        "health_status_current_concerns": {
+          "confidence": 0.45,
+          "value": [
+            "哎哟，说起跳皮筋和丢沙包，我可有的说了。我特别喜欢跳皮筋，那时候我们几个女孩子一放学就聚在一起跳，有时候能跳到天黑。我记得有一次，我们跳得正起劲，突然下起了大雨，大家淋得跟落汤鸡似"
+          ]
+        }
+      }
+    },
+    "update_count": 5
+  },
+  "narrative_fragments": {
+    "frag_0501d8a20f": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_0501d8a20f",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张刺激",
+        "location": "村子东头的小山坡",
+        "people": [
+          "秀兰奶奶",
+          "小芳",
+          "阿强",
+          "小丽"
+        ],
+        "significance": "童年的冒险和快乐回忆",
+        "theme_id": "THEME_09_WISDOM_EVENT",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们计划并实施了偷摘李子的行动，包括踩点、商量逃跑路线、趁大人午睡时行动、摘李子后逃跑，以及小芳衣服挂树上的小插曲",
+      "source_turn_ids": [
+        "turn_8cbbca7db6"
+      ],
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "updated_at": null
+    },
+    "frag_112e854c5f": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_112e854c5f",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "温馨、快乐",
+        "location": "小山坡上",
+        "people": [
+          "秀兰奶奶",
+          "小芳",
+          "阿强",
+          "小丽"
+        ],
+        "significance": "体现了童年时的纯真和友情",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们在找到李子后，会找个地方坐下来轮流分享，没有特别的分配方式，大家互相推让大个的李子",
+      "source_turn_ids": [
+        "turn_79ff8481e1"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_14079fcfaf": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_14079fcfaf",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "开心",
+        "location": "河边",
+        "people": [
+          "我",
+          "小伙伴们"
+        ],
+        "significance": "童年快乐时光",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "童年时在河边捉小鱼小虾，河水清澈",
+      "source_turn_ids": [
+        "turn_c2dcf9dbf3"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_144327ddc0": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_144327ddc0",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张又刺激",
+        "location": "隔壁村",
+        "people": [
+          "秀兰奶奶",
+          "小芳",
+          "阿强",
+          "小丽",
+          "村里的小孩"
+        ],
+        "significance": "儿时调皮的回忆",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "一个夏天"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们计划并实施了偷摘隔壁村李子的行动",
+      "source_turn_ids": [
+        "turn_29e3f57f5f"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_1babfc7157": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_1babfc7157",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "既紧张又刺激",
+        "location": "隔壁村的李子树",
+        "people": [
+          "秀兰奶奶",
+          "小芳",
+          "阿强",
+          "小丽",
+          "村里的小孩"
+        ],
+        "significance": "童年的调皮事，现在想起来觉得好笑",
+        "theme_id": "THEME_01_LIFE_CHAPTERS",
+        "time_anchor": "一个夏天"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们在一个夏天商量着去偷摘隔壁村的李子，感到既紧张又刺激，生怕被人发现",
+      "source_turn_ids": [
+        "turn_2547edca8a"
+      ],
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "updated_at": null
+    },
+    "frag_2457f83249": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_2457f83249",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "既紧张又刺激",
+        "location": "隔壁村的小山坡",
+        "people": [
+          "秀兰奶奶",
+          "小芳",
+          "阿强",
+          "小丽",
+          "村里的小孩"
+        ],
+        "significance": "一段难忘的童年冒险经历",
+        "theme_id": "THEME_09_WISDOM_EVENT",
+        "time_anchor": "夏天"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们计划并实施了偷摘李子的行动，过程中充满了紧张和刺激，最终被大人发现并挨骂",
+      "source_turn_ids": [
+        "turn_629aa3bd9e"
+      ],
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "updated_at": null
+    },
+    "frag_2600d79929": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_2600d79929",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "刺激和甜蜜",
+        "location": "安静的角落",
+        "people": [
+          "秀兰奶奶",
+          "小伙伴们"
+        ],
+        "significance": "童年的快乐和无忧无虑",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "过去"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们偷摘李子后，在安静的角落里分吃李子，感到刺激和甜蜜",
+      "source_turn_ids": [
+        "turn_d02bf5a3d4"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_2d531a8028": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_2d531a8028",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张",
+        "location": "隔壁村的李子树",
+        "people": [
+          "秀兰奶奶",
+          "小芳",
+          "阿强",
+          "小丽",
+          "村里的其他小孩"
+        ],
+        "significance": "偷摘李子行动的一部分",
+        "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+        "time_anchor": "偷摘李子当天"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们摘完李子后迅速逃跑",
+      "source_turn_ids": [
+        "turn_f788e76296"
+      ],
+      "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+      "updated_at": null
+    },
+    "frag_2fa042793e": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_2fa042793e",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张后转为安心",
+        "location": "山上",
+        "people": [
+          "秀兰奶奶",
+          "小芳"
+        ],
+        "significance": "一次难忘的童年经历",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和小芳去山上摘果子时迷路，天黑后被村里大人找到",
+      "source_turn_ids": [
+        "turn_9e9be0de34"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_3fa3b2458d": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_3fa3b2458d",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "快乐",
+        "people": [
+          "秀兰奶奶",
+          "小伙伴们"
+        ],
+        "significance": "童年的无忧无虑和创造力的体现",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶回忆童年时和小伙伴们一起用报纸和竹篾制作风筝，虽然简陋但飞得很高",
+      "source_turn_ids": [
+        "turn_184cdd626f"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_46b33e5918": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_46b33e5918",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "开心",
+        "location": "村子",
+        "people": [
+          "我",
+          "小伙伴们"
+        ],
+        "significance": "童年快乐时光",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "童年时在村子里玩捉迷藏，跑来跑去",
+      "source_turn_ids": [
+        "turn_c2dcf9dbf3"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_4df76a2420": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_4df76a2420",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张又兴奋",
+        "people": [
+          "秀兰奶奶",
+          "阿强",
+          "小芳",
+          "小丽"
+        ],
+        "significance": "童年调皮捣蛋的回忆",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "小时候"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们计划并实施了偷摘李子的行动，过程中充满了紧张和兴奋，最终被大人发现并挨了骂",
+      "source_turn_ids": [
+        "turn_14b1e8ff27"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_54bdef9c78": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_54bdef9c78",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "快乐",
+        "location": "村子里的空地",
+        "people": [
+          "小芳",
+          "阿强",
+          "小丽",
+          "村里的小孩"
+        ],
+        "significance": "童年时期简单而快乐的回忆",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "放学后或周末"
+      },
+      "rich_text": "秀兰奶奶和村里的小伙伴们一起玩的热门游戏，包括小芳、阿强、小丽等，通常在村子里的空地上进行，放学后或周末是主要的游戏时间",
+      "source_turn_ids": [
+        "turn_c7ae56aec8"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_5799e94e61": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_5799e94e61",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张又兴奋",
+        "location": "小山坡上",
+        "people": [
+          "秀兰奶奶",
+          "小伙伴们"
+        ],
+        "significance": "童年的调皮回忆",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "一个夏天"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们在一个夏天偷摘隔壁村李子的调皮经历",
+      "source_turn_ids": [
+        "turn_0becbdc2d1"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_5a2ec8a7aa": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_5a2ec8a7aa",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "又害怕又兴奋",
+        "location": "隔壁村的小山坡",
+        "people": [
+          "秀兰奶奶",
+          "小伙伴们"
+        ],
+        "significance": "童年的调皮经历，后来成为教训",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "一个夏天"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们在一个夏天去隔壁村的小山坡上偷摘李子，一边摘一边四处张望，生怕被人发现",
+      "source_turn_ids": [
+        "turn_26fa964c3c"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_6557eec66f": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_6557eec66f",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张又兴奋",
+        "significance": "认识到错误，决定以后不再做这种事情",
+        "theme_id": "THEME_09_WISDOM_EVENT",
+        "time_anchor": "小时候"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们计划并实施了偷摘李子的行为，过程中感到紧张和兴奋，最终被大人发现并受到责备",
+      "source_turn_ids": [
+        "turn_b176692fe9"
+      ],
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "updated_at": null
+    },
+    "frag_6bf0726dd9": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_6bf0726dd9",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张又刺激",
+        "location": "隔壁村的小山坡上",
+        "people": [
+          "秀兰奶奶",
+          "小芳",
+          "阿强",
+          "小丽",
+          "村里的其他小孩"
+        ],
+        "significance": "童年冒险经历，虽受责备但内心觉得刺激",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "夏天"
+      },
+      "rich_text": "秀兰奶奶和几个小伙伴计划并实施了一次偷摘李子的行动，包括踩点、商量逃跑路线、趁大人午睡时行动、摘李子后逃跑、小芳衣服挂树上的小插曲以及最终被大人发现并挨骂的过程",
+      "source_turn_ids": [
+        "turn_2b8a41c762"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_6d62065b83": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_6d62065b83",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "焦急",
+        "location": "隔壁村的李子树",
+        "people": [
+          "秀兰奶奶",
+          "小芳"
+        ],
+        "significance": "偷摘李子过程中的小意外",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "偷摘李子当天"
+      },
+      "rich_text": "小芳爬树时衣服被挂住，秀兰奶奶爬上去帮忙解开",
+      "source_turn_ids": [
+        "turn_f788e76296"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_7d2453a617": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_7d2453a617",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张又刺激",
+        "location": "隔壁村的李子树",
+        "people": [
+          "秀兰奶奶",
+          "小芳",
+          "阿强",
+          "小丽",
+          "村里的其他小孩"
+        ],
+        "significance": "童年调皮的回忆",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "一个夏天"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们计划并实施了偷摘隔壁村李子的行动",
+      "source_turn_ids": [
+        "turn_f788e76296"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_7f868912ee": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_7f868912ee",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张又刺激",
+        "people": [
+          "秀兰奶奶",
+          "小伙伴们",
+          "小芳"
+        ],
+        "significance": "童年的冒险和快乐回忆",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "大人午睡的时候"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们计划并实施了一次偷摘李子的行动，包括踩点、商量逃跑路线、趁大人午睡时行动、摘李子后逃跑，以及小芳衣服挂树上的小插曲",
+      "source_turn_ids": [
+        "turn_3494b8681a"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_873d874ad3": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_873d874ad3",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "开心",
+        "people": [
+          "秀兰奶奶",
+          "小伙伴们"
+        ],
+        "significance": "简单的快乐",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们一起做游戏，如跳皮筋、丢沙包",
+      "source_turn_ids": [
+        "turn_9e9be0de34"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_9123225b00": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_9123225b00",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张又好笑",
+        "location": "户外",
+        "people": [
+          "秀兰奶奶",
+          "小伙伴们"
+        ],
+        "significance": "童年游戏中的趣事",
+        "theme_id": "THEME_02_PEAK_EXPERIENCE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶玩丢沙包时太用力，沙包飞出很远差点砸到路过的牛，引发大家大笑",
+      "source_turn_ids": [
+        "turn_54fae75454"
+      ],
+      "theme_id": "THEME_02_PEAK_EXPERIENCE",
+      "updated_at": null
+    },
+    "frag_98032fe14d": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_98032fe14d",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "开心",
+        "people": [
+          "我",
+          "小伙伴们"
+        ],
+        "significance": "童年快乐时光",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "童年时玩具都是自己做的，与现在的孩子不同",
+      "source_turn_ids": [
+        "turn_c2dcf9dbf3"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_9814df81b4": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_9814df81b4",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张又刺激",
+        "location": "村子东头的小山坡",
+        "people": [
+          "秀兰奶奶",
+          "小芳",
+          "阿强",
+          "小丽"
+        ],
+        "significance": "童年的调皮经历，体现了纯真和快乐",
+        "theme_id": "THEME_09_WISDOM_EVENT",
+        "time_anchor": "过去"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们计划并实施了偷摘李子的行动，包括踩点、商量逃跑路线，并在大人们午睡时行动",
+      "source_turn_ids": [
+        "turn_f5d1d2433c"
+      ],
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "updated_at": null
+    },
+    "frag_a228a5e1ce": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_a228a5e1ce",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "高兴",
+        "people": [
+          "我",
+          "妈妈"
+        ],
+        "significance": "穿上新鞋是件大事",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "小时候"
+      },
+      "rich_text": "李秀兰奶奶小时候穿上母亲做的新布鞋，非常高兴并到处跑",
+      "source_turn_ids": [
+        "turn_d1801ae3f1"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_a7ee2b6ad8": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_a7ee2b6ad8",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "快乐",
+        "people": [
+          "秀兰奶奶",
+          "小伙伴们"
+        ],
+        "significance": "童年的自然体验和简单的快乐",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们去山上摘酸酸甜甜的野果，享受自然的乐趣",
+      "source_turn_ids": [
+        "turn_184cdd626f"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_b10c15c69e": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_b10c15c69e",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张",
+        "location": "隔壁村的李子树",
+        "people": [
+          "秀兰奶奶",
+          "小芳",
+          "阿强",
+          "小丽",
+          "村里的其他小孩"
+        ],
+        "significance": "为偷摘李子做准备",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "偷摘李子的前一天"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们事先去踩点，查看李子树周围是否有人看守，并商量逃跑路线",
+      "source_turn_ids": [
+        "turn_f788e76296"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_b1ace11eaf": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_b1ace11eaf",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张刺激",
+        "location": "未提及具体地点",
+        "people": [
+          "秀兰奶奶",
+          "小伙伴们",
+          "小芳"
+        ],
+        "significance": "教训和成长",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "未提及具体时间"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们计划并实施了偷摘李子的行动，包括踩点、商量逃跑路线、趁大人午睡时行动、摘李子后逃跑、小插曲（小芳衣服挂树上）和最终被大人发现并挨骂的过程",
+      "source_turn_ids": [
+        "turn_f713ccdef9"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_bf4fb3c6bb": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_bf4fb3c6bb",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "默契合作",
+        "people": [
+          "秀兰奶奶",
+          "阿强",
+          "小芳",
+          "小丽"
+        ],
+        "significance": "童年时的默契与合作",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们根据自己的特点和能力分工合作摘李子，阿强爬树，秀兰和小芳捡李子，小丽望风",
+      "source_turn_ids": [
+        "turn_5919006d57"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_c6c056e08c": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_c6c056e08c",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张又刺激",
+        "location": "隔壁村的小山坡",
+        "people": [
+          "秀兰奶奶",
+          "小芳",
+          "其他小伙伴"
+        ],
+        "significance": "教训了秀兰奶奶做人要诚实守信",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "夏天"
+      },
+      "rich_text": "秀兰奶奶和几个小伙伴计划偷摘李子，包括踩点、商量逃跑路线、趁大人午睡时行动、摘李子后逃跑、小芳衣服挂树上的小插曲、最终被大人发现并挨骂",
+      "source_turn_ids": [
+        "turn_b6ee47778a"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_caa2918332": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_caa2918332",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "开心",
+        "location": "田里",
+        "people": [
+          "我",
+          "小伙伴们"
+        ],
+        "significance": "童年快乐时光",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "童年时在田里捉蛐蛐儿，比赛谁捉的多",
+      "source_turn_ids": [
+        "turn_c2dcf9dbf3"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_d5503d3526": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_d5503d3526",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "认识到错误",
+        "location": "河边",
+        "people": [
+          "秀兰奶奶",
+          "小芳",
+          "阿强",
+          "小丽",
+          "村里的小孩"
+        ],
+        "significance": "意识到偷摘李子是不对的，决定改正",
+        "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+        "time_anchor": "偷摘李子后"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们在偷摘李子后坐在河边洗脚聊天，讨论了这次行动的不妥，并决定以后不再做这种事情",
+      "source_turn_ids": [
+        "turn_0d61372b4c"
+      ],
+      "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+      "updated_at": null
+    },
+    "frag_d5a898aa83": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_d5a898aa83",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "既紧张又刺激",
+        "location": "隔壁村的小山坡",
+        "people": [
+          "秀兰奶奶",
+          "小芳",
+          "阿强",
+          "小丽",
+          "村里的小孩"
+        ],
+        "significance": "童年的冒险经历",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "一个夏天"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们在一个夏天去隔壁村的小山坡上偷摘李子的行动",
+      "source_turn_ids": [
+        "turn_3990a167ed"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_d711b815c6": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_d711b815c6",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "开心",
+        "people": [
+          "秀兰奶奶",
+          "小芳"
+        ],
+        "significance": "童年的快乐时光",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和小芳经常一起在河边捉鱼和山上摘野果",
+      "source_turn_ids": [
+        "turn_9e9be0de34"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_e01f4f057f": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_e01f4f057f",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "快乐而不舍",
+        "location": "户外",
+        "people": [
+          "秀兰奶奶",
+          "女孩子们"
+        ],
+        "significance": "难忘的童年游戏经历",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和女孩子们放学后跳皮筋，突然下起大雨，大家淋湿了但仍然继续跳，直到雨太大才回家",
+      "source_turn_ids": [
+        "turn_54fae75454"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_eb1c0f91bc": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_eb1c0f91bc",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "焦急",
+        "location": "李子树",
+        "people": [
+          "秀兰奶奶",
+          "小芳"
+        ],
+        "significance": "增加了行动的紧张和趣味性",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE"
+      },
+      "rich_text": "小芳在爬树摘李子时衣服被挂住，秀兰奶奶爬上树帮她解下",
+      "source_turn_ids": [
+        "turn_f5d1d2433c"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_f36188defa": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_f36188defa",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "又害怕又兴奋",
+        "location": "隔壁村的小山坡",
+        "people": [
+          "秀兰奶奶",
+          "小芳",
+          "其他小伙伴"
+        ],
+        "significance": "一次充满紧张刺激的冒险经历",
+        "theme_id": "THEME_09_WISDOM_EVENT",
+        "time_anchor": "夏天"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们计划并实施了一次偷摘李子的行动，过程中充满了紧张和刺激，最终被大人发现并挨骂",
+      "source_turn_ids": [
+        "turn_b5ec8fadfc"
+      ],
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "updated_at": null
+    },
+    "frag_ffd6919dc2": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_ffd6919dc2",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "紧张又兴奋",
+        "location": "隔壁村的小山坡",
+        "people": [
+          "秀兰奶奶",
+          "阿强",
+          "小芳",
+          "小丽"
+        ],
+        "significance": "童年调皮的回忆",
+        "theme_id": "THEME_09_WISDOM_EVENT",
+        "time_anchor": "夏天"
+      },
+      "rich_text": "秀兰奶奶和几个小伙伴有计划地偷摘隔壁村小山坡上的李子，分工合作，阿强上树摘李子，秀兰和小芳在树下捡，小丽望风",
+      "source_turn_ids": [
+        "turn_182a7b9079"
+      ],
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "updated_at": null
+    }
+  },
+  "session_id": "41d639d8eb7d4393b73326e2956724f1",
+  "theme_nodes": [
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_02_PEAK_EXPERIENCE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_03_LOW_POINT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_04_TURNING_POINT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_07_ADULT_MEMORY",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_08_RELIGIOUS_EXPERIENCE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_10_NEXT_CHAPTER",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_11_DREAMS_PLANS",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_12_LIFE_PROJECT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_13_LIFE_CHALLENGE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_14_HEALTH",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_15_LOSS",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_16_FAILURE_REGRET",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_17_RELIGIOUS_VALUES",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_18_POLITICAL_VALUES",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_19_VALUE_EVOLUTION",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_20_SINGLE_VALUE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_21_SESSION_SUMMARY",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_23_CONTEXT_MANAGEMENT",
+      "title": null
+    }
+  ],
+  "timestamp": "2026-05-08T09:05:02.289991",
+  "turn_count": 28
+}

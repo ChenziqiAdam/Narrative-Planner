@@ -10,6 +10,7 @@ import React from 'react'
 import {
   GraphState,
 } from '../types'
+import { ClipboardIcon } from './icons'
 import './TimelineCanvas.css'
 
 interface TimelineCanvasProps {
@@ -61,7 +62,7 @@ const TimelineCanvas: React.FC<TimelineCanvasProps> = ({
       <div className={`timeline-canvas-container ${className}`}>
         <div className="timeline-content">
           <div className="timeline-empty">
-            <span className="empty-icon">📋</span>
+            <ClipboardIcon className="empty-icon" color="#9CA3AF" />
             <p>暂无图谱数据</p>
           </div>
         </div>
@@ -77,7 +78,7 @@ const TimelineCanvas: React.FC<TimelineCanvasProps> = ({
       <div className="timeline-content">
         {sortedFragments.length === 0 ? (
           <div className="timeline-empty">
-            <span className="empty-icon">📋</span>
+            <ClipboardIcon className="empty-icon" color="#9CA3AF" />
             <p>暂无叙事片段数据</p>
           </div>
         ) : (

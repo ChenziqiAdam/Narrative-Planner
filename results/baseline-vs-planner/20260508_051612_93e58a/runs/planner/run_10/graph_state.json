@@ -1,0 +1,1477 @@
+{
+  "coverage_metrics": {
+    "overall_richness": 0.0,
+    "theme_richness": {
+      "THEME_01_LIFE_CHAPTERS": 0.0,
+      "THEME_02_PEAK_EXPERIENCE": 0.0,
+      "THEME_03_LOW_POINT": 0.0,
+      "THEME_04_TURNING_POINT": 0.0,
+      "THEME_05_CHILDHOOD_POSITIVE": 0.0,
+      "THEME_06_CHILDHOOD_NEGATIVE": 0.0,
+      "THEME_07_ADULT_MEMORY": 0.0,
+      "THEME_08_RELIGIOUS_EXPERIENCE": 0.0,
+      "THEME_09_WISDOM_EVENT": 0.0,
+      "THEME_10_NEXT_CHAPTER": 0.0,
+      "THEME_11_DREAMS_PLANS": 0.0,
+      "THEME_12_LIFE_PROJECT": 0.0,
+      "THEME_13_LIFE_CHALLENGE": 0.0,
+      "THEME_14_HEALTH": 0.0,
+      "THEME_15_LOSS": 0.0,
+      "THEME_16_FAILURE_REGRET": 0.0,
+      "THEME_17_RELIGIOUS_VALUES": 0.0,
+      "THEME_18_POLITICAL_VALUES": 0.0,
+      "THEME_19_VALUE_EVOLUTION": 0.0,
+      "THEME_20_SINGLE_VALUE": 0.0,
+      "THEME_21_SESSION_SUMMARY": 0.0,
+      "THEME_22_INFORMATION_INTEGRATION": 0.0,
+      "THEME_23_CONTEXT_MANAGEMENT": 0.0
+    }
+  },
+  "dynamic_profile": {
+    "last_updated_turn_id": "turn_9ebf4f1f06",
+    "planner_guidance": [
+      "Family profile is still thin; when the story naturally allows it, ask about spouse, children, siblings, or grandchildren.",
+      "Adapt question shape to speaking style: story-rich replies; allow narrative space, then follow up on one concrete detail."
+    ],
+    "profile_quality": {
+      "core_identity_and_personality": 0.6667,
+      "current_life_status": 0.6667,
+      "family_situation": 0.0,
+      "life_views_and_attitudes": 0.0,
+      "overall": 0.3333
+    },
+    "schema_version": "dynamic_elder_profile_v1",
+    "sections": {
+      "core_identity_and_personality": {
+        "common_expressions": {
+          "confidence": 0.35,
+          "value": [
+            "哎哟，说起那个场景，我现在都记得清清楚楚的",
+            "那天下午，太阳快落山了，屋里头光线有点暗",
+            "现在想起来，那时候的光景，真是简单又幸福",
+            "现在想起来，那些日子虽然苦，但是心里头甜得很"
+          ]
+        },
+        "identity_background": {
+          "confidence": 0.9,
+          "value": "name=李秀兰; birth_year=1944; age=82; hometown=四川成都; background=退休中学语文教师，经历过知青下乡、恢复高考、改革开放后的城市变迁。她有一个儿子和一个女儿，晚年喜欢整理旧照片和写日记。"
+        },
+        "life_overview": {
+          "confidence": 0.75,
+          "value": [
+            "退休中学语文教师，经历过知青下乡、恢复高考、改革开放后的城市变迁。她有一个儿子和一个女儿，晚年喜欢整理旧照片和写日记。"
+          ]
+        },
+        "speaking_style": {
+          "confidence": 0.45,
+          "value": "story-rich replies; allow narrative space, then follow up on one concrete detail"
+        }
+      },
+      "current_life_status": {
+        "health_status_current_concerns": {
+          "confidence": 0.45,
+          "value": [
+            "哎哟，说起二女儿在我生病时候照顾家里的事情，我心里头那个滋味真是说不清楚。我们那会儿条件不好，家里头啥子都没有，我生病了，二女儿才那么点儿大，就要担起照顾家的责任。我记得她那时候天"
+          ]
+        },
+        "interests_hobbies_social": {
+          "confidence": 0.45,
+          "value": [
+            "哎哟，说起河边散步和摘野花这些习惯，我心头那个温暖啊。我们那会儿嘛，条件艰苦，没有现在这么多花样，但是那份简单和真挚，是现在很难找到的。河边散步，是我们两个人的小世界，说说心里话，"
+          ]
+        }
+      }
+    },
+    "update_count": 6
+  },
+  "narrative_fragments": {
+    "frag_036efd7da9": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_036efd7da9",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "五味杂陈",
+        "people": [
+          "大儿子",
+          "弟弟妹妹"
+        ],
+        "significance": "体现了家庭教育的成果和分享精神",
+        "theme_id": "THEME_09_WISDOM_EVENT",
+        "time_anchor": "大儿子小时候"
+      },
+      "rich_text": "秀兰奶奶的大儿子在学校得到一个苹果后，没有自己吃，而是带回家分给了弟弟妹妹",
+      "source_turn_ids": [
+        "turn_eabf0f5c31"
+      ],
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "updated_at": null
+    },
+    "frag_060ec53911": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_060ec53911",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "保护和勇气",
+        "people": [
+          "大儿子",
+          "小儿子"
+        ],
+        "significance": "体现了家庭中的兄弟保护和勇气",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "孩子们小时候"
+      },
+      "rich_text": "大儿子在学校知道小儿子被欺负后，立刻去找欺负者谈话，使得对方不再敢欺负小儿子。",
+      "source_turn_ids": [
+        "turn_30b3f52dda"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_0a65ed1082": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_0a65ed1082",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "people": [
+          "小儿子",
+          "大儿子",
+          "二女儿"
+        ],
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "过年"
+      },
+      "rich_text": "小儿子因工作忙过年回不来，大儿子和二女儿轮流过来陪老人过年",
+      "source_turn_ids": [
+        "turn_564ebd970c"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_0f0408b442": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_0f0408b442",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "稀奇、亲切",
+        "location": "龙泉山",
+        "people": [
+          "秀兰奶奶",
+          "小伙伴们"
+        ],
+        "significance": "展现了与自然和谐相处的童年记忆",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们在山上摘野果时遇到一只小松鼠，给它起名为‘松松’，之后每次上山都会去看看它",
+      "source_turn_ids": [
+        "turn_3ab6d4a2a4"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_12d35c25d2": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_12d35c25d2",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "温馨、感动",
+        "people": [
+          "大儿子",
+          "弟弟",
+          "妹妹"
+        ],
+        "significance": "培养了孩子们分享和照顾彼此的习惯，影响了他们成年后的生活",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "孩子们还小的时候"
+      },
+      "rich_text": "秀兰奶奶的大儿子在学校得到苹果后带回家，与弟弟妹妹分享，展现了家庭中的分享和照顾",
+      "source_turn_ids": [
+        "turn_9eaf94df89"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_1ea5c748b3": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_1ea5c748b3",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "感恩和分享",
+        "people": [
+          "秀兰奶奶",
+          "大儿子",
+          "邻居"
+        ],
+        "significance": "教育孩子们分享和感恩",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "过年的时候"
+      },
+      "rich_text": "秀兰奶奶让大儿子给邻居家送腊肉，体现分享和感恩",
+      "source_turn_ids": [
+        "turn_52091ad9cb"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_1f83c3084d": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_1f83c3084d",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "积极和快乐",
+        "people": [
+          "孩子们",
+          "秀兰奶奶"
+        ],
+        "significance": "孩子们成长路上最宝贵的财富",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE"
+      },
+      "rich_text": "秀兰奶奶通过带孩子们去浇地、除草等小事，教育他们要勤劳、诚实、懂得感恩和分享",
+      "source_turn_ids": [
+        "turn_3ed484861c"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_22c593ce53": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_22c593ce53",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "快乐",
+        "location": "山上",
+        "people": [
+          "我",
+          "小伙伴"
+        ],
+        "significance": "童年的趣事之一",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年"
+      },
+      "rich_text": "童年时与小伙伴去山上摘野果，野果种类多，有的甜有的酸，一边摘一边吃，吃得肚子圆滚滚",
+      "source_turn_ids": [
+        "turn_467771684d"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_2388fcbbab": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_2388fcbbab",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "骄傲和感动",
+        "people": [
+          "秀兰奶奶",
+          "孩子们"
+        ],
+        "significance": "教育孩子们勤劳诚实",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "孩子们还小的时候"
+      },
+      "rich_text": "秀兰奶奶带着孩子们一起浇地、除草，教育他们珍惜粮食，体现勤劳和诚实",
+      "source_turn_ids": [
+        "turn_52091ad9cb"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_274b5df380": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_274b5df380",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "快乐",
+        "location": "龙泉山",
+        "people": [
+          "我",
+          "小伙伴们"
+        ],
+        "significance": "童年的快乐回忆",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "童年时与小伙伴们一起上龙泉山摘野果的活动",
+      "source_turn_ids": [
+        "turn_6a3562af3f"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_295afd37aa": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_295afd37aa",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "关爱和分享",
+        "location": "学校",
+        "people": [
+          "秀兰奶奶",
+          "学生们",
+          "流浪猫"
+        ],
+        "significance": "体现了从‘松松’那里学到的精神",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION"
+      },
+      "rich_text": "秀兰奶奶在学校带头给流浪猫喂食并搭建窝棚，学生们随后也参与照顾",
+      "source_turn_ids": [
+        "turn_4b0485229a"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_3bfb6db2cb": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_3bfb6db2cb",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "温暖和懂事",
+        "people": [
+          "二女儿",
+          "秀兰奶奶",
+          "弟弟们"
+        ],
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION"
+      },
+      "rich_text": "秀兰奶奶的二女儿在家照顾秀兰奶奶和弟弟们",
+      "source_turn_ids": [
+        "turn_7a4b10716e"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_3e3d2fa905": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_3e3d2fa905",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "感动和心疼",
+        "people": [
+          "二女儿",
+          "母亲",
+          "两个弟弟"
+        ],
+        "significance": "体现了家庭的团结和孩子们的责任感",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "孩子们小时候"
+      },
+      "rich_text": "秀兰奶奶生病时，二女儿负责在家熬粥照顾母亲和两个弟弟",
+      "source_turn_ids": [
+        "turn_ed05ce825f"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_3fc40d6b90": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_3fc40d6b90",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "分享和感恩",
+        "people": [
+          "大儿子",
+          "邻居"
+        ],
+        "significance": "教育孩子们懂得感恩和分享",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION"
+      },
+      "rich_text": "秀兰奶奶让大儿子给邻居送腊肉，不仅是分享，也是教会他们邻里之间的和睦相处",
+      "source_turn_ids": [
+        "turn_3ed484861c"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_473039c19b": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_473039c19b",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "怀旧和感动",
+        "location": "戏院",
+        "people": [
+          "秀兰奶奶",
+          "二女儿",
+          "女婿"
+        ],
+        "significance": "让秀兰奶奶感觉回到了年轻时候",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "那天晚上"
+      },
+      "rich_text": "秀兰奶奶和二女儿、女婿一起去戏院听川剧，感受到年轻时的回忆",
+      "source_turn_ids": [
+        "turn_1bbcf93d2c"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_4765c1dc50": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_4765c1dc50",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "温馨、感动",
+        "location": "家里",
+        "people": [
+          "大儿子",
+          "弟弟",
+          "妹妹"
+        ],
+        "significance": "体现了孩子们的懂事和相亲相爱",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "那天下午，太阳快落山了"
+      },
+      "rich_text": "大儿子放学后将学校发的红苹果分给弟弟妹妹，三个孩子头碰头地共享苹果",
+      "source_turn_ids": [
+        "turn_4296d27557"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_4ebc7f7671": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_4ebc7f7671",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "感动",
+        "people": [
+          "大儿子",
+          "妹妹"
+        ],
+        "significance": "体现了家庭中的分享和关爱",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "孩子们小时候"
+      },
+      "rich_text": "秀兰奶奶的大儿子在学校得到一支钢笔作为奖品，没有自己使用，而是给了妹妹，因为妹妹学习需要。",
+      "source_turn_ids": [
+        "turn_bb09366676"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_510800ca86": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_510800ca86",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "感动和欣慰",
+        "people": [
+          "大儿子",
+          "弟弟",
+          "妹妹"
+        ],
+        "significance": "培养了孩子们分享和照顾彼此的习惯",
+        "theme_id": "THEME_09_WISDOM_EVENT",
+        "time_anchor": "孩子们小时候"
+      },
+      "rich_text": "秀兰奶奶的大儿子在学校得到一个苹果，没有自己吃，而是带回家分给了弟弟妹妹",
+      "source_turn_ids": [
+        "turn_774ed97ea6"
+      ],
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "updated_at": null
+    },
+    "frag_5666c7065c": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_5666c7065c",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "怀念与艰辛",
+        "location": "老城区破旧瓦房",
+        "people": [
+          "我",
+          "阿妈"
+        ],
+        "significance": "童年的艰辛与母亲的爱",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "李秀兰奶奶回忆童年时家里条件艰苦，住在老城区破旧的瓦房，母亲给她做的新布鞋和煮的白米饭给她留下了深刻印象",
+      "source_turn_ids": [
+        "turn_29288f6d77"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_56cdf36ae3": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_56cdf36ae3",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "高兴",
+        "people": [
+          "大儿子",
+          "邻居阿姨"
+        ],
+        "significance": "体现了分享和感恩的教育",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "过年时"
+      },
+      "rich_text": "大儿子给邻居送腊肉，邻居阿姨夸他懂事，他听了非常高兴。",
+      "source_turn_ids": [
+        "turn_c77550f04b"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_58428c85bd": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_58428c85bd",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "正面",
+        "people": [
+          "秀兰奶奶",
+          "学生们"
+        ],
+        "significance": "延续了与‘松松’友谊中学到的道理",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "成为老师后"
+      },
+      "rich_text": "秀兰奶奶成为老师后，将从‘松松’身上学到的道理传授给学生",
+      "source_turn_ids": [
+        "turn_4b0485229a"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_599becdd40": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_599becdd40",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "感动和懂事",
+        "people": [
+          "大儿子",
+          "弟弟",
+          "妹妹"
+        ],
+        "significance": "家庭教育的成果和重要一课",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "大儿子十来岁时"
+      },
+      "rich_text": "秀兰奶奶的大儿子在学校得到一个苹果，没有自己吃，而是拿回家分给了弟弟妹妹",
+      "source_turn_ids": [
+        "turn_e91ba423af"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_5a1940ad4d": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_5a1940ad4d",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "people": [
+          "二女儿",
+          "大儿子的媳妇儿"
+        ],
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "一个多月"
+      },
+      "rich_text": "二女儿从重庆赶回来帮忙照顾生病的大儿子媳妇儿，持续一个多月",
+      "source_turn_ids": [
+        "turn_36989c46bb"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_5d3e115b6f": {
+      "confidence": 0.85,
+      "created_at": null,
+      "fragment_id": "frag_5d3e115b6f",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "欣慰",
+        "people": [
+          "大儿子",
+          "邻居阿姨"
+        ],
+        "significance": "孩子们学会了如何在社会上立足，如何与人为善",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "过年时"
+      },
+      "rich_text": "秀兰奶奶通过生活中的小事教育孩子们勤劳、诚实、感恩和分享，如让大儿子给邻居送腊肉，体现了分享和促进邻里和睦的行为",
+      "source_turn_ids": [
+        "turn_56d41cbf9f"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_5f89d565f5": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_5f89d565f5",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "欣慰",
+        "people": [
+          "秀兰奶奶",
+          "大儿子",
+          "二女儿"
+        ],
+        "significance": "孩子们成长路上最宝贵的财富",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "孩子们成长时期"
+      },
+      "rich_text": "秀兰奶奶通过生活中的小事教育孩子们要勤劳、诚实、懂得感恩和分享，这些教育方式在孩子们成年后的生活中体现出来",
+      "source_turn_ids": [
+        "turn_9ebf4f1f06"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_6ad97c1a5e": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_6ad97c1a5e",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "location": "重庆",
+        "people": [
+          "二女儿",
+          "大儿子的媳妇儿"
+        ],
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "一个多月"
+      },
+      "rich_text": "二女儿从重庆赶回来，帮忙照顾生病的大儿媳一个多月",
+      "source_turn_ids": [
+        "turn_564ebd970c"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_6b68060d25": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_6b68060d25",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "温馨、快乐",
+        "location": "龙泉山",
+        "people": [
+          "秀兰奶奶",
+          "小伙伴们",
+          "‘松松’"
+        ],
+        "significance": "学会了珍惜和尊重生命，懂得了和谐相处",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们在龙泉山上与一只小松鼠‘松松’建立起了友谊，通过给它带食物和互动，逐渐获得了‘松松’的信任",
+      "source_turn_ids": [
+        "turn_b370a0a2d9"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_6ec0c355bb": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_6ec0c355bb",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "温馨、快乐",
+        "location": "家里",
+        "people": [
+          "我",
+          "大儿子",
+          "媳妇儿",
+          "孙子"
+        ],
+        "significance": "家庭团圆，孙子的童真给家庭带来欢笑",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "过年"
+      },
+      "rich_text": "大儿子和媳妇带着孙子来陪老人过年，打扫家里，贴春联，挂红灯笼，一起包饺子，孙子弄得满脸面粉，大家笑得合不拢嘴，晚上一起看春晚，孙子讲学校的趣事",
+      "source_turn_ids": [
+        "turn_0acd10c517"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_77da82d5e8": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_77da82d5e8",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "感动和骄傲",
+        "people": [
+          "大儿子",
+          "弟弟"
+        ],
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE"
+      },
+      "rich_text": "秀兰奶奶的大儿子在学校保护弟弟不受欺负",
+      "source_turn_ids": [
+        "turn_7a4b10716e"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_7c70a8b2bf": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_7c70a8b2bf",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "积极快乐",
+        "people": [
+          "孩子们"
+        ],
+        "significance": "孩子们学会勤劳和珍惜",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "孩子们小时候"
+      },
+      "rich_text": "秀兰奶奶带着孩子们去浇地、除草，孩子们虽然年纪小，但都抢着干活，弄得一身泥还笑得咯咯的。",
+      "source_turn_ids": [
+        "turn_c77550f04b"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_7f69f7c4ee": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_7f69f7c4ee",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "关怀和责任",
+        "people": [
+          "二女儿",
+          "母亲"
+        ],
+        "significance": "展现了家庭中姐妹的关怀和责任感",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "孩子们小时候"
+      },
+      "rich_text": "二女儿从小懂事，帮助做家务并照顾两个弟弟。在母亲生病时，二女儿在家照顾母亲并为弟弟们做饭。",
+      "source_turn_ids": [
+        "turn_30b3f52dda"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_9110c63083": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_9110c63083",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "温暖",
+        "people": [
+          "秀兰奶奶",
+          "爷爷"
+        ],
+        "significance": "相互扶持，共同面对生活艰辛",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "过去"
+      },
+      "rich_text": "秀兰奶奶和爷爷一起在河边散步，分享心里话和一天的喜怒哀乐",
+      "source_turn_ids": [
+        "turn_274406eef2"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_9a88a8b413": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_9a88a8b413",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "正面",
+        "location": "家里",
+        "people": [
+          "秀兰奶奶",
+          "子女们"
+        ],
+        "significance": "延续了与‘松松’友谊中学到的分享精神",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE"
+      },
+      "rich_text": "秀兰奶奶在家中教育子女要懂得分享，无论是食物还是用品都要考虑到他人",
+      "source_turn_ids": [
+        "turn_4b0485229a"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_a6e54530aa": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_a6e54530aa",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "怀旧、温暖",
+        "location": "川剧表演场地",
+        "people": [
+          "我",
+          "二女儿",
+          "女婿"
+        ],
+        "significance": "文化传承，家庭情感的加深",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "过年"
+      },
+      "rich_text": "二女儿和女婿回来，知道老人爱听川剧，特地带她去看川剧表演，一家人围坐一起听川剧",
+      "source_turn_ids": [
+        "turn_0acd10c517"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_b77458dea5": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_b77458dea5",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "简单快乐",
+        "location": "龙泉山",
+        "people": [
+          "秀兰奶奶",
+          "小伙伴们"
+        ],
+        "significance": "体现了童年时期的乐趣和纯真",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们去龙泉山摘野果，一边摘一边吃，吃得肚子圆滚滚的",
+      "source_turn_ids": [
+        "turn_3ab6d4a2a4"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_b84abcda0c": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_b84abcda0c",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "真挚",
+        "people": [
+          "秀兰奶奶",
+          "爷爷"
+        ],
+        "significance": "简单和真挚的爱情表达",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "过去"
+      },
+      "rich_text": "爷爷为秀兰奶奶摘野花，虽不值钱但心意珍贵",
+      "source_turn_ids": [
+        "turn_274406eef2"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_bdb2839bed": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_bdb2839bed",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "亲密交流",
+        "location": "河边",
+        "people": [
+          "爷爷",
+          "秀兰奶奶"
+        ],
+        "significance": "增进感情的简单方式",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "年轻时"
+      },
+      "rich_text": "秀兰奶奶和爷爷一起去河边散步，边走边聊心里话",
+      "source_turn_ids": [
+        "turn_322ad07856"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_c431a5cd61": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_c431a5cd61",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "积极和快乐",
+        "location": "家里菜地",
+        "people": [
+          "秀兰奶奶",
+          "大儿子",
+          "二女儿"
+        ],
+        "significance": "教育孩子们勤劳和珍惜",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "一年夏天"
+      },
+      "rich_text": "秀兰奶奶带着孩子们在炎热的夏天一起浇地和除草，孩子们虽然年纪不大但干活认真，体会到了劳动的辛苦和珍惜",
+      "source_turn_ids": [
+        "turn_c7743b6014"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_c87d0689c3": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_c87d0689c3",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "感激",
+        "people": [
+          "小儿子"
+        ],
+        "significance": "体现了成年后孩子们对家庭的经济支持和关爱",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE"
+      },
+      "rich_text": "秀兰奶奶的小儿子在深圳工作，虽然忙碌，但逢年过节会寄钱回家，让父母生活更宽裕。",
+      "source_turn_ids": [
+        "turn_bb09366676"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_c8c2761317": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_c8c2761317",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "甜蜜",
+        "location": "戏院",
+        "people": [
+          "秀兰奶奶",
+          "爷爷"
+        ],
+        "significance": "象征着秀兰奶奶和爷爷年轻时的爱情",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "年轻时"
+      },
+      "rich_text": "秀兰奶奶年轻时和爷爷谈恋爱时一起看过《白蛇传》",
+      "source_turn_ids": [
+        "turn_1bbcf93d2c"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_cde2ca928b": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_cde2ca928b",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "温馨",
+        "people": [
+          "二女儿"
+        ],
+        "significance": "体现了成年后孩子们之间的亲情和团结",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION"
+      },
+      "rich_text": "秀兰奶奶的二女儿虽然远在重庆，但经常打电话回家询问家里情况并提供帮助。",
+      "source_turn_ids": [
+        "turn_bb09366676"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_d2aaf5f261": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_d2aaf5f261",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "快乐",
+        "location": "河边",
+        "people": [
+          "我",
+          "小伙伴"
+        ],
+        "significance": "童年的趣事之一",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "童年"
+      },
+      "rich_text": "童年时与小伙伴一起去河边捉鱼，河水清澈，鱼多，用竹篓子捞鱼，有时一次能捞好几条",
+      "source_turn_ids": [
+        "turn_467771684d"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_d7f364f397": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_d7f364f397",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "深情怀念",
+        "people": [
+          "爷爷",
+          "秀兰奶奶"
+        ],
+        "significance": "维持长久情感的象征",
+        "theme_id": "THEME_01_LIFE_CHAPTERS",
+        "time_anchor": "年轻时至老年"
+      },
+      "rich_text": "秀兰奶奶和爷爷分别前在对方手心写‘想’字的习惯",
+      "source_turn_ids": [
+        "turn_322ad07856"
+      ],
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "updated_at": null
+    },
+    "frag_d9fcd0c0eb": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_d9fcd0c0eb",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "欣慰和高兴",
+        "location": "邻居家",
+        "people": [
+          "秀兰奶奶",
+          "大儿子"
+        ],
+        "significance": "教育孩子们分享和邻里和睦",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "过年"
+      },
+      "rich_text": "过年时秀兰奶奶让大儿子给邻居送腊肉，大儿子得到邻居的夸奖感到高兴，体现了分享和邻里和睦",
+      "source_turn_ids": [
+        "turn_c7743b6014"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_da14677b16": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_da14677b16",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "people": [
+          "小儿子",
+          "大儿子",
+          "二女儿"
+        ],
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION"
+      },
+      "rich_text": "小儿子在深圳工作忙，过年回不来",
+      "source_turn_ids": [
+        "turn_36989c46bb"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_dbd3bc4e69": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_dbd3bc4e69",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "people": [
+          "大儿子的媳妇儿",
+          "二女儿"
+        ],
+        "theme_id": "THEME_01_LIFE_CHAPTERS",
+        "time_anchor": "有一年冬天"
+      },
+      "rich_text": "大儿子的媳妇儿生了病，需要人照顾",
+      "source_turn_ids": [
+        "turn_564ebd970c"
+      ],
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "updated_at": null
+    },
+    "frag_dcfda88ef8": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_dcfda88ef8",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "温馨、快乐",
+        "location": "龙泉山",
+        "people": [
+          "秀兰奶奶",
+          "小伙伴们",
+          "‘松松’"
+        ],
+        "significance": "与小动物之间纯真的感情",
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+        "time_anchor": "童年时期"
+      },
+      "rich_text": "秀兰奶奶和小伙伴们在上山摘野果时遇到了小松鼠‘松松’，通过给它带食物，逐渐与它建立了友谊",
+      "source_turn_ids": [
+        "turn_4cd2546327"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_f12566ce21": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_f12566ce21",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "欣慰",
+        "people": [
+          "秀兰奶奶",
+          "孩子们"
+        ],
+        "significance": "教育孩子们成为有责任感和好习惯的人",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE"
+      },
+      "rich_text": "秀兰奶奶强调教育孩子们做人要厚道、感恩、分享，以及保持勤劳和诚实",
+      "source_turn_ids": [
+        "turn_7cd26f8196"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_f1d82068ab": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_f1d82068ab",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "小甜蜜",
+        "location": "河边",
+        "people": [
+          "爷爷",
+          "秀兰奶奶"
+        ],
+        "significance": "代表爷爷对秀兰奶奶的心意",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "年轻时"
+      },
+      "rich_text": "爷爷在河边给秀兰奶奶摘野花，表达心意",
+      "source_turn_ids": [
+        "turn_322ad07856"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_f58c75ffe3": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_f58c75ffe3",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "people": [
+          "大儿子的媳妇儿",
+          "二女儿"
+        ],
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION"
+      },
+      "rich_text": "大儿子的媳妇儿生了病，需要人照顾",
+      "source_turn_ids": [
+        "turn_36989c46bb"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    },
+    "frag_f78ab24331": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_f78ab24331",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "亲情和团结",
+        "people": [
+          "孩子们"
+        ],
+        "significance": "比物质财富更重要",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE"
+      },
+      "rich_text": "秀兰奶奶的孩子们从小学会了互相照顾，这份亲情和团结延续到他们成年后各自成家，依然互相帮助",
+      "source_turn_ids": [
+        "turn_463979fbed"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_fa85c084da": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_fa85c084da",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "温暖和幸福",
+        "people": [
+          "大儿子",
+          "二女儿",
+          "小儿子"
+        ],
+        "significance": "体现了孩子们从小养成的分享和照顾彼此的习惯",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE"
+      },
+      "rich_text": "孩子们长大后在各自成家后依然保持互相帮助的习惯，如大儿子媳妇生孩子时二女儿从重庆回来照顾一个多月，小儿子过年不回家时其他子女轮流陪伴母亲",
+      "source_turn_ids": [
+        "turn_3c51306657"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_fbfe0008c5": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_fbfe0008c5",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "温暖和真挚",
+        "significance": "相互扶持，共同面对生活艰辛的坚持和勇气",
+        "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+        "time_anchor": "艰苦时期"
+      },
+      "rich_text": "秀兰奶奶和爷爷在艰苦条件下的小甜蜜，河边散步时分享心里话，爷爷为奶奶摘野花",
+      "source_turn_ids": [
+        "turn_c6f7fce5df"
+      ],
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "updated_at": null
+    },
+    "frag_fc88af12c6": {
+      "confidence": 0.9,
+      "created_at": null,
+      "fragment_id": "frag_fc88af12c6",
+      "merge_status": "new",
+      "narrative_richness": 0.0,
+      "properties": {
+        "emotional_tone": "温馨",
+        "people": [
+          "大儿子",
+          "二女儿",
+          "母亲"
+        ],
+        "theme_id": "THEME_22_INFORMATION_INTEGRATION"
+      },
+      "rich_text": "大儿子和二女儿轮流过来陪母亲过年，以免母亲孤单",
+      "source_turn_ids": [
+        "turn_36989c46bb"
+      ],
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "updated_at": null
+    }
+  },
+  "session_id": "687bf58175e14afda5160db76829587e",
+  "theme_nodes": [
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_01_LIFE_CHAPTERS",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_02_PEAK_EXPERIENCE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_03_LOW_POINT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_04_TURNING_POINT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_05_CHILDHOOD_POSITIVE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_06_CHILDHOOD_NEGATIVE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_07_ADULT_MEMORY",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_08_RELIGIOUS_EXPERIENCE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_09_WISDOM_EVENT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_10_NEXT_CHAPTER",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_11_DREAMS_PLANS",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_12_LIFE_PROJECT",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_13_LIFE_CHALLENGE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_14_HEALTH",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_15_LOSS",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_16_FAILURE_REGRET",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_17_RELIGIOUS_VALUES",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_18_POLITICAL_VALUES",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_19_VALUE_EVOLUTION",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_20_SINGLE_VALUE",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "pending",
+      "theme_id": "THEME_21_SESSION_SUMMARY",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_22_INFORMATION_INTEGRATION",
+      "title": null
+    },
+    {
+      "narrative_richness": 0.0,
+      "status": "mentioned",
+      "theme_id": "THEME_23_CONTEXT_MANAGEMENT",
+      "title": null
+    }
+  ],
+  "timestamp": "2026-05-08T11:25:39.196359",
+  "turn_count": 33
+}
