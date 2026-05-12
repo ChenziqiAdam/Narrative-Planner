@@ -85,11 +85,14 @@ class IntervieweeHistoryCompressionTest(unittest.TestCase):
     """Test IntervieweeAgent's record_turn + _load_step_prompt compression flow."""
 
     def _make_agent(self):
+        import threading
         from src.agents.interviewee_agent import IntervieweeAgent
         agent = IntervieweeAgent.__new__(IntervieweeAgent)
         agent.history = ""
         agent._history_summary = ""
         agent._history_turns = []
+        agent._compress_lock = threading.Lock()
+        agent._compress_thread = None
         agent.sys_prompt = "system"
         agent.tools = []
         agent.tool_callables = {}

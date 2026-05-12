@@ -612,30 +612,35 @@ class SessionOrchestrator:
         max_recent = Config.HISTORY_COMPRESS_MAX_RECENT_TURNS
         if state.turn_count <= max_recent:
             return
-        old_turns = state.transcript[:-max_recent]
+        old_turns = list(state.transcript[:-max_recent])
         total_chars = sum(
             len(t.interviewer_question or "") + len(t.interviewee_answer or "")
             for t in old_turns
         )
         if total_chars < Config.HISTORY_COMPRESS_MAX_CHAR_THRESHOLD // 3:
             return
+        existing_summary = state.conversation_summary
         turns_data = [
             {"question": t.interviewer_question or "", "answer": t.interviewee_answer or ""}
             for t in old_turns
         ]
-        try:
-            compressor = self._get_compressor()
-            new_summary = compressor.compress_qa_pairs(
-                turns_data, state.conversation_summary,
-            )
-            if new_summary:
-                state.conversation_summary = new_summary
-                logger.info(
-                    "Conversation summary updated: %d old turns → %d chars",
-                    len(old_turns), len(new_summary),
+
+        def _compress():
+            try:
+                new_summary = self._get_compressor().compress_qa_pairs(
+                    turns_data, existing_summary,
                 )
-        except Exception as exc:
-            logger.warning("Conversation summary update failed: %s", exc)
+                if new_summary:
+                    state.conversation_summary = new_summary
+                    self.store.save(state)
+                    logger.info(
+                        "Conversation summary updated: %d old turns → %d chars",
+                        len(old_turns), len(new_summary),
+                    )
+            except Exception as exc:
+                logger.warning("Conversation summary update failed: %s", exc)
+
+        threading.Thread(target=_compress, daemon=True).start()
 
     # ── Dynamic profile (async) ──
 

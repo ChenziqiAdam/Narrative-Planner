@@ -3,6 +3,7 @@ import logging
 import os
 import re
 import sys
+import threading
 from copy import deepcopy
 from datetime import datetime
 from typing import Any
@@ -88,6 +89,8 @@ class IntervieweeAgent:
         self.basic_info = ""
         self._history_summary = ""
         self._history_turns: list[dict[str, str]] = []
+        self._compress_lock = threading.Lock()
+        self._compress_thread: threading.Thread | None = None
         self.model_candidates = Config.get_model_candidates("interviewee")
         self.model = self.model_candidates[0]
         self._prompt_generator = ElderPromptGenerator(template_path=Config.INTERVIEWEE_PROMPT_TEMPLATE)
@@ -103,6 +106,7 @@ class IntervieweeAgent:
         self.history = f"受访者基本信息: {self.basic_info}\n" if self.basic_info else ""
         self._history_summary = ""
         self._history_turns = []
+        self._compress_thread = None
         self._load_sys_prompt(basic_info if isinstance(basic_info, dict) else None)
 
     def _load_tools(self):
@@ -117,6 +121,7 @@ class IntervieweeAgent:
         self.sys_prompt = self._prompt_generator.generate_prompt(profile_data)
 
     def _load_step_prompt(self, history, question):
+        self._wait_for_compression()
         max_recent = Config.HISTORY_COMPRESS_MAX_RECENT_TURNS
         recent_turns = self._history_turns[-max_recent:]
         recent_text = "\n".join(
@@ -208,23 +213,37 @@ class IntervieweeAgent:
         if len(self._history_turns) <= max_recent:
             return
         split = len(self._history_turns) - max_recent
-        old_turns = self._history_turns[:split]
+        old_turns = list(self._history_turns[:split])
         total_chars = sum(len(t["question"]) + len(t["answer"]) for t in old_turns)
         if total_chars < Config.HISTORY_COMPRESS_MAX_CHAR_THRESHOLD // 3:
             return
-        try:
-            new_summary = self._compressor.compress_qa_pairs(
-                old_turns, self._history_summary,
-            )
-            if new_summary:
-                self._history_summary = new_summary
-                self._history_turns = self._history_turns[split:]
-                logger.info(
-                    "Interviewee history compressed: %d old turns → %d-char summary",
-                    split, len(new_summary),
+        # Wait for any previous compression to finish before starting a new one
+        self._wait_for_compression()
+
+        def _compress():
+            try:
+                new_summary = self._compressor.compress_qa_pairs(
+                    old_turns, self._history_summary,
                 )
-        except Exception as exc:
-            logger.warning("History compression failed, keeping raw turns: %s", exc)
+                if new_summary:
+                    with self._compress_lock:
+                        self._history_summary = new_summary
+                        self._history_turns = self._history_turns[split:]
+                    logger.info(
+                        "Interviewee history compressed: %d old turns → %d-char summary",
+                        split, len(new_summary),
+                    )
+            except Exception as exc:
+                logger.warning("History compression failed, keeping raw turns: %s", exc)
+
+        self._compress_thread = threading.Thread(target=_compress, daemon=True)
+        self._compress_thread.start()
+
+    def _wait_for_compression(self):
+        t = self._compress_thread
+        if t is not None and t.is_alive():
+            t.join()
+            self._compress_thread = None
 
     def step(self, prompt: str) -> str:
         """Send a prompt and return the text reply, executing any tool calls."""
