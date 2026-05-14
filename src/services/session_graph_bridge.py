@@ -141,8 +141,7 @@ class SessionGraphBridge:
               AND n.type IN ['Event', 'Person', 'Location', 'Emotion', 'Insight']
             RETURN n.id AS id, n.type AS type, n.name AS name,
                    n.description AS description, n.session_id AS session_id,
-                   n.properties AS props, n.embedding AS embedding,
-                   n.open_loops AS open_loops
+                   properties(n) AS node_props
             ORDER BY n.type, n.name
             """,
             {"elder_id": elder_id},
@@ -152,14 +151,15 @@ class SessionGraphBridge:
 
         entities: List[HistoricalEntity] = []
         for row in rows:
-            props = row.get("props") or {}
+            node_props = row.get("node_props") or {}
+            props = node_props.get("properties") or {}
             if isinstance(props, str):
                 try:
                     props = json.loads(props)
                 except (json.JSONDecodeError, TypeError):
                     props = {}
 
-            emb = row.get("embedding")
+            emb = node_props.get("embedding")
             if isinstance(emb, str):
                 try:
                     emb = json.loads(emb)

@@ -7,11 +7,12 @@ import threading
 import time
 import uuid
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any, Callable, Dict, List, Optional
 
 from src.agents.evaluator_agent import EvaluatorAgent
 from src.agents.graph_extraction_agent import GraphExtractionAgent
 from src.agents.interviewer_agent import InterviewerAgent
+from src.agents.llm_turn_judge_agent import LLMTurnJudgeAgent
 from src.config import Config
 from src.orchestration.state_store import InMemorySessionStateStore
 from src.services import ProfileProjector
@@ -46,20 +47,25 @@ class SessionOrchestrator:
         store: Optional[InMemorySessionStateStore] = None,
         interviewer_agent: Optional[InterviewerAgent] = None,
         evaluator_agent: Optional[EvaluatorAgent] = None,
+        llm_turn_judge_agent: Optional[LLMTurnJudgeAgent] = None,
         profile_projector: Optional[ProfileProjector] = None,
         mode: Optional[str] = None,
         decision_weights: Optional[Any] = None,
         reset_graph_on_start: bool = False,
+        enable_llm_judge: Optional[bool] = None,
     ):
         self.session_id = session_id
         self.store = store or InMemorySessionStateStore()
         self.interviewer_agent = interviewer_agent or InterviewerAgent()
         self.evaluator_agent = evaluator_agent or EvaluatorAgent()
+        self.llm_turn_judge_agent = llm_turn_judge_agent
         self.profile_projector = profile_projector or ProfileProjector()
         self.mode = "graph_rag"
         self._legacy_mode = mode
         self._decision_weights = decision_weights
         self._reset_graph_on_start = bool(reset_graph_on_start)
+        self.enable_llm_judge = Config.ENABLE_LLM_TURN_JUDGE if enable_llm_judge is None else enable_llm_judge
+        self.evaluation_update_callback: Callable[[TurnRecord], None] | None = None
 
         # Neo4j graph manager (lazy connect)
         self._neo4j_manager: Optional[Neo4jGraphManager] = None
@@ -74,7 +80,11 @@ class SessionOrchestrator:
         self._coverage_calculator = GraphCoverageCalculator()
 
         self._evaluation_threads: Dict[str, threading.Thread] = {}
+        self._llm_judge_threads: Dict[str, threading.Thread] = {}
         self._profile_threads: Dict[str, threading.Thread] = {}
+
+    def set_evaluation_update_callback(self, callback: Callable[[TurnRecord], None] | None) -> None:
+        self.evaluation_update_callback = callback
 
     # ── Neo4j lazy connection ──
 
@@ -358,9 +368,17 @@ class SessionOrchestrator:
             current_interviewer_action,
         )
         turn_record.turn_evaluation = turn_evaluation
+        if self.enable_llm_judge:
+            turn_evaluation.llm_judge_status = "pending"
         state.evaluation_trace.append(turn_evaluation)
         state.session_metrics = self._compute_session_metrics()
         self.store.save(state)
+        self._schedule_llm_turn_judge(
+            turn_record.turn_id,
+            current_interviewer_action,
+            planner_plan,
+            turn_debug_trace,
+        )
 
         return {
             "question": state.pending_question,
@@ -542,7 +560,7 @@ class SessionOrchestrator:
                 """
                 MATCH (t:Topic)
                 OPTIONAL MATCH (t)-[:INCLUDES]->(e:Event)
-                RETURN t.id AS theme_id, t.title AS title, t.status AS status,
+                RETURN t.id AS theme_id, coalesce(t.title, t.name, t.id) AS title, t.status AS status,
                        t.priority AS priority, count(e) AS entity_count
                 """
             )
@@ -700,6 +718,96 @@ class SessionOrchestrator:
             self.store.save(state)
         finally:
             self._evaluation_threads.pop(turn_id, None)
+
+    # ── Turn LLM judge (async, non-blocking) ──
+
+    def _schedule_llm_turn_judge(
+        self,
+        turn_id: str,
+        interviewer_action: str,
+        planner_plan: Dict[str, Any],
+        debug_trace: Dict[str, Any],
+    ) -> None:
+        if not self.enable_llm_judge:
+            return
+        worker = threading.Thread(
+            target=self._judge_turn_background,
+            args=(turn_id, interviewer_action, planner_plan, debug_trace),
+            daemon=True,
+        )
+        self._llm_judge_threads[turn_id] = worker
+        worker.start()
+
+    def _judge_turn_background(
+        self,
+        turn_id: str,
+        interviewer_action: str,
+        planner_plan: Dict[str, Any],
+        debug_trace: Dict[str, Any],
+    ) -> None:
+        try:
+            state = self._require_state()
+            turn_record = next((turn for turn in state.transcript if turn.turn_id == turn_id), None)
+            if not turn_record or not turn_record.turn_evaluation:
+                return
+
+            judge = self.llm_turn_judge_agent or LLMTurnJudgeAgent()
+            self.llm_turn_judge_agent = judge
+            result = judge.safe_judge_turn(
+                dialogue_context=self._dialogue_context_before_turn(state, turn_record),
+                interviewer_question=turn_record.interviewer_question,
+                interviewee_answer=turn_record.interviewee_answer,
+                interviewer_action=interviewer_action,
+                interview_goal=self._build_llm_judge_goal(planner_plan, debug_trace),
+                deterministic_evaluation=turn_record.turn_evaluation.to_dict(),
+                debug_trace=debug_trace,
+            )
+
+            evaluation = turn_record.turn_evaluation
+            evaluation.llm_judge_status = str(result.get("status", "failed"))
+            evaluation.llm_judge_score = result.get("question_score")
+            evaluation.llm_judge_reason = str(result.get("reason", "") or "")
+            evaluation.llm_judge_dimensions = dict(result.get("dimensions", {}) or {})
+            evaluation.llm_judge_suggestions = list(result.get("suggestions", []) or [])
+            evaluation.llm_judge_model = result.get("model")
+            evaluation.llm_judge_error = result.get("error")
+            state.session_metrics = self._compute_session_metrics()
+            self.store.save(state)
+            if self.evaluation_update_callback:
+                self.evaluation_update_callback(turn_record)
+        finally:
+            self._llm_judge_threads.pop(turn_id, None)
+
+    @staticmethod
+    def _dialogue_context_before_turn(state: SessionState, turn_record: TurnRecord) -> List[Dict[str, str]]:
+        context: List[Dict[str, str]] = []
+        for turn in state.transcript:
+            if turn.turn_id == turn_record.turn_id:
+                break
+            context.append({"role": "interviewer", "text": turn.interviewer_question})
+            context.append({"role": "interviewee", "text": turn.interviewee_answer})
+        return context[-8:]
+
+    @staticmethod
+    def _build_llm_judge_goal(
+        planner_plan: Dict[str, Any],
+        debug_trace: Dict[str, Any],
+    ) -> str:
+        planning = (debug_trace or {}).get("planning", {}) or {}
+        focus = planning.get("focus") or {}
+        if not isinstance(focus, dict):
+            focus = {"label": str(focus)}
+        parts = [
+            f"action={planning.get('next_action') or ''}",
+            f"selected_action={planning.get('selected_action') or planner_plan.get('selected_action') or ''}",
+            f"stage={planning.get('stage') or planner_plan.get('stage') or ''}",
+            f"focus={focus.get('label') or focus.get('type') or ''}",
+            f"intent={planning.get('question_intent') or planner_plan.get('question_intent') or ''}",
+        ]
+        missing = planning.get("missing_dimensions") or []
+        if missing:
+            parts.append(f"missing_dimensions={', '.join(str(item) for item in missing[:6])}")
+        return "; ".join(part for part in parts if not part.endswith("="))
 
     # ── Utility methods ──
 

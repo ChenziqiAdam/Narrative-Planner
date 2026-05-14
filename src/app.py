@@ -766,17 +766,7 @@ def _log_compare_turn(
             delta=float(turn_evaluation.get("coverage_gain", 0.0) or 0.0),
             slot_coverage=theme_richness,
         ),
-        evaluation=EvaluationLog(
-            question_quality_score=float(turn_evaluation.get("question_quality_score", 0.0) or 0.0),
-            information_gain_score=float(turn_evaluation.get("information_gain_score", 0.0) or 0.0),
-            non_redundancy_score=float(turn_evaluation.get("non_redundancy_score", 0.0) or 0.0),
-            slot_targeting_score=float(turn_evaluation.get("slot_targeting_score", 0.0) or 0.0),
-            emotional_alignment_score=float(turn_evaluation.get("emotional_alignment_score", 0.0) or 0.0),
-            planner_alignment_score=float(turn_evaluation.get("planner_alignment_score", 0.0) or 0.0),
-            coverage_gain=float(turn_evaluation.get("coverage_gain", 0.0) or 0.0),
-            targeted_slots=list(turn_evaluation.get("targeted_slots", []) or planning.get("missing_dimensions", []) or []),
-            notes=list(turn_evaluation.get("notes", []) or []),
-        ),
+        evaluation=_build_evaluation_log(turn_evaluation, planning),
         planner_decision=PlannerDecisionLog(
             next_action=planning.get("next_action", action or "continue"),
             recommended_theme_id=(planning.get("focus") or {}).get("id") if isinstance(planning.get("focus"), dict) else None,
@@ -799,6 +789,42 @@ def _log_compare_turn(
         logger.log_turn(log_data)
     except Exception:
         app.logger.exception("Failed to write interview turn log for session %s", logger.session_id)
+
+
+def _build_evaluation_log(turn_evaluation: dict, planning: dict | None = None) -> EvaluationLog:
+    planning = planning or {}
+    return EvaluationLog(
+        question_quality_score=float(turn_evaluation.get("question_quality_score", 0.0) or 0.0),
+        information_gain_score=float(turn_evaluation.get("information_gain_score", 0.0) or 0.0),
+        non_redundancy_score=float(turn_evaluation.get("non_redundancy_score", 0.0) or 0.0),
+        slot_targeting_score=float(turn_evaluation.get("slot_targeting_score", 0.0) or 0.0),
+        emotional_alignment_score=float(turn_evaluation.get("emotional_alignment_score", 0.0) or 0.0),
+        planner_alignment_score=float(turn_evaluation.get("planner_alignment_score", 0.0) or 0.0),
+        coverage_gain=float(turn_evaluation.get("coverage_gain", 0.0) or 0.0),
+        targeted_slots=list(turn_evaluation.get("targeted_slots", []) or planning.get("missing_dimensions", []) or []),
+        notes=list(turn_evaluation.get("notes", []) or []),
+        llm_judge_status=str(turn_evaluation.get("llm_judge_status", "not_started") or "not_started"),
+        llm_judge_score=turn_evaluation.get("llm_judge_score"),
+        llm_judge_reason=str(turn_evaluation.get("llm_judge_reason", "") or ""),
+        llm_judge_dimensions=dict(turn_evaluation.get("llm_judge_dimensions", {}) or {}),
+        llm_judge_suggestions=list(turn_evaluation.get("llm_judge_suggestions", []) or []),
+        llm_judge_model=turn_evaluation.get("llm_judge_model"),
+        llm_judge_error=turn_evaluation.get("llm_judge_error"),
+    )
+
+
+def _update_compare_turn_log(session: dict, turn_record) -> None:
+    logger = session.get("logger")
+    evaluation = getattr(turn_record, "turn_evaluation", None)
+    if not logger or not evaluation:
+        return
+    try:
+        logger.update_turn_evaluation(
+            turn_record.turn_id,
+            _build_evaluation_log(evaluation.to_dict(), (turn_record.debug_trace or {}).get("planning", {})),
+        )
+    except Exception:
+        app.logger.exception("Failed to update async LLM judge log for session %s", logger.session_id)
 
 
 def _finalize_interview_log(session: dict, end_reason: str = "") -> None:
@@ -893,6 +919,13 @@ def baseline_start():
         elder_info if isinstance(elder_info, dict) else {"background": basic_info_text},
         mode,
     )
+    if hasattr(scorer, "set_evaluation_update_callback"):
+        scorer.set_evaluation_update_callback(
+            lambda turn_record, sid=session_id: _update_compare_turn_log(
+                _compare_sessions.get(sid, {}),
+                turn_record,
+            )
+        )
 
     # 存储会话
     _compare_sessions[session_id] = {
@@ -1131,15 +1164,29 @@ def planner_start():
         )
     except ValueError as exc:
         return jsonify({"error": str(exc)}), 400
-    agent.initialize_conversation(elder_info)
+    try:
+        agent.initialize_conversation(elder_info)
 
-    # 获取首条问题
-    result = agent.get_next_question()
-    decision_weight_payload = agent.async_agent.orchestrator.get_decision_weight_payload()
+        # 获取首条问题
+        result = agent.get_next_question()
+        decision_weight_payload = agent.async_agent.orchestrator.get_decision_weight_payload()
+    except Exception as exc:
+        app.logger.exception("Planner session initialization failed")
+        return jsonify({
+            "error": "Planner 初始化失败。请确认 Neo4j 已启动，并且 LLM/Embedding 配置可用。",
+            "detail": str(exc),
+            "hint": "先启动 Docker Desktop，然后在项目根目录运行 make neo4j；Neo4j Browser 地址是 http://localhost:7474。",
+        }), 503
     interview_logger = create_planner_logger(
         session_id,
         elder_info if isinstance(elder_info, dict) else {"background": str(elder_info)},
         mode,
+    )
+    agent.async_agent.orchestrator.set_evaluation_update_callback(
+        lambda turn_record, sid=session_id: _update_compare_turn_log(
+            _compare_sessions.get(sid, {}),
+            turn_record,
+        )
     )
 
     # 存储会话
@@ -1194,7 +1241,15 @@ def planner_reply():
     session["history"].append({"role": "interviewee", "text": answer})
 
     # 获取下一个问题（包含事件提取和图谱更新）
-    result = agent.get_next_question(answer)
+    try:
+        result = agent.get_next_question(answer)
+    except Exception as exc:
+        app.logger.exception("Planner reply failed")
+        return jsonify({
+            "error": "Planner 生成下一轮失败。请确认 Neo4j 仍在运行，并检查 LLM/Embedding 配置。",
+            "detail": str(exc),
+            "hint": "运行 docker ps 查看 narrative-neo4j 是否健康；必要时运行 make neo4j。",
+        }), 503
 
     # 记录问题
     session["history"].append({"role": "interviewer", "text": result["question"], "action": result.get("action", "continue")})
@@ -3082,11 +3137,21 @@ COMPARE_HTML = '''<!DOCTYPE html>
             const targetSlots = Array.isArray(evaluation.targeted_slots) ? evaluation.targeted_slots : [];
             const noteText = notes.length > 0 ? notes.join(" | ") : "";
             const slotText = targetSlots.length > 0 ? `Slots ${targetSlots.join("/")}` : "No slot target";
+            const llmStatus = evaluation.llm_judge_status || "not_started";
+            const llmText = llmStatus === "completed" && evaluation.llm_judge_score !== null && evaluation.llm_judge_score !== undefined
+                ? `Judge ${formatPercent(evaluation.llm_judge_score)}`
+                : llmStatus === "pending"
+                    ? "Judge pending"
+                    : llmStatus === "failed"
+                        ? "Judge failed"
+                        : "";
+            const llmTitle = evaluation.llm_judge_reason || evaluation.llm_judge_error || "";
             container.innerHTML = `
                 <span class="evaluation-chip score">Question ${formatPercent(evaluation.question_quality_score)}</span>
                 <span class="evaluation-chip info">Gain ${formatPercent(evaluation.information_gain_score)}</span>
                 <span class="evaluation-chip slot">${slotText}</span>
                 <span class="evaluation-chip coverage">Coverage ${formatCoverageGain(evaluation.coverage_gain)}</span>
+                ${llmText ? `<span class="evaluation-chip notes" title="${llmTitle}">${llmText}</span>` : ""}
                 ${noteText ? `<span class="evaluation-chip notes" title="${noteText}">Notes</span>` : ""}
             `;
         }

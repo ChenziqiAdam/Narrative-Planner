@@ -21,6 +21,16 @@ def _turn(index: int) -> TurnRecord:
     )
 
 
+def _turn_with_text(index: int, question: str, answer: str) -> TurnRecord:
+    return TurnRecord(
+        turn_id=f"turn_{index}",
+        turn_index=index,
+        timestamp=datetime.now(),
+        interviewer_question=question,
+        interviewee_answer=answer,
+    )
+
+
 class InterviewerLifeOverviewTest(unittest.TestCase):
     def test_opening_does_not_jump_to_work_when_background_mentions_factory(self):
         agent = _agent()
@@ -145,6 +155,44 @@ class InterviewerLifeOverviewTest(unittest.TestCase):
             response["planner_plan"]["selected_action"],
             "continue_life_overview",
         )
+
+    def test_repetitive_question_detector_catches_duplicate_time_arrangement_loop(self):
+        transcript = [
+            _turn_with_text(
+                1,
+                "您能具体说说，您是如何安排自己的时间，确保既能完成自己的工作，又能照顾到同事的工作呢？",
+                "我每天早点去，晚点回，把她那份工作也做了，还给她送鸡汤。",
+            )
+        ]
+
+        self.assertTrue(
+            InterviewerAgent._is_repetitive_question(
+                "您能具体说说，您是如何安排自己的时间，确保既能完成自己的工作，又能照顾到同事的工作呢？",
+                transcript,
+            )
+        )
+        self.assertTrue(
+            InterviewerAgent._is_repetitive_question(
+                "您提到了每天早去晚归帮助生病的同事，我很好奇，您是如何具体安排自己的工作和帮助她的工作的？能和我分享一下您当时的时间表吗？",
+                transcript,
+            )
+        )
+
+    def test_anti_repeat_fallback_switches_phase(self):
+        agent = _agent()
+        transcript = [
+            _turn_with_text(
+                1,
+                "您是怎么帮助生病同事的？",
+                "那时候在纺织厂，我帮生病同事顶班，也给她送鸡汤。",
+            )
+        ]
+
+        response = agent._anti_repeat_fallback_response(transcript)
+
+        self.assertEqual(response["action"], "next_phase")
+        self.assertIn("除了这件事", response["question"])
+        self.assertNotIn("再跟我多说说那个时候", response["question"])
 
 
 if __name__ == "__main__":

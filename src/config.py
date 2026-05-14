@@ -20,7 +20,7 @@ class Config:
     MOONSHOT_BASE_URL = os.getenv("MOONSHOT_BASE_URL") or OPENAI_BASE_URL
     MODEL_NAME = os.getenv("MODEL_NAME", "moonshot-v1-8k")
     STRUCTURED_MODEL_NAME = os.getenv("STRUCTURED_MODEL_NAME", "moonshot-v1-8k")
-    CHAT_MODEL_NAME = os.getenv("CHAT_MODEL_NAME", "kimi-latest")
+    CHAT_MODEL_NAME = os.getenv("CHAT_MODEL_NAME", "moonshot-v1-8k")
     INTERVIEWER_MODEL_NAME = os.getenv("INTERVIEWER_MODEL_NAME") or CHAT_MODEL_NAME
     BASELINE_MODEL_NAME = os.getenv("BASELINE_MODEL_NAME") or INTERVIEWER_MODEL_NAME
     INTERVIEWEE_MODEL_NAME = os.getenv("INTERVIEWEE_MODEL_NAME") or CHAT_MODEL_NAME
@@ -91,6 +91,13 @@ class Config:
     QUERY_OPTIMIZATION_ENABLED = os.getenv("QUERY_OPTIMIZATION_ENABLED", "false").lower() in {
         "1", "true", "yes", "on"
     }
+
+    # Turn-level LLM-as-a-judge evaluation. Runs off the user-facing critical
+    # path and updates evaluation snapshots/logs when the score is ready.
+    ENABLE_LLM_TURN_JUDGE = os.getenv("ENABLE_LLM_TURN_JUDGE", "true").lower() in {
+        "1", "true", "yes", "on"
+    }
+    LLM_TURN_JUDGE_MODEL_NAME = os.getenv("LLM_TURN_JUDGE_MODEL_NAME") or STRUCTURED_MODEL_NAME
 
     @classmethod
     def get_api_key(cls):

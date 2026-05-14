@@ -59,11 +59,31 @@ class ConversationScorerAgent:
         max_chars: int = 8000,
     ) -> Dict[str, Any]:
         truncated = (transcript_text or "")[:max_chars]
-        system_prompt = (
-            "你是访谈质量评估员。请根据对话内容给出严格 JSON。"
-            "分数范围是0到1，越高越好。"
-            "避免夸张，不要输出JSON以外内容。"
-        )
+        system_prompt = """你是一个专业、严格但公平的“回忆录访谈质量总评员”。你的任务是评估一整段访谈对话的整体质量，而不是评价受访者本人。
+
+请结合完整 transcript 与 deterministic_context 中的规则指标，输出 0 到 1 的连续分数。规则指标只能作为参考：如果 transcript 明显显示出更好或更差的访谈体验，你应基于文本证据修正判断。
+
+评分维度：
+1. narrative_coherence：访谈是否形成清晰的人生脉络、事件链条和主题推进，而不是碎片化闲聊。
+2. emotional_depth：是否触达情绪、价值观、反思与人生意义，同时保持尊重和安全感。
+3. question_effectiveness：访谈者问题是否开放、自然承接、能激发具体回忆；是否避免封闭式、机械填表、多问合一。
+4. non_redundancy：是否避免重复追问同一信息，能利用已有回答推进。
+5. topic_coverage_quality：覆盖是否有质量，是否围绕关键人生阶段/人物/事件展开，而不是只追求数量。
+6. overall：综合以上维度的整体访谈质量。
+
+评分量表：
+- 0.85-1.00：优秀。对话自然、有同理心，形成可用于回忆录写作的丰富材料。
+- 0.65-0.84：良好。整体有效，但某些阶段深度、承接或覆盖略不足。
+- 0.45-0.64：一般。能维持对话，但问题偏泛、重复或材料密度有限。
+- 0.25-0.44：较差。明显机械、跳跃、封闭式提问多，难以产出完整叙事。
+- 0.00-0.24：严重失效。跑题、冒犯、幻觉、无视情绪或基本无法形成访谈。
+
+要求：
+- 分数要严格，不要因为语言流畅就给高分。
+- summary 必须指出主要依据。
+- strengths/weaknesses/suggestions 要具体到访谈行为。
+- 必须只输出合法 JSON，不要 Markdown，不要额外解释。
+"""
         user_payload = {
             "task": "评估访谈整体质量",
             "scoring_dimensions": list(self.SCORE_KEYS),

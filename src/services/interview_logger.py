@@ -50,6 +50,13 @@ class EvaluationLog:
     coverage_gain: float = 0.0
     targeted_slots: List[str] = field(default_factory=list)
     notes: List[str] = field(default_factory=list)
+    llm_judge_status: str = "not_started"
+    llm_judge_score: Optional[float] = None
+    llm_judge_reason: str = ""
+    llm_judge_dimensions: Dict[str, float] = field(default_factory=dict)
+    llm_judge_suggestions: List[str] = field(default_factory=list)
+    llm_judge_model: Optional[str] = None
+    llm_judge_error: Optional[str] = None
 
 
 @dataclass
@@ -100,7 +107,7 @@ class InterviewLogger:
     访谈会话日志记录器
 
     实时记录每轮对话，立即写入文件，支持中断恢复。
-    同时输出完整JSON文件和JSON Lines格式的轮次追加文件。
+    同时输出完整 JSON 文件和 JSON Lines 格式的简洁轮次文件。
     """
 
     def __init__(
@@ -124,6 +131,7 @@ class InterviewLogger:
         # 会话数据
         self.turns: List[TurnLogData] = []
         self.summary: Optional[SessionSummary] = None
+        self._pending_evaluation_updates: Dict[str, EvaluationLog] = {}
 
         # 文件路径
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -161,12 +169,25 @@ class InterviewLogger:
             turn_data: 单轮对话完整数据
         """
         self.turns.append(turn_data)
+        pending_evaluation = self._pending_evaluation_updates.pop(turn_data.turn_id, None)
+        if pending_evaluation:
+            turn_data.evaluation = pending_evaluation
 
         # 实时写入完整日志文件
         self._write_full_log()
 
-        # 追加写入轮次日志文件（JSON Lines格式）
-        self._append_turn_file(turn_data)
+        # 重写简洁轮次日志，保证异步评分更新后仍是一轮一行。
+        self._write_turns_log()
+
+    def update_turn_evaluation(self, turn_id: str, evaluation: EvaluationLog) -> None:
+        """Update an existing turn evaluation after async judge completion."""
+        for turn in reversed(self.turns):
+            if turn.turn_id == turn_id:
+                turn.evaluation = evaluation
+                self._write_full_log()
+                self._write_turns_log()
+                return
+        self._pending_evaluation_updates[turn_id] = evaluation
 
     def _write_full_log(self) -> None:
         """写入完整会话日志（JSON格式）"""
@@ -182,11 +203,18 @@ class InterviewLogger:
         }
         self._write_json_file(session_data)
 
-    def _append_turn_file(self, turn_data: TurnLogData) -> None:
-        """追加单轮记录到JSON Lines文件"""
-        turn_dict = self._turn_to_dict(turn_data)
-        with open(self.turns_log_path, 'a', encoding='utf-8') as f:
-            f.write(json.dumps(turn_dict, ensure_ascii=False) + '\n')
+    def _write_turns_log(self) -> None:
+        """写入简洁 JSON Lines 轮次文件，每轮只保留一行最新状态。"""
+        temp_path = self.turns_log_path + '.tmp'
+        try:
+            with open(temp_path, 'w', encoding='utf-8') as f:
+                for turn in self.turns:
+                    f.write(json.dumps(self._turn_to_compact_dict(turn), ensure_ascii=False) + '\n')
+            os.replace(temp_path, self.turns_log_path)
+        except Exception:
+            if os.path.exists(temp_path):
+                os.remove(temp_path)
+            raise
 
     def _turn_to_dict(self, turn_data: TurnLogData) -> Dict[str, Any]:
         """将TurnLogData转换为字典"""
@@ -201,6 +229,49 @@ class InterviewLogger:
             "planner_decision": asdict(turn_data.planner_decision) if turn_data.planner_decision else None,
             "memory_calls": turn_data.memory_calls,
             "debug_trace": turn_data.debug_trace
+        }
+
+    def _turn_to_compact_dict(self, turn_data: TurnLogData) -> Dict[str, Any]:
+        """将单轮记录压缩成便于快速查看的一行摘要。"""
+        coverage = asdict(turn_data.coverage)
+        slot_coverage = coverage.get("slot_coverage") or {}
+        coverage["slot_coverage"] = {
+            key: value
+            for key, value in slot_coverage.items()
+            if isinstance(value, (int, float)) and value > 0
+        }
+
+        planner_decision = asdict(turn_data.planner_decision) if turn_data.planner_decision else None
+        if planner_decision:
+            planner_decision = {
+                "next_action": planner_decision.get("next_action"),
+                "recommended_theme_id": planner_decision.get("recommended_theme_id"),
+                "recommended_theme_title": planner_decision.get("recommended_theme_title"),
+                "targeted_slots": planner_decision.get("targeted_slots", []),
+                "low_info_streak": planner_decision.get("low_info_streak", 0),
+                "prefer_breadth_switch": planner_decision.get("prefer_breadth_switch", False),
+                "suggest_close": planner_decision.get("suggest_close", False),
+            }
+
+        debug_trace = turn_data.debug_trace or {}
+        timings = debug_trace.get("timings") if isinstance(debug_trace, dict) else None
+        graph_changes = debug_trace.get("graph_changes") if isinstance(debug_trace, dict) else None
+        planning = debug_trace.get("planning") if isinstance(debug_trace, dict) else None
+
+        return {
+            "turn_id": turn_data.turn_id,
+            "turn_index": turn_data.turn_index,
+            "timestamp": turn_data.timestamp,
+            "dialogue": asdict(turn_data.dialogue),
+            "coverage": coverage,
+            "evaluation": asdict(turn_data.evaluation) if turn_data.evaluation else None,
+            "planner_decision": planner_decision,
+            "memory_call_count": len(turn_data.memory_calls),
+            "debug_summary": {
+                "timings": timings if isinstance(timings, dict) else None,
+                "graph_changes": graph_changes if isinstance(graph_changes, dict) else None,
+                "planning": planning if isinstance(planning, dict) else None,
+            },
         }
 
     def _write_json_file(self, data: Dict[str, Any]) -> None:

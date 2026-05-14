@@ -104,7 +104,8 @@ class Neo4jGraphManager:
         node_dict["id"] = topic.id or topic.theme_id
         node_dict["type"] = "Topic"
         node_dict["name"] = topic.name or topic.theme_id
-        ok = self.driver.insert_node(_sanitize_node_dict(node_dict))
+        node_dict["title"] = topic.name or topic.theme_id
+        ok = self._sanitize_and_write(node_dict)
         if ok:
             logger.debug("Upserted Topic %s", topic.theme_id)
         return ok
@@ -129,19 +130,27 @@ class Neo4jGraphManager:
         Skips the upsert if topics already exist in Neo4j (avoids redundant
         writes on every session initialization).
         """
+        from src.core.theme_loader import ThemeLoader
+
+        themes = ThemeLoader().load()
+        expected_count = len(themes)
+
         try:
             rows = self.driver.execute_query(
                 "MATCH (t:Topic) RETURN count(t) AS cnt"
             )
-            if rows and rows[0].get("cnt", 0) > 0:
-                logger.debug("Topics already synced (%d), skipping", rows[0]["cnt"])
-                return rows[0]["cnt"]
+            current_count = int(rows[0].get("cnt", 0)) if rows else 0
+            if current_count >= expected_count:
+                logger.debug("Topics already synced (%d), skipping", current_count)
+                return current_count
+            if current_count > 0:
+                logger.info(
+                    "Neo4j has only %d/%d Topic nodes; resyncing themes.",
+                    current_count,
+                    expected_count,
+                )
         except Exception:
             logger.debug("Topic count check failed, proceeding with sync", exc_info=True)
-
-        from src.core.theme_loader import ThemeLoader
-
-        themes = ThemeLoader().load()
         topics = [TopicNode.from_theme_node(theme) for theme in themes.values()]
         return self.batch_upsert_topics(topics)
 
@@ -274,7 +283,7 @@ class Neo4jGraphManager:
         node_dict["id"] = event.id
         node_dict["type"] = "Event"
         node_dict["name"] = event.title or event.name or event.id
-        ok = self.driver.insert_node(_sanitize_node_dict(node_dict))
+        ok = self._sanitize_and_write(node_dict)
         if ok and theme_id:
             self.driver.insert_edge(theme_id, event.id, self.REL_INCLUDES)
         return ok
@@ -302,7 +311,7 @@ class Neo4jGraphManager:
         node_dict["id"] = person.id
         node_dict["type"] = "Person"
         node_dict["name"] = person.name or person.id
-        ok = self.driver.insert_node(_sanitize_node_dict(node_dict))
+        ok = self._sanitize_and_write(node_dict)
         if ok and event_id:
             self.driver.insert_edge(event_id, person.id, self.REL_PARTICIPATES_IN)
         return ok
@@ -322,7 +331,7 @@ class Neo4jGraphManager:
         node_dict["id"] = location.id
         node_dict["type"] = "Location"
         node_dict["name"] = location.name or location.id
-        ok = self.driver.insert_node(_sanitize_node_dict(node_dict))
+        ok = self._sanitize_and_write(node_dict)
         if ok and event_id:
             self.driver.insert_edge(event_id, location.id, self.REL_LOCATED_AT)
         return ok
@@ -336,7 +345,7 @@ class Neo4jGraphManager:
         node_dict["id"] = emotion.id
         node_dict["type"] = "Emotion"
         node_dict["name"] = emotion.name or emotion.id
-        ok = self.driver.insert_node(_sanitize_node_dict(node_dict))
+        ok = self._sanitize_and_write(node_dict)
         if ok and event_id:
             self.driver.insert_edge(event_id, emotion.id, self.REL_TRIGGERS)
         return ok

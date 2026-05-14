@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import logging
+import re
 from typing import Any, Dict, List, Optional
 
 from openai import OpenAI
@@ -91,6 +92,9 @@ class InterviewerAgent:
 
                     parsed = self._parse_response(raw_content)
                     if parsed.get("question"):
+                        if self._is_repetitive_question(parsed["question"], recent_transcript):
+                            logger.warning("InterviewerAgent rejected repetitive question: %s", parsed["question"])
+                            continue
                         if tool_trace:
                             parsed["tool_trace"] = tool_trace
                         parsed["llm_usage"] = _llm_usage
@@ -111,12 +115,22 @@ class InterviewerAgent:
                         break
 
         logger.error("InterviewerAgent returning fallback response")
+        return self._anti_repeat_fallback_response(recent_transcript)
+
+    def _anti_repeat_fallback_response(self, recent_transcript: List[TurnRecord]) -> Dict[str, Any]:
+        latest = recent_transcript[-1] if recent_transcript else None
+        latest_answer = (latest.interviewee_answer if latest else "") or ""
+        focus_hint = self._extract_focus_hint(latest_answer)
+        if focus_hint:
+            question = f"刚才这个故事里，{focus_hint}很有画面感。除了这件事，您后来的人生里还有没有另一段让您觉得特别重要的经历？"
+        else:
+            question = "刚才这一段我们已经聊得比较细了。我们换一个角度吧：后来您人生里还有没有另一件让您觉得特别重要的事？"
         return {
-            "action": "continue",
-            "question": "您能再跟我多说说那个时候的事情吗？",
+            "action": "next_phase",
+            "question": question,
             "planner_plan": self._fallback_planner_plan(
-                "continue",
-                "LLM 生成失败，降级为温和追问当前经历。",
+                "next_phase",
+                "检测到生成问题可能重复，切换到新角度防止循环追问。",
             ),
         }
 
@@ -171,6 +185,12 @@ class InterviewerAgent:
 4. **抓住一个切入点提问** —— 把老人意犹未尽或者到嘴边没说出来的话延展出去。问题清晰、聚焦，不堆叠多个问题但可以交叉确认或核实必要的信息
 
 5. **隐藏技术细节** —— 永远不提"图谱"、"节点"、"槽位"、"覆盖率"等概念
+
+6. **防止重复追问** —— 认真查看最近对话，尤其最近 3-5 个问题和回答。
+   - 禁止提出与最近问题相同或只是换一种说法的问题。
+   - 如果老人已经回答过某个细节（例如时间安排、具体做法、结果、感受），不要继续问同一个细节。
+   - 如果连续两轮回答内容高度相似，必须停止深挖同一切口，改用 `switch_theme`、`move_to_person`、`move_to_period` 或 `gentle_reflection`。
+   - 当你发现同一事件已经问了 2-3 轮仍没有新信息，优先总结承接后切换到新人物、新人生阶段或更高层反思。
 
 ---
 
@@ -330,6 +350,10 @@ class InterviewerAgent:
 
         # 7. Strategy hints
         parts.append("\n## 策略提示")
+        if prompt_stage == "early":
+            parts.append(
+                "当前仍处于人生脉络梳理阶段，优先帮助老人铺开人生阶段、大事节点、关键人物、自我评价和价值观。"
+            )
         if ctx.low_info_streak >= 3:
             parts.append(
                 f"最近连续 {ctx.low_info_streak} 轮信息增益偏低。"
@@ -353,6 +377,12 @@ class InterviewerAgent:
         parts.append("3. 如果老人情绪低落，先共情再提问")
         parts.append("4. 如果老人疲劳，切换到轻松话题")
         parts.append("5. 前几轮不要因为背景里出现某个职业、地点或亲属就立刻深挖；先让老人自己铺开人生脉络")
+        parts.append("6. 不要重复最近 3-5 轮已经问过的信息；如果最近回答开始重复，必须换切口或换主题")
+        recent_questions = [turn.interviewer_question for turn in recent_transcript[-5:] if turn.interviewer_question]
+        if recent_questions:
+            parts.append("\n最近已经问过的问题，下一问不得重复这些问题或换皮复述：")
+            for idx, question in enumerate(recent_questions, 1):
+                parts.append(f"{idx}. {question}")
         parts.append("")
         parts.append("返回严格 JSON 格式，必须包含 planner_plan、action、question 三个顶层字段：")
         parts.append(
@@ -566,6 +596,66 @@ class InterviewerAgent:
 
         planner_plan = self._normalize_planner_plan(planner_plan, action)
         return {"action": action, "question": question, "planner_plan": planner_plan}
+
+    @classmethod
+    def _is_repetitive_question(cls, question: str, recent_transcript: List[TurnRecord]) -> bool:
+        question_norm = cls._normalize_question_for_similarity(question)
+        if not question_norm:
+            return False
+        recent_questions = [
+            turn.interviewer_question
+            for turn in recent_transcript[-5:]
+            if turn.interviewer_question
+        ]
+        for previous in recent_questions:
+            prev_norm = cls._normalize_question_for_similarity(previous)
+            if question_norm == prev_norm:
+                return True
+            if cls._char_jaccard(question_norm, prev_norm) >= 0.55:
+                return True
+            if cls._shared_focus_term_count(question, previous) >= 3:
+                return True
+
+        if len(recent_transcript) >= 2:
+            last_answer = cls._normalize_question_for_similarity(recent_transcript[-1].interviewee_answer or "")
+            prev_answer = cls._normalize_question_for_similarity(recent_transcript[-2].interviewee_answer or "")
+            if cls._char_jaccard(last_answer, prev_answer) >= 0.78:
+                focus_terms = ("怎么安排", "时间", "具体", "再详细", "工作", "帮助", "同事")
+                if any(term in question for term in focus_terms):
+                    return True
+        return False
+
+    @staticmethod
+    def _normalize_question_for_similarity(text: str) -> str:
+        text = re.sub(r"\s+", "", text or "")
+        text = re.sub(r"[^\w\u4e00-\u9fff]", "", text)
+        polite_prefixes = ("王淑芬奶奶", "淑芬奶奶", "奶奶", "您刚才提到", "听您说", "听您讲起")
+        for prefix in polite_prefixes:
+            text = text.replace(prefix, "")
+        return text
+
+    @staticmethod
+    def _char_jaccard(left: str, right: str) -> float:
+        left_set = set(left or "")
+        right_set = set(right or "")
+        if not left_set or not right_set:
+            return 0.0
+        return len(left_set & right_set) / max(1, len(left_set | right_set))
+
+    @staticmethod
+    def _shared_focus_term_count(left: str, right: str) -> int:
+        focus_terms = (
+            "安排", "时间", "工作", "帮助", "同事", "生病", "早去晚归",
+            "具体", "怎么做到", "时间表", "完成", "照顾",
+        )
+        return sum(1 for term in focus_terms if term in (left or "") and term in (right or ""))
+
+    @staticmethod
+    def _extract_focus_hint(text: str) -> str:
+        for keyword in ("纺织厂", "同事", "姐姐", "母亲", "成都", "河边", "孩子", "家庭"):
+            if keyword in (text or ""):
+                return keyword
+        return ""
 
     def _opening_response(self, elder_profile: ElderProfile) -> Dict[str, Any]:
         question = self._build_opening_question(elder_profile)
