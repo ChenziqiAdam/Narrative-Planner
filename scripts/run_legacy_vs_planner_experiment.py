@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
-"""Run a baseline-vs-planner interview quality experiment.
+"""Run a legacy-vs-planner interview quality experiment.
 
 Default experiment:
-    baseline: 10 independent AI interviews, 20 turns each
-    planner:  10 independent AI interviews, 50 turns each
+    legacy:  5 independent AI interviews, 30 turns each
+    planner: 5 independent AI interviews, 30 turns each
 
-Outputs are written under results/baseline-vs-planner/<experiment_id>/.
-The script drives the same Flask compare APIs used by the 9999 frontend.
+Both agents use the same /api/planner/* Flask routes; the only difference is
+the "version" field in the start payload ("legacy" vs "graphrag").
+
+Outputs are written under results/legacy-vs-planner/<experiment_id>/.
 """
 from __future__ import annotations
 
@@ -296,7 +298,8 @@ def extract_common_metrics(
         },
         # --- tokens: total and per-module averages ---
         "tokens": _aggregate_tokens(timing_rows),
-        "graph_rag": extract_graph_metrics(turns) if agent_type == "planner" else {},
+        # Legacy uses in-memory graph — no graph_rag_metrics in debug_trace
+        "graph_rag": extract_graph_metrics(turns) if agent_type == "graphrag" else {},
     }
 
 
@@ -312,7 +315,7 @@ def deterministic_score(metrics: Dict[str, Any]) -> Dict[str, Any]:
     common = sum(components[k] * COMMON_SCORE_WEIGHTS[k] for k in COMMON_SCORE_WEIGHTS)
 
     graph_observability = None
-    if metrics.get("agent") == "planner":
+    if metrics.get("agent") == "graphrag":
         graph = metrics.get("graph_rag") or {}
         graph_observability = clip01(
             0.35 * clip01(graph.get("retrieval_nonempty_rate"))
@@ -382,7 +385,7 @@ def final_score(
 @dataclass
 class ExperimentArgs:
     runs_per_agent: int
-    baseline_turns: int
+    legacy_turns: int
     planner_turns: int
     output_dir: Path
     experiment_id: str
@@ -396,7 +399,7 @@ class ExperimentArgs:
     elder_info: Dict[str, Any]
 
 
-class CompareExperimentRunner:
+class LegacyVsPlannerRunner:
     def __init__(self, args: ExperimentArgs):
         self.args = args
         self.experiment_dir = args.output_dir / args.experiment_id
@@ -406,7 +409,7 @@ class CompareExperimentRunner:
         self.client = None
 
     def target_turns(self, agent_type: str) -> int:
-        return self.args.planner_turns if agent_type == "planner" else self.args.baseline_turns
+        return self.args.planner_turns if agent_type == "graphrag" else self.args.legacy_turns
 
     def configure_runtime(self) -> None:
         if self.args.model:
@@ -445,31 +448,30 @@ class CompareExperimentRunner:
         import src.app as app_module
 
         app_module.app.config["TESTING"] = True
-        # The experiment script owns graph reset semantics.  The Flask app also
-        # resets on first request when serving port 9999, so mark that startup
-        # hook as already handled for this in-process test-client run.
         if hasattr(app_module, "_GRAPH_RESET_ON_PORT_OPEN_DONE"):
             app_module._GRAPH_RESET_ON_PORT_OPEN_DONE = True
         self.app_module = app_module
         self.client = app_module.app.test_client()
 
     def start_session(self, agent_type: str) -> tuple[str, Dict[str, Any]]:
+        # Both legacy and graphrag use /api/planner/start; version differentiates them
         assert self.client is not None
         response = self.client.post(
-            f"/api/{agent_type}/start",
-            json={"elder_info": self.args.elder_info, "mode": "ai"},
+            "/api/planner/start",
+            json={"elder_info": self.args.elder_info, "mode": "ai", "version": agent_type},
         )
         data = response.get_json(silent=True) or {}
         if response.status_code != 200:
-            raise RuntimeError(f"{agent_type} start failed: {response.status_code} {data}")
+            raise RuntimeError(f"planner/{agent_type} start failed: {response.status_code} {data}")
         return str(data["session_id"]), data
 
     def run_single_turn(self, agent_type: str, session_id: str) -> List[Dict[str, Any]]:
+        # Both agents use the same /api/planner/auto endpoint
         assert self.client is not None
-        response = self.client.get(f"/api/{agent_type}/auto?session_id={session_id}&single_turn=1")
+        response = self.client.get(f"/api/planner/auto?session_id={session_id}&single_turn=1")
         raw = response.get_data(as_text=True)
         if response.status_code != 200:
-            raise RuntimeError(f"{agent_type} auto failed: {response.status_code} {raw[:500]}")
+            raise RuntimeError(f"planner/{agent_type} auto failed: {response.status_code} {raw[:500]}")
         return parse_sse_events(raw)
 
     def fetch_json(self, path: str) -> Dict[str, Any]:
@@ -528,9 +530,10 @@ class CompareExperimentRunner:
         session = self.app_module._compare_sessions.get(session_id, {})
         history = list(session.get("history", []))
         transcript = build_transcript(history)
-        evaluation_state = self.fetch_json(f"/api/{agent_type}/evaluation/{session_id}")
-        planner_report = self.fetch_json(f"/api/planner/report/{session_id}") if agent_type == "planner" else {}
-        graph_state = self.fetch_json(f"/api/planner/graph/{session_id}") if agent_type == "planner" else {}
+        evaluation_state = self.fetch_json(f"/api/planner/evaluation/{session_id}")
+        # Both agents are planner-class — both support report and graph endpoints
+        planner_report = self.fetch_json(f"/api/planner/report/{session_id}")
+        graph_state = self.fetch_json(f"/api/planner/graph/{session_id}")
 
         metrics = extract_common_metrics(agent_type, turns, evaluation_state, target_turns)
         deterministic = deterministic_score(metrics)
@@ -599,10 +602,10 @@ class CompareExperimentRunner:
     def run(self) -> Dict[str, Any]:
         self.initialize_app()
         total_runs = self.args.runs_per_agent * 2
-        print(f"[exp] experiment_id={self.args.experiment_id}  total_runs={total_runs}  baseline_turns={self.args.baseline_turns}  planner_turns={self.args.planner_turns}")
+        print(f"[exp] experiment_id={self.args.experiment_id}  total_runs={total_runs}  legacy_turns={self.args.legacy_turns}  planner_turns={self.args.planner_turns}")
         all_runs: List[Dict[str, Any]] = []
         completed = 0
-        for agent_type in ("baseline", "planner"):
+        for agent_type in ("legacy", "graphrag"):
             for run_index in range(1, self.args.runs_per_agent + 1):
                 t_run_start = time.perf_counter()
                 print(f"[start] {agent_type} run {run_index:02d}/{self.args.runs_per_agent}  ({completed}/{total_runs} done)")
@@ -624,7 +627,7 @@ class CompareExperimentRunner:
         return summary
 
     def build_summary(self, runs: List[Dict[str, Any]]) -> Dict[str, Any]:
-        by_agent: Dict[str, List[Dict[str, Any]]] = {"baseline": [], "planner": []}
+        by_agent: Dict[str, List[Dict[str, Any]]] = {"legacy": [], "graphrag": []}
         for run in runs:
             by_agent.setdefault(run["agent"], []).append(run)
 
@@ -679,7 +682,7 @@ class CompareExperimentRunner:
                 ],
             }
 
-            if agent == "planner":
+            if agent == "graphrag":
                 graph_runs = [run["metrics"].get("graph_rag", {}) for run in agent_runs]
                 agents[agent]["graph_rag"] = {
                     "retrieval_nonempty_rate_mean": round(
@@ -702,7 +705,7 @@ class CompareExperimentRunner:
             "created_at": datetime.now().isoformat(),
             "config": {
                 "runs_per_agent": self.args.runs_per_agent,
-                "baseline_turns": self.args.baseline_turns,
+                "legacy_turns": self.args.legacy_turns,
                 "planner_turns": self.args.planner_turns,
                 "use_llm_scorer": self.args.use_llm_scorer,
                 "llm_weight": self.args.llm_weight,
@@ -800,7 +803,7 @@ class CompareExperimentRunner:
             self.charts_dir / "mean_score.svg",
             "Mean Overall Score",
             mean_values,
-            "#2563eb",
+            "#7c3aed",
         )
         self.write_bar_svg(
             self.charts_dir / "mean_minus_variance_penalty.svg",
@@ -846,18 +849,23 @@ class CompareExperimentRunner:
 
     def write_docs(self, summary: Dict[str, Any]) -> None:
         self.docs_dir.mkdir(parents=True, exist_ok=True)
-        methods = f"""# Baseline vs Planner Experiment Methods
+        methods = f"""# Legacy vs GraphRAG Planner Experiment Methods
 
 ## Purpose
-This experiment compares the control-group `baseline` interviewer against the GraphRAG-enabled `planner` interviewer under the same automated interview conditions.
+This experiment compares the `legacy` planner interviewer (in-memory graph, adaptive routing calibration phases, `src/legacy/`) against the `graphrag` (current) planner interviewer (Neo4j-backed entity retrieval and context injection, `src/orchestration/`) under identical automated interview conditions.
+
+## Key Architectural Difference
+Both agents are started via `POST /api/planner/start` — the only difference is the `"version"` field:
+- `legacy`: uses `LegacyPlannerInterviewAgentSync`; in-memory graph manager with routing calibration phases; `debug_trace` uses schema `planner_debug_v1` with no `graph_rag_metrics` block
+- `graphrag`: uses `PlannerInterviewAgentSync`; Neo4j-backed entity retrieval, ranking, and context injection; `debug_trace` contains `graph_rag_metrics` with `planner_retrieval`, `decision_context`, `write`, and `extraction` sub-sections
 
 ## Default Design
-- Agents: `baseline`, `planner`
+- Agents: `legacy` (version="legacy"), `graphrag` (version="graphrag")
 - Runs per agent: {self.args.runs_per_agent}
-- Baseline turns per run: {self.args.baseline_turns}
-- Planner turns per run: {self.args.planner_turns}
-- Interview mode: AI interviewee through the same `/api/<agent>/auto?single_turn=1` route used by the 9999 compare UI
-- Graph reset: once before the experiment, preserving Topic nodes, when Neo4j is enabled
+- Legacy turns per run: {self.args.legacy_turns}
+- Planner (GraphRAG) turns per run: {self.args.planner_turns}
+- Interview mode: AI interviewee through `/api/planner/auto?single_turn=1`
+- Graph reset: once before the experiment (Neo4j only), when Neo4j is enabled — legacy uses in-memory graph
 - Planner tools enabled: {self.args.enable_planner_tools}
 - Model override: `{self.args.model or "use .env"}`
 
@@ -868,9 +876,10 @@ Each run directory contains:
 - `run.json`: complete run payload
 - `metrics.json`: extracted comparable metrics
 - `score.json`: deterministic and optional LLM scorer output
-- `planner_report.json` and `graph_state.json`: planner-only GraphRAG reports
+- `planner_report.json`: planner session report (available for both agents)
+- `graph_state.json`: graph state snapshot (in-memory for legacy, Neo4j for graphrag)
 
-## Comparable Metrics
+## Comparable Metrics (both agents)
 - completed_turns and completion_rate
 - avg_question_quality
 - avg_information_gain
@@ -880,7 +889,7 @@ Each run directory contains:
 - action_continue_ratio / action_next_phase_ratio / action_end_ratio
 - avg_interviewer_ms
 
-Planner additionally records GraphRAG observability:
+GraphRAG planner additionally records:
 - retrieval_nonempty_rate
 - avg_ranked_entities
 - avg_context_chars
@@ -890,27 +899,22 @@ Planner additionally records GraphRAG observability:
 - total_extracted_events
 
 ## Deterministic Score
-The common deterministic score intentionally does not require GraphRAG-specific fields, so baseline and planner are judged on the same output-quality surface:
+The common score is identical for both agents — GraphRAG fields are not required:
 
 `score = 0.28*question_quality + 0.24*information_gain + 0.20*non_redundancy + 0.18*coverage + 0.10*completion`
 
-Planner GraphRAG metrics are reported separately as `graph_observability_score`, and are not folded into the common score by default.
+GraphRAG planner additionally reports `graph_observability_score` (not folded into the common score).
 
 ## Optional Scoring Agent
 When `--use-llm-scorer` is set, `ConversationScorerAgent` scores the transcript on narrative coherence, emotional depth, question effectiveness, non-redundancy, topic coverage quality, and overall quality. Final score becomes:
 
 `overall = (1 - llm_weight) * deterministic_score + llm_weight * llm_overall`
 
-If the scorer agent fails, the script falls back to deterministic score and records `llm_score = null`.
-
 ## Stability Penalty
-For each agent:
 
 `mean_minus_variance_penalty = mean(overall_score) - variance_penalty_weight * population_variance(overall_score)`
-
-This favors agents that are both high-performing and stable across independent runs.
 """
-        readme = f"""# Baseline vs Planner Experiment
+        readme = f"""# Legacy vs GraphRAG Planner Experiment
 
 Experiment ID: `{self.args.experiment_id}`
 
@@ -927,7 +931,7 @@ Experiment ID: `{self.args.experiment_id}`
 
 ## Reproduce
 ```bash
-python scripts/run_baseline_vs_planner_experiment.py --runs-per-agent {self.args.runs_per_agent} --baseline-turns {self.args.baseline_turns} --planner-turns {self.args.planner_turns}
+python scripts/run_legacy_vs_planner_experiment.py --runs-per-agent {self.args.runs_per_agent} --legacy-turns {self.args.legacy_turns} --planner-turns {self.args.planner_turns}
 ```
 """
         (self.docs_dir / "METHODS.md").write_text(methods, encoding="utf-8")
@@ -945,16 +949,16 @@ def load_elder_info(path: Optional[str]) -> Dict[str, Any]:
 
 def parse_args() -> ExperimentArgs:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--runs-per-agent", type=int, default=10)
+    parser.add_argument("--runs-per-agent", type=int, default=5)
     parser.add_argument(
         "--turns",
         type=int,
         default=None,
-        help="Optional shortcut to set both --baseline-turns and --planner-turns.",
+        help="Optional shortcut to set both --legacy-turns and --planner-turns.",
     )
-    parser.add_argument("--baseline-turns", type=int, default=20)
-    parser.add_argument("--planner-turns", type=int, default=50)
-    parser.add_argument("--output-dir", default=str(PROJECT_ROOT / "results" / "baseline-vs-planner"))
+    parser.add_argument("--legacy-turns", type=int, default=30)
+    parser.add_argument("--planner-turns", type=int, default=30)
+    parser.add_argument("--output-dir", default=str(PROJECT_ROOT / "results" / "legacy-vs-planner"))
     parser.add_argument("--experiment-id", default="")
     parser.add_argument("--elder-info-json", default="")
     parser.add_argument("--use-llm-scorer", action="store_true")
@@ -971,11 +975,11 @@ def parse_args() -> ExperimentArgs:
     ns = parser.parse_args()
 
     experiment_id = ns.experiment_id or f"{datetime.now().strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:6]}"
-    baseline_turns = ns.turns if ns.turns is not None else ns.baseline_turns
+    legacy_turns = ns.turns if ns.turns is not None else ns.legacy_turns
     planner_turns = ns.turns if ns.turns is not None else ns.planner_turns
     return ExperimentArgs(
         runs_per_agent=max(1, ns.runs_per_agent),
-        baseline_turns=max(1, int(baseline_turns)),
+        legacy_turns=max(1, int(legacy_turns)),
         planner_turns=max(1, int(planner_turns)),
         output_dir=Path(ns.output_dir),
         experiment_id=experiment_id,
@@ -992,7 +996,7 @@ def parse_args() -> ExperimentArgs:
 
 def main() -> None:
     args = parse_args()
-    runner = CompareExperimentRunner(args)
+    runner = LegacyVsPlannerRunner(args)
     summary = runner.run()
     print(json.dumps(summary, ensure_ascii=False, indent=2))
     print(f"\n[done] results: {runner.experiment_dir}")
