@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Narrative Planner — AI-Guided Memoir Interviews</title>
+  <meta name="description" content="Narrative Planner is an intelligent interview system that combines a GraphRAG knowledge graph with a coverage-aware planning agent to conduct deep, structured memoir interviews." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset & Custom Properties ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --color-bg:       #FDF6EC;
+      --color-text:     #2C1A0E;
+      --color-accent:   #D97706;
+      --color-accent-dk:#B45309;
+      --color-card:     #FFF8F0;
+      --color-border:   #E8D5B7;
+      --color-muted:    #9B7653;
+      --color-disabled: #C4A882;
+
+      --font-heading: 'Playfair Display', Georgia, serif;
+      --font-body:    'Inter', system-ui, sans-serif;
+
+      --radius-card:   14px;
+      --radius-btn:    8px;
+      --max-w:         800px;
+      --section-gap:   80px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Layout Helpers ── */
+    .container {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    section {
+      padding: var(--section-gap) 0;
+    }
+
+    .section-heading {
+      font-family: var(--font-heading);
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: 32px;
+    }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 22px;
+      border-radius: var(--radius-btn);
+      font-family: var(--font-body);
+      font-size: 0.925rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease, opacity 0.18s ease;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: var(--color-accent);
+      color: #fff;
+      border-color: var(--color-accent);
+    }
+    .btn-primary:hover {
+      background: var(--color-accent-dk);
+      border-color: var(--color-accent-dk);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--color-text);
+      border-color: var(--color-border);
+    }
+    .btn-outline:hover {
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+    }
+
+    .btn-disabled {
+      background: transparent;
+      color: var(--color-disabled);
+      border-color: var(--color-border);
+      cursor: default;
+      pointer-events: none;
+      position: relative;
+    }
+
+    .coming-soon-badge {
+      display: inline-block;
+      background: var(--color-border);
+      color: var(--color-muted);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border-radius: 99px;
+      margin-left: 2px;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 96px 0 80px;
+      text-align: center;
+    }
+
+    .hero-eyebrow {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-accent);
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      font-family: var(--font-heading);
+      font-size: clamp(2.4rem, 6vw, 3.6rem);
+      font-weight: 700;
+      line-height: 1.15;
+      color: var(--color-text);
+      margin-bottom: 18px;
+    }
+
+    .hero-tagline {
+      font-family: var(--font-heading);
+      font-style: italic;
+      font-size: 1.2rem;
+      color: var(--color-muted);
+      margin-bottom: 28px;
+    }
+
+    .hero-desc {
+      max-width: 640px;
+      margin: 0 auto 44px;
+      color: var(--color-muted);
+      font-size: 1rem;
+      line-height: 1.75;
+    }
+
+    .hero-cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      justify-content: center;
+    }
+
+    /* ── Abstract ── */
+    .abstract p {
+      color: var(--color-text);
+      margin-bottom: 20px;
+      font-size: 1rem;
+      line-height: 1.8;
+    }
+    .abstract p:last-of-type { margin-bottom: 0; }
+
+    .stat-callout {
+      margin-top: 44px;
+      background: var(--color-card);
+      border: 1.5px solid var(--color-border);
+      border-left: 4px solid var(--color-accent);
+      border-radius: var(--radius-card);
+      padding: 36px 40px;
+      text-align: center;
+      box-shadow: 0 2px 16px rgba(44, 26, 14, 0.06);
+    }
+
+    .stat-callout .stat-number {
+      font-family: var(--font-heading);
+      font-size: 4.5rem;
+      font-weight: 700;
+      color: var(--color-accent);
+      line-height: 1;
+      display: block;
+    }
+
+    .stat-callout .stat-label {
+      display: block;
+      margin-top: 10px;
+      font-size: 0.95rem;
+      color: var(--color-muted);
+    }
+
+    /* ── How It Works ── */
+    .how-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .how-card {
+      background: var(--color-card);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-card);
+      padding: 32px 28px;
+      box-shadow: 0 2px 12px rgba(44, 26, 14, 0.05);
+    }
+
+    .how-card-icon {
+      color: var(--color-accent);
+      margin-bottom: 18px;
+      display: block;
+    }
+
+    .how-card h3 {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--color-text);
+    }
+
+    .how-card p {
+      font-size: 0.9rem;
+      color: var(--color-muted);
+      line-height: 1.7;
+    }
+
+    /* ── Screenshots ── */
+    .screenshots-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .screenshots-grid figure {
+      margin: 0;
+    }
+
+    .screenshot-slot__placeholder {
+      background: var(--color-card);
+      border: 1.5px dashed var(--color-border);
+      border-radius: var(--radius-card);
+      aspect-ratio: 16 / 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: var(--color-disabled);
+      font-size: 0.78rem;
+      transition: border-color 0.2s;
+    }
+
+    .screenshots-grid figure figcaption {
+      margin-top: 12px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--color-muted);
+      font-weight: 500;
+    }
+
+    /* ── Results ── */
+    .results-row {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .results-arrow {
+      color: var(--color-muted);
+      flex-shrink: 0;
+    }
+
+    .result-card {
+      flex: 1;
+      background: var(--color-card);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-card);
+      padding: 36px 28px;
+      text-align: center;
+      box-shadow: 0 2px 12px rgba(44, 26, 14, 0.05);
+      position: relative;
+    }
+
+    .result-card.highlight {
+      border-color: var(--color-accent);
+      box-shadow: 0 4px 24px rgba(217, 119, 6, 0.14);
+    }
+
+    .result-card .result-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-muted);
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .result-card .result-score {
+      font-family: var(--font-heading);
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--color-text);
+      line-height: 1;
+    }
+
+    .result-card.highlight .result-score {
+      color: var(--color-accent);
+    }
+
+    .result-badge {
+      position: absolute;
+      top: -13px;
+      right: 18px;
+      background: var(--color-accent);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 3px 11px;
+      border-radius: 99px;
+      letter-spacing: 0.04em;
+    }
+
+    .results-note {
+      margin-top: 28px;
+      font-size: 0.875rem;
+      color: var(--color-muted);
+      line-height: 1.7;
+    }
+
+    /* ── Citation ── */
+    .citation-card {
+      background: var(--color-card);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-card);
+      position: relative;
+      box-shadow: 0 2px 12px rgba(44, 26, 14, 0.05);
+      overflow: hidden;
+    }
+
+    #bibtex-content {
+      display: block;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.85rem;
+      line-height: 1.7;
+      color: var(--color-text);
+      white-space: pre;
+      overflow-x: auto;
+      padding: 36px 32px 28px;
+      background: transparent;
+      border: none;
+      tab-size: 2;
+    }
+
+    #copy-btn {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      background: var(--color-bg);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-btn);
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--color-muted);
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+
+    #copy-btn:hover {
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+      background: var(--color-bg);
+    }
+
+    #copy-btn.copied {
+      border-color: #10b981;
+      color: #10b981;
+    }
+
+    /* ── Footer ── */
+    .site-footer {
+      border-top: 1.5px solid var(--color-border);
+      padding: 36px 0;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .footer-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .footer-gh-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--color-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.15s;
+    }
+
+    .footer-gh-link:hover { color: var(--color-accent); }
+
+    .footer-email {
+      font-size: 0.875rem;
+      color: var(--color-muted);
+    }
+
+    .footer-copyright {
+      font-size: 0.85rem;
+      color: var(--color-disabled);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      :root { --section-gap: 52px; }
+
+      .hero-cta {
+        flex-direction: column;
+        align-items: center;
+      }
+      .hero-cta .btn {
+        width: 100%;
+        max-width: 280px;
+        justify-content: center;
+      }
+
+      .section-heading { font-size: 1.4rem; }
+
+      .how-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .screenshots-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .results-row {
+        flex-direction: column;
+      }
+      .results-arrow {
+        transform: rotate(90deg);
+      }
+      .result-card {
+        width: 100%;
+      }
+
+      #bibtex-content {
+        font-size: 0.75rem;
+        padding: 52px 16px 20px;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+      }
+      .footer-left { justify-content: center; }
+
+      .stat-callout .stat-number { font-size: 3rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Hero ── -->
+  <header class="hero">
+    <div class="container">
+      <span class="hero-eyebrow">Research Project</span>
+      <h1>Narrative Planner</h1>
+      <p class="hero-tagline">AI-guided interviews that capture a lifetime of stories</p>
+      <p class="hero-desc">Narrative Planner is an intelligent interview system that combines a GraphRAG knowledge graph with a coverage-aware planning agent to conduct deep, structured memoir interviews. It tracks which parts of a person's life have been explored and strategically guides each question toward uncovered territory — ensuring no chapter goes untold.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="YOUR_DEMO_URL" target="_blank" rel="noopener">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+            <polyline points="15 3 21 3 21 9"/>
+            <line x1="10" y1="14" x2="21" y2="3"/>
+          </svg>
+          Live Demo
+        </a>
+        <a class="btn btn-outline" href="YOUR_GITHUB_URL" target="_blank" rel="noopener">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/>
+          </svg>
+          GitHub
+        </a>
+        <button class="btn btn-disabled" disabled>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <polyline points="10 9 9 9 8 9"/>
+          </svg>
+          Paper
+          <span class="coming-soon-badge">Coming Soon</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── Abstract ── -->
+  <section class="abstract" id="abstract">
+    <div class="container">
+      <h2 class="section-heading">What is Narrative Planner?</h2>
+      <p>Capturing a person's complete life story in an interview is surprisingly difficult. Conversations naturally gravitate toward vivid, emotionally salient memories while quieter decades — careers, friendships, migrations, everyday rituals — go unmentioned. Existing AI interviewers lack any mechanism to track coverage or detect these gaps.</p>
+      <p>Narrative Planner addresses this with a two-layer architecture: a <strong>GraphRAG module</strong> that builds a structured life-event knowledge graph in real time as the interview unfolds, and an <strong>intelligent planning agent</strong> that reads coverage signals from the graph to decide whether to explore the current topic more deeply or pivot to an underrepresented area of the subject's life.</p>
+      <p>The result is richer, more complete memoirs. Across automated evaluations using simulated interviewee personas, Narrative Planner achieves substantially higher life-coverage scores than a strong baseline chatbot interviewer — without sacrificing the conversational warmth that makes these sessions feel human.</p>
+
+      <div class="stat-callout">
+        <span class="stat-number">32%</span>
+        <span class="stat-label">improvement in life coverage score vs. baseline</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── How It Works ── -->
+  <section class="how" id="how-it-works">
+    <div class="container">
+      <h2 class="section-heading">How It Works</h2>
+      <div class="how-grid">
+        <div class="how-card">
+          <span class="how-card-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              <line x1="9" y1="10" x2="15" y2="10"/>
+              <line x1="9" y1="14" x2="13" y2="14"/>
+            </svg>
+          </span>
+          <h3>Interview</h3>
+          <p>A conversational AI engages the subject in natural dialogue, asking open-ended questions guided by a coverage-aware planning agent that tracks what has and hasn't been discussed.</p>
+        </div>
+        <div class="how-card">
+          <span class="how-card-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="5" cy="12" r="2"/>
+              <circle cx="19" cy="5" r="2"/>
+              <circle cx="19" cy="19" r="2"/>
+              <circle cx="12" cy="12" r="2"/>
+              <line x1="7" y1="12" x2="10" y2="12"/>
+              <line x1="14" y1="12" x2="17.2" y2="6.5"/>
+              <line x1="14" y1="12" x2="17.2" y2="17.5"/>
+            </svg>
+          </span>
+          <h3>Graph Construction</h3>
+          <p>As the conversation flows, life events, people, places, and time periods are extracted and woven into a real-time GraphRAG knowledge graph that maps the subject's life.</p>
+        </div>
+        <div class="how-card">
+          <span class="how-card-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/>
+              <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
+            </svg>
+          </span>
+          <h3>Coverage Navigation</h3>
+          <p>The planner continuously evaluates graph coverage, balancing rich exploration of well-remembered topics with strategic pivots toward underrepresented decades and themes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Screenshots ── -->
+  <section class="screenshots" id="screenshots">
+    <div class="container">
+      <h2 class="section-heading">See It In Action</h2>
+      <div class="screenshots-grid">
+        <figure>
+          <div class="screenshot-slot__placeholder">
+            <!-- Replace this entire <div> with an <img> tag when screenshots are ready -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+          </div>
+          <figcaption>Conversation UI</figcaption>
+        </figure>
+        <figure>
+          <div class="screenshot-slot__placeholder">
+            <!-- Replace this entire <div> with an <img> tag when screenshots are ready -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+          </div>
+          <figcaption>Life Event Graph</figcaption>
+        </figure>
+        <figure>
+          <div class="screenshot-slot__placeholder">
+            <!-- Replace this entire <div> with an <img> tag when screenshots are ready -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+          </div>
+          <figcaption>Coverage Dashboard</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Results ── -->
+  <section class="results" id="results">
+    <div class="container">
+      <h2 class="section-heading">Results</h2>
+      <div class="results-row">
+        <div class="result-card">
+          <span class="result-label">Baseline Agent</span>
+          <span class="result-score">0.358</span>
+        </div>
+        <div class="results-arrow">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </div>
+        <div class="result-card highlight">
+          <span class="result-badge">+32%</span>
+          <span class="result-label">Narrative Planner</span>
+          <span class="result-score">0.473</span>
+        </div>
+      </div>
+      <p class="results-note">Evaluated across automated simulated interviews using 4 interviewee personas with distinct life histories, scored by an independent LLM judge on breadth, depth, and temporal coverage.</p>
+    </div>
+  </section>
+
+  <!-- ── Citation ── -->
+  <section class="citation" id="citation">
+    <div class="container">
+      <h2 class="section-heading">Citation</h2>
+      <div class="citation-card">
+        <button id="copy-btn" type="button">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+          <span id="copy-btn-text">Copy</span>
+        </button>
+        <pre id="bibtex-content">@misc{narrativeplanner2026,
+  title     = {Narrative Planner: AI-Guided Interview System for Life Memoir Generation},
+  author    = {Chen, Adam and others},
+  year      = {2026},
+  note      = {https://github.com/YOUR_USERNAME/Narrative-Planner}
+}</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ── -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-left">
+          <a class="footer-gh-link" href="YOUR_GITHUB_URL" target="_blank" rel="noopener">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/>
+            </svg>
+            Narrative Planner
+          </a>
+        </div>
+        <span class="footer-email">adamchen04718@googlemail.com</span>
+        <span class="footer-copyright">&#169; 2026 Narrative Planner</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var copyBtn = document.getElementById('copy-btn');
+      var copyBtnText = document.getElementById('copy-btn-text');
+      var bibtex = document.getElementById('bibtex-content');
+
+      if (!copyBtn || !bibtex) return;
+
+      copyBtn.addEventListener('click', function () {
+        var text = bibtex.textContent || bibtex.innerText;
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(text).then(function () {
+            showCopied();
+          }).catch(function () {
+            fallbackCopy(text);
+          });
+        } else {
+          fallbackCopy(text);
+        }
+      });
+
+      function showCopied() {
+        copyBtnText.textContent = 'Copied!';
+        copyBtn.classList.add('copied');
+        setTimeout(function () {
+          copyBtnText.textContent = 'Copy';
+          copyBtn.classList.remove('copied');
+        }, 2000);
+      }
+
+      function fallbackCopy(text) {
+        var textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        try {
+          document.execCommand('copy');
+          showCopied();
+        } catch (e) {
+          copyBtnText.textContent = 'Failed';
+        }
+        document.body.removeChild(textarea);
+      }
+    }());
+  </script>
+</body>
+</html>

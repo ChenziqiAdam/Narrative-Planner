@@ -394,6 +394,7 @@ class ExperimentArgs:
     reset_graph_before_experiment: bool
     continue_on_error: bool
     elder_info: Dict[str, Any]
+    agents: List[str]
 
 
 class CompareExperimentRunner:
@@ -598,11 +599,12 @@ class CompareExperimentRunner:
 
     def run(self) -> Dict[str, Any]:
         self.initialize_app()
-        total_runs = self.args.runs_per_agent * 2
-        print(f"[exp] experiment_id={self.args.experiment_id}  total_runs={total_runs}  baseline_turns={self.args.baseline_turns}  planner_turns={self.args.planner_turns}")
+        agent_order = [a for a in ("baseline", "planner") if a in self.args.agents]
+        total_runs = self.args.runs_per_agent * len(agent_order)
+        print(f"[exp] experiment_id={self.args.experiment_id}  agents={agent_order}  total_runs={total_runs}  baseline_turns={self.args.baseline_turns}  planner_turns={self.args.planner_turns}")
         all_runs: List[Dict[str, Any]] = []
         completed = 0
-        for agent_type in ("baseline", "planner"):
+        for agent_type in agent_order:
             for run_index in range(1, self.args.runs_per_agent + 1):
                 t_run_start = time.perf_counter()
                 print(f"[start] {agent_type} run {run_index:02d}/{self.args.runs_per_agent}  ({completed}/{total_runs} done)")
@@ -968,11 +970,20 @@ def parse_args() -> ExperimentArgs:
     parser.add_argument("--enable-planner-tools", action="store_true")
     parser.add_argument("--no-reset-graph-before-experiment", action="store_true")
     parser.add_argument("--continue-on-error", action="store_true")
+    parser.add_argument(
+        "--agents",
+        default="baseline,planner",
+        help="Comma-separated agents to run, e.g. 'baseline' or 'planner' or 'baseline,planner'.",
+    )
     ns = parser.parse_args()
 
     experiment_id = ns.experiment_id or f"{datetime.now().strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:6]}"
     baseline_turns = ns.turns if ns.turns is not None else ns.baseline_turns
     planner_turns = ns.turns if ns.turns is not None else ns.planner_turns
+    valid = {"baseline", "planner"}
+    agents = [a.strip() for a in ns.agents.split(",") if a.strip() in valid]
+    if not agents:
+        raise ValueError(f"--agents must include at least one of {valid}")
     return ExperimentArgs(
         runs_per_agent=max(1, ns.runs_per_agent),
         baseline_turns=max(1, int(baseline_turns)),
@@ -987,6 +998,7 @@ def parse_args() -> ExperimentArgs:
         reset_graph_before_experiment=not bool(ns.no_reset_graph_before_experiment),
         continue_on_error=bool(ns.continue_on_error),
         elder_info=load_elder_info(ns.elder_info_json),
+        agents=agents,
     )
 
 
