@@ -211,7 +211,8 @@ def start():
     agents["mode"] = mode
 
     # Get the opening question
-    question = agents["interviewer"].get_next_question()
+    result = agents["interviewer"].get_next_question()
+    question = result.get("question", "") if isinstance(result, dict) else result
     agents["history"].append({"role": "interviewer", "text": question})
 
     return jsonify({"question": question, "mode": mode})
@@ -240,7 +241,9 @@ def user_reply():
     agents["history"].append({"role": "interviewee", "text": answer})
 
     # Interviewer gets next question
-    question = agents["interviewer"].get_next_question(answer)
+    result = agents["interviewer"].get_next_question(answer)
+    question = result.get("question", "") if isinstance(result, dict) else result
+    action = result.get("action", "continue") if isinstance(result, dict) else "continue"
     agents["turn_count"] += 1
 
     if agents["turn_count"] >= 50:
@@ -258,7 +261,7 @@ def user_reply():
         return jsonify({"action": "end", "question": end_text, "done": True})
 
     agents["history"].append({"role": "interviewer", "text": question})
-    return jsonify({"action": "continue", "question": question, "done": False})
+    return jsonify({"action": action, "question": question, "done": False})
 
 
 @app.route("/auto_interview", methods=["GET"])
@@ -287,7 +290,9 @@ def auto_interview():
             yield f"data: {json.dumps({'role': 'interviewee', 'action': 'answer', 'text': answer, 'memory_calls': memory_calls}, ensure_ascii=False)}\n\n"
 
             # Interviewer gets next question
-            question = agents["interviewer"].get_next_question(answer)
+            result = agents["interviewer"].get_next_question(answer)
+            question = result.get("question", "") if isinstance(result, dict) else result
+            iv_action = result.get("action", "continue") if isinstance(result, dict) else "continue"
             agents["turn_count"] += 1
 
             if agents["turn_count"] >= 50:
@@ -297,7 +302,7 @@ def auto_interview():
 
             agents["history"].append({"role": "interviewer", "text": question})
             last_question = question
-            yield f"data: {json.dumps({'role': 'interviewer', 'action': 'continue', 'text': question}, ensure_ascii=False)}\n\n"
+            yield f"data: {json.dumps({'role': 'interviewer', 'action': iv_action, 'text': question}, ensure_ascii=False)}\n\n"
 
         # Save full transcript
         transcript = "\n".join(
