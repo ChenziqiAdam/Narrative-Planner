@@ -51,7 +51,7 @@ export const DomainColors: Record<string, string> = {
 
 /** 领域边框颜色映射 */
 export const DomainBorderColors: Record<string, string> = {
-  [Domain.LIFE_CHAPTERS]: '#3B82F6',
+  [Domain.LIFE_CHAPTERS]: '#B8552E',
   [Domain.KEY_SCENES]: '#8B5CF6',
   [Domain.FUTURE_SCRIPTS]: '#06B6D4',
   [Domain.CHALLENGES]: '#EF4444',
