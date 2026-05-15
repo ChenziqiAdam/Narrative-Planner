@@ -91,7 +91,7 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({
           <span
             className="node-type-badge"
             style={{
-              backgroundColor: selectedNode.type === 'theme' ? '#3B82F6' : '#F59E0B',
+              backgroundColor: selectedNode.type === 'theme' ? '#B8552E' : '#F59E0B',
             }}
           >
             {selectedNode.type === 'theme' ? '主题' : '叙事片段'}

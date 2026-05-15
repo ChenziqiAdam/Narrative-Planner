@@ -133,7 +133,7 @@ function getCytoscapeStyles(): cytoscape.StylesheetJson {
       selector: 'node.highlighted',
       style: {
         'border-width': 4,
-        'border-color': '#3B82F6',
+        'border-color': '#B8552E',
         'opacity': 1,
       },
     },
