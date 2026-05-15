@@ -1,0 +1,486 @@
+\documentclass{beamer}
+\usepackage{ctex}
+\usepackage{hyperref}
+\usepackage{latexsym,amsmath,amssymb,xcolor,multicol,booktabs,calligra}
+\usepackage{graphicx,listings,stackengine}
+\author{\mbox{Jianing Zhang, Ziqi Chen, Zhenyu Huang, Yingyue Li, Yidong Lin}}
+\title{Narrative-Planner “叙事导航者”}
+\subtitle{基于动态事件树(或图谱)的回忆录访谈策略规划系统}
+\institute{DDA4080 Capstone Project}
+\date{2026 年 5 月 16 日}
+\usepackage{CUHKSZ}
+
+\xdefinecolor{cuhksz1}{rgb}{0.457,0.0585,0.42578}
+\xdefinecolor{cuhksz2}{rgb}{0.86328,0.63671875,0}
+\xdefinecolor{cuhksz3}{rgb}{0.953125,0.87109,0.6875}
+\definecolor{deepred}{rgb}{0.6,0,0}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
+
+\begin{document}
+
+%% --- 第 1 页：标题页 ---
+\begin{frame}
+    \titlepage
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.25\linewidth]{pic/qr-code.jpg}
+    \end{figure}
+\end{frame}
+
+%% --- 第 2 页：目录 ---
+\begin{frame}[shrink=5]{目录}
+    \tableofcontents[sectionstyle=show,subsectionstyle=show/shaded/hide]
+\end{frame}
+
+
+%% ============================================================
+\section{项目定位与核心痛点}
+%% ============================================================
+
+\begin{frame}{项目定位}
+    \begin{center}
+        {\Large\textbf{基于 GraphRAG 的智能叙事访谈系统}}
+    \end{center}
+    \vspace{0.3em}
+    \textbf{核心目标：}辅助深度人生回忆录访谈。系统通过\textcolor{cuhksz1}{实时构建个人知识图谱} +
+    \textcolor{cuhksz1}{语义检索} + \textcolor{cuhksz1}{动态画像}，驱动 LLM 生成有策略的访谈问题，
+    确保访谈覆盖完整人生阶段并深挖高价值记忆。
+    \vspace{0.5em}
+    \textbf{直接 LLM 访谈的痛点}
+    \begin{itemize}
+        \item \textbf{遗忘主线} — 轮次间缺乏持久记忆
+        \item \textbf{提问浅显} — 停留在表面，缺乏深度追问
+        \item \textbf{逻辑跳跃} — 无覆盖追踪，遗漏人生阶段
+        \item \textbf{重复提问} — 反复询问相同内容
+    \end{itemize}
+\end{frame}
+
+
+%% ============================================================
+\section{我们做了什么}
+%% ============================================================
+
+\begin{frame}{系统全景图：5 层数据流水线}
+    \begin{block}{每轮对话的完整生命周期}
+        \footnotesize
+        \begin{enumerate}
+            \item \textbf{GraphExtractionAgent} — LLM 提取实体/关系（输入：当前轮 + 近 3 轮上下文 + 已有实体摘要）
+            \item \textbf{GraphWriter} — 向量嵌入 $\to$ 去重（cos $> 0.85$）$\to$ Neo4j 写入 + FAISS 同步 $\to$ 事件-主题自动关联
+            \item \textbf{HybridRetriever} — 三路混合检索（向量 $\alpha\!=\!0.5$ + 图遍历 $\beta\!=\!0.3$ + 全文 $\gamma\!=\!0.2$）$\to$ RRF 融合
+            \item \textbf{GraphRAGDecisionContextBuilder} — 覆盖率 + 焦点叙事 + 图间隙 + 情绪 + 动态画像 $\to$ 决策上下文
+            \item \textbf{InterviewerAgent} — Planner 6 步推理 + 问题生成，\textbf{单次 LLM 调用}
+            \item \textbf{ProfileProjector} {\small （异步）}— 动态画像更新（每 3--5 轮）
+        \end{enumerate}
+    \end{block}
+    \vspace{0.2em}
+    \textbf{存储：}Neo4j（图数据库）+ FAISS（向量索引）\\    \textbf{模型：}Kimi 2.5（访谈员）+ moonshot-v1-8k（提取器）
+\end{frame}
+
+\begin{frame}{智能体体系}
+    \begin{center}
+    \begin{tabular}{lll}
+        \toprule
+        \textbf{智能体} & \textbf{职责}\\
+        \midrule
+        InterviewerAgent & Planner决策+问题生成\\
+        IntervieweeAgent & 用户模拟器\\
+        GraphExtractionAgent & 实体与关系自由提取\\
+        EvaluatorAgent & 对话质量评分\\
+        \bottomrule
+    \end{tabular}
+    \end{center}
+    \vspace{0.5em}
+    \begin{block}{Tool Call 双向机制}
+        \begin{itemize}
+            \item \textbf{InterviewerAgent}：10 个 Planner Tools，LLM 自主调用查证据
+            \item \textbf{IntervieweeAgent}：6 个记忆工具，通过 OpenAI Tool Call 自主检索记忆
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+
+%% ============================================================
+\section{如何设计的}
+%% ============================================================
+
+\begin{frame}[shrink=5]{三层记忆架构}
+    \small
+    \begin{center}
+    \begin{tabular}{llll}
+        \toprule
+        \textbf{层次} & \textbf{存储} & \textbf{更新频率} & \textbf{作用} \\
+        \midrule
+        短期记忆 & SessionState.ts & 每轮 & 直接对话上下文 \\
+        宏观长期 & Neo4j + FAISS & 每轮 & 覆盖度 / 焦点 / 探索引导 \\
+        微观长期 & DynamicProfile & 每3--5轮（异步） & 性格 / 家庭 / 价值观 \\
+        \bottomrule
+    \end{tabular}
+    \end{center}
+    \textbf{动态画像 4 个维度：}
+    \begin{itemize}
+        \item 核心身份与性格
+        \item 当前生活状况
+        \item 家庭情况
+        \item 人生观与价值观
+    \end{itemize}
+    \hfill
+\end{frame}
+
+\begin{frame}{Planner 决策机制（核心创新）}
+    \small
+    \textbf{统一 LLM 调用} — Planner + Interviewer 合并为\textbf{一次}调用，内嵌 6 步推理链：
+    \begin{enumerate}\small
+        \item \textbf{语义理解}当前回复
+        \item \textbf{访谈阶段}判断（概述 / 深入 / 拓展 / 反思 / 收尾）
+        \item \textbf{事件完整度}评估（时间/地点/人物/原因/结果/感受/反思/顺序）
+        \item \textbf{情绪与精力}感知（energy + valence）
+        \item \textbf{图谱与主题缺口}分析
+        \item \textbf{候选动作打分} $\to$ 选最优
+    \end{enumerate}
+    \begin{block}{9 种规划器动作}
+        \scriptsize
+        \texttt{continue\_overview} · \texttt{deep\_dive} · \texttt{clarify} · \texttt{confirm\_summary} · \texttt{switch\_theme}
+        · \texttt{move\_to\_person} · \texttt{move\_to\_period} · \texttt{reflection} · \texttt{end}
+    \end{block}
+    输出结构化 \texttt{planner\_plan} JSON（stage, action, focus, completeness, emotion, candidates, tone）— \textbf{可观测、可调试、可实验}
+\end{frame}
+
+\begin{frame}{检索策略：Schema-on-the-fly + RRF 三路融合}
+    \begin{columns}[T]
+        \begin{column}{0.57\textwidth}
+            \small
+            \textbf{Schema-on-the-fly 提取：}
+            \begin{itemize}\setlength{\itemsep}{1pt}
+                \item 不预设固定槽位，LLM 自由提取实体和关系
+                \item 5 种实体类型：Event / Person / Location / Emotion / Insight
+                \item 实体 ID
+                \item LLM 自主决定：new / update / skip
+            \end{itemize}
+            \vspace{0.15em}
+            \textbf{实体去重双重校验：}
+            \begin{itemize}\setlength{\itemsep}{1pt}
+                \item 向量余弦相似度 $> 0.85$
+                \item 名称子串匹配
+            \end{itemize}
+            \vspace{0.15em}
+            事件在写入时自动关联 McAdams \textbf{23 个人生主题}。
+        \end{column}
+        \begin{column}{0.41\textwidth}
+            \small
+            \textbf{三路检索互补：}
+            \begin{itemize}\setlength{\itemsep}{1pt}
+                \item \textbf{向量}$\alpha\!=\!0.5$：语义近似
+                \item \textbf{图遍历}$\beta\!=\!0.3$：关系发现
+                \item \textbf{全文}$\gamma\!=\!0.2$：关键词命中
+            \end{itemize}
+            \vspace{0.15em}
+            % 这里修复：无空行 + 删除多余的\end{block}
+            \begin{block}{RRF 融合公式}
+            \[
+            s(e) = \frac{\alpha}{K+r_v} + \frac{\beta}{K+r_g} + \frac{\gamma}{K+r_f}
+            \]
+            \end{block}
+            {\scriptsize $K=60$，输出 $\sim$400 token 的 \texttt{RankedEntity} 列表}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Prompt 组成：InterviewerAgent}
+    \begin{columns}
+        \begin{column}{0.48\textwidth}
+            \begin{block}{System Prompt（静态）}
+                \scriptsize
+                \begin{itemize}
+                    \item 角色定位：充满好奇心的传记访谈者
+                    \item 访谈覆盖主题（Life Story Interview 规程）
+                    \item 行为准则（5 条）：先回应后提问、好奇多于礼貌等
+                    \item 内部 Planner 工作流（6 步）
+                    \item 判停与结束判断
+                    \item 输出要求（严格 JSON）
+                    \item 工具调用说明
+                \end{itemize}
+            \end{block}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{block}{User Prompt（每轮动态组装）}
+                \scriptsize
+                \begin{enumerate}
+                    \item 受访者基本信息
+                    \item 已了解的受访者特点（动态画像 + guidance）
+                    \item 最近对话（3--5 轮）
+                    \item 正在聊的经历（focus\_rich\_text）
+                    \item 人生故事覆盖情况
+                    \item 待探索的话题线索
+                    \item 叙事记忆脉络（RRF 融合结果）
+                    \item 策略提示（低信息警告 + 跨会话历史）
+                    \item 任务指令 + JSON 格式要求
+                \end{enumerate}
+            \end{block}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+
+%% ============================================================
+\section{探索历程}
+%% ============================================================
+
+\begin{frame}{9 周架构演进时间线}
+    \scriptsize
+    \begin{tabular}{llp{7.8cm}}
+        \toprule
+        \textbf{周次} & \textbf{时间} & \textbf{关键事件} \\
+        \midrule
+        1 & 2.5–2.6 & 基线搭建：Baseline Agent + 嵌入 / LLM 评判 \\
+        2 & 3.5–3.15 & 原型验证：用户模拟器；Cytoscape 可视化；放弃 CAMEL 框架 \\
+        3 & 3.19–3.20 & 槽位探索：8 槽位→5 槽位→6 层事件提取；GraphProjector+MergeEngine \\
+        4 & 4.2–4.3 & Agent 合并：Planner+Interviewer 合并为单次 LLM 调用 \\
+        5 & 4.16 & 向量检索：FAISS 引入；语义记忆检索；动态画像异步更新 \\
+        6 & 4.17 & 数据库迁移：NetworkX→Neo4j 持久化图数据库 \\
+        7 & 4.23–4.24 & 工程化：BatchInterview 批量测试管线 + 模块计时 \\
+        8 & 5.2–5.3 & \textbf{GraphRAG 革命}：删除 13000+ 行旧代码；全面切换 GraphRAG \\
+        9 & 5.4–5.8 & 性能优化：智谱 Embedding-3；实体去重；get\_graph\_state 2.1s→9ms \\
+        \bottomrule
+    \end{tabular}
+\end{frame}
+
+\begin{frame}{关键取舍：保留 vs.\ 放弃}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{alertblock}{放弃的技术（及原因）}
+                \scriptsize
+                \begin{itemize}
+                    \item \textbf{固定 8 槽位体系} — 太死板，强行填槽导致信息丢失
+                    \item \textbf{CAMEL 框架} — 太重，控制力不够，手动实现更灵活
+                    \item \textbf{NetworkX 内存图} — 不持久化，重启丢失，无法跨会话
+                    \item \textbf{Planner/Interviewer 分离} — 两次 LLM 调用延迟高、上下文割裂
+                    \item \textbf{独立决策策略文件} — 规则太多维护不动，交给 LLM 在 Prompt 内推理
+                    \item \textbf{自适应路由校准} — 过度工程化，实际效果不明显
+                    \item \textbf{本地 sentence-transformers} — 维度低(384)，中英文效果一般
+                    \item \textbf{旧 RAG 模块} — 功能太简单，被 GraphRAG 三路融合取代
+                \end{itemize}
+            \end{alertblock}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{block}{保留并持续优化}
+                \scriptsize
+                \begin{itemize}
+                    \item McAdams \textbf{23 个人生主题}体系
+                    \item \textbf{IntervieweeAgent} Tool Call 记忆系统
+                    \item \textbf{DynamicProfile} 异步画像更新
+                    \item \textbf{FAISS + RRF} 三路混合检索
+                    \item \textbf{Planner Tool Call}（10 个只读工具）
+                    \item \textbf{SessionGraphBridge} 跨会话记忆
+                    \item \textbf{BatchInterview} 批量实验管线
+                    \item \textbf{Cytoscape.js} 前端图谱可视化
+                \end{itemize}
+            \end{block}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{核心洞见与关键设计决策}
+    \begin{center}
+        {\large\textbf{``从规则驱动的槽位填充，到数据驱动的图谱生长''}}
+    \end{center}
+    \vspace{0.2em}
+    最大的架构决策是把 Planner 决策逻辑从硬编码规则（权重打分）转变为 LLM 内部推理 + 图谱证据驱动的 emergent behavior。
+    \vspace{0.3em}
+    \begin{block}{7 大关键设计决策}
+        \small
+        \begin{enumerate}
+            \item \textbf{Schema-on-the-fly}：不预设固定槽位，LLM 自由提取实体和关系
+            \item \textbf{Planner-NLG 统一}：输出结构化 planner\_plan + action + question，一次调用完成
+            \item \textbf{RRF 三路融合}：向量 + 图 + 全文互补增强检索召回
+            \item \textbf{实体去重}：向量余弦 $> 0.85$ + 名称子串双重校验
+            \item \textbf{异步画像更新}：每 3--5 轮后台线程更新，不阻塞主流程
+            \item \textbf{Tool Call 双向}：InterviewerAgent 有 Planner Tools，IntervieweeAgent 有 Memory Tools
+            \item \textbf{跨会话连续性}：通过 elder\_id 关联，预加载历史图谱 + 向量索引
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+
+%% ============================================================
+\section{成果展示与数据对比}
+%% ============================================================
+
+\begin{frame}{对比实验设计}
+    \textbf{自动化 A/B 测试框架：}每个智能体运行 10 次，使用相同的长者画像和 LLM。
+    \vspace{0.3em}
+    \begin{block}{5 指标综合评分}
+        \begin{center}
+        \begin{tabular}{lcc}
+            \toprule
+            \textbf{指标} & \textbf{权重} & \textbf{衡量内容} \\
+            \midrule
+            问题质量 & 28\% & 相关性与深度） \\
+            信息增益 & 24\% & 每轮新提取的实体数 \\
+            非冗余度 & 20\% & 近 3 轮问题比较 \\
+            覆盖度 & 18\% & 覆盖的人生主题数（共 23 个） \\
+            完成度 & 10\% & 会话完成率 \\
+            \bottomrule
+        \end{tabular}
+        \end{center}
+    \end{block}
+    \vspace{0.2em}
+    三种实验条件：\textbf{Baseline}（纯 LLM）$\cdot$ \textbf{Planner（槽位版）} $\cdot$ \textbf{Planner（GraphRAG版）}
+\end{frame}
+
+\begin{frame}{定量结果}
+    \begin{center}
+    \begin{tabular}{lccc}
+        \toprule
+        \textbf{指标} & \textbf{Baseline} & \textbf{Planner+GraphRAG} & \textbf{变化} \\
+        \midrule
+        综合均分       & 0.3583 & \textbf{0.4731} & \textcolor{deepgreen}{+32\%} \\
+        信息增益       & 0.10   & \textbf{0.6366} & \textcolor{deepgreen}{+537\%} \\
+        非冗余度       & \textbf{0.7439} & 0.5864 & \textcolor{deepred}{$-$21\%} \\
+        平均对话轮数   & 20.0   & \textbf{32.7}   & \textcolor{deepgreen}{+64\%} \\
+        \midrule
+        创建实体数     & --- & \textbf{699} & --- \\
+        创建关系数     & --- & \textbf{1{,}060} & --- \\
+        \bottomrule
+    \end{tabular}
+    \end{center}
+    \vspace{0.2em}
+    \begin{alertblock}{核心发现}
+        Planner+GraphRAG 在所有加权指标上均胜出。非冗余度下降是\textbf{符合预期的}：
+        深度访谈会\textbf{有意}回访话题，以探索新的维度（事件完整度 8 维检查）。
+    \end{alertblock}
+\end{frame}
+
+\begin{frame}{实时评测机设计}
+    \begin{block}{实时评测智能体}
+        在衡量实体提取、覆盖度和冗余度基础上，判断每一轮访谈问题是否真正
+        “接住了线索”、是否在合适时机深挖或转向。因此我们加入了
+        \textbf{Evaluator Agent}，对访谈质量进行实时补充评估。
+    \end{block}
+
+    \begin{center}
+    \begin{tabular}{lp{0.62\linewidth}}
+        \toprule
+        \textbf{机制} & \textbf{说明} \\
+        \midrule
+        上下文判断 & 评分时传入最近对话，用于判断承接、重复与连贯性 \\
+        日志同步 & 评分结果写入每轮访谈日志，便于后续实验复盘 \\
+        \bottomrule
+    \end{tabular}
+    \end{center}
+
+    \begin{alertblock}{}
+        评测机不只判断“问得好不好”，更关注问题是否推动回忆录材料形成：
+        能否捕捉线索、补全事件、延展人生阶段，并保持自然的访谈节奏。
+    \end{alertblock}
+\end{frame}
+
+\begin{frame}{实时评测机结果}
+    \begin{block}{评测设置}
+        我们进一步使用实时评测机，对两个智能体评价其路径合理性、线索闭合、事件完整度、共情表现与主题覆盖。
+    \end{block}
+
+    \vspace{0.3em}
+    \begin{center}
+    \begin{tabular}{lccc}
+        \toprule
+        \textbf{指标} & \textbf{Baseline} & \textbf{Planner+GraphRAG} & \textbf{变化} \\
+        \midrule
+        会话综合得分 & 7.67 & \textbf{9.0} & \textcolor{deepgreen}{+17.3\%} \\
+        路径合理性 & 9.0 & \textbf{9.5} & \textcolor{deepgreen}{+5.6\%} \\
+        线索闭合率 & 5.0 & \textbf{8.0} & \textcolor{deepgreen}{+60.0\%} \\
+        事件完整度 & 9.0 & \textbf{9.5} & \textcolor{deepgreen}{+5.6\%} \\
+        \bottomrule
+    \end{tabular}
+    \end{center}
+
+    \vspace{0.2em}
+    \begin{alertblock}{补充发现}
+        Planner+GraphRAG 的优势主要体现在\textbf{线索闭合}与\textbf{结构化证据积累}：
+        它更能接住长者话语中的人物、事件和情感线索，并将访谈内容转化为可用于回忆录写作的图谱材料。
+    \end{alertblock}
+\end{frame}
+
+
+
+\begin{frame}{定性案例对比}
+    \begin{columns}
+        \begin{column}{0.48\textwidth}
+            \begin{alertblock}{Baseline（纯 LLM）}
+                \scriptsize
+                \begin{itemize}
+                    \item 机械追问，缺乏情感共鸣
+                    \item 重复提问相同话题
+                    \item 遗漏重要人生阶段
+                    \item 无法感知用户情绪变化
+                    \item 对话轮数少（$\sim$20 轮），浅尝辄止
+                \end{itemize}
+            \end{alertblock}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{block}{Planner + GraphRAG}
+                \scriptsize
+                \begin{itemize}
+                    \item 自然过渡，先回应后深入
+                    \item 主动跳转未覆盖的主题
+                    \item 深挖情感细节和事件背景
+                    \item 感知情绪并调整语气
+                    \item 对话轮数多（$\sim$33 轮），深度挖掘
+                \end{itemize}
+            \end{block}
+        \end{column}
+    \end{columns}
+    \vspace{0.3em}
+    \begin{block}{Token 与延迟成本}
+        \scriptsize
+        GraphRAG \textbf{降低了回复延迟}（103.8s vs.\ 162.2s），通过压缩决策上下文实现，
+        但增加了提取 Token 成本（更丰富的实体类型提示词）。
+        模型采用 Kimi 2.5，后续计划探索更多模型的 Token 消耗和延迟表现。
+    \end{block}
+\end{frame}
+
+
+%% ============================================================
+\section{总结与展望}
+%% ============================================================
+
+\begin{frame}{项目成果总结}
+    \textbf{我们构建了：}
+    \begin{itemize}
+        \item 完整的 GraphRAG 访谈系统：4 个 Agent + 5 层服务 + 前后端全栈
+        \item 可观测的 Planner 决策，通过结构化 \texttt{planner\_plan} JSON 输出
+        \item $\sim$103 次 Git 提交；在第八周大重构中\textbf{删除 13,380+ 行}旧代码（73 个文件）
+        \item 基于腾讯真实长者画像样本的评估验证
+    \end{itemize}
+    \vspace{0.5em}
+    \textbf{核心数据：}
+    \begin{itemize}
+        \item 综合评分 \textcolor{deepgreen}{+32\%}，信息增益 \textcolor{deepgreen}{+537\%}（对比 Baseline）
+        \item 10 次会话中提取 699 个实体和 1,060 条关系
+        \item 性能优化：\texttt{get\_graph\_state} 从 2.1s $\to$ 9ms
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{未来方向}
+    \begin{itemize}
+        \item \textbf{真人访谈验证}：从用户模拟器（User Simulator）到真实长者用户测试
+        \item \textbf{个性化访谈大纲}：从通用模板 $\to$ 根据老人背景定制的专属访谈计划
+        \item \textbf{回忆录生成}：从访谈记录 $\to$ 自动撰写完整传记
+        \item \textbf{模型探索}：在更多 LLM 上测试 Token 消耗和延迟表现
+    \end{itemize}
+    \vspace{1em}
+    \begin{center}
+        {\textbf{``从规则驱动到数据驱动，从静态槽位到动态图谱''}}
+    \end{center}
+\end{frame}
+
+%% --- 致谢 ---
+\begin{frame}[plain]
+    \begin{center}
+        {\Huge\calligra Thanks!}
+        \vspace{1em}
+
+        \normalsize 欢迎提问与讨论
+    \end{center}
+\end{frame}
+
+\end{document}
