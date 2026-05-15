@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>叙事导航者 · Narrative Planner</title>
+<meta name="description" content="基于动态事件图谱的回忆录访谈规划系统 — A GraphRAG-based interview planner for memoir generation." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          paper:   '#FAF8F5',
+          ink:     '#1A1A1A',
+          muted:   '#5C5853',
+          line:    '#E5E0D8',
+          accent:  '#B8552E',
+          accent2: '#8C3D1F',
+          warm:    '#F2EBDF',
+        },
+        fontFamily: {
+          serif: ['"Noto Serif SC"', 'Georgia', 'serif'],
+          sans:  ['Inter', 'system-ui', 'sans-serif'],
+          mono:  ['"JetBrains Mono"', 'monospace'],
+        },
+      }
+    }
+  }
+</script>
+
+<style>
+  html { scroll-behavior: smooth; }
+  body {
+    background-color: #FAF8F5;
+    color: #1A1A1A;
+    font-family: 'Inter', system-ui, sans-serif;
+    /* subtle paper grain */
+    background-image:
+      radial-gradient(rgba(0,0,0,0.018) 1px, transparent 1px),
+      radial-gradient(rgba(0,0,0,0.012) 1px, transparent 1px);
+    background-size: 3px 3px, 7px 7px;
+    background-position: 0 0, 1px 1px;
+  }
+  .font-cn { font-family: 'Noto Serif SC', Georgia, serif; }
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: #B8552E;
+  }
+  .hairline { border-color: #E5E0D8; }
+
+  /* fade-in on scroll */
+  .reveal { opacity: 0; transform: translateY(16px); transition: opacity .8s ease, transform .8s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* hide alt-language by default */
+  [data-en] { display: none; }
+  html[lang="en"] [data-cn] { display: none; }
+  html[lang="en"] [data-en] { display: inline; }
+  html[lang="en"] [data-en-block] { display: block; }
+
+  /* default cn block visibility */
+  [data-cn-block] { display: block; }
+  html[lang="en"] [data-cn-block] { display: none; }
+
+  /* link underline */
+  .underline-soft { text-decoration: underline; text-decoration-color: rgba(184,85,46,0.4); text-underline-offset: 4px; }
+  .underline-soft:hover { text-decoration-color: #B8552E; }
+
+  /* growing graph animation */
+  @keyframes nodepop {
+    0% { opacity: 0; transform: scale(0); }
+    60% { opacity: 1; transform: scale(1.2); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  @keyframes drawline {
+    from { stroke-dashoffset: 200; }
+    to { stroke-dashoffset: 0; }
+  }
+  .graph-node { transform-origin: center; transform-box: fill-box; animation: nodepop 0.6s ease-out forwards; opacity: 0; }
+  .graph-line { stroke-dasharray: 200; stroke-dashoffset: 200; animation: drawline 1s ease-out forwards; }
+</style>
+</head>
+
+<body class="antialiased">
+
+<!-- ============ NAV ============ -->
+<nav class="fixed top-0 left-0 right-0 z-50 bg-paper/85 backdrop-blur-md border-b hairline">
+  <div class="max-w-6xl mx-auto px-6 sm:px-10 h-14 flex items-center justify-between">
+    <a href="#top" class="flex items-baseline gap-2">
+      <span class="font-cn text-lg font-semibold text-ink">叙事导航者</span>
+      <span class="hidden sm:inline text-[11px] tracking-[0.18em] uppercase text-muted">Narrative Planner</span>
+    </a>
+    <div class="hidden md:flex items-center gap-7 text-xs tracking-wider uppercase text-muted">
+      <a href="#problem"  class="hover:text-ink transition">01 <span data-cn>问题</span><span data-en>Problem</span></a>
+      <a href="#approach" class="hover:text-ink transition">02 <span data-cn>方法</span><span data-en>Approach</span></a>
+      <a href="#system"   class="hover:text-ink transition">03 <span data-cn>系统</span><span data-en>System</span></a>
+      <a href="#features" class="hover:text-ink transition">04 <span data-cn>特性</span><span data-en>Features</span></a>
+      <a href="#demo"     class="hover:text-ink transition">05 <span data-cn>演示</span><span data-en>Demo</span></a>
+      <a href="#eval"     class="hover:text-ink transition">06 <span data-cn>评估</span><span data-en>Evaluation</span></a>
+    </div>
+    <button id="lang-toggle" class="font-mono text-xs px-3 py-1.5 border hairline rounded-full hover:bg-warm transition">
+      <span data-cn>EN</span><span data-en>中</span>
+    </button>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header id="top" class="pt-32 pb-24 sm:pt-40 sm:pb-32">
+  <div class="max-w-6xl mx-auto px-6 sm:px-10 grid md:grid-cols-12 gap-10 items-center">
+    <div class="md:col-span-7">
+      <div class="section-num mb-6">// A RESEARCH PROJECT · 2026</div>
+      <h1 class="font-cn text-5xl sm:text-6xl md:text-7xl font-semibold leading-[1.05] text-ink">
+        <span data-cn-block>叙事导航者</span>
+        <span data-en-block class="font-sans tracking-tight">Narrative<br/>Planner</span>
+      </h1>
+      <p class="mt-5 text-sm tracking-[0.25em] uppercase text-accent font-medium">
+        <span data-cn>用科技留存岁月</span>
+        <span data-en>Preserving Lives Through Technology</span>
+      </p>
+      <p class="mt-8 text-lg sm:text-xl leading-relaxed text-muted max-w-xl">
+        <span data-cn>一个基于动态事件图谱的回忆录访谈规划系统。通过实时图谱构建与语义检索，辅助 LLM 进行更深入、更连贯、更完整的人生叙事访谈。</span>
+        <span data-en>A GraphRAG-based interview planning system for memoir generation. Real-time event graph construction and semantic retrieval assist LLMs in deeper, more coherent, and more complete life-narrative interviews.</span>
+      </p>
+
+      <div class="mt-10 flex flex-wrap gap-3">
+        <!-- TODO: replace # with live demo URL -->
+        <a href="#" class="group inline-flex items-center gap-2 bg-ink text-paper px-6 py-3 rounded-full text-sm font-medium hover:bg-accent transition">
+          <span data-cn>在线演示</span><span data-en>Live Demo</span>
+          <svg class="w-4 h-4 group-hover:translate-x-0.5 transition" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+        </a>
+        <!-- TODO: replace # with GitHub URL -->
+        <a href="#" class="inline-flex items-center gap-2 border border-ink text-ink px-6 py-3 rounded-full text-sm font-medium hover:bg-ink hover:text-paper transition">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.76 2.69 1.25 3.34.96.1-.74.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.7 0-1.26.45-2.29 1.18-3.1-.12-.29-.51-1.46.11-3.04 0 0 .96-.31 3.16 1.18a10.95 10.95 0 0 1 5.74 0c2.2-1.49 3.16-1.18 3.16-1.18.62 1.58.23 2.75.11 3.04.74.81 1.18 1.84 1.18 3.1 0 4.43-2.7 5.41-5.27 5.69.41.36.78 1.06.78 2.14v3.18c0 .31.21.67.8.55C20.21 21.39 23.5 17.07 23.5 12 23.5 5.65 18.35.5 12 .5z"/></svg>
+          GitHub
+        </a>
+        <a href="#demo" class="inline-flex items-center gap-2 text-ink px-6 py-3 rounded-full text-sm font-medium hover:text-accent transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><circle cx="12" cy="12" r="9" stroke-linecap="round"/></svg>
+          <span data-cn>观看视频</span><span data-en>Watch Video</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- animated growing graph -->
+    <div class="md:col-span-5">
+      <div class="aspect-square w-full max-w-md mx-auto relative">
+        <svg viewBox="0 0 400 400" class="w-full h-full">
+          <!-- timeline axis -->
+          <line x1="60" y1="60" x2="60" y2="340" stroke="#E5E0D8" stroke-width="1"/>
+          <text x="50" y="70"  text-anchor="end" font-family="JetBrains Mono" font-size="9" fill="#5C5853">1950</text>
+          <text x="50" y="200" text-anchor="end" font-family="JetBrains Mono" font-size="9" fill="#5C5853">1980</text>
+          <text x="50" y="340" text-anchor="end" font-family="JetBrains Mono" font-size="9" fill="#5C5853">2020</text>
+
+          <!-- domain columns -->
+          <text x="120" y="50" font-family="Inter" font-size="9" fill="#5C5853">家庭</text>
+          <text x="220" y="50" font-family="Inter" font-size="9" fill="#5C5853">职业</text>
+          <text x="320" y="50" font-family="Inter" font-size="9" fill="#5C5853">时代</text>
+
+          <!-- lines -->
+          <path class="graph-line" d="M120 90 L 220 150" stroke="#B8552E" stroke-width="1.2" fill="none" style="animation-delay:0.5s"/>
+          <path class="graph-line" d="M220 150 L 320 200" stroke="#B8552E" stroke-width="1.2" fill="none" style="animation-delay:1.2s"/>
+          <path class="graph-line" d="M120 90 L 120 220" stroke="#1A1A1A" stroke-width="1" fill="none" opacity="0.4" style="animation-delay:1.5s"/>
+          <path class="graph-line" d="M220 150 L 220 280" stroke="#1A1A1A" stroke-width="1" fill="none" opacity="0.4" style="animation-delay:2s"/>
+          <path class="graph-line" d="M120 220 L 220 280" stroke="#B8552E" stroke-width="1.2" fill="none" style="animation-delay:2.5s"/>
+          <path class="graph-line" d="M320 200 L 320 320" stroke="#1A1A1A" stroke-width="1" fill="none" opacity="0.4" style="animation-delay:3s"/>
+
+          <!-- nodes -->
+          <circle class="graph-node" cx="120" cy="90"  r="7" fill="#B8552E" style="animation-delay:0.2s"/>
+          <circle class="graph-node" cx="220" cy="150" r="9" fill="#1A1A1A" style="animation-delay:0.9s"/>
+          <circle class="graph-node" cx="320" cy="200" r="6" fill="#B8552E" style="animation-delay:1.6s"/>
+          <circle class="graph-node" cx="120" cy="220" r="8" fill="#1A1A1A" style="animation-delay:2.1s"/>
+          <circle class="graph-node" cx="220" cy="280" r="11" fill="#B8552E" style="animation-delay:2.7s"/>
+          <circle class="graph-node" cx="320" cy="320" r="5" fill="#1A1A1A" opacity="0.4" style="animation-delay:3.3s"/>
+
+          <!-- pending (dashed) future nodes -->
+          <circle class="graph-node" cx="320" cy="100" r="6" fill="none" stroke="#B8552E" stroke-width="1.2" stroke-dasharray="2 2" style="animation-delay:3.6s"/>
+          <circle class="graph-node" cx="120" cy="320" r="6" fill="none" stroke="#B8552E" stroke-width="1.2" stroke-dasharray="2 2" style="animation-delay:3.8s"/>
+        </svg>
+        <div class="absolute bottom-0 left-0 right-0 text-center text-[10px] tracking-[0.2em] uppercase text-muted">
+          <span data-cn>实时生长的人生事件图谱</span>
+          <span data-en>Real-time growing life-event graph</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ 01 PROBLEM ============ -->
+<section id="problem" class="py-24 border-t hairline">
+  <div class="max-w-6xl mx-auto px-6 sm:px-10">
+    <div class="reveal">
+      <div class="section-num mb-4">01 — THE PROBLEM</div>
+      <h2 class="font-cn text-4xl sm:text-5xl font-semibold max-w-3xl leading-tight">
+        <span data-cn>通用大模型在长程访谈中容易失焦</span>
+        <span data-en class="font-sans tracking-tight">General-purpose LLMs lose focus in long-form interviews.</span>
+      </h2>
+      <p class="mt-6 text-muted max-w-2xl">
+        <span data-cn>回忆录访谈是一项专业工作。当对话动辄数十轮时，我们观察到现有 LLM 普遍存在三类系统性缺陷：</span>
+        <span data-en>Memoir interviewing is a craft. Across long, multi-turn conversations we observe three recurring failure modes in off-the-shelf LLMs:</span>
+      </p>
+    </div>
+
+    <div class="mt-16 grid md:grid-cols-3 gap-6">
+      <div class="reveal p-8 border hairline rounded-sm bg-paper">
+        <div class="font-mono text-xs text-accent">PAIN · 01</div>
+        <h3 class="mt-3 font-cn text-2xl font-semibold">
+          <span data-cn>遗忘主线</span><span data-en class="font-sans">Losing the thread</span>
+        </h3>
+        <p class="mt-4 text-sm text-muted leading-relaxed">
+          <span data-cn>缺乏全局规划。话题随机漂移，重要的人生阶段被遗漏，访谈结束时仍存在大片空白。</span>
+          <span data-en>No global plan. Topics drift, key life stages get skipped, and entire decades remain blank when the session ends.</span>
+        </p>
+      </div>
+      <div class="reveal p-8 border hairline rounded-sm bg-paper" style="transition-delay:.1s">
+        <div class="font-mono text-xs text-accent">PAIN · 02</div>
+        <h3 class="mt-3 font-cn text-2xl font-semibold">
+          <span data-cn>提问浅尝辄止</span><span data-en class="font-sans">Shallow probing</span>
+        </h3>
+        <p class="mt-4 text-sm text-muted leading-relaxed">
+          <span data-cn>缺乏深度挖掘机制。停在表面事实，无法触及情感、细节与反思——而那才是回忆录的灵魂。</span>
+          <span data-en>Stops at surface facts. Never digs into emotion, sensory detail, or reflection — the substance that makes a memoir worth reading.</span>
+        </p>
+      </div>
+      <div class="reveal p-8 border hairline rounded-sm bg-paper" style="transition-delay:.2s">
+        <div class="font-mono text-xs text-accent">PAIN · 03</div>
+        <h3 class="mt-3 font-cn text-2xl font-semibold">
+          <span data-cn>逻辑跳跃</span><span data-en class="font-sans">Jarring transitions</span>
+        </h3>
+        <p class="mt-4 text-sm text-muted leading-relaxed">
+          <span data-cn>话题切换生硬。从父亲跳到工作再跳到童年，老人感到困惑，对话失去连贯。</span>
+          <span data-en>Topic switches feel abrupt. The interviewee gets disoriented, and the conversation loses narrative coherence.</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 02 APPROACH ============ -->
+<section id="approach" class="py-24 border-t hairline bg-warm/40">
+  <div class="max-w-6xl mx-auto px-6 sm:px-10">
+    <div class="reveal grid md:grid-cols-12 gap-10">
+      <div class="md:col-span-5">
+        <div class="section-num mb-4">02 — OUR APPROACH</div>
+        <h2 class="font-cn text-4xl sm:text-5xl font-semibold leading-tight">
+          <span data-cn>把"规划"和"说话"分开</span>
+          <span data-en class="font-sans tracking-tight">Decouple planning from speaking.</span>
+        </h2>
+      </div>
+      <div class="md:col-span-7">
+        <p class="text-lg text-ink/80 leading-relaxed">
+          <span data-cn>我们设计了一个独立的<span class="text-accent font-medium">访谈决策规划模块（Planner）</span>，它不直接生成对话，而是输出结构化的战术指令——告诉对话 Agent <em>下一步该深挖什么、何时切换话题、用什么语气</em>。Planner 的依据来自一张实时构建、不断生长的<span class="text-accent font-medium">人生事件图谱</span>。</span>
+          <span data-en>We built a standalone <span class="text-accent font-medium">interview decision planner</span> that does not produce dialogue itself. Instead it emits structured tactical instructions — telling the conversational agent <em>what to probe next, when to switch topics, and what tone to use</em>. Its decisions are grounded in a live, ever-growing <span class="text-accent font-medium">life-event graph</span>.</span>
+        </p>
+        <blockquote class="mt-8 pl-6 border-l-2 border-accent font-cn text-2xl italic text-ink/90">
+          <span data-cn>"用科技留存岁月。"</span>
+          <span data-en class="not-italic font-sans">"Preserving lives through technology."</span>
+        </blockquote>
+      </div>
+    </div>
+
+    <!-- 3-stage diagram -->
+    <div class="reveal mt-20">
+      <h3 class="font-mono text-xs tracking-[0.2em] uppercase text-muted mb-8">
+        <span data-cn>三阶段演化 · Three-Stage Evolution of the Life Graph</span>
+        <span data-en>Three-Stage Evolution of the Life Graph</span>
+      </h3>
+      <div class="grid md:grid-cols-3 gap-6">
+        <!-- Stage 1 -->
+        <div class="p-8 border hairline rounded-sm bg-paper">
+          <div class="font-mono text-xs text-accent mb-2">STAGE 01</div>
+          <h4 class="font-cn text-xl font-semibold mb-4"><span data-cn>骨架期</span><span data-en class="font-sans">Skeleton</span></h4>
+          <svg viewBox="0 0 200 120" class="w-full h-28">
+            <line x1="100" y1="20" x2="100" y2="100" stroke="#1A1A1A" stroke-width="1"/>
+            <circle cx="100" cy="20" r="4" fill="none" stroke="#B8552E" stroke-dasharray="2 2"/>
+            <circle cx="100" cy="50" r="4" fill="none" stroke="#B8552E" stroke-dasharray="2 2"/>
+            <circle cx="100" cy="80" r="4" fill="none" stroke="#B8552E" stroke-dasharray="2 2"/>
+            <circle cx="100" cy="100" r="4" fill="none" stroke="#B8552E" stroke-dasharray="2 2"/>
+            <text x="115" y="24" font-family="Inter" font-size="8" fill="#5C5853">童年</text>
+            <text x="115" y="54" font-family="Inter" font-size="8" fill="#5C5853">求学</text>
+            <text x="115" y="84" font-family="Inter" font-size="8" fill="#5C5853">工作</text>
+            <text x="115" y="104" font-family="Inter" font-size="8" fill="#5C5853">退休</text>
+          </svg>
+          <p class="mt-4 text-sm text-muted leading-relaxed">
+            <span data-cn>从极简生平出发，搭建"待填空的生命树"——通用人生阶段大纲。</span>
+            <span data-en>Start from minimal biography. Build a blank life-tree — a universal stage-by-stage outline waiting to be filled.</span>
+          </p>
+        </div>
+        <!-- Stage 2 -->
+        <div class="p-8 border hairline rounded-sm bg-paper">
+          <div class="font-mono text-xs text-accent mb-2">STAGE 02</div>
+          <h4 class="font-cn text-xl font-semibold mb-4"><span data-cn>蔓延生长期</span><span data-en class="font-sans">Growth</span></h4>
+          <svg viewBox="0 0 200 120" class="w-full h-28">
+            <line x1="100" y1="20" x2="100" y2="100" stroke="#1A1A1A" stroke-width="1"/>
+            <line x1="100" y1="35" x2="60" y2="50" stroke="#B8552E" stroke-width="1"/>
+            <line x1="100" y1="35" x2="140" y2="55" stroke="#B8552E" stroke-width="1"/>
+            <line x1="100" y1="65" x2="55" y2="80" stroke="#B8552E" stroke-width="1"/>
+            <line x1="100" y1="65" x2="145" y2="85" stroke="#1A1A1A" stroke-width="1" opacity="0.4" stroke-dasharray="2 2"/>
+            <circle cx="100" cy="35" r="5" fill="#1A1A1A"/>
+            <circle cx="100" cy="65" r="5" fill="#B8552E"/>
+            <circle cx="100" cy="95" r="4" fill="none" stroke="#B8552E" stroke-dasharray="2 2"/>
+            <circle cx="60" cy="50" r="4" fill="#B8552E"/>
+            <circle cx="140" cy="55" r="4" fill="#1A1A1A"/>
+            <circle cx="55" cy="80" r="4" fill="#1A1A1A"/>
+            <circle cx="145" cy="85" r="3" fill="none" stroke="#B8552E" stroke-dasharray="2 2"/>
+          </svg>
+          <p class="mt-4 text-sm text-muted leading-relaxed">
+            <span data-cn>边访谈边织网：捕捉高亮实体（人名、时间），挂载到骨架，预测潜在子任务。</span>
+            <span data-en>Weave the web while interviewing: capture salient entities (people, times), attach to the skeleton, predict latent sub-tasks.</span>
+          </p>
+        </div>
+        <!-- Stage 3 -->
+        <div class="p-8 border hairline rounded-sm bg-paper">
+          <div class="font-mono text-xs text-accent mb-2">STAGE 03</div>
+          <h4 class="font-cn text-xl font-semibold mb-4"><span data-cn>主题升华期</span><span data-en class="font-sans">Synthesis</span></h4>
+          <svg viewBox="0 0 200 120" class="w-full h-28">
+            <circle cx="100" cy="60" r="22" fill="none" stroke="#B8552E" stroke-width="1.5"/>
+            <circle cx="100" cy="60" r="6"  fill="#B8552E"/>
+            <circle cx="60"  cy="40" r="3" fill="#1A1A1A"/>
+            <circle cx="140" cy="35" r="3" fill="#1A1A1A"/>
+            <circle cx="50"  cy="80" r="3" fill="#1A1A1A"/>
+            <circle cx="150" cy="85" r="3" fill="#1A1A1A"/>
+            <circle cx="100" cy="100" r="3" fill="#1A1A1A"/>
+            <line x1="60" y1="40" x2="100" y2="60" stroke="#5C5853" stroke-width="0.5"/>
+            <line x1="140" y1="35" x2="100" y2="60" stroke="#5C5853" stroke-width="0.5"/>
+            <line x1="50" y1="80" x2="100" y2="60" stroke="#5C5853" stroke-width="0.5"/>
+            <line x1="150" y1="85" x2="100" y2="60" stroke="#5C5853" stroke-width="0.5"/>
+            <line x1="100" y1="100" x2="100" y2="60" stroke="#5C5853" stroke-width="0.5"/>
+          </svg>
+          <p class="mt-4 text-sm text-muted leading-relaxed">
+            <span data-cn>覆盖率 > 70% 时切换至总结模式，扫描全图寻找高频情绪，提炼出主题（如《漂泊中的安宁》）。</span>
+            <span data-en>Once coverage exceeds 70%, switch to synthesis mode: scan the graph for emotional motifs and surface a theme (e.g., "Stillness Within Drifting").</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03 SYSTEM ============ -->
+<section id="system" class="py-24 border-t hairline">
+  <div class="max-w-6xl mx-auto px-6 sm:px-10">
+    <div class="reveal">
+      <div class="section-num mb-4">03 — HOW IT WORKS</div>
+      <h2 class="font-cn text-4xl sm:text-5xl font-semibold max-w-3xl leading-tight">
+        <span data-cn>四层架构，五个 Agent 协同</span>
+        <span data-en class="font-sans tracking-tight">Four layers. Five cooperating agents.</span>
+      </h2>
+    </div>
+
+    <!-- architecture diagram -->
+    <div class="reveal mt-16 p-8 sm:p-12 border hairline rounded-sm bg-warm/30">
+      <svg viewBox="0 0 800 460" class="w-full h-auto">
+        <!-- Layer labels -->
+        <text x="20" y="40"  font-family="JetBrains Mono" font-size="10" fill="#B8552E">UI LAYER</text>
+        <text x="20" y="160" font-family="JetBrains Mono" font-size="10" fill="#B8552E">PLANNER</text>
+        <text x="20" y="290" font-family="JetBrains Mono" font-size="10" fill="#B8552E">DATA</text>
+        <text x="20" y="410" font-family="JetBrains Mono" font-size="10" fill="#B8552E">AI SERVICES</text>
+
+        <!-- separators -->
+        <line x1="0" y1="80"  x2="800" y2="80"  stroke="#E5E0D8"/>
+        <line x1="0" y1="200" x2="800" y2="200" stroke="#E5E0D8"/>
+        <line x1="0" y1="330" x2="800" y2="330" stroke="#E5E0D8"/>
+
+        <!-- UI -->
+        <rect x="180" y="20" width="180" height="50" rx="4" fill="#FAF8F5" stroke="#1A1A1A"/>
+        <text x="270" y="50" text-anchor="middle" font-family="Inter" font-size="12" fill="#1A1A1A">Interview Dashboard</text>
+        <rect x="440" y="20" width="180" height="50" rx="4" fill="#FAF8F5" stroke="#1A1A1A"/>
+        <text x="530" y="50" text-anchor="middle" font-family="Inter" font-size="12" fill="#1A1A1A">Graph Visualization</text>
+
+        <!-- Planner agents -->
+        <rect x="80"  y="110" width="140" height="70" rx="4" fill="#FAF8F5" stroke="#B8552E"/>
+        <text x="150" y="138" text-anchor="middle" font-family="Inter" font-size="11" font-weight="600" fill="#B8552E">Dialogue Mgr</text>
+        <text x="150" y="155" text-anchor="middle" font-family="Inter" font-size="9" fill="#5C5853">session control</text>
+
+        <rect x="240" y="110" width="140" height="70" rx="4" fill="#FAF8F5" stroke="#B8552E"/>
+        <text x="310" y="138" text-anchor="middle" font-family="Inter" font-size="11" font-weight="600" fill="#B8552E">Event Extractor</text>
+        <text x="310" y="155" text-anchor="middle" font-family="Inter" font-size="9" fill="#5C5853">LLM-based NER+RE</text>
+
+        <rect x="400" y="110" width="140" height="70" rx="4" fill="#FAF8F5" stroke="#B8552E"/>
+        <text x="470" y="138" text-anchor="middle" font-family="Inter" font-size="11" font-weight="600" fill="#B8552E">Graph Builder</text>
+        <text x="470" y="155" text-anchor="middle" font-family="Inter" font-size="9" fill="#5C5853">incremental updates</text>
+
+        <rect x="560" y="110" width="140" height="70" rx="4" fill="#FAF8F5" stroke="#B8552E"/>
+        <text x="630" y="138" text-anchor="middle" font-family="Inter" font-size="11" font-weight="600" fill="#B8552E">Navigator</text>
+        <text x="630" y="155" text-anchor="middle" font-family="Inter" font-size="9" fill="#5C5853">depth / breadth</text>
+
+        <!-- Data layer -->
+        <ellipse cx="280" cy="265" rx="100" ry="28" fill="#FAF8F5" stroke="#1A1A1A"/>
+        <text x="280" y="262" text-anchor="middle" font-family="Inter" font-size="11" font-weight="600" fill="#1A1A1A">Event Graph</text>
+        <text x="280" y="277" text-anchor="middle" font-family="Inter" font-size="9" fill="#5C5853">Neo4j + GraphRAG</text>
+
+        <ellipse cx="520" cy="265" rx="100" ry="28" fill="#FAF8F5" stroke="#1A1A1A"/>
+        <text x="520" y="262" text-anchor="middle" font-family="Inter" font-size="11" font-weight="600" fill="#1A1A1A">Dialogue History</text>
+        <text x="520" y="277" text-anchor="middle" font-family="Inter" font-size="9" fill="#5C5853">JSON</text>
+
+        <!-- AI services -->
+        <rect x="120" y="360" width="160" height="60" rx="4" fill="#FAF8F5" stroke="#5C5853" stroke-dasharray="3 3"/>
+        <text x="200" y="385" text-anchor="middle" font-family="Inter" font-size="11" fill="#1A1A1A">LLM · Kimi / Moonshot</text>
+        <text x="200" y="402" text-anchor="middle" font-family="Inter" font-size="9" fill="#5C5853">extract · plan · generate</text>
+
+        <rect x="320" y="360" width="160" height="60" rx="4" fill="#FAF8F5" stroke="#5C5853" stroke-dasharray="3 3"/>
+        <text x="400" y="385" text-anchor="middle" font-family="Inter" font-size="11" fill="#1A1A1A">Embedding · Zhipu</text>
+        <text x="400" y="402" text-anchor="middle" font-family="Inter" font-size="9" fill="#5C5853">semantic retrieval</text>
+
+        <rect x="520" y="360" width="160" height="60" rx="4" fill="#FAF8F5" stroke="#5C5853" stroke-dasharray="3 3"/>
+        <text x="600" y="385" text-anchor="middle" font-family="Inter" font-size="11" fill="#1A1A1A">User Simulator</text>
+        <text x="600" y="402" text-anchor="middle" font-family="Inter" font-size="9" fill="#5C5853">automated eval</text>
+
+        <!-- arrows -->
+        <line x1="270" y1="70" x2="200" y2="110" stroke="#1A1A1A" stroke-width="0.8"/>
+        <line x1="530" y1="70" x2="630" y2="110" stroke="#1A1A1A" stroke-width="0.8"/>
+        <line x1="310" y1="180" x2="280" y2="237" stroke="#B8552E" stroke-width="0.8"/>
+        <line x1="470" y1="180" x2="500" y2="237" stroke="#B8552E" stroke-width="0.8"/>
+        <line x1="630" y1="180" x2="540" y2="237" stroke="#B8552E" stroke-width="0.8"/>
+      </svg>
+    </div>
+
+    <!-- dual-path navigation -->
+    <div class="reveal mt-20 grid md:grid-cols-2 gap-8">
+      <div class="p-8 border hairline rounded-sm bg-paper">
+        <div class="font-mono text-xs text-accent mb-2">NAVIGATION · A</div>
+        <h3 class="font-cn text-2xl font-semibold mb-3"><span data-cn>深度扩展</span><span data-en class="font-sans">Deep Dive</span></h3>
+        <p class="text-sm text-muted leading-relaxed mb-5">
+          <span data-cn>当核心事件槽位未满、情绪能量高时触发。三条子路径：</span>
+          <span data-en>Triggered when core slots are unfilled and emotional intensity is high. Three sub-paths:</span>
+        </p>
+        <ul class="space-y-2 text-sm">
+          <li class="flex gap-3"><span class="font-mono text-accent">A1</span><span><strong data-cn>由事及人</strong><strong data-en>Facts → People</strong> — <span class="text-muted" data-cn>归纳法，提炼性格标签</span><span class="text-muted" data-en>induction, distill character traits</span></span></li>
+          <li class="flex gap-3"><span class="font-mono text-accent">A2</span><span><strong data-cn>由物及情</strong><strong data-en>Object → Emotion</strong> — <span class="text-muted" data-cn>感官锚点触发深度记忆</span><span class="text-muted" data-en>sensory anchors unlock deep memory</span></span></li>
+          <li class="flex gap-3"><span class="font-mono text-accent">A3</span><span><strong data-cn>由时代及个体</strong><strong data-en>Era → Individual</strong> — <span class="text-muted" data-cn>历史背景中的个人坐标</span><span class="text-muted" data-en>locate the person within history</span></span></li>
+        </ul>
+      </div>
+
+      <div class="p-8 border hairline rounded-sm bg-paper">
+        <div class="font-mono text-xs text-accent mb-2">NAVIGATION · B</div>
+        <h3 class="font-cn text-2xl font-semibold mb-3"><span data-cn>广度跳转</span><span data-en class="font-sans">Breadth Switch</span></h3>
+        <p class="text-sm text-muted leading-relaxed mb-5">
+          <span data-cn>当信息密度衰减、出现疲劳时触发。五种跳转策略，按体验质量排序：</span>
+          <span data-en>Triggered when information density drops or fatigue appears. Five strategies, ordered by interview quality:</span>
+        </p>
+        <ul class="space-y-2 text-sm">
+          <li class="flex gap-3"><span class="font-mono text-accent">B1</span><span data-cn><strong>情感共振</strong> — 通过情绪钩子串联跨度大的事件</span><span class="font-mono text-accent" data-en></span><span data-en><strong>Affective resonance</strong> — link distant events via shared emotion</span></li>
+          <li class="flex gap-3"><span class="font-mono text-accent">B2</span><span data-cn><strong>社交网络</strong> — 利用图谱中已识别但未展开的人物</span><span data-en><strong>Social network</strong> — pivot through people already in the graph</span></li>
+          <li class="flex gap-3"><span class="font-mono text-accent">B3</span><span data-cn><strong>地理跳转</strong> — 沿物理空间（家、学校、工厂）延伸</span><span data-en><strong>Spatial jump</strong> — follow places (home, school, factory)</span></li>
+          <li class="flex gap-3"><span class="font-mono text-accent">B4</span><span data-cn><strong>时代快照</strong> — 抛出标志性历史时刻定位</span><span data-en><strong>Historical snapshot</strong> — anchor on a landmark moment</span></li>
+          <li class="flex gap-3"><span class="font-mono text-accent">B5</span><span data-cn><strong>挂起任务</strong> — 翻出此前被打断的话题，保障覆盖率</span><span data-en><strong>Task resume</strong> — pick up an earlier interrupted thread</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 04 FEATURES ============ -->
+<section id="features" class="py-24 border-t hairline bg-warm/40">
+  <div class="max-w-6xl mx-auto px-6 sm:px-10">
+    <div class="reveal">
+      <div class="section-num mb-4">04 — KEY FEATURES</div>
+      <h2 class="font-cn text-4xl sm:text-5xl font-semibold max-w-3xl leading-tight">
+        <span data-cn>从规划到产出，端到端</span>
+        <span data-en class="font-sans tracking-tight">End-to-end, planning to publication.</span>
+      </h2>
+    </div>
+
+    <div class="mt-16 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div class="reveal p-6 border hairline rounded-sm bg-paper">
+        <div class="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        </div>
+        <h4 class="font-cn font-semibold mb-2"><span data-cn>实时交互</span><span data-en class="font-sans">Real-Time</span></h4>
+        <p class="text-sm text-muted leading-relaxed">
+          <span data-cn>基于 WebSocket 的流式回应，规划与对话同步进行，无感等待。</span>
+          <span data-en>WebSocket-streamed responses. Planning runs concurrently with dialogue — no waiting.</span>
+        </p>
+      </div>
+
+      <div class="reveal p-6 border hairline rounded-sm bg-paper" style="transition-delay:.1s">
+        <div class="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7"/></svg>
+        </div>
+        <h4 class="font-cn font-semibold mb-2"><span data-cn>动态图谱</span><span data-en class="font-sans">Dynamic Graph</span></h4>
+        <p class="text-sm text-muted leading-relaxed">
+          <span data-cn>基于 Neo4j + GraphRAG 实时构建人生事件图谱，覆盖率可视化。</span>
+          <span data-en>Live event graph on Neo4j + GraphRAG. Coverage and density rendered visually.</span>
+        </p>
+      </div>
+
+      <div class="reveal p-6 border hairline rounded-sm bg-paper" style="transition-delay:.2s">
+        <div class="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        </div>
+        <h4 class="font-cn font-semibold mb-2"><span data-cn>多模态</span><span data-en class="font-sans">Multimodal</span></h4>
+        <p class="text-sm text-muted leading-relaxed">
+          <span data-cn>支持照片上传、语音口音识别、多图叙事链条，触发感官记忆。</span>
+          <span data-en>Photo upload, accent-aware speech, multi-image narrative chains — sensory cues that unlock memory.</span>
+        </p>
+      </div>
+
+      <div class="reveal p-6 border hairline rounded-sm bg-paper" style="transition-delay:.3s">
+        <div class="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19V6l12-3v13M9 19c0 1.66-1.34 3-3 3s-3-1.34-3-3 1.34-3 3-3 3 1.34 3 3zm12-3c0 1.66-1.34 3-3 3s-3-1.34-3-3 1.34-3 3-3 3 1.34 3 3z"/></svg>
+        </div>
+        <h4 class="font-cn font-semibold mb-2"><span data-cn>叙事风格</span><span data-en class="font-sans">Narrative Voice</span></h4>
+        <p class="text-sm text-muted leading-relaxed">
+          <span data-cn>三种产出风格：个人风格、名家风格、传统回忆录风格。</span>
+          <span data-en>Three output voices: personal, literary master, classic memoir.</span>
+        </p>
+      </div>
+
+      <div class="reveal p-6 border hairline rounded-sm bg-paper">
+        <div class="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        </div>
+        <h4 class="font-cn font-semibold mb-2"><span data-cn>无幻觉</span><span data-en class="font-sans">No Hallucination</span></h4>
+        <p class="text-sm text-muted leading-relaxed">
+          <span data-cn>所有产出严格基于访谈内容，每段叙述可追溯到原始对话。</span>
+          <span data-en>Every line of output is grounded in actual interview content. Fully traceable to source dialogue.</span>
+        </p>
+      </div>
+
+      <div class="reveal p-6 border hairline rounded-sm bg-paper" style="transition-delay:.1s">
+        <div class="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+        </div>
+        <h4 class="font-cn font-semibold mb-2"><span data-cn>评估体系</span><span data-en class="font-sans">Evaluation Suite</span></h4>
+        <p class="text-sm text-muted leading-relaxed">
+          <span data-cn>覆盖率、深度、连贯性的自动化指标，配 LLM-as-judge 仿真测试。</span>
+          <span data-en>Automated coverage, depth, and coherence metrics, paired with LLM-as-judge simulations.</span>
+        </p>
+      </div>
+
+      <div class="reveal p-6 border hairline rounded-sm bg-paper" style="transition-delay:.2s">
+        <div class="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <h4 class="font-cn font-semibold mb-2"><span data-cn>断点续传</span><span data-en class="font-sans">Resumable</span></h4>
+        <p class="text-sm text-muted leading-relaxed">
+          <span data-cn>老人可随时中断，下次开启自动温故知新，从挂起状态继续。</span>
+          <span data-en>The interviewee can pause anytime. Next session resumes from the saved state — gracefully.</span>
+        </p>
+      </div>
+
+      <div class="reveal p-6 border hairline rounded-sm bg-paper" style="transition-delay:.3s">
+        <div class="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+        </div>
+        <h4 class="font-cn font-semibold mb-2"><span data-cn>柔性引导</span><span data-en class="font-sans">Soft Guidance</span></h4>
+        <p class="text-sm text-muted leading-relaxed">
+          <span data-cn>话题切换使用桥接语，避免审讯感，让老人感到被倾听。</span>
+          <span data-en>Topic switches use bridging language. No interrogation feel — the interviewee feels heard.</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 05 DEMO ============ -->
+<section id="demo" class="py-24 border-t hairline">
+  <div class="max-w-6xl mx-auto px-6 sm:px-10">
+    <div class="reveal">
+      <div class="section-num mb-4">05 — DEMO</div>
+      <h2 class="font-cn text-4xl sm:text-5xl font-semibold max-w-3xl leading-tight">
+        <span data-cn>看看它的样子</span>
+        <span data-en class="font-sans tracking-tight">See it in action.</span>
+      </h2>
+    </div>
+
+    <!-- video -->
+    <div class="reveal mt-12 aspect-video w-full bg-ink/5 border hairline rounded-sm flex items-center justify-center relative overflow-hidden">
+      <!-- TODO: replace with <iframe> or <video> tag -->
+      <!-- <iframe class="w-full h-full" src="VIDEO_URL" frameborder="0" allowfullscreen></iframe> -->
+      <div class="text-center">
+        <div class="w-20 h-20 rounded-full bg-accent/90 flex items-center justify-center mx-auto mb-4 cursor-pointer hover:scale-105 transition">
+          <svg class="w-8 h-8 text-paper ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+        <p class="font-mono text-xs tracking-widest text-muted uppercase">
+          <span data-cn>演示视频 · 占位 · 待嵌入</span>
+          <span data-en>Demo Video · Placeholder · Embed Coming</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- screenshots -->
+    <div class="reveal mt-8 grid md:grid-cols-3 gap-5">
+      <div class="aspect-[4/3] bg-warm border hairline rounded-sm flex items-center justify-center">
+        <span class="font-mono text-xs text-muted">[ Screenshot · Interview UI ]</span>
+      </div>
+      <div class="aspect-[4/3] bg-warm border hairline rounded-sm flex items-center justify-center">
+        <span class="font-mono text-xs text-muted">[ Screenshot · Live Graph ]</span>
+      </div>
+      <div class="aspect-[4/3] bg-warm border hairline rounded-sm flex items-center justify-center">
+        <span class="font-mono text-xs text-muted">[ Screenshot · Coverage Dashboard ]</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 06 EVALUATION ============ -->
+<section id="eval" class="py-24 border-t hairline bg-warm/40">
+  <div class="max-w-6xl mx-auto px-6 sm:px-10">
+    <div class="reveal">
+      <div class="section-num mb-4">06 — EVALUATION</div>
+      <h2 class="font-cn text-4xl sm:text-5xl font-semibold max-w-3xl leading-tight">
+        <span data-cn>对比基线，量化提升</span>
+        <span data-en class="font-sans tracking-tight">Measured against the baseline.</span>
+      </h2>
+      <p class="mt-6 text-muted max-w-2xl">
+        <span data-cn>我们构建了 LLM 驱动的"模拟受访者"环境，让 Planner 与无规划的纯对话 Agent 进行多轮访谈对照实验。</span>
+        <span data-en>We built an LLM-driven simulated interviewee and ran controlled multi-turn experiments comparing the Planner against a vanilla conversational baseline.</span>
+      </p>
+    </div>
+
+    <!-- Metric cards -->
+    <div class="reveal mt-12 grid md:grid-cols-3 gap-6">
+      <div class="p-8 border hairline rounded-sm bg-paper">
+        <div class="font-mono text-xs text-muted uppercase tracking-widest">
+          <span data-cn>话题覆盖率</span><span data-en>Coverage</span>
+        </div>
+        <!-- TODO: replace XX with actual numbers -->
+        <div class="mt-3 flex items-baseline gap-2">
+          <span class="font-cn text-5xl font-semibold text-accent">+XX%</span>
+          <span class="text-sm text-muted">vs baseline</span>
+        </div>
+        <p class="mt-3 text-sm text-muted">
+          <span data-cn>覆盖更完整的人生阶段，减少访谈空白。</span>
+          <span data-en>More complete life-stage coverage, fewer narrative gaps.</span>
+        </p>
+      </div>
+
+      <div class="p-8 border hairline rounded-sm bg-paper">
+        <div class="font-mono text-xs text-muted uppercase tracking-widest">
+          <span data-cn>对话深度</span><span data-en>Avg. Depth</span>
+        </div>
+        <div class="mt-3 flex items-baseline gap-2">
+          <span class="font-cn text-5xl font-semibold text-accent">+XX</span>
+          <span class="text-sm text-muted">turns / topic</span>
+        </div>
+        <p class="mt-3 text-sm text-muted">
+          <span data-cn>每个话题的平均挖掘深度显著提升。</span>
+          <span data-en>Significantly deeper exploration per topic.</span>
+        </p>
+      </div>
+
+      <div class="p-8 border hairline rounded-sm bg-paper">
+        <div class="font-mono text-xs text-muted uppercase tracking-widest">
+          <span data-cn>逻辑连贯性</span><span data-en>Coherence</span>
+        </div>
+        <div class="mt-3 flex items-baseline gap-2">
+          <span class="font-cn text-5xl font-semibold text-accent">XX/10</span>
+          <span class="text-sm text-muted">LLM judge</span>
+        </div>
+        <p class="mt-3 text-sm text-muted">
+          <span data-cn>由 GPT-4 评分的话题切换流畅度。</span>
+          <span data-en>Topic-switch fluency, scored by GPT-4 as judge.</span>
+        </p>
+      </div>
+    </div>
+
+    <p class="reveal mt-10 text-xs font-mono text-muted">
+      <span data-cn>※ 完整实验报告与原始数据见技术报告 PDF。</span>
+      <span data-en>※ Full experimental report and raw data available in the technical paper.</span>
+    </p>
+  </div>
+</section>
+
+<!-- ============ TECH STACK ============ -->
+<section class="py-20 border-t hairline">
+  <div class="max-w-6xl mx-auto px-6 sm:px-10">
+    <div class="reveal">
+      <div class="section-num mb-4">07 — BUILT WITH</div>
+      <h2 class="font-cn text-3xl sm:text-4xl font-semibold mb-10">
+        <span data-cn>技术栈</span><span data-en class="font-sans">Technology Stack</span>
+      </h2>
+    </div>
+    <div class="reveal flex flex-wrap gap-x-10 gap-y-4 text-sm text-muted">
+      <div><span class="font-mono text-xs text-accent">FRONTEND</span> · React · TypeScript · Vite</div>
+      <div><span class="font-mono text-xs text-accent">BACKEND</span> · FastAPI · WebSocket · Flask</div>
+      <div><span class="font-mono text-xs text-accent">GRAPH</span> · Neo4j 5 · GraphRAG · NetworkX</div>
+      <div><span class="font-mono text-xs text-accent">LLM</span> · Kimi · Moonshot · GPT-4 (judge)</div>
+      <div><span class="font-mono text-xs text-accent">EMBEDDING</span> · Zhipu GLM Embedding-3</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="border-t hairline py-16 bg-ink text-paper">
+  <div class="max-w-6xl mx-auto px-6 sm:px-10 grid md:grid-cols-12 gap-10">
+    <div class="md:col-span-5">
+      <div class="font-cn text-2xl font-semibold">叙事导航者</div>
+      <div class="text-xs tracking-[0.2em] uppercase text-paper/60 mt-1">Narrative Planner</div>
+      <p class="mt-6 text-sm text-paper/70 max-w-sm">
+        <span data-cn>用科技留存岁月。让每一段人生都被看见、被记得。</span>
+        <span data-en>Preserving lives through technology. So every story is seen, and remembered.</span>
+      </p>
+    </div>
+
+    <div class="md:col-span-3">
+      <div class="font-mono text-xs text-paper/50 uppercase tracking-widest mb-4">
+        <span data-cn>项目链接</span><span data-en>Project</span>
+      </div>
+      <ul class="space-y-2 text-sm">
+        <!-- TODO: fill in real URLs -->
+        <li><a href="#" class="hover:text-accent transition underline-soft">
+          <span data-cn>在线演示</span><span data-en>Live Demo</span></a></li>
+        <li><a href="#" class="hover:text-accent transition underline-soft">GitHub Repository</a></li>
+        <li><a href="#" class="hover:text-accent transition underline-soft">
+          <span data-cn>技术报告 (PDF)</span><span data-en>Technical Paper (PDF)</span></a></li>
+        <li><a href="#" class="hover:text-accent transition underline-soft">
+          <span data-cn>演示视频</span><span data-en>Demo Video</span></a></li>
+      </ul>
+    </div>
+
+    <div class="md:col-span-4">
+      <div class="font-mono text-xs text-paper/50 uppercase tracking-widest mb-4">
+        <span data-cn>联系</span><span data-en>Contact</span>
+      </div>
+      <p class="text-sm text-paper/70">
+        <span data-cn>研究合作、试用申请、媒体咨询，请通过 GitHub Issues 联系。</span>
+        <span data-en>For research collaboration, trial access, or press inquiries, please reach us via GitHub Issues.</span>
+      </p>
+    </div>
+  </div>
+
+  <div class="max-w-6xl mx-auto px-6 sm:px-10 mt-12 pt-6 border-t border-paper/10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 text-xs text-paper/50">
+    <div>© 2026 Narrative Planner Project · <span data-cn>保留所有权利</span><span data-en>All rights reserved</span></div>
+    <div class="font-mono">Built with care · 用心制作</div>
+  </div>
+</footer>
+
+<!-- ============ JS ============ -->
+<script>
+  // language toggle
+  const html = document.documentElement;
+  const stored = localStorage.getItem('lang');
+  if (stored) html.setAttribute('lang', stored);
+  document.getElementById('lang-toggle').addEventListener('click', () => {
+    const next = html.getAttribute('lang') === 'en' ? 'zh-CN' : 'en';
+    html.setAttribute('lang', next);
+    localStorage.setItem('lang', next);
+  });
+
+  // reveal on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
