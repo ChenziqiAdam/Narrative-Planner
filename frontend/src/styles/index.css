@@ -23,19 +23,19 @@
 
 /* 选择文字样式 */
 ::selection {
-  background: rgba(59, 130, 246, 0.5);
+  background: rgba(184, 85, 46, 0.3);
   color: #fff;
 }
 
 /* 链接样式 */
 a {
-  color: #60A5FA;
+  color: #C4714A;
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 a:hover {
-  color: #93C5FD;
+  color: #B8552E;
 }
 
 /* 按钮基础样式 */
@@ -60,7 +60,7 @@ textarea {
 
 /* 聚焦样式 */
 :focus-visible {
-  outline: 2px solid #3B82F6;
+  outline: 2px solid #B8552E;
   outline-offset: 2px;
 }
 
