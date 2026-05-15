@@ -172,7 +172,7 @@
 
 .depth-value {
   font-weight: 600;
-  color: #3B82F6;
+  color: #B8552E;
 }
 
 .depth-indicator {
@@ -189,7 +189,7 @@
 }
 
 .depth-level.active {
-  background: linear-gradient(90deg, #3B82F6, #10B981);
+  background: linear-gradient(90deg, #B8552E, #10B981);
 }
 
 .completion-bar {
@@ -201,7 +201,7 @@
 
 .completion-fill {
   height: 100%;
-  background: linear-gradient(90deg, #10B981, #3B82F6);
+  background: linear-gradient(90deg, #10B981, #B8552E);
   border-radius: 4px;
   transition: width 0.5s ease;
 }
@@ -265,7 +265,7 @@
   background: #EFF6FF;
   border-radius: 4px;
   font-size: 11px;
-  color: #3B82F6;
+  color: #B8552E;
 }
 
 /* 问题列表 */
@@ -294,7 +294,7 @@
   border-radius: 50%;
   font-size: 11px;
   font-weight: 600;
-  color: #3B82F6;
+  color: #B8552E;
   flex-shrink: 0;
 }
 
@@ -422,7 +422,7 @@
 
 .metric-fill {
   height: 100%;
-  background: linear-gradient(90deg, #3B82F6, #10B981);
+  background: linear-gradient(90deg, #B8552E, #10B981);
   border-radius: 3px;
   transition: width 0.3s ease;
 }
@@ -449,7 +449,7 @@
 }
 
 .depth-pip.active {
-  background: linear-gradient(90deg, #3B82F6, #10B981);
+  background: linear-gradient(90deg, #B8552E, #10B981);
 }
 
 /* 情绪指示器 */
