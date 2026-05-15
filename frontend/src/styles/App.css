@@ -6,17 +6,17 @@
 /* CSS 变量 */
 :root {
   /* 颜色 - 浅色主题 */
-  --color-bg-primary: #F9FAFB;
+  --color-bg-primary: #FAF8F5;
   --color-bg-secondary: #FFFFFF;
-  --color-bg-tertiary: #F3F4F6;
-  --color-text-primary: #1F2937;
+  --color-bg-tertiary: #F0EDE8;
+  --color-text-primary: #1A1A1A;
   --color-text-secondary: #4B5563;
-  --color-text-muted: #9CA3AF;
-  --color-accent: #3B82F6;
+  --color-text-muted: #A39890;
+  --color-accent: #B8552E;
   --color-success: #10B981;
   --color-warning: #F59E0B;
   --color-danger: #EF4444;
-  --color-border: #E5E7EB;
+  --color-border: #E5E0D8;
 
   /* 尺寸 */
   --header-height: 60px;
@@ -118,7 +118,7 @@ body {
 }
 
 .error-content button:hover {
-  background: #2563EB;
+  background: #9E4425;
 }
 
 /* ==================== 头部 ==================== */
@@ -371,7 +371,7 @@ body {
 }
 
 .stat-item.pending .stat-value {
-  color: #9CA3AF;
+  color: var(--color-text-muted);
 }
 
 .stat-item.mentioned .stat-value {
